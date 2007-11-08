@@ -2055,4 +2055,3 @@ case $mkdir_p in
 esac
 ])
 
-m4_include([buildlib/tools.m4])
