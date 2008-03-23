@@ -751,7 +751,7 @@ void pkgAcqIndex::Done(string Message,unsigned long Size,string Hash,
       Local = true;
    
    string compExt = Desc.URI.substr(Desc.URI.size()-3);
-   char *decompProg;
+   const char *decompProg;
    if(compExt == "bz2") 
       decompProg = "bzip2";
    else if(compExt == ".gz") 
@@ -820,16 +820,19 @@ pkgAcqMetaSig::pkgAcqMetaSig(pkgAcquire *Owner,
    Desc.Owner = this;
    Desc.ShortDesc = ShortDesc;
    Desc.URI = URI;
-   
       
    string Final = _config->FindDir("Dir::State::lists");
    Final += URItoFileName(RealURI);
    struct stat Buf;
    if (stat(Final.c_str(),&Buf) == 0)
    {
-      // File was already in place.  It needs to be re-verified
-      // because Release might have changed, so Move it into partial
-      Rename(Final,DestFile);
+      // File was already in place.  It needs to be re-downloaded/verified
+      // because Release might have changed, we do give it a differnt
+      // name than DestFile because otherwise the http method will
+      // send If-Range requests and there are too many broken servers
+      // out there that do not understand them
+      LastGoodSig = DestFile+".reverify";
+      Rename(Final,LastGoodSig);
    }
 
    QueueURI(Desc);
@@ -841,7 +844,7 @@ pkgAcqMetaSig::pkgAcqMetaSig(pkgAcquire *Owner,
 string pkgAcqMetaSig::Custom600Headers()
 {
    struct stat Buf;
-   if (stat(DestFile.c_str(),&Buf) != 0)
+   if (stat(LastGoodSig.c_str(),&Buf) != 0)
       return "\nIndex-File: true";
 
    return "\nIndex-File: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
@@ -871,9 +874,16 @@ void pkgAcqMetaSig::Done(string Message,unsigned long Size,string MD5,
 
    Complete = true;
 
+   // put the last known good file back on i-m-s hit (it will
+   // be re-verified again)
+   // Else do nothing, we have the new file in DestFile then
+   if(StringToBool(LookupTag(Message,"IMS-Hit"),false) == true)
+      Rename(LastGoodSig, DestFile);
+
    // queue a pkgAcqMetaIndex to be verified against the sig we just retrieved
-   new pkgAcqMetaIndex(Owner, MetaIndexURI, MetaIndexURIDesc, MetaIndexShortDesc,
-		       DestFile, IndexTargets, MetaIndexParser);
+   new pkgAcqMetaIndex(Owner, MetaIndexURI, MetaIndexURIDesc, 
+		       MetaIndexShortDesc,  DestFile, IndexTargets, 
+		       MetaIndexParser);
 
 }
 									/*}}}*/
@@ -887,7 +897,7 @@ void pkgAcqMetaSig::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
       Item::Failed(Message,Cnf);
       // move the sigfile back on transient network failures 
       if(FileExists(DestFile))
- 	 Rename(DestFile,Final);
+ 	 Rename(LastGoodSig,Final);
 
       // set the status back to , Item::Failed likes to reset it
       Status = pkgAcquire::Item::StatTransientNetworkError;
@@ -962,6 +972,15 @@ void pkgAcqMetaIndex::Done(string Message,unsigned long Size,string Hash,
    if (AuthPass == true)
    {
       AuthDone(Message);
+
+      // all cool, move Release file into place
+      Complete = true;
+
+      string FinalFile = _config->FindDir("Dir::State::lists");
+      FinalFile += URItoFileName(RealURI);
+      Rename(DestFile,FinalFile);
+      chmod(FinalFile.c_str(),0644);
+      DestFile = FinalFile;
    }
    else
    {
@@ -1013,22 +1032,15 @@ void pkgAcqMetaIndex::RetrievalDone(string Message)
       return;
    }
 
-   // see if the download was a IMSHit
+   // make sure to verify against the right file on I-M-S hit
    IMSHit = StringToBool(LookupTag(Message,"IMS-Hit"),false);
+   if(IMSHit)
+   {
+      string FinalFile = _config->FindDir("Dir::State::lists");
+      FinalFile += URItoFileName(RealURI);
+      DestFile = FinalFile;
+   }
    Complete = true;
-
-   string FinalFile = _config->FindDir("Dir::State::lists");
-   FinalFile += URItoFileName(RealURI);
-
-   // If we get a IMS hit we can remove the empty file in partial
-   // othersie we move the file in place
-   if (IMSHit)
-      unlink(DestFile.c_str());
-   else
-      Rename(DestFile,FinalFile);
-
-   chmod(FinalFile.c_str(),0644);
-   DestFile = FinalFile;
 }
 
 void pkgAcqMetaIndex::AuthDone(string Message)
@@ -1058,7 +1070,6 @@ void pkgAcqMetaIndex::AuthDone(string Message)
    QueueIndexes(true);
 
    // Done, move signature file into position
-
    string VerifiedSigFile = _config->FindDir("Dir::State::lists") +
       URItoFileName(RealURI) + ".gpg";
    Rename(SigFile,VerifiedSigFile);
@@ -1203,31 +1214,30 @@ void pkgAcqMetaIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
 {
    if (AuthPass == true)
    {
-      // if we fail the authentication but got the file via a IMS-Hit 
-      // this means that the file wasn't downloaded and that it might be
-      // just stale (server problem, proxy etc). we delete what we have
-      // queue it again without i-m-s 
-      // alternatively we could just unlink the file and let the user try again
-      if (IMSHit)
+      // gpgv method failed, if we have a good signature 
+      string LastGoodSigFile = _config->FindDir("Dir::State::lists") +
+	 "partial/" + URItoFileName(RealURI) + ".gpg.reverify";
+      if(FileExists(LastGoodSigFile))
       {
-	 Complete = false;
-	 Local = false;
-	 AuthPass = false;
-	 unlink(DestFile.c_str());
-
-	 DestFile = _config->FindDir("Dir::State::lists") + "partial/";
-	 DestFile += URItoFileName(RealURI);
-	 Desc.URI = RealURI;
-	 QueueURI(Desc);
+	 string VerifiedSigFile = _config->FindDir("Dir::State::lists") +
+	    URItoFileName(RealURI) + ".gpg";
+	 Rename(LastGoodSigFile,VerifiedSigFile);
+	 Status = StatTransientNetworkError;
+	 _error->Warning(_("A error occurred during the signature "
+			   "verification. The repository is not updated "
+			   "and the previous index files will be used."
+			   "GPG error: %s: %s\n"),
+			 Desc.Description.c_str(),
+			 LookupTag(Message,"Message").c_str());
+	 RunScripts("APT::Update::Auth-Failure");
 	 return;
+      } else {
+	 _error->Warning(_("GPG error: %s: %s"),
+			 Desc.Description.c_str(),
+			 LookupTag(Message,"Message").c_str());
       }
-
       // gpgv method failed 
       ReportMirrorFailure("GPGFailure");
-      _error->Warning("GPG error: %s: %s",
-                      Desc.Description.c_str(),
-                      LookupTag(Message,"Message").c_str());
-
    }
 
    // No Release file was present, or verification failed, so fall

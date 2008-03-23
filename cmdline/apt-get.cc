@@ -53,6 +53,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include <sys/statfs.h>
 #include <sys/statvfs.h>
 #include <signal.h>
 #include <unistd.h>
@@ -62,6 +63,8 @@
 #include <sys/wait.h>
 #include <sstream>
 									/*}}}*/
+
+#define RAMFS_MAGIC     0x858458f6
 
 using namespace std;
 
@@ -835,16 +838,16 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask = true,
    if (DebBytes != FetchBytes)
       ioprintf(c1out,_("Need to get %sB/%sB of archives.\n"),
 	       SizeToStr(FetchBytes).c_str(),SizeToStr(DebBytes).c_str());
-   else
+   else if (DebBytes != 0)
       ioprintf(c1out,_("Need to get %sB of archives.\n"),
 	       SizeToStr(DebBytes).c_str());
 
    // Size delta
    if (Cache->UsrSize() >= 0)
-      ioprintf(c1out,_("After unpacking %sB of additional disk space will be used.\n"),
+      ioprintf(c1out,_("After this operation, %sB of additional disk space will be used.\n"),
 	       SizeToStr(Cache->UsrSize()).c_str());
    else
-      ioprintf(c1out,_("After unpacking %sB disk space will be freed.\n"),
+      ioprintf(c1out,_("After this operation, %sB disk space will be freed.\n"),
 	       SizeToStr(-1*Cache->UsrSize()).c_str());
 
    if (_error->PendingError() == true)
@@ -861,8 +864,13 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask = true,
 	 return _error->Errno("statvfs",_("Couldn't determine free space in %s"),
 			      OutputDir.c_str());
       if (unsigned(Buf.f_bfree) < (FetchBytes - FetchPBytes)/Buf.f_bsize)
-	 return _error->Error(_("You don't have enough free space in %s."),
-			      OutputDir.c_str());
+      {
+         struct statfs Stat;
+         if (statfs(OutputDir.c_str(),&Stat) != 0 ||
+			 unsigned(Stat.f_type) != RAMFS_MAGIC)
+            return _error->Error(_("You don't have enough free space in %s."),
+                OutputDir.c_str());
+      }
    }
    
    // Fail safe check
@@ -1343,14 +1351,15 @@ bool DoUpdate(CommandLine &CmdL)
 	 return _error->Error(_("Unable to lock the list directory"));
    }
    
-   // Create the download object
+   // Create the progress
    AcqTextStatus Stat(ScreenWidth,_config->FindI("quiet",0));
-   pkgAcquire Fetcher(&Stat);
-
-   
+      
    // Just print out the uris an exit if the --print-uris flag was used
    if (_config->FindB("APT::Get::Print-URIs") == true)
    {
+      // get a fetcher
+      pkgAcquire Fetcher(&Stat);
+
       // Populate it with the source selection and get all Indexes 
       // (GetAll=true)
       if (List.GetIndexes(&Fetcher,true) == false)
@@ -1363,54 +1372,14 @@ bool DoUpdate(CommandLine &CmdL)
       return true;
    }
 
-   // Populate it with the source selection
-   if (List.GetIndexes(&Fetcher) == false)
-	 return false;
-   
-   // Run it
-   if (Fetcher.Run() == pkgAcquire::Failed)
-      return false;
-
-   bool Failed = false;
-   bool TransientNetworkFailure = false;
-   for (pkgAcquire::ItemIterator I = Fetcher.ItemsBegin(); I != Fetcher.ItemsEnd(); I++)
-   {
-      if ((*I)->Status == pkgAcquire::Item::StatDone)
-	 continue;
-
-      (*I)->Finished();
-
-      fprintf(stderr,_("Failed to fetch %s  %s\n"),(*I)->DescURI().c_str(),
-	      (*I)->ErrorText.c_str());
-
-      if ((*I)->Status == pkgAcquire::Item::StatTransientNetworkError) 
-      {
-	 TransientNetworkFailure = true;
-	 continue;
-      }
-
-      Failed = true;
-   }
-   
-   // Clean out any old list files
-   if (!TransientNetworkFailure &&
-       _config->FindB("APT::Get::List-Cleanup",true) == true)
-   {
-      if (Fetcher.Clean(_config->FindDir("Dir::State::lists")) == false ||
-	  Fetcher.Clean(_config->FindDir("Dir::State::lists") + "partial/") == false)
-	 return false;
-   }
-   
-   // Prepare the cache.   
+   // do the work
    CacheFile Cache;
+   bool res = ListUpdate(Stat, List);
+     
+   // Rebuild the cache.   
    if (Cache.BuildCaches() == false)
       return false;
    
-   if (TransientNetworkFailure == true)
-      _error->Warning(_("Some index files failed to download, they have been ignored, or old ones used instead."));
-   else if (Failed == true)
-      return _error->Error(_("Some index files failed to download, they have been ignored, or old ones used instead."));
-
    return true;
 }
 									/*}}}*/
@@ -1526,21 +1495,29 @@ bool TryInstallTask(pkgDepCache &Cache, pkgProblemResolver &Fix,
    
    bool found = false;
    bool res = true;
-   for (Pkg = Cache.PkgBegin(); Pkg.end() == false; Pkg++)
+
+   // two runs, first ignore dependencies, second install any missing
+   for(int IgnoreBroken=1; IgnoreBroken >= 0; IgnoreBroken--)
    {
-      pkgCache::VerIterator ver = Cache[Pkg].CandidateVerIter(Cache);
-      if(ver.end())
-	 continue;
-      pkgRecords::Parser &parser = Recs.Lookup(ver.FileList());
-      parser.GetRec(start,end);
-      strncpy(buf, start, end-start);
-      buf[end-start] = 0x0;
-      if (regexec(&Pattern,buf,0,0,0) != 0)
-	 continue;
-      res &= TryToInstall(Pkg,Cache,Fix,Remove,true,ExpectedInst);
-      found = true;
+      for (Pkg = Cache.PkgBegin(); Pkg.end() == false; Pkg++)
+      {
+	 pkgCache::VerIterator ver = Cache[Pkg].CandidateVerIter(Cache);
+	 if(ver.end())
+	    continue;
+	 pkgRecords::Parser &parser = Recs.Lookup(ver.FileList());
+	 parser.GetRec(start,end);
+	 strncpy(buf, start, end-start);
+	 buf[end-start] = 0x0;
+	 if (regexec(&Pattern,buf,0,0,0) != 0)
+	    continue;
+	 res &= TryToInstall(Pkg,Cache,Fix,Remove,IgnoreBroken,ExpectedInst);
+	 found = true;
+      }
    }
    
+   // now let the problem resolver deal with any issues
+   Fix.Resolve(true);
+
    if(!found)
       _error->Error(_("Couldn't find task %s"),taskname);
 
@@ -1711,7 +1688,7 @@ bool DoInstall(CommandLine &CmdL)
 	       (Cache[Pkg].Flags & pkgCache::Flag::Auto) &&
 	       _config->FindB("APT::Get::ReInstall",false) == false)
 	    {
-	       ioprintf(c1out,_("%s set to manual installed.\n"),
+	       ioprintf(c1out,_("%s set to manually installed.\n"),
 			Pkg.Name());
 	       Cache->MarkAuto(Pkg,false);
 	       AutoMarkChanged++;
@@ -2215,8 +2192,13 @@ bool DoSource(CommandLine &CmdL)
       return _error->Errno("statvfs",_("Couldn't determine free space in %s"),
 			   OutputDir.c_str());
    if (unsigned(Buf.f_bfree) < (FetchBytes - FetchPBytes)/Buf.f_bsize)
-      return _error->Error(_("You don't have enough free space in %s"),
-			   OutputDir.c_str());
+     {
+       struct statfs Stat;
+       if (statfs(OutputDir.c_str(),&Stat) != 0 || 
+           unsigned(Stat.f_type) != RAMFS_MAGIC) 
+          return _error->Error(_("You don't have enough free space in %s"),
+              OutputDir.c_str());
+      }
    
    // Number of bytes
    if (DebBytes != FetchBytes)
@@ -2671,6 +2653,7 @@ bool ShowHelp(CommandLine &CmdL)
       "   upgrade - Perform an upgrade\n"
       "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
       "   remove - Remove packages\n"
+      "   autoremove - Remove all automatic unused packages\n"
       "   purge - Remove and purge packages\n"
       "   source - Download source archives\n"
       "   build-dep - Configure build-dependencies for source packages\n"
@@ -2687,7 +2670,7 @@ bool ShowHelp(CommandLine &CmdL)
       "  -d  Download only - do NOT install or unpack archives\n"
       "  -s  No-act. Perform ordering simulation\n"
       "  -y  Assume Yes to all queries and do not prompt\n"
-      "  -f  Attempt to continue if the integrity check fails\n"
+      "  -f  Attempt to correct a system with broken dependencies in place\n"
       "  -m  Attempt to continue if archives are unlocatable\n"
       "  -u  Show a list of upgraded packages as well\n"
       "  -b  Build the source package after fetching it\n"
@@ -2781,6 +2764,7 @@ int main(int argc,const char *argv[])
                                    {"upgrade",&DoUpgrade},
                                    {"install",&DoInstall},
                                    {"remove",&DoInstall},
+                                   {"purge",&DoInstall},
 				   {"autoremove",&DoInstall},
 				   {"purge",&DoInstall},
                                    {"dist-upgrade",&DoDistUpgrade},

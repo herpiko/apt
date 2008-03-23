@@ -185,7 +185,7 @@ apt-doc: build-doc
 
 # Build architecture-dependent files here.
 
-binary-arch: apt-transport-https apt libapt-pkg-dev apt-utils
+binary-arch: apt libapt-pkg-dev apt-utils apt-transport-https
 apt: build debian/shlibs.local
 	dh_testdir -p$@
 	dh_testroot -p$@
@@ -204,6 +204,8 @@ apt: build debian/shlibs.local
 	find $(BLD)/bin/ -type l -name "libapt-pkg*.so.*" -exec cp -a "{}" debian/$@/usr/lib/ \;
 
 	cp $(BLD)/bin/methods/* debian/$@/usr/lib/apt/methods/
+	# https has its own package
+	rm debian/$@/usr/lib/apt/methods/https
 
 	cp $(BLD)/scripts/dselect/* debian/$@/usr/lib/dpkg/methods/apt/
 	cp -r $(BLD)/locale debian/$@/usr/share/
@@ -211,8 +213,8 @@ apt: build debian/shlibs.local
 	cp debian/bugscript debian/$@/usr/share/bug/apt/script
 	cp debian/apt.logrotate debian/$@/etc/logrotate.d/apt
 
-	cp share/blankon-archive.gpg debian/$@/usr/share/$@
 	cp share/ubuntu-archive.gpg debian/$@/usr/share/$@
+	sed 's/^_//' share/apt-auth-failure.note > debian/$@/usr/share/$@/apt-auth-failure.note
 	cp debian/apt.conf.autoremove debian/$@/etc/apt/apt.conf.d/01autoremove
 	cp debian/apt.conf.ubuntu debian/$@/etc/apt/apt.conf.d/01ubuntu
 #	head -n 500 ChangeLog > debian/ChangeLog
@@ -298,7 +300,7 @@ apt-utils: build debian/shlibs.local
 	dh_md5sums -p$@
 	dh_builddeb -p$@
 
-apt-transport-https: build debian/shlibs.local
+apt-transport-https: build debian/shlibs.local libapt-pkg-dev
 	dh_testdir -p$@
 	dh_testroot -p$@
 	dh_clean -p$@ -k
@@ -306,7 +308,7 @@ apt-transport-https: build debian/shlibs.local
 
 	# install the method
 	mkdir -p debian/$@/usr/lib/apt/methods
-	mv $(BLD)/bin/methods/https debian/$@/usr/lib/apt/methods
+	cp $(BLD)/bin/methods/https debian/$@/usr/lib/apt/methods
 
 	dh_installdocs -p$@
 	dh_installexamples -p$@

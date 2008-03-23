@@ -1,6 +1,6 @@
 .\"     Title: apt-ftparchive
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
 .\"    Manual: 
 .\"    Source: Linux
@@ -11,7 +11,7 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt\-ftparchive \- インデックスファイル生成ユーティリティ
+apt-ftparchive - インデックスファイル生成ユーティリティ
 .SH "SYNOPSIS"
 .HP 15
 \fBapt\-ftparchive\fR [\fB\-hvdsq\fR] [\fB\-\-md5\fR] [\fB\-\-delink\fR] [\fB\-\-readonly\fR] [\fB\-\-contents\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[packages\ \fIpath\fR...\ [\fIoverride\fR\ [\fIpathprefix\fR]]] | [sources\ \fIpath\fR...\ [\fIoverride\fR\ [\fIpathprefix\fR]]] | [contents\ \fIpath\fR] | [release\ \fIpath\fR] | [generate\ \fIconfig\-file\fR\ \fIsection\fR...] | [clean\ \fIconfig\-file\fR]}
@@ -22,7 +22,7 @@ apt\-ftparchive \- インデックスファイル生成ユーティリティ
 .PP
 \fBapt\-ftparchive\fR
 は、
-\fBdpkg\-scanpackages\fR(8)
+\fBdpkg-scanpackages\fR(8)
 プログラムのスーパーセットで、
 packages
 コマンド経由で機能全体を取り込んでいます。 また、contents ファイルジェネレータ
@@ -31,7 +31,7 @@ contents
 .PP
 本質的に
 \fBapt\-ftparchive\fR
-は、 .deb ファイルの内容をキャッシュするのにバイナリデータベースを使用できます。 また、\fBgzip\fR(1)
+は、 \.deb ファイルの内容をキャッシュするのにバイナリデータベースを使用できます。 また、\fBgzip\fR(1)
 以外のいかなる外部プログラムにも依存しません。 すべて生成する際には、 ファイル変更点の検出と希望した圧縮出力ファイルの作成を自動的に実行します。
 .PP
 \fB\-h\fR
@@ -42,7 +42,7 @@ contents
 packages
 .RS 4
 
-packages コマンドは、 ディレクトリツリーからパッケージファイルを生成します。 与えられたディレクトリから再帰検索し、.deb ファイルを取得します。 またパッケージレコードを標準出力にそれぞれ出力します。 このコマンドは、\fBdpkg\-scanpackages\fR(8)
+packages コマンドは、 ディレクトリツリーからパッケージファイルを生成します。 与えられたディレクトリから再帰検索し、\.deb ファイルを取得します。 またパッケージレコードを標準出力にそれぞれ出力します。 このコマンドは、\fBdpkg-scanpackages\fR(8)
 とほぼ同じです。
 .sp
 \fB\-\-db\fR
@@ -54,7 +54,7 @@ sources
 
 
 sources
-コマンドは、 ディレクトリツリーからソースインデックスファイルを生成します。 与えられたディレクトリから再帰検索し、.dsc ファイルを取得します。 またソースレコードを標準出力にそれぞれ出力します。 このコマンドは、\fBdpkg\-scansources\fR(8)
+コマンドは、 ディレクトリツリーからソースインデックスファイルを生成します。 与えられたディレクトリから再帰検索し、\.dsc ファイルを取得します。 またソースレコードを標準出力にそれぞれ出力します。 このコマンドは、\fBdpkg-scansources\fR(8)
 とほぼ同じです。
 .sp
 
@@ -66,7 +66,7 @@ contents
 
 
 contents
-コマンドは、 ディレクトリツリーからコンテンツファイルを生成します。 与えられたディレクトリから再帰検索し、.deb ファイルを取得します。 またファイルごとにファイル一覧を読み取ります。 その後、パッケージに対応するファイル一覧を標準出力にソートして出力します。 ディレクトリは出力に含まれません。 複数のパッケージが同じファイルを持つ場合、 パッケージ名をカンマ区切りで出力します。
+コマンドは、 ディレクトリツリーからコンテンツファイルを生成します。 与えられたディレクトリから再帰検索し、\.deb ファイルを取得します。 またファイルごとにファイル一覧を読み取ります。 その後、パッケージに対応するファイル一覧を標準出力にソートして出力します。 ディレクトリは出力に含まれません。 複数のパッケージが同じファイルを持つ場合、 パッケージ名をカンマ区切りで出力します。
 .sp
 
 
@@ -79,7 +79,7 @@ release
 
 
 release
-コマンドは、 ディレクトリツリーから Release ファイルを生成します。 与えられたディレクトリから、Packages, Packages.gz, Packages.bz2, Sources, Sources.gz, Sources.bz2, Release, md5sum.txt といったファイルを再帰検索します。 その後、ファイルごとの MD5 ダイジェストと SHA1 ダイジェストを含んだ Release ファイルを、標準出力に書き出します。
+コマンドは、 ディレクトリツリーから Release ファイルを生成します。 与えられたディレクトリから、Packages, Packages\.gz, Packages\.bz2, Sources, Sources\.gz, Sources\.bz2, Release, md5sum\.txt といったファイルを再帰検索します。 その後、ファイルごとの MD5 ダイジェストと SHA1 ダイジェストを含んだ Release ファイルを、標準出力に書き出します。
 .sp
 
 Release ファイルの追加メタデータフィールドの値は、
@@ -170,13 +170,13 @@ Default
 Packages::Compress
 .RS 4
 
-Package インデックスファイルのデフォルトの圧縮方法を設定します。 少なくともひとつは '.' (圧縮なし), 'gzip', 'bzip2' が入る、 空白区切りの文字列です。 圧縮方法のデフォルトはすべて '. gzip' です。
+Package インデックスファイルのデフォルトの圧縮方法を設定します。 少なくともひとつは \'\.\' (圧縮なし), \'gzip\', \'bzip2\' が入る、 空白区切りの文字列です。 圧縮方法のデフォルトはすべて \'\. gzip\' です。
 .RE
 .PP
 Packages::Extensions
 .RS 4
 
-パッケージファイル拡張子のデフォルト値を列挙します。 このデフォルト値は '.deb' です。
+パッケージファイル拡張子のデフォルト値を列挙します。 このデフォルト値は \'\.deb\' です。
 .RE
 .PP
 Sources::Compress
@@ -190,7 +190,7 @@ Packages::Compress
 Sources::Extensions
 .RS 4
 
-ソースファイル拡張子のデフォルト値を列挙します。 このデフォルト値は '.dsc' です。
+ソースファイル拡張子のデフォルト値を列挙します。 このデフォルト値は \'\.dsc\' です。
 .RE
 .PP
 Contents::Compress
@@ -230,13 +230,13 @@ MaxContentsChange
 ContentsAge
 .RS 4
 
-変更がない contents ファイルをチェックする日数を指定します。 この制限を越えた contents ファイルの mtime を、更新します。 パッケージファイルが変更されても、 [例えば上書き編集で] contents ファイルが更新されないような場合、 こういったことが発生します。 新しい .deb ファイルをインストールしたい場合、保留を解除でき、 少なくとも新しいファイルが必要です。 デフォルトは 10 で、単位は日です。
+変更がない contents ファイルをチェックする日数を指定します。 この制限を越えた contents ファイルの mtime を、更新します。 パッケージファイルが変更されても、 [例えば上書き編集で] contents ファイルが更新されないような場合、 こういったことが発生します。 新しい \.deb ファイルをインストールしたい場合、保留を解除でき、 少なくとも新しいファイルが必要です。 デフォルトは 10 で、単位は日です。
 .RE
 .PP
 Directory
 .RS 4
 
-\&.deb ディレクトリツリーの先頭を設定します。デフォルトは
+\.deb ディレクトリツリーの先頭を設定します。デフォルトは
 \fI$(DIST)/$(SECTION)/binary\-$(ARCH)/\fR
 です。
 .RE
@@ -348,7 +348,7 @@ distribution 以下に現れるセクションを、空白区切りで指定したリストです。 通常、ma
 Architectures
 .RS 4
 
-search セクション以下に現れるアーキテクチャを、 空白区切りで指定したリストです。 特殊アーキテクチャ 'source' は、 ソースアーカイブのツリーであることを示します。
+search セクション以下に現れるアーキテクチャを、 空白区切りで指定したリストです。 特殊アーキテクチャ \'source\' は、 ソースアーカイブのツリーであることを示します。
 .RE
 .PP
 BinOverride
@@ -451,7 +451,7 @@ FileList, SourceFileList
 .SH "バイナリオーバーライドファイル"
 .PP
 バイナリオーバーライドファイルは、
-\fBdpkg\-scanpackages\fR(8)
+\fBdpkg-scanpackages\fR(8)
 と完全に互換性があります。 ここには、空白区切りでフィールドが 4 個あります。 先頭のフィールドはパッケージ名、 2 番目のフィールドはパッケージに強制する優先度、 3 番目のフィールドはパッケージに強制するセクション、 最後のフィールドはメンテナ順列フィールドです。
 .PP
 メンテナフィールドは一般的には、
@@ -475,7 +475,7 @@ new
 .PP
 
 ソースオーバーライドファイルは、
-\fBdpkg\-scansources\fR(8)
+\fBdpkg-scansources\fR(8)
 と完全に互換性があります。 ここには、空白区切りでフィールドが 2 個あります。 先頭のフィールドはソースパッケージ名、 2 番目のフィールドは割り当てるセクションです。
 .SH "特別オーバーライドファイル"
 .PP
@@ -569,11 +569,11 @@ APT::FTPArchive::ReadOnlyDB
 .RE
 .SH "サンプル"
 .PP
-バイナリパッケージ (.deb) があるディレクトリの Packages ファイルを生成するには、以下のようにします。
+バイナリパッケージ (\.deb) があるディレクトリの Packages ファイルを生成するには、以下のようにします。
 .sp
 .RS 4
 .nf
-\fBapt\-ftparchive\fR packages \fIdirectory\fR | \fBgzip\fR > \fIPackages.gz\fR
+\fBapt\-ftparchive\fR packages \fIdirectory\fR | \fBgzip\fR > \fIPackages\.gz\fR
 .fi
 .RE
 .SH "関連項目"
@@ -586,16 +586,16 @@ APT::FTPArchive::ReadOnlyDB
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian.or.jp>
+<nabetaro@debian\.or\.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian.or.jp>
+<debian\-doc@debian\.or\.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
@@ -607,7 +607,7 @@ Author.
 .sp -1n
 .IP "" 4
 Author.
-.SH "REFERENCES"
+.SH "NOTES"
 .IP " 1." 4
 APT バグページ
 .RS 4

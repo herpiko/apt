@@ -146,7 +146,16 @@ bool debReleaseIndex::GetIndexes(pkgAcquire *Owner, bool GetAll) const
 	 new pkgAcqIndex(Owner, (*Target)->URI, (*Target)->Description,
 			 (*Target)->ShortDesc, HashString());
       }
+      // this is normally created in pkgAcqMetaSig, but if we run
+      // in --print-uris mode, we add it here
+      new pkgAcqMetaIndex(Owner, MetaIndexURI("Release"),
+		     MetaIndexInfo("Release"), "Release",
+		     MetaIndexURI("Release.gpg"), 
+		     ComputeIndexTargets(),
+		     new indexRecords (Dist));
+
    }
+
    new pkgAcqMetaSig(Owner, MetaIndexURI("Release.gpg"),
 		     MetaIndexInfo("Release.gpg"), "Release.gpg",
 		     MetaIndexURI("Release"), MetaIndexInfo("Release"), "Release",
@@ -224,7 +233,7 @@ class debSLTypeDebian : public pkgSourceList::Type
 	 // This check insures that there will be only one Release file
 	 // queued for all the Packages files and Sources files it
 	 // corresponds to.
-	 if (strcmp((*I)->GetType(), "deb") == 0)
+		if (strcmp((*I)->GetType(), "deb") == 0)
 	 {
 	    debReleaseIndex *Deb = (debReleaseIndex *) (*I);
 	    // This check insures that there will be only one Release file

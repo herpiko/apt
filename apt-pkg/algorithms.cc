@@ -19,7 +19,7 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/version.h>
 #include <apt-pkg/sptr.h>
-
+#include <apt-pkg/acquire-item.h>
     
 #include <apti18n.h>
 #include <sys/types.h>
@@ -985,17 +985,17 @@ bool pkgProblemResolver::Resolve(bool BrokenFix)
 
 		  if (Start->Type == pkgCache::Dep::DpkgBreaks)
 		  {
-		     /* Would it help if we upgraded? */
-		     if (Cache[End] & pkgDepCache::DepGCVer) {
+		     // first, try upgradring the package, if that
+		     // does not help, the breaks goes onto the
+		     // kill list
+		     // FIXME: use DoUpgrade(Pkg) instead?
+		     if (Cache[End] & pkgDepCache::DepGCVer) 
+		     {
 			if (Debug)
 			   clog << "  Upgrading " << Pkg.Name() << " due to Breaks field in " << I.Name() << endl;
 			Cache.MarkInstall(Pkg, false, 0, false);
 			continue;
 		     }
-		     if (Debug)
-			clog << "  Will not break " << Pkg.Name() << " as stated in Breaks field in " << I.Name() <<endl;
-		     Cache.MarkKeep(I, false, false);
-		     continue;
 		  }
 
 		  // Skip adding to the kill list if it is protected
@@ -1066,6 +1066,7 @@ bool pkgProblemResolver::Resolve(bool BrokenFix)
 	       if ((Cache[J->Dep] & pkgDepCache::DepGNow) == 0)
 	       {
 		  if (J->Dep->Type == pkgCache::Dep::Conflicts || 
+		      J->Dep->Type == pkgCache::Dep::DpkgBreaks ||
 		      J->Dep->Type == pkgCache::Dep::Obsoletes)
 		  {
 		     if (Debug == true)
@@ -1107,8 +1108,7 @@ bool pkgProblemResolver::Resolve(bool BrokenFix)
       return _error->Error(_("Unable to correct problems, you have held broken packages."));
    }
    
-   // set the auto-flags (mvo: I'm not sure if we _really_ need this, but
-   // I didn't managed 
+   // set the auto-flags (mvo: I'm not sure if we _really_ need this)
    pkgCache::PkgIterator I = Cache.PkgBegin();
    for (;I.end() != true; I++) {
       if (Cache[I].NewInstall() && !(Flags[I->ID] & PreInstalled)) {
@@ -1261,8 +1261,8 @@ void pkgProblemResolver::InstallProtect()
 	    Cache.MarkDelete(I);
 	 else 
 	 {
-	    // preserver the information if the package was auto
-	    // or manual installed
+	    // preserve the information whether the package was auto
+	    // or manually installed
 	    bool autoInst = (Cache[I].Flags & pkgCache::Flag::Auto);
 	    Cache.MarkInstall(I, false, 0, !autoInst);
 	 }
@@ -1302,3 +1302,81 @@ void pkgPrioSortList(pkgCache &Cache,pkgCache::Version **List)
 }
 									/*}}}*/
 
+// CacheFile::ListUpdate - update the cache files                    	/*{{{*/
+// ---------------------------------------------------------------------
+/* This is a simple wrapper to update the cache. it will fetch stuff
+ * from the network (or any other sources defined in sources.list)
+ */
+bool ListUpdate(pkgAcquireStatus &Stat, 
+		pkgSourceList &List, 
+		int PulseInterval)
+{
+   pkgAcquire::RunResult res;
+   pkgAcquire Fetcher(&Stat);
+
+   // Populate it with the source selection
+   if (List.GetIndexes(&Fetcher) == false)
+	 return false;
+
+   // Run scripts
+   RunScripts("APT::Update::Pre-Invoke");
+   
+   // check arguments
+   if(PulseInterval>0)
+      res = Fetcher.Run(PulseInterval);
+   else
+      res = Fetcher.Run();
+
+   if (res == pkgAcquire::Failed)
+      return false;
+
+   bool Failed = false;
+   bool TransientNetworkFailure = false;
+   for (pkgAcquire::ItemIterator I = Fetcher.ItemsBegin(); 
+	I != Fetcher.ItemsEnd(); I++)
+   {
+      if ((*I)->Status == pkgAcquire::Item::StatDone)
+	 continue;
+
+      (*I)->Finished();
+
+      _error->Warning(_("Failed to fetch %s  %s\n"),(*I)->DescURI().c_str(),
+	      (*I)->ErrorText.c_str());
+
+      if ((*I)->Status == pkgAcquire::Item::StatTransientNetworkError) 
+      {
+	 TransientNetworkFailure = true;
+	 continue;
+      }
+
+      Failed = true;
+   }
+   
+   // Clean out any old list files
+   // Keep "APT::Get::List-Cleanup" name for compatibility, but
+   // this is really a global option for the APT library now
+   if (!TransientNetworkFailure && !Failed &&
+       (_config->FindB("APT::Get::List-Cleanup",true) == true &&
+	_config->FindB("APT::List-Cleanup",true) == true))
+   {
+      if (Fetcher.Clean(_config->FindDir("Dir::State::lists")) == false ||
+	  Fetcher.Clean(_config->FindDir("Dir::State::lists") + "partial/") == false)
+	 // something went wrong with the clean
+	 return false;
+   }
+   
+   if (TransientNetworkFailure == true)
+      _error->Warning(_("Some index files failed to download, they have been ignored, or old ones used instead."));
+   else if (Failed == true)
+      return _error->Error(_("Some index files failed to download, they have been ignored, or old ones used instead."));
+
+
+   // Run the success scripts if all was fine
+   if(!TransientNetworkFailure && !Failed)
+      RunScripts("APT::Update::Post-Invoke-Success");
+
+   // Run the other scripts
+   RunScripts("APT::Update::Post-Invoke");
+   return true;
+}
+									/*}}}*/

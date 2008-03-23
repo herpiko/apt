@@ -1,20 +1,20 @@
 .\"     Title: apt.conf
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
 .\"    Manual: 
 .\"    Source: Linux
 .\"
-.TH "APT.CONF" "5" "29 February 2004" "Linux" ""
+.TH "APT\.CONF" "5" "29 February 2004" "Linux" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt.conf \- APT 設定ファイル
+apt.conf - APT 設定ファイル
 .SH "説明"
 .PP
-\fIapt.conf\fR
+\fIapt\.conf\fR
 は、 APT ツール集のメイン設定ファイルです。 この設定ファイルと共通のコマンドラインパーサを使って、 すべてのツールを統一環境で使用できます。 APT ツールの起動時には、\fBAPT_CONFIG\fR
 環境変数に指定した設定を (存在すれば) 読み込みます。 次に
 Dir::Etc::Parts
@@ -59,8 +59,8 @@ DPkg::Pre\-Install\-Pkgs {"/usr/sbin/dpkg\-preconfigure \-\-apt";};
 .fi
 .RE
 .PP
-\fI/usr/share/doc/apt/examples/apt.conf\fR
-\fI/usr/share/doc/apt/examples/configure\-index.gz\fR
+\fI/usr/share/doc/apt/examples/apt\.conf\fR
+\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
 は一般的な設定ファイルのサンプルです。 どのように設定するか参考になるでしょう。
 .PP
 #include
@@ -118,27 +118,27 @@ Build\-Essential
 Get
 .RS 4
 サブセクション Get は
-\fBapt\-get\fR(8)
+\fBapt-get\fR(8)
 ツールを制御します。 このオプションの詳細は
-\fBapt\-get\fR(8)
+\fBapt-get\fR(8)
 の文書を参照してください。
 .RE
 .PP
 Cache
 .RS 4
 サブセクション Cache は
-\fBapt\-cache\fR(8)
+\fBapt-cache\fR(8)
 ツールを制御します。 このオプションの詳細は
-\fBapt\-cache\fR(8)
+\fBapt-cache\fR(8)
 の文書を参照してください。
 .RE
 .PP
 CDROM
 .RS 4
 サブセクション CDROM は
-\fBapt\-cdrom\fR(8)
+\fBapt-cdrom\fR(8)
 ツールを制御します。 このオプションの詳細は
-\fBapt\-cdrom\fR(8)
+\fBapt-cdrom\fR(8)
 の文書を参照してください。
 .RE
 .SH "ACQUIRE グループ"
@@ -183,17 +183,17 @@ DIRECT
 \fBhttp_proxy\fR
 で上書きされます。
 .sp
-HTTP/1.1 準拠のプロキシキャッシュの制御について、 3 種類の設定があります。No\-Cache
+HTTP/1\.1 準拠のプロキシキャッシュの制御について、 3 種類の設定があります。No\-Cache
 はプロキシに対して、 いかなる時もキャッシュを使用しないと伝えます。
 Max\-Age
 は、インデックスファイル用のときだけ送信し、 得られた時間よりも古かった場合に、 オブジェクトをリフレッシュするようキャッシュに指示します。 デフォルトでは 1 日となっているため、 Debian は日毎にそのインデックスファイルを更新します。
 No\-Store
-は、キャッシュがこのリクエストを格納せず、 アーカイブファイルのみ設定するよう指定します。 これは、非常に大きな .deb ファイルでプロキシキャッシュが汚れるのを、 防ぐのに便利かもしれません。 注) Squid 2.0.2 では、これらのオプションをサポートしていません。
+は、キャッシュがこのリクエストを格納せず、 アーカイブファイルのみ設定するよう指定します。 これは、非常に大きな \.deb ファイルでプロキシキャッシュが汚れるのを、 防ぐのに便利かもしれません。 注) Squid 2\.0\.2 では、これらのオプションをサポートしていません。
 .sp
 timeout
 オプションは、 この方法でのタイムアウトまでの時間を設定します。 これには、接続のタイムアウトとデータのタイムアウトが含まれています。
 .sp
-リモートサーバが RFC 準拠でなかったり、 (Squid 2.0.2 のように) バグがあったりしたときのために、 パイプラインの深さの制御を設定します。
+リモートサーバが RFC 準拠でなかったり、 (Squid 2\.0\.2 のように) バグがあったりしたときのために、 パイプラインの深さの制御を設定します。
 Acquire::http::Pipeline\-Depth
 により、 APT が送信できるリクエストの回数を 0 から 5 の値で設定できます。 リモートサーバが適切でなく、TCP 接続に時間がかかるときは、
 \fI必ず\fR
@@ -209,7 +209,7 @@ ftp://[[user][:pass]@]host[:port]/
 で上書きされます。 ftp プロキシを使用するには、設定ファイルに
 ftp::ProxyLogin
 スクリプトを設定する必要があります。 プロキシサーバに送信する接続コマンドを、このエントリに設定します。 どのようにするのかは
-\fI/usr/share/doc/apt/examples/configure\-index.gz\fR
+\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
 の例を参照してください。 その他にも、$(PROXY_USER)
 $(PROXY_PASS)
 $(SITE_USER)
@@ -272,7 +272,7 @@ Dir::State
 には、
 \fI/\fR
 や
-\fI./\fR
+\fI\./\fR
 で始まらない 全サブアイテムに付加する、デフォルトディレクトリを含んでいます。
 .PP
 Dir::Cache
@@ -325,14 +325,14 @@ Clean
 options
 .RS 4
 この変数の内容は、 install 時のコマンドラインオプションと同様に
-\fBapt\-get\fR(8)
+\fBapt-get\fR(8)
 に渡されます。
 .RE
 .PP
 Updateoptions
 .RS 4
 この変数の内容は、 update 時のコマンドラインオプションと同様に
-\fBapt\-get\fR(8)
+\fBapt-get\fR(8)
 に渡されます。
 .RE
 .PP
@@ -374,7 +374,7 @@ Pre\-Install\-Pkgs
 options
 のようにリスト記法で指定しなければなりません。 コマンドは
 \fI/bin/sh\fR
-を通して呼び出され、 何か問題があれば、APT は異常終了します。 APT はインストールしようとする全 .deb ファイルのファイル名を、 ひとつずつコマンドの標準入力に送ります。
+を通して呼び出され、 何か問題があれば、APT は異常終了します。 APT はインストールしようとする全 \.deb ファイルのファイル名を、 ひとつずつコマンドの標準入力に送ります。
 .sp
 このプロトコルのバージョン 2 では、(プロトコルのバージョンや APT 設定スペース、パッケージを含む) 詳細情報やファイル、 変更されているバージョンを出力します。
 DPkg::Tools::options::cmd::Version
@@ -395,7 +395,7 @@ APT は dpkg を呼び出す前にこのディレクトリに移動します。 デフォルトは
 Build\-options
 .RS 4
 これらのオプションは、 パッケージのコンパイル時に
-\fBdpkg\-buildpackage\fR(1)
+\fBdpkg-buildpackage\fR(1)
 に渡されます。 デフォルトでは、署名を無効にし、全バイナリを生成します。
 .RE
 .SH "デバッグオプション"
@@ -412,29 +412,29 @@ Debug::Acquire::gpgv
 gpgv 法のデバッグです。
 .SH "例"
 .PP
-\fI/usr/share/doc/apt/examples/configure\-index.gz\fR
+\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
 に、全利用可能オプションのデフォルト値を参照できる、 設定ファイルのサンプルがあります。
 .SH "ファイル"
 .PP
-\fI/etc/apt/apt.conf\fR
+\fI/etc/apt/apt\.conf\fR
 .SH "関連項目"
 .PP
-\fBapt\-cache\fR(8),
-\fBapt\-config\fR(8),
-\fBapt_preferences\fR(5).
+\fBapt-cache\fR(8),
+\fBapt-config\fR(8),
+\fBapt_preferences\fR(5)\.
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian.or.jp>
+<nabetaro@debian\.or\.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian.or.jp>
+<debian\-doc@debian\.or\.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
@@ -446,7 +446,7 @@ Author.
 .sp -1n
 .IP "" 4
 Author.
-.SH "REFERENCES"
+.SH "NOTES"
 .IP " 1." 4
 APT バグページ
 .RS 4

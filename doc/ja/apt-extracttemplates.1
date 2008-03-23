@@ -1,17 +1,17 @@
 .\"     Title: apt-extracttemplates
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
 .\"    Manual: 
 .\"    Source: Linux
 .\"
-.TH "APT\-EXTRACTTEMPLATES" "1" "29 February 2004" "Linux" ""
+.TH "APT\-EXTRACTTEMPLATE" "1" "29 February 2004" "Linux" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt\-extracttemplates \- Debian ¥Ñ¥Ã¥±¡¼¥¸¤«¤é DebConf ÀßÄê¤È¥Æ¥ó¥×¥ì¡¼¥È¤òÃê½Ð¤¹¤ë¥æ¡¼¥Æ¥£¥ê¥Æ¥£
+apt-extracttemplates - Debian ¥Ñ¥Ã¥±¡¼¥¸¤«¤é DebConf ÀßÄê¤È¥Æ¥ó¥×¥ì¡¼¥È¤òÃê½Ð¤¹¤ë¥æ¡¼¥Æ¥£¥ê¥Æ¥£
 .SH "SYNOPSIS"
 .HP 21
 \fBapt\-extracttemplates\fR [\fB\-hv\fR] [\fB\-t=\fR\fB\fItemporary\ directory\fR\fR] \fIfile\fR...
@@ -22,9 +22,9 @@ apt\-extracttemplates \- Debian ¥Ñ¥Ã¥±¡¼¥¸¤«¤é DebConf ÀßÄê¤È¥Æ¥ó¥×¥ì¡¼¥È¤òÃê½Ð¤
 .PP
 package version template\-file config\-script
 .PP
-¥Æ¥ó¥×¥ì¡¼¥È¥Õ¥¡¥¤¥ë¤ä¡¢ÀßÄê¥¹¥¯¥ê¥×¥È¤Ï¡¢ \-t ¤ä \-\-tempdir ¤Ç»ØÄê¤·¤¿°ì»þ¥Ç¥£¥ì¥¯¥È¥ê (APT::ExtractTemplates::TempDir) ¤Ë½ñ¤­½Ð¤µ¤ì¡¢ ¥Õ¥¡¥¤¥ëÌ¾¤Ï¡¢\fIpackage.template.XXXX\fR
+¥Æ¥ó¥×¥ì¡¼¥È¥Õ¥¡¥¤¥ë¤ä¡¢ÀßÄê¥¹¥¯¥ê¥×¥È¤Ï¡¢ \-t ¤ä \-\-tempdir ¤Ç»ØÄê¤·¤¿°ì»þ¥Ç¥£¥ì¥¯¥È¥ê (APT::ExtractTemplates::TempDir) ¤Ë½ñ¤­½Ð¤µ¤ì¡¢ ¥Õ¥¡¥¤¥ëÌ¾¤Ï¡¢\fIpackage\.template\.XXXX\fR
 ¤ä
-\fIpackage.config.XXXX\fR
+\fIpackage\.config\.XXXX\fR
 ¤È¸À¤Ã¤¿·Á¤Ë¤Ê¤ê¤Þ¤¹¡£
 .SH "¥ª¥×¥·¥ç¥ó"
 .PP
@@ -72,16 +72,16 @@ APT::ExtractTemplates::TempDir
 .SH "¥Ð¥°"
 .PP
 \fIAPT ¥Ð¥°¥Ú¡¼¥¸\fR\&[1]¤ò ¤´Í÷¤¯¤À¤µ¤¤¡£ APT ¤Î¥Ð¥°¤òÊó¹ð¤¹¤ë¾ì¹ç¤Ï¡¢
-\fI/usr/share/doc/debian/bug\-reporting.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
 ¤ä
 \fBreportbug\fR(1)
 ¥³¥Þ¥ó¥É¤ò¤´Í÷¤¯¤À¤µ¤¤¡£
 .SH "Ìõ¼Ô"
 .PP
 ÁÒß· Ë¾
-<nabetaro@debian.or.jp>
+<nabetaro@debian\.or\.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian.or.jp>
+<debian\-doc@debian\.or\.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
@@ -93,7 +93,7 @@ Author.
 .sp -1n
 .IP "" 4
 Author.
-.SH "REFERENCES"
+.SH "NOTES"
 .IP " 1." 4
 APT ¥Ð¥°¥Ú¡¼¥¸
 .RS 4

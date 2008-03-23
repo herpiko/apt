@@ -1,0 +1,82 @@
+.\"     Title: apt-mark
+.\"    Author: APT team
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\"      Date: 2 November 2007
+.\"    Manual: 
+.\"    Source: Linux
+.\"
+.TH "APT\-MARK" "8" "2 November 2007" "Linux" ""
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.SH "NAME"
+apt-mark - Utility to sort package index files
+.SH "SYNOPSIS"
+.HP 9
+\fBapt\-mark\fR [\fB\-hv\fR] [\fB\-f=\fR\fB\fIFILENAME\fR\fR] {[markauto] | [unmarkauto]} \fIpackage\fR...
+.SH "DESCRIPTION"
+.PP
+\fBapt\-mark\fR
+will change whether a package has been marked as being automatically installed\.
+.PP
+When you request that a package is installed, and as a result other packages are installed to satisfy its dependencies, the depedencies are marked as being automatically installed\. Once these automatically installed packages are no longer depended on by any manually installed packages, they will be removed\.
+.PP
+markauto
+.RS 4
+markauto
+is used to mark a package as being automatically installed, which will cause the package to be removed when no more manually installed packages depend on this package\.
+.RE
+.PP
+unmarkauto
+.RS 4
+unmarkauto
+is used to mark a package as being manually installed, which will prevent the package from being automatically removed if no other packages depend on it\.
+.RE
+.SH "OPTIONS"
+.PP
+\fB\-f=\fR\fB\fIFILENAME\fR\fR, \fB\-\-file=\fR\fB\fIFILENAME\fR\fR
+.RS 4
+Read/Write package stats from
+\fIFILENAME\fR
+instead of the default location, which is
+\fIextended_status\fR
+in the directory defined by the Configuration Item:
+Dir::State\.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Show a short usage summary\.
+.RE
+.PP
+\fB\-v\fR, \fB\-\-version\fR
+.RS 4
+Show the program version\.
+.RE
+.SH "SEE ALSO"
+.PP
+\fBapt.conf\fR(5)
+.SH "DIAGNOSTICS"
+.PP
+\fBapt\-mark\fR
+returns zero on normal operation, non\-zero on error\.
+.SH "BUGS"
+.PP
+\fIAPT bug page\fR\&[1]\. If you wish to report a bug in APT, please see
+\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+or the
+\fBreportbug\fR(1)
+command\.
+.SH "AUTHOR"
+.PP
+\fBAPT team\fR
+.sp -1n
+.IP "" 4
+Author.
+.SH "NOTES"
+.IP " 1." 4
+APT bug page
+.RS 4
+\%http://bugs.debian.org/src:apt
+.RE

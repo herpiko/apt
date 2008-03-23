@@ -1,6 +1,6 @@
 .\"     Title: apt-cache
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.72.0 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
 .\"    Manual: 
 .\"    Source: Linux
@@ -11,7 +11,7 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt\-cache \- APT パッケージ操作ユーティリティ \-\- キャッシュ操作
+apt-cache - APT パッケージ操作ユーティリティ -- キャッシュ操作
 .SH "SYNOPSIS"
 .HP 10
 \fBapt\-cache\fR [\fB\-hvsn\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[add\ \fIfile\fR...] | [gencaches] | [showpkg\ \fIpkg\fR...] | [showsrc\ \fIpkg\fR...] | [stats] | [dump] | [dumpavail] | [unmet] | [search\ \fIregex\fR] | [show\ \fIpkg\fR...] | [depends\ \fIpkg\fR...] | [rdepends\ \fIpkg\fR...] | [pkgnames\ \fIprefix\fR] | [dotty\ \fIpkg\fR...] | [policy\ \fIpkgs\fR...] | [madison\ \fIpkgs\fR...]}
@@ -54,18 +54,18 @@ showpkg
 .RS 4
 .nf
 Package: libreadline2
-Versions: 2.1\-12(/var/state/apt/lists/foo_Packages),
+Versions: 2\.1\-12(/var/state/apt/lists/foo_Packages),
 Reverse Depends: 
   libreadlineg2,libreadline2
   libreadline2\-altdev,libreadline2
 Dependencies:
-2.1\-12 \- libc5 (2 5.4.0\-0) ncurses3.0 (0 (null))
+2\.1\-12 \- libc5 (2 5\.4\.0\-0) ncurses3\.0 (0 (null))
 Provides:
-2.1\-12 \- 
+2\.1\-12 \- 
 Reverse Provides: 
 .fi
 .RE
-つまり、libreadline2 の version 2.1\-12 は、 libc5 と ncurses3.0 に依存していて、libreadline2 が動作するには、 これらをインストールする必要があるということが判ります。 一方、libreadlineg2 と libreadline2\-altdev は libreadline2 に依存しています。 libreadline2 をインストールするためには、libc5, ncurses3.0, ldso を すべてインストールしなければなりませんが、libreadlineg2 と libreadline2\-altdev はインストールする必要はありません。 出力の残りの部分の意味については、 apt のソースコードを調べるのが最良でしょう。
+つまり、libreadline2 の version 2\.1\-12 は、 libc5 と ncurses3\.0 に依存していて、libreadline2 が動作するには、 これらをインストールする必要があるということが判ります。 一方、libreadlineg2 と libreadline2\-altdev は libreadline2 に依存しています。 libreadline2 をインストールするためには、libc5, ncurses3\.0, ldso を すべてインストールしなければなりませんが、libreadlineg2 と libreadline2\-altdev はインストールする必要はありません。 出力の残りの部分の意味については、 apt のソースコードを調べるのが最良でしょう。
 .RE
 .PP
 stats
@@ -143,7 +143,7 @@ show
 と同様の機能を実行します。 これは、指定したパッケージのパッケージレコードの表示です。
 .RE
 .PP
-search \fIregex [ regex ... ]\fR
+search \fIregex [ regex \.\.\. ]\fR
 .RS 4
 search
 は、与えられた正規表現によって、 すべての利用可能なパッケージに対して全文検索を行います。 パッケージ名と説明に対して検索を行い、 パッケージ名と短い説明文を表示します。
@@ -323,7 +323,7 @@ APT::Cache::Installed
 .RE
 .SH "ファイル"
 .PP
-\fI/etc/apt/sources.list\fR
+\fI/etc/apt/sources\.list\fR
 .RS 4
 パッケージの取得元。 設定項目 \-
 Dir::Etc::SourceList
@@ -346,7 +346,7 @@ Dir::State::Lists
 .PP
 \fBapt.conf\fR(5),
 \fBsources.list\fR(5),
-\fBapt\-get\fR(8)
+\fBapt-get\fR(8)
 .SH "診断メッセージ"
 .PP
 \fBapt\-cache\fR
@@ -354,16 +354,16 @@ Dir::State::Lists
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[2]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian.or.jp>
+<nabetaro@debian\.or\.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian.or.jp>
+<debian\-doc@debian\.or\.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
@@ -375,7 +375,7 @@ Author.
 .sp -1n
 .IP "" 4
 Author.
-.SH "REFERENCES"
+.SH "NOTES"
 .IP " 1." 4
 GraphViz
 .RS 4

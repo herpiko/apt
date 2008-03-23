@@ -23,6 +23,8 @@ class pkgDPkgPM : public pkgPackageManager
 {
    private:
 
+   bool stdin_is_dev_null;
+
    // the buffer we use for the dpkg status-fd reading
    char dpkgbuf[1024];
    int dpkgbuf_pos;
@@ -63,7 +65,6 @@ class pkgDPkgPM : public pkgPackageManager
    vector<Item> List;
 
    // Helpers
-   bool RunScripts(const char *Cnf);
    bool RunScriptsWithPkgs(const char *Cnf);
    bool SendV2Pkgs(FILE *F);
 

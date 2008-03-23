@@ -15,6 +15,7 @@
 #include <apt-pkg/pkgrecords.h>
 #include <apt-pkg/strutl.h>
 #include <apti18n.h>
+#include <apt-pkg/fileutl.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -45,8 +46,8 @@ using namespace std;
 // ---------------------------------------------------------------------
 /* */
 pkgDPkgPM::pkgDPkgPM(pkgDepCache *Cache) 
-   : pkgPackageManager(Cache), dpkgbuf_pos(0), PackagesDone(0), 
-     PackagesTotal(0), term_out(NULL)
+   : pkgPackageManager(Cache), dpkgbuf_pos(0),
+     term_out(NULL), PackagesDone(0), PackagesTotal(0)
 {
 }
 									/*}}}*/
@@ -96,68 +97,6 @@ bool pkgDPkgPM::Remove(PkgIterator Pkg,bool Purge)
    return true;
 }
 									/*}}}*/
-// DPkgPM::RunScripts - Run a set of scripts				/*{{{*/
-// ---------------------------------------------------------------------
-/* This looks for a list of script sto run from the configuration file,
-   each one is run with system from a forked child. */
-bool pkgDPkgPM::RunScripts(const char *Cnf)
-{
-   Configuration::Item const *Opts = _config->Tree(Cnf);
-   if (Opts == 0 || Opts->Child == 0)
-      return true;
-   Opts = Opts->Child;
-
-   // Fork for running the system calls
-   pid_t Child = ExecFork();
-   
-   // This is the child
-   if (Child == 0)
-   {
-      if (chdir("/tmp/") != 0)
-	 _exit(100);
-	 
-      unsigned int Count = 1;
-      for (; Opts != 0; Opts = Opts->Next, Count++)
-      {
-	 if (Opts->Value.empty() == true)
-	    continue;
-	 
-	 if (system(Opts->Value.c_str()) != 0)
-	    _exit(100+Count);
-      }
-      _exit(0);
-   }      
-
-   // Wait for the child
-   int Status = 0;
-   while (waitpid(Child,&Status,0) != Child)
-   {
-      if (errno == EINTR)
-	 continue;
-      return _error->Errno("waitpid","Couldn't wait for subprocess");
-   }
-
-   // Restore sig int/quit
-   signal(SIGQUIT,SIG_DFL);
-   signal(SIGINT,SIG_DFL);   
-
-   // Check for an error code.
-   if (WIFEXITED(Status) == 0 || WEXITSTATUS(Status) != 0)
-   {
-      unsigned int Count = WEXITSTATUS(Status);
-      if (Count > 100)
-      {
-	 Count -= 100;
-	 for (; Opts != 0 && Count != 1; Opts = Opts->Next, Count--);
-	 _error->Error("Problem executing scripts %s '%s'",Cnf,Opts->Value.c_str());
-      }
-      
-      return _error->Error("Sub-process returned an error code");
-   }
-   
-   return true;
-}
-                                                                        /*}}}*/
 // DPkgPM::SendV2Pkgs - Send version 2 package info			/*{{{*/
 // ---------------------------------------------------------------------
 /* This is part of the helper script communication interface, it sends
@@ -335,7 +274,6 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 
    return true;
 }
-
 									/*}}}*/
 // DPkgPM::DoStdin - Read stdin and pass to slave pty			/*{{{*/
 // ---------------------------------------------------------------------
@@ -343,9 +281,12 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 */
 void pkgDPkgPM::DoStdin(int master)
 {
-   char input_buf[256] = {0,}; 
-   int len = read(0, input_buf, sizeof(input_buf));
-   write(master, input_buf, len);
+   unsigned char input_buf[256] = {0,}; 
+   ssize_t len = read(0, input_buf, sizeof(input_buf));
+   if (len)
+      write(master, input_buf, len);
+   else
+      stdin_is_dev_null = true;
 }
 									/*}}}*/
 // DPkgPM::DoTerminalPty - Read the terminal pty and write log		/*{{{*/
@@ -355,9 +296,9 @@ void pkgDPkgPM::DoStdin(int master)
  */
 void pkgDPkgPM::DoTerminalPty(int master)
 {
-   char term_buf[1024] = {0,};
+   unsigned char term_buf[1024] = {0,0, };
 
-   int len=read(master, term_buf, sizeof(term_buf));
+   ssize_t len=read(master, term_buf, sizeof(term_buf));
    if(len == -1 && errno == EIO)
    {
       // this happens when the child is about to exit, we
@@ -546,6 +487,27 @@ bool pkgDPkgPM::CloseLog()
    return true;
 }
 
+/*{{{*/
+// This implements a racy version of pselect for those architectures
+// that don't have a working implementation.
+// FIXME: Probably can be removed on Lenny+1
+static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
+   fd_set *exceptfds, const struct timespec *timeout,
+   const sigset_t *sigmask)
+{
+   sigset_t origmask;
+   struct timeval tv;
+   int retval;
+
+   tv.tv_sec = timeout->tv_sec;
+   tv.tv_usec = timeout->tv_nsec/1000;
+
+   sigprocmask(SIG_SETMASK, sigmask, &origmask);
+   retval = select(nfds, readfds, writefds, exceptfds, &tv);
+   sigprocmask(SIG_SETMASK, &origmask, 0);
+   return retval;
+}
+/*}}}*/
 
 // DPkgPM::Go - Run the sequence					/*{{{*/
 // ---------------------------------------------------------------------
@@ -620,6 +582,8 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 PackagesTotal++;
       }
    }   
+
+   stdin_is_dev_null = false;
 
    // create log
    OpenLog();
@@ -740,14 +704,16 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       sighandler_t old_SIGINT = signal(SIGINT,SIG_IGN);
 
       struct	termios tt;
+      struct	termios tt_out;
       struct	winsize win;
       int	master;
       int	slave;
 
       // FIXME: setup sensible signal handling (*ick*)
       tcgetattr(0, &tt);
+      tcgetattr(1, &tt_out);
       ioctl(0, TIOCGWINSZ, (char *)&win);
-      if (openpty(&master, &slave, NULL, &tt, &win) < 0) 
+      if (openpty(&master, &slave, NULL, &tt_out, &win) < 0) 
       {
 	 const char *s = _("Can not write log, openpty() "
 			   "failed (/dev/pts not mounted?)\n");
@@ -804,7 +770,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
 	 /* No Job Control Stop Env is a magic dpkg var that prevents it
 	    from using sigstop */
-	 putenv("DPKG_NO_TSTP=yes");
+	 putenv((char *)"DPKG_NO_TSTP=yes");
 	 execvp(Args[0],(char **)Args);
 	 cerr << "Could not exec dpkg!" << endl;
 	 _exit(100);
@@ -847,10 +813,10 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    signal(SIGINT,old_SIGINT);
 	    return _error->Errno("waitpid","Couldn't wait for subprocess");
 	 }
-
 	 // wait for input or output here
 	 FD_ZERO(&rfds);
-	 FD_SET(0, &rfds); 
+	 if (!stdin_is_dev_null)
+	    FD_SET(0, &rfds); 
 	 FD_SET(_dpkgin, &rfds);
 	 if(master >= 0)
 	    FD_SET(master, &rfds);
@@ -858,6 +824,9 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 tv.tv_nsec = 0;
 	 select_ret = pselect(max(master, _dpkgin)+1, &rfds, NULL, NULL, 
 			      &tv, &original_sigmask);
+	 if (select_ret < 0 && (errno == EINVAL || errno == ENOSYS))
+	    select_ret = racy_pselect(max(master, _dpkgin)+1, &rfds, NULL,
+				      NULL, &tv, &original_sigmask);
 	 if (select_ret == 0) 
   	    continue;
   	 else if (select_ret < 0 && errno == EINTR)
@@ -939,9 +908,8 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    if (_config->FindB("Dpkg::ApportFailureReport",true) == false)
       return;
 
-   // only report the first error if we are in StopOnError=false mode
-   // to prevent bogus reports
-   if((_config->FindB("Dpkg::StopOnError",true) == false) && pkgFailures > 1)
+   // only report the first error
+   if(pkgFailures > _config->FindI("APT::Apport::MaxReports", 3))
       return;
 
    // get the pkgname and reportfile
