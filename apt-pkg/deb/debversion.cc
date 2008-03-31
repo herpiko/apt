@@ -194,10 +194,43 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    if (getenv ("BLANKON_UBUNTU_MODE"))
      return CmpFragment(dlhs,AEnd,drhs,BEnd);
      
+   int derivative = 0;
+   char *tmp;
+
+   tmp = strstr (drhs, "ubuntu");
+   if (tmp)
+   {
+     if (strstr (tmp, "-"))
+       derivative = 1;
+   }
+
    if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
-     return 1;
+   {
+     if (derivative)
+     // something-XblankonY vs -XubuntuY-something
+       return -1;
+     else
+     // something-XblankonY vs -XubuntuY
+       return 1;
+   }
+
+   derivative = 0;
+   tmp = strstr (dlhs, "ubuntu");
+   if (tmp)
+   {
+     if (strstr (tmp, "-"))
+       derivative = 1;
+   }
+
    if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
-     return -1;
+   {
+     // -XubuntuY-something vs something-XblankonY
+     if (derivative)
+       return 1;
+     else
+     // -XubuntuY vs something-XblankonY
+       return -1;
+   }
 
    return CmpFragment(dlhs,AEnd,drhs,BEnd);
 }
