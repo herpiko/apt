@@ -175,6 +175,11 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    for (;dlhs > lhs && *dlhs != '-'; dlhs--);
    for (;drhs > rhs && *drhs != '-'; drhs--);
 
+   if (strstr(dlhs, "blankon"))
+      for (dlhs--; dlhs > lhs && *dlhs != '-'; dlhs--);
+   if (strstr(drhs, "blankon"))
+      for (drhs--; drhs > rhs && *drhs != '-'; drhs--);
+
    if (dlhs == lhs)
       dlhs = AEnd;
    if (drhs == rhs)
@@ -190,48 +195,15 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
       dlhs++;
    if (drhs != rhs)
       drhs++;
-   
+
    if (getenv ("BLANKON_UBUNTU_MODE"))
-     return CmpFragment(dlhs,AEnd,drhs,BEnd);
+      return CmpFragment(dlhs,AEnd,drhs,BEnd);
      
-   int derivative = 0;
-   char *tmp;
-
-   tmp = strstr (drhs, "ubuntu");
-   if (tmp)
-   {
-     if (strstr (tmp, "-"))
-       derivative = 1;
-   }
-
    if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
-   {
-     if (derivative)
-     // something-XblankonY vs -XubuntuY-something
-       return -1;
-     else
-     // something-XblankonY vs -XubuntuY
-       return 1;
-   }
-
-   derivative = 0;
-   tmp = strstr (dlhs, "ubuntu");
-   if (tmp)
-   {
-     if (strstr (tmp, "-"))
-       derivative = 1;
-   }
-
+      return 1;
    if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
-   {
-     // -XubuntuY-something vs something-XblankonY
-     if (derivative)
-       return 1;
-     else
-     // -XubuntuY vs something-XblankonY
-       return -1;
-   }
-
+      return -1;
+   
    return CmpFragment(dlhs,AEnd,drhs,BEnd);
 }
 									/*}}}*/
