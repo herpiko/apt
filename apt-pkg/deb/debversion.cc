@@ -199,6 +199,8 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    if (getenv ("BLANKON_UBUNTU_MODE"))
       return CmpFragment(dlhs,AEnd,drhs,BEnd);
      
+   if (dlhs >= AEnd && drhs >= BEnd)
+      return 0;
    if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
       return 1;
    if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
