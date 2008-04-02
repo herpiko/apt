@@ -175,10 +175,13 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    for (;dlhs > lhs && *dlhs != '-'; dlhs--);
    for (;drhs > rhs && *drhs != '-'; drhs--);
 
-   if (strstr(dlhs, "blankon"))
-      for (dlhs--; dlhs > lhs && *dlhs != '-'; dlhs--);
-   if (strstr(drhs, "blankon"))
-      for (drhs--; drhs > rhs && *drhs != '-'; drhs--);
+   if (!getenv ("BLANKON_UBUNTU_MODE")) 
+   {
+      if (strstr(dlhs, "blankon"))
+         for (dlhs--; dlhs > lhs && *dlhs != '-'; dlhs--);
+      if (strstr(drhs, "blankon"))
+         for (drhs--; drhs > rhs && *drhs != '-'; drhs--);
+   }
 
    if (dlhs == lhs)
       dlhs = AEnd;
