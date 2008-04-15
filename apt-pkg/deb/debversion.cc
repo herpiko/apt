@@ -177,9 +177,9 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
 
    if (!getenv ("BLANKON_UBUNTU_MODE")) 
    {
-      if (strstr(dlhs, "blankon"))
+      if (dlhs < AEnd && strstr(dlhs, "blankon"))
          for (dlhs--; dlhs > lhs && *dlhs != '-'; dlhs--);
-      if (strstr(drhs, "blankon"))
+      if (drhs < BEnd && strstr(drhs, "blankon"))
          for (drhs--; drhs > rhs && *drhs != '-'; drhs--);
    }
 
@@ -204,6 +204,16 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
      
    if (dlhs >= AEnd && drhs >= BEnd)
       return 0;
+   if (dlhs >= AEnd)
+   {
+      if (*drhs == '~') return 1;
+      return -1;
+   }
+   if (drhs >= BEnd)
+   {
+      if (*dlhs == '~') return -1;
+      return 1;
+   }
    if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
       return 1;
    if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
