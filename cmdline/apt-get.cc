@@ -1374,8 +1374,9 @@ bool DoUpdate(CommandLine &CmdL)
 
    // do the work
    CacheFile Cache;
-   bool res = ListUpdate(Stat, List);
-     
+   if (_config->FindB("APT::Get::Download",true) == true)
+       ListUpdate(Stat, List);
+
    // Rebuild the cache.   
    if (Cache.BuildCaches() == false)
       return false;
@@ -2578,15 +2579,13 @@ bool DoBuildDep(CommandLine &CmdL)
 bool DoMoo(CommandLine &CmdL)
 {
    cout << 
-      "Tolong!                     .---.       \n"
-      "       \\               .---/-----\\---.\n"
-      "          (__)         ===============  \n"
-      "   /------(oo)             `-----'      \n"
-      "  / |   ||(__)                          \n"
-      " *  /\\--/\\                            \n"
-      "                                        \n"
-      "                                        \n"
-      "~~~~~~~~~~~~~~~~ hati-hati diculik UFO  \n";
+      "         (__) \n"
+      "         (oo) \n"
+      "   /------\\/ \n"
+      "  / |    ||   \n" 
+      " *  /\\---/\\ \n"
+      "    ~~   ~~   \n"
+      "....\"Have you mooed today?\"...\n";
 			    
    return true;
 }
@@ -2655,7 +2654,7 @@ bool ShowHelp(CommandLine &CmdL)
       "   upgrade - Perform an upgrade\n"
       "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
       "   remove - Remove packages\n"
-      "   autoremove - Remove all automatic unused packages\n"
+      "   autoremove - Remove automatically all unused packages\n"
       "   purge - Remove and purge packages\n"
       "   source - Download source archives\n"
       "   build-dep - Configure build-dependencies for source packages\n"

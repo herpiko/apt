@@ -47,7 +47,7 @@ using namespace std;
 /* */
 pkgDPkgPM::pkgDPkgPM(pkgDepCache *Cache) 
    : pkgPackageManager(Cache), dpkgbuf_pos(0),
-     term_out(NULL), PackagesDone(0), PackagesTotal(0)
+     term_out(NULL), PackagesDone(0), PackagesTotal(0), pkgFailures(0)
 {
 }
 									/*}}}*/
@@ -333,6 +333,12 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data 
       and conffile-prompt like this
       'status: conffile-prompt: conffile : 'current-conffile' 'new-conffile' useredited distedited
+      
+      Newer versions of dpkg sent also:
+      'processing: install: pkg'
+      'processing: configure: pkg'
+      'processing: remove: pkg'
+      'processing: trigproc: trigger'
 	    
    */
    char* list[5];
@@ -350,6 +356,34 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
    }
    char *pkg = list[1];
    char *action = _strstrip(list[2]);
+
+   // 'processing' from dpkg looks like
+   // 'processing: action: pkg'
+   if(strncmp(list[0], "processing", strlen("processing")) == 0)
+   {
+      char s[200];
+      map<string,string>::iterator iter;
+      char *pkg_or_trigger = _strstrip(list[2]);
+      action =_strstrip( list[1]);
+      iter = PackageProcessingOps.find(action);
+      if(iter == PackageProcessingOps.end())
+      {
+	 if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+	    std::clog << "ignoring unknwon action: " << action << std::endl;
+	 return;
+      }
+      snprintf(s, sizeof(s), _(iter->second.c_str()), pkg_or_trigger);
+
+      status << "pmstatus:" << pkg_or_trigger
+	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
+	     << ":" << s
+	     << endl;
+      if(OutStatusFd > 0)
+	 write(OutStatusFd, status.str().c_str(), status.str().size());
+      if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+	 std::clog << "send: '" << status.str() << "'" << endl;
+      return;
+   }
 
    if(strncmp(action,"error",strlen("error")) == 0)
    {
@@ -522,13 +556,14 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 {
    unsigned int MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);   
    unsigned int MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
+   bool NoTriggers = _config->FindB("DPkg::NoTriggers",false);
 
    if (RunScripts("DPkg::Pre-Invoke") == false)
       return false;
 
    if (RunScriptsWithPkgs("DPkg::Pre-Install-Pkgs") == false)
       return false;
-   
+
    // map the dpkg states to the operations that are performed
    // (this is sorted in the same way as Item::Ops)
    static const struct DpkgState DpkgStatesOpMap[][7] = {
@@ -568,6 +603,12 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       },
    };
 
+   // populate the "processing" map
+   PackageProcessingOps.insert( make_pair("install",N_("Installing %s")) );
+   PackageProcessingOps.insert( make_pair("configure",N_("Configuring %s")) );
+   PackageProcessingOps.insert( make_pair("remove",N_("Removing %s")) );
+   PackageProcessingOps.insert( make_pair("trigproc",N_("Running post-installation trigger %s")) );
+   
    // init the PackageOps map, go over the list of packages that
    // that will be [installed|configured|removed|purged] and add
    // them to the PackageOps map (the dpkg states it goes through)
@@ -651,6 +692,8 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 
 	 case Item::Configure:
 	 Args[n++] = "--configure";
+	 if (NoTriggers)
+	    Args[n++] = "--no-triggers";
 	 Size += strlen(Args[n-1]);
 	 break;
 	 
@@ -906,11 +949,17 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    FILE *report;
 
    if (_config->FindB("Dpkg::ApportFailureReport",true) == false)
+   {
+      std::clog << "configured to not write apport reports" << std::endl;
       return;
+   }
 
    // only report the first error
    if(pkgFailures > _config->FindI("APT::Apport::MaxReports", 3))
+   {
+      std::clog << _("No apport report written because MaxReports is reached already") << std::endl;
       return;
+   }
 
    // get the pkgname and reportfile
    pkgname = flNotDir(pkgpath);

@@ -255,6 +255,16 @@ Compile source packages after downloading them\. Configuration Item:
 APT::Get::Compile\.
 .RE
 .PP
+\fB\-\-install\-recommends\fR
+.RS 4
+Also install recommended packages\.
+.RE
+.PP
+\fB\-\-no\-install\-recommends\fR
+.RS 4
+Do not install recommended packages\.
+.RE
+.PP
 \fB\-\-ignore\-hold\fR
 .RS 4
 Ignore package Holds; This causes
@@ -383,7 +393,7 @@ APT::Get::Arch\-Only\.
 .PP
 \fB\-\-allow\-unauthenticated\fR
 .RS 4
-Ignore if packages can\'t be authenticated and don\'t prompt about it\. This is usefull for tools like pbuilder\. Configuration Item:
+Ignore if packages can\'t be authenticated and don\'t prompt about it\. This is useful for tools like pbuilder\. Configuration Item:
 APT::Get::AllowUnauthenticated\.
 .RE
 .PP
@@ -406,7 +416,7 @@ for syntax information\.
 .PP
 \fB\-o\fR, \fB\-\-option\fR
 .RS 4
-Set a Configuration Option; This will set an arbitary configuration option\. The syntax is
+Set a Configuration Option; This will set an arbitrary configuration option\. The syntax is
 \fB\-o Foo::Bar=bar\fR\.
 .RE
 .SH "FILES"
