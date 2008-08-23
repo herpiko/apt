@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-all\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 11:00+0200\n"
+"POT-Creation-Date: 2008-08-14 18:30+0200\n"
 "PO-Revision-Date: 2006-07-29 15:57+0300\n"
 "Last-Translator: Artem Bondarenko <artem.brz@gmail.com>\n"
 "Language-Team: Українська <uk@li.org>\n"
@@ -158,7 +158,7 @@ msgstr "       %4i %s\n"
 
 #: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2598 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s для %s %s скомпільовано %s %s\n"
@@ -1260,25 +1260,25 @@ msgstr ""
 "Не вдалося задовольнити залежність типу %s для пакунка %s: Встановлений "
 "пакунок %s новіше, аніж треба"
 
-#: cmdline/apt-get.cc:2553
+#: cmdline/apt-get.cc:2555
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Неможливо задовольнити залежність типу %s для пакунка %s: %s"
 
-#: cmdline/apt-get.cc:2567
+#: cmdline/apt-get.cc:2569
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Залежності для побудови %s не можуть бути задоволені."
 
-#: cmdline/apt-get.cc:2571
+#: cmdline/apt-get.cc:2573
 msgid "Failed to process build dependencies"
 msgstr "Обробка залежностей для побудови закінчилася невдало"
 
-#: cmdline/apt-get.cc:2603
+#: cmdline/apt-get.cc:2605
 msgid "Supported modules:"
 msgstr "Підтримувані модулі:"
 
-#: cmdline/apt-get.cc:2644
+#: cmdline/apt-get.cc:2646
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1904,7 +1904,7 @@ msgstr "Час з'єднання з сокетом даних вичерпавс
 msgid "Unable to accept connection"
 msgstr "Неможливо прийняти з'єднання"
 
-#: methods/ftp.cc:864 methods/http.cc:961 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Проблема хешування файла"
 
@@ -2103,15 +2103,20 @@ msgstr "Помилка читання з сервера. Віддалена ст
 msgid "Error reading from server"
 msgstr "Помилка читання з сервера"
 
-#: methods/http.cc:1106
+#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#, fuzzy
+msgid "Failed to truncate file"
+msgstr "Не вдалося записати файл %s"
+
+#: methods/http.cc:1107
 msgid "Bad header data"
 msgstr "Погана заголовкова інформація"
 
-#: methods/http.cc:1123 methods/http.cc:1178
+#: methods/http.cc:1124 methods/http.cc:1179
 msgid "Connection failed"
 msgstr "З'єднання не вдалося"
 
-#: methods/http.cc:1230
+#: methods/http.cc:1231
 msgid "Internal error"
 msgstr "Внутрішня помилка"
 
@@ -2123,6 +2128,10 @@ msgstr "Неможливо відобразити в пам'яті пустий 
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Неможливо відобразити в пам'яті %lu байт"
+
+#: apt-pkg/contrib/mmap.cc:213
+msgid "Dynamic MMap ran out of room"
+msgstr ""
 
 #: apt-pkg/contrib/strutl.cc:1014
 #, c-format
@@ -2242,13 +2251,14 @@ msgstr "Невірна дія %s"
 msgid "Unable to stat the mount point %s"
 msgstr "Неможливо прочитати атрибути точки монтування %s"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/acquire.cc:424 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
+#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Неможливо зробити зміни у %s"
 
-#: apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/contrib/cdromutl.cc:188
 msgid "Failed to stat the cdrom"
 msgstr "Не вдалося прочитати атрибути cdrom"
 
@@ -2542,12 +2552,12 @@ msgstr "Архівна тека %spartial відсутня."
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:827
+#: apt-pkg/acquire.cc:828
 #, fuzzy, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr "Завантажується файл %li з %li (%s залишилось)"
 
-#: apt-pkg/acquire.cc:829
+#: apt-pkg/acquire.cc:830
 #, fuzzy, c-format
 msgid "Retrieving file %li of %li"
 msgstr "Завантажується файл %li з %li"
@@ -2849,104 +2859,121 @@ msgstr "Записується новий перелік джерел\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Перелік джерел для цього диску:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:823
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Записано %i записів.\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:825
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Записано %i записів з %i відсутніми файлами.\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:828
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Записано %i записів з %i невідповідними файлам\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:831
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "Записано %i записів з %i відсутніми і %i невідповідними файлами\n"
 
-#: apt-pkg/deb/dpkgpm.cc:488
+#: apt-pkg/deb/dpkgpm.cc:497
 #, fuzzy, c-format
 msgid "Directory '%s' missing"
 msgstr "Lists тека %spartial відсутня."
 
-#: apt-pkg/deb/dpkgpm.cc:572
+#: apt-pkg/deb/dpkgpm.cc:581
 #, c-format
 msgid "Preparing %s"
 msgstr "Підготовка %s"
 
-#: apt-pkg/deb/dpkgpm.cc:573
+#: apt-pkg/deb/dpkgpm.cc:582
 #, c-format
 msgid "Unpacking %s"
 msgstr "Розпакування %s"
 
-#: apt-pkg/deb/dpkgpm.cc:578
+#: apt-pkg/deb/dpkgpm.cc:587
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Підготовка до конфігурації %s"
 
-#: apt-pkg/deb/dpkgpm.cc:579 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
 #, c-format
 msgid "Configuring %s"
 msgstr "Конфігурація %s"
 
-#: apt-pkg/deb/dpkgpm.cc:581 apt-pkg/deb/dpkgpm.cc:582
+#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
 #, fuzzy, c-format
 msgid "Processing triggers for %s"
 msgstr "Помилка обробки течи %s"
 
-#: apt-pkg/deb/dpkgpm.cc:584
+#: apt-pkg/deb/dpkgpm.cc:593
 #, c-format
 msgid "Installed %s"
 msgstr "Встановлено %s"
 
-#: apt-pkg/deb/dpkgpm.cc:589 apt-pkg/deb/dpkgpm.cc:591
-#: apt-pkg/deb/dpkgpm.cc:592
+#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:601
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Підготовка до видалення %s"
 
-#: apt-pkg/deb/dpkgpm.cc:594 apt-pkg/deb/dpkgpm.cc:609
+#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
 #, c-format
 msgid "Removing %s"
 msgstr "Видаляється %s"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:604
 #, c-format
 msgid "Removed %s"
 msgstr "Видалено %s"
 
-#: apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:609
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Підготовка до повного видалення %s"
 
-#: apt-pkg/deb/dpkgpm.cc:601
+#: apt-pkg/deb/dpkgpm.cc:610
 #, c-format
 msgid "Completely removed %s"
 msgstr "Повністю видалено %s"
 
 #. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:607
+#: apt-pkg/deb/dpkgpm.cc:616
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "Встановлено %s"
 
-#: apt-pkg/deb/dpkgpm.cc:610
+#: apt-pkg/deb/dpkgpm.cc:619
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:770
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:960
+#: apt-pkg/deb/dpkgpm.cc:969
 msgid "No apport report written because MaxReports is reached already"
+msgstr ""
+
+#. check if its not a follow up error
+#: apt-pkg/deb/dpkgpm.cc:974
+msgid "dependency problems - leaving unconfigured"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:976
+msgid ""
+"No apport report written because the error message indicates its a followup "
+"error from a previous failure."
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:982
+msgid ""
+"No apport report written because the error message indicates a disk full "
+"error"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

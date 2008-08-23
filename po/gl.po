@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 11:00+0200\n"
+"POT-Creation-Date: 2008-08-14 18:30+0200\n"
 "PO-Revision-Date: 2008-05-06 19:24+0100\n"
 "Last-Translator: Jacobo Tarrío <jtarrio@debian.org>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -157,7 +157,7 @@ msgstr "       %4i %s\n"
 
 #: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2598 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s para %s compilado o %s %s\n"
@@ -1250,25 +1250,25 @@ msgstr ""
 "Non se puido satisfacer a dependencia \"%s\" de %s: O paquete instalado %s é "
 "novo de máis"
 
-#: cmdline/apt-get.cc:2553
+#: cmdline/apt-get.cc:2555
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Non se puido satisfacer a dependencia \"%s\" de %s: %s"
 
-#: cmdline/apt-get.cc:2567
+#: cmdline/apt-get.cc:2569
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Non se puideron satisfacer as dependencias de compilación de %s."
 
-#: cmdline/apt-get.cc:2571
+#: cmdline/apt-get.cc:2573
 msgid "Failed to process build dependencies"
 msgstr "Non se puido procesar as dependencias de compilación"
 
-#: cmdline/apt-get.cc:2603
+#: cmdline/apt-get.cc:2605
 msgid "Supported modules:"
 msgstr "Módulos soportados:"
 
-#: cmdline/apt-get.cc:2644
+#: cmdline/apt-get.cc:2646
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1887,7 +1887,7 @@ msgstr "A conexión do socket de datos esgotou o tempo"
 msgid "Unable to accept connection"
 msgstr "Non se pode aceptar a conexión"
 
-#: methods/ftp.cc:864 methods/http.cc:961 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problema ao calcular o hash do ficheiro"
 
@@ -2086,15 +2086,20 @@ msgstr "Erro ao ler do servidor. O extremo remoto pechou a conexión"
 msgid "Error reading from server"
 msgstr "Erro ao ler do servidor"
 
-#: methods/http.cc:1106
+#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#, fuzzy
+msgid "Failed to truncate file"
+msgstr "Non se puido gravar o ficheiro %s"
+
+#: methods/http.cc:1107
 msgid "Bad header data"
 msgstr "Datos da cabeceira incorrectos"
 
-#: methods/http.cc:1123 methods/http.cc:1178
+#: methods/http.cc:1124 methods/http.cc:1179
 msgid "Connection failed"
 msgstr "A conexión fallou"
 
-#: methods/http.cc:1230
+#: methods/http.cc:1231
 msgid "Internal error"
 msgstr "Erro interno"
 
@@ -2106,6 +2111,10 @@ msgstr "Non se pode facer mmap sobre un ficheiro baleiro"
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Non se puido facer mmap de %lu bytes"
+
+#: apt-pkg/contrib/mmap.cc:213
+msgid "Dynamic MMap ran out of room"
+msgstr ""
 
 #: apt-pkg/contrib/strutl.cc:1014
 #, c-format
@@ -2224,13 +2233,14 @@ msgstr "Operación %s non válida"
 msgid "Unable to stat the mount point %s"
 msgstr "Non se pode analizar o punto de montaxe %s"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/acquire.cc:424 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
+#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Non se pode cambiar a %s"
 
-#: apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/contrib/cdromutl.cc:188
 msgid "Failed to stat the cdrom"
 msgstr "Non se puido analizar o CD-ROM"
 
@@ -2515,12 +2525,12 @@ msgstr "O directorio de arquivos %spartial falla."
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:827
+#: apt-pkg/acquire.cc:828
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr "A obter o ficheiro %li de %li (fallan %s)"
 
-#: apt-pkg/acquire.cc:829
+#: apt-pkg/acquire.cc:830
 #, c-format
 msgid "Retrieving file %li of %li"
 msgstr "A obter o ficheiro %li de %li"
@@ -2824,108 +2834,125 @@ msgstr "A gravar a nova lista de fontes\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "As entradas da lista de fontes deste disco son:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:823
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Graváronse %i rexistros.\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:825
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Graváronse %i rexistros con %i ficheiros que fallan.\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:828
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Graváronse %i rexistros con %i ficheiros que non coinciden\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:831
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
 "Graváronse %i rexistros con %i ficheiros que fallan e %i ficheiros que non "
 "coinciden\n"
 
-#: apt-pkg/deb/dpkgpm.cc:488
+#: apt-pkg/deb/dpkgpm.cc:497
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "O directorio \"%s\" falla"
 
-#: apt-pkg/deb/dpkgpm.cc:572
+#: apt-pkg/deb/dpkgpm.cc:581
 #, c-format
 msgid "Preparing %s"
 msgstr "A preparar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:573
+#: apt-pkg/deb/dpkgpm.cc:582
 #, c-format
 msgid "Unpacking %s"
 msgstr "A desempaquetar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:578
+#: apt-pkg/deb/dpkgpm.cc:587
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "A se preparar para configurar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:579 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
 #, c-format
 msgid "Configuring %s"
 msgstr "A configurar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:581 apt-pkg/deb/dpkgpm.cc:582
+#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
 #, c-format
 msgid "Processing triggers for %s"
 msgstr "A procesar os disparadores de %s"
 
-#: apt-pkg/deb/dpkgpm.cc:584
+#: apt-pkg/deb/dpkgpm.cc:593
 #, c-format
 msgid "Installed %s"
 msgstr "Instalouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:589 apt-pkg/deb/dpkgpm.cc:591
-#: apt-pkg/deb/dpkgpm.cc:592
+#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:601
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "A se preparar para a eliminación de %s"
 
-#: apt-pkg/deb/dpkgpm.cc:594 apt-pkg/deb/dpkgpm.cc:609
+#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
 #, c-format
 msgid "Removing %s"
 msgstr "A eliminar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:604
 #, c-format
 msgid "Removed %s"
 msgstr "Eliminouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:609
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "A se preparar para eliminar %s completamente"
 
-#: apt-pkg/deb/dpkgpm.cc:601
+#: apt-pkg/deb/dpkgpm.cc:610
 #, c-format
 msgid "Completely removed %s"
 msgstr "Eliminouse %s completamente"
 
 #. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:607
+#: apt-pkg/deb/dpkgpm.cc:616
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "Instalouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:610
+#: apt-pkg/deb/dpkgpm.cc:619
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:770
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 "Non se puido escribir no rexistro, a chamada a openpty() fallou (¿/dev/pts "
 "non estaba montado?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:960
+#: apt-pkg/deb/dpkgpm.cc:969
 msgid "No apport report written because MaxReports is reached already"
+msgstr ""
+
+#. check if its not a follow up error
+#: apt-pkg/deb/dpkgpm.cc:974
+msgid "dependency problems - leaving unconfigured"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:976
+msgid ""
+"No apport report written because the error message indicates its a followup "
+"error from a previous failure."
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:982
+msgid ""
+"No apport report written because the error message indicates a disk full "
+"error"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

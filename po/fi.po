@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.26\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 11:00+0200\n"
+"POT-Creation-Date: 2008-08-14 18:30+0200\n"
 "PO-Revision-Date: 2008-05-04 19:30+0300\n"
 "Last-Translator: Tapio Lehtonen <tale@debian.org>\n"
 "Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
@@ -158,7 +158,7 @@ msgstr "       %4i %s\n"
 
 #: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2598 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s laitealustalle %s käännöksen päiväys %s %s\n"
@@ -1240,25 +1240,25 @@ msgstr ""
 "Riippuvutta %s paketille %s ei voi tyydyttää: Asennettu paketti %s on liian "
 "uusi"
 
-#: cmdline/apt-get.cc:2553
+#: cmdline/apt-get.cc:2555
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Riippuvuutta %s paketille %s ei voi tyydyttää: %s"
 
-#: cmdline/apt-get.cc:2567
+#: cmdline/apt-get.cc:2569
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Paketointiriippuvuuksia paketille %s ei voi tyydyttää."
 
-#: cmdline/apt-get.cc:2571
+#: cmdline/apt-get.cc:2573
 msgid "Failed to process build dependencies"
 msgstr "Paketointiriippuvuuksien käsittely ei onnistunut"
 
-#: cmdline/apt-get.cc:2603
+#: cmdline/apt-get.cc:2605
 msgid "Supported modules:"
 msgstr "Tuetut moduulit:"
 
-#: cmdline/apt-get.cc:2644
+#: cmdline/apt-get.cc:2646
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1874,7 +1874,7 @@ msgstr "Pistokkeen kytkeminen aikakatkaistiin"
 msgid "Unable to accept connection"
 msgstr "Yhteyttä ei voitu hyväksyä"
 
-#: methods/ftp.cc:864 methods/http.cc:961 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Pulmia tiedoston hajautuksessa"
 
@@ -2071,15 +2071,20 @@ msgstr "Tapahtui virhe luettaessa palvelimelta. Etäpää sulki yhteyden"
 msgid "Error reading from server"
 msgstr "Tapahtui virhe luettaessa palvelimelta"
 
-#: methods/http.cc:1106
+#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#, fuzzy
+msgid "Failed to truncate file"
+msgstr "Tiedoston %s kirjoittaminen ei onnistunut"
+
+#: methods/http.cc:1107
 msgid "Bad header data"
 msgstr "Virheellinen otsikkotieto"
 
-#: methods/http.cc:1123 methods/http.cc:1178
+#: methods/http.cc:1124 methods/http.cc:1179
 msgid "Connection failed"
 msgstr "Yhteys ei toiminut"
 
-#: methods/http.cc:1230
+#: methods/http.cc:1231
 msgid "Internal error"
 msgstr "Sisäinen virhe"
 
@@ -2091,6 +2096,10 @@ msgstr "Tyhjälle tiedostolle ei voi tehdä mmap:ia"
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Ei voitu tehdä %lu tavun mmap:ia"
+
+#: apt-pkg/contrib/mmap.cc:213
+msgid "Dynamic MMap ran out of room"
+msgstr ""
 
 #: apt-pkg/contrib/strutl.cc:1014
 #, c-format
@@ -2208,13 +2217,14 @@ msgstr "Virheellinen toiminto %s"
 msgid "Unable to stat the mount point %s"
 msgstr "Komento stat ei toiminut liitoskohdalle %s"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/acquire.cc:424 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
+#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Kansioon %s vaihto ei onnistu"
 
-#: apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/contrib/cdromutl.cc:188
 msgid "Failed to stat the cdrom"
 msgstr "Komento stat ei toiminut rompulle"
 
@@ -2498,12 +2508,12 @@ msgstr "Arkistokansio %spartial puuttuu."
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:827
+#: apt-pkg/acquire.cc:828
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr "Noudetaan tiedosto %li / %li (jäljellä %s)"
 
-#: apt-pkg/acquire.cc:829
+#: apt-pkg/acquire.cc:830
 #, c-format
 msgid "Retrieving file %li of %li"
 msgstr "Noudetaan tiedosto %li / %li"
@@ -2804,108 +2814,125 @@ msgstr "Kirjoitetaan uusi lähdeluettelo\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Tämän levyn lähdekoodipakettien luettelon tietueita ovat:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:823
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Kirjoitettiin %i tietuetta.\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:825
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Kirjoitettiin %i tietuetta joissa oli %i puuttuvaa tiedostoa.\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:828
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Kirjoitettiin %i tietuetta joissa oli %i paritonta tiedostoa\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:831
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
 "Kirjoitettiin %i tietuetta joissa oli %i puuttuvaa ja %i paritonta "
 "tiedostoa\n"
 
-#: apt-pkg/deb/dpkgpm.cc:488
+#: apt-pkg/deb/dpkgpm.cc:497
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Kansio \"%s\" puuttuu."
 
-#: apt-pkg/deb/dpkgpm.cc:572
+#: apt-pkg/deb/dpkgpm.cc:581
 #, c-format
 msgid "Preparing %s"
 msgstr "Valmistellaan %s"
 
-#: apt-pkg/deb/dpkgpm.cc:573
+#: apt-pkg/deb/dpkgpm.cc:582
 #, c-format
 msgid "Unpacking %s"
 msgstr "Puretaan %s"
 
-#: apt-pkg/deb/dpkgpm.cc:578
+#: apt-pkg/deb/dpkgpm.cc:587
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Valmistaudutaan tekemään asetukset: %s"
 
-#: apt-pkg/deb/dpkgpm.cc:579 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
 #, c-format
 msgid "Configuring %s"
 msgstr "Tehdään asetukset: %s"
 
-#: apt-pkg/deb/dpkgpm.cc:581 apt-pkg/deb/dpkgpm.cc:582
+#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
 #, c-format
 msgid "Processing triggers for %s"
 msgstr "Käsitellään %s:n liipaisimia"
 
-#: apt-pkg/deb/dpkgpm.cc:584
+#: apt-pkg/deb/dpkgpm.cc:593
 #, c-format
 msgid "Installed %s"
 msgstr "%s asennettu"
 
-#: apt-pkg/deb/dpkgpm.cc:589 apt-pkg/deb/dpkgpm.cc:591
-#: apt-pkg/deb/dpkgpm.cc:592
+#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:601
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Valmistaudutaan poistamaan %s"
 
-#: apt-pkg/deb/dpkgpm.cc:594 apt-pkg/deb/dpkgpm.cc:609
+#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
 #, c-format
 msgid "Removing %s"
 msgstr "Poistetaan %s"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:604
 #, c-format
 msgid "Removed %s"
 msgstr "%s poistettu"
 
-#: apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:609
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Valmistaudutaan poistamaan %s kokonaan"
 
-#: apt-pkg/deb/dpkgpm.cc:601
+#: apt-pkg/deb/dpkgpm.cc:610
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s poistettiin kokonaan"
 
 #. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:607
+#: apt-pkg/deb/dpkgpm.cc:616
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "%s asennettu"
 
-#: apt-pkg/deb/dpkgpm.cc:610
+#: apt-pkg/deb/dpkgpm.cc:619
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:770
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 "Lokiin ei voi kirjoittaa, openpty() epäonnistui (onko /dev/pts "
 "liittämättä?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:960
+#: apt-pkg/deb/dpkgpm.cc:969
 msgid "No apport report written because MaxReports is reached already"
+msgstr ""
+
+#. check if its not a follow up error
+#: apt-pkg/deb/dpkgpm.cc:974
+msgid "dependency problems - leaving unconfigured"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:976
+msgid ""
+"No apport report written because the error message indicates its a followup "
+"error from a previous failure."
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:982
+msgid ""
+"No apport report written because the error message indicates a disk full "
+"error"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

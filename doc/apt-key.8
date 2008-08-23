@@ -11,7 +11,7 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt-key - APT key management utility
+apt-key \- APT key management utility
 .SH "SYNOPSIS"
 .HP 8
 \fBapt\-key\fR [\fIcommand\fR/] [\fB\fIarguments\fR\fR...]
@@ -19,64 +19,64 @@ apt-key - APT key management utility
 .PP
 
 \fBapt\-key\fR
-is used to manage the list of keys used by apt to authenticate packages\. Packages which have been authenticated using these keys will be considered trusted\.
+is used to manage the list of keys used by apt to authenticate packages\&. Packages which have been authenticated using these keys will be considered trusted\&.
 .SH "COMMANDS"
 .PP
 add \fIfilename\fR
 .RS 4
-Add a new key to the list of trusted keys\. The key is read from
+Add a new key to the list of trusted keys\&. The key is read from
 \fIfilename\fR, or standard input if
 \fIfilename\fR
 is
-\-\.
+\-\&.
 .RE
 .PP
 del \fIkeyid\fR
 .RS 4
-Remove a key from the list of trusted keys\.
+Remove a key from the list of trusted keys\&.
 .RE
 .PP
 export \fIkeyid\fR
 .RS 4
 Output the key
 \fIkeyid\fR
-to standard output\.
+to standard output\&.
 .RE
 .PP
 exportall
 .RS 4
-Output all trusted keys to standard output\.
+Output all trusted keys to standard output\&.
 .RE
 .PP
 list
 .RS 4
-List trusted keys\.
+List trusted keys\&.
 .RE
 .PP
 update
 .RS 4
-Update the local keyring with the keyring of Debian archive keys and removes from the keyring the archive keys which are no longer valid\.
+Update the local keyring with the keyring of Debian archive keys and removes from the keyring the archive keys which are no longer valid\&.
 .RE
 .SH "FILES"
 .PP
-\fI/etc/apt/trusted\.gpg\fR
+\fI/etc/apt/trusted\&.gpg\fR
 .RS 4
-Keyring of local trusted keys, new keys will be added here\.
+Keyring of local trusted keys, new keys will be added here\&.
 .RE
 .PP
-\fI/etc/apt/trustdb\.gpg\fR
+\fI/etc/apt/trustdb\&.gpg\fR
 .RS 4
-Local trust database of archive keys\.
+Local trust database of archive keys\&.
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-keyring\.gpg\fR
+\fI/usr/share/keyrings/debian\-archive\-keyring\&.gpg\fR
 .RS 4
-Keyring of Debian archive trusted keys\.
+Keyring of Debian archive trusted keys\&.
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-removed\-keys\.gpg\fR
+\fI/usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg\fR
 .RS 4
-Keyring of Debian archive removed trusted keys\.
+Keyring of Debian archive removed trusted keys\&.
 .RE
 .SH "SEE ALSO"
 .PP
@@ -85,15 +85,15 @@ Keyring of Debian archive removed trusted keys\.
 \fBapt-secure\fR(8)
 .SH "BUGS"
 .PP
-\fIAPT bug page\fR\&[1]\. If you wish to report a bug in APT, please see
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fIAPT bug page\fR\&[1]\&. If you wish to report a bug in APT, please see
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 or the
 \fBreportbug\fR(1)
-command\.
+command\&.
 .SH "AUTHOR"
 .PP
 APT was written by the APT team
-<apt@packages\.debian\.org>\.
+<apt@packages\&.debian\&.org>\&.
 .SH "AUTHOR"
 .PP
 \fBJason Gunthorpe\fR

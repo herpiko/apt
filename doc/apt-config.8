@@ -11,25 +11,25 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt-config - APT Configuration Query program
+apt-config \- APT Configuration Query program
 .SH "SYNOPSIS"
 .HP 11
 \fBapt\-config\fR [\fB\-hv\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[shell] | [dump]}
 .SH "DESCRIPTION"
 .PP
 \fBapt\-config\fR
-is an internal program used by various portions of the APT suite to provide consistent configurability\. It accesses the main configuration file
-\fI/etc/apt/apt\.conf\fR
-in a manner that is easy to use by scripted applications\.
+is an internal program used by various portions of the APT suite to provide consistent configurability\&. It accesses the main configuration file
+\fI/etc/apt/apt\&.conf\fR
+in a manner that is easy to use by scripted applications\&.
 .PP
 Unless the
 \fB\-h\fR, or
 \fB\-\-help\fR
-option is given one of the commands below must be present\.
+option is given one of the commands below must be present\&.
 .PP
 shell
 .RS 4
-shell is used to access the configuration information from a shell script\. It is given pairs of arguments, the first being a shell variable and the second the configuration value to query\. As output it lists a series of shell assignments commands for each present value\. In a shell script it should be used like:
+shell is used to access the configuration information from a shell script\&. It is given pairs of arguments, the first being a shell variable and the second the configuration value to query\&. As output it lists a series of shell assignments commands for each present value\&. In a shell script it should be used like:
 .sp
 .RS 4
 .nf
@@ -39,43 +39,43 @@ eval $RES
 .fi
 .RE
 This will set the shell environment variable $OPTS to the value of MyApp::options with a default of
-\fB\-f\fR\.
+\fB\-f\fR\&.
 .sp
-The configuration item may be postfixed with a /[fdbi]\. f returns file names, d returns directories, b returns true or false and i returns an integer\. Each of the returns is normalized and verified internally\.
+The configuration item may be postfixed with a /[fdbi]\&. f returns file names, d returns directories, b returns true or false and i returns an integer\&. Each of the returns is normalized and verified internally\&.
 .RE
 .PP
 dump
 .RS 4
-Just show the contents of the configuration space\.
+Just show the contents of the configuration space\&.
 .RE
 .SH "OPTIONS"
 .PP
-All command line options may be set using the configuration file, the descriptions indicate the configuration option to set\. For boolean options you can override the config file by using something like
+All command line options may be set using the configuration file, the descriptions indicate the configuration option to set\&. For boolean options you can override the config file by using something like
 \fB\-f\-\fR,\fB\-\-no\-f\fR,
 \fB\-f=no\fR
-or several other variations\.
+or several other variations\&.
 .PP
 \fB\-h\fR, \fB\-\-help\fR
 .RS 4
-Show a short usage summary\.
+Show a short usage summary\&.
 .RE
 .PP
 \fB\-v\fR, \fB\-\-version\fR
 .RS 4
-Show the program version\.
+Show the program version\&.
 .RE
 .PP
 \fB\-c\fR, \fB\-\-config\-file\fR
 .RS 4
-Configuration File; Specify a configuration file to use\. The program will read the default configuration file and then this configuration file\. See
+Configuration File; Specify a configuration file to use\&. The program will read the default configuration file and then this configuration file\&. See
 \fBapt.conf\fR(5)
-for syntax information\.
+for syntax information\&.
 .RE
 .PP
 \fB\-o\fR, \fB\-\-option\fR
 .RS 4
-Set a Configuration Option; This will set an arbitrary configuration option\. The syntax is
-\fB\-o Foo::Bar=bar\fR\.
+Set a Configuration Option; This will set an arbitrary configuration option\&. The syntax is
+\fB\-o Foo::Bar=bar\fR\&.
 .RE
 .SH "SEE ALSO"
 .PP
@@ -83,14 +83,14 @@ Set a Configuration Option; This will set an arbitrary configuration option\. Th
 .SH "DIAGNOSTICS"
 .PP
 \fBapt\-config\fR
-returns zero on normal operation, decimal 100 on error\.
+returns zero on normal operation, decimal 100 on error\&.
 .SH "BUGS"
 .PP
-\fIAPT bug page\fR\&[1]\. If you wish to report a bug in APT, please see
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fIAPT bug page\fR\&[1]\&. If you wish to report a bug in APT, please see
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 or the
 \fBreportbug\fR(1)
-command\.
+command\&.
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR

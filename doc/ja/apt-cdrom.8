@@ -11,7 +11,7 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt-cdrom - APT CDROM 管理ユーティリティ
+apt-cdrom \- APT CDROM 管理ユーティリティ
 .SH "SYNOPSIS"
 .HP 10
 \fBapt\-cdrom\fR [\fB\-hvrmfan\fR] [\fB\-d=\fR\fB\fIcdrom\ mount\ point\fR\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] [[add] | [ident]]
@@ -39,7 +39,7 @@ add
 ディレクトリが存在しない場合、 タイトルを入力するよう促します。
 .sp
 APT は、現在ドライブにあるディスクのトラックから取得した、 CDROM ID を使用します。またその ID を、
-\fI/var/lib/apt/cdroms\.list\fR
+\fI/var/lib/apt/cdroms\&.list\fR
 内のデータベースで管理します。
 .RE
 .PP
@@ -88,7 +88,7 @@ APT::CDROM::Fast
 .PP
 \fB\-a\fR, \fB\-\-thorough\fR
 .RS 4
-完全パッケージスキャン \- 古い Debian 1\.1/1\.2 のディスクは、パッケージファイルが違う場所にあるため、 このオプションを使う必要があるかもしれません。 CD をスキャンするのに非常に時間がかかりますが、 全パッケージファイルを抽出することができます。
+完全パッケージスキャン \- 古い Debian 1\&.1/1\&.2 のディスクは、パッケージファイルが違う場所にあるため、 このオプションを使う必要があるかもしれません。 CD をスキャンするのに非常に時間がかかりますが、 全パッケージファイルを抽出することができます。
 .RE
 .PP
 \fB\-n\fR, \fB\-\-just\-print\fR, \fB\-\-recon\fR, \fB\-\-no\-act\fR
@@ -134,16 +134,16 @@ APT::CDROM::NoAct
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\.or\.jp>
+<nabetaro@debian\&.or\&.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\.or\.jp>
+<debian\-doc@debian\&.or\&.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR

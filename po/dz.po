@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po.pot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 11:00+0200\n"
+"POT-Creation-Date: 2008-08-14 18:30+0200\n"
 "PO-Revision-Date: 2006-09-19 09:49+0530\n"
 "Last-Translator: Kinley Tshering <gasepkuenden2k3@hotmail.com>\n"
 "Language-Team: Dzongkha <pgeyleg@dit.gov.bt>\n"
@@ -162,7 +162,7 @@ msgstr "%4i %s\n"
 
 #: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2598 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s་གི་དོན་ལུ་%s %sགུར་ཕྱོགས་སྒྲིག་འབད་ཡོད་པའི་%s %s\n"
@@ -1246,25 +1246,25 @@ msgstr ""
 "%s:གི་དོན་ལུ་%s་རྟེན་འབྲེལ་དེ་གི་རེ་བ་སྐོང་ནི་འདི་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན་  གཞི་བཙུགས་འབད་ཡོད་པའི་ཐུམ་"
 "སྒྲིལ་%s་དེ་གནམ་མེད་ས་མེད་གསརཔ་ཨིན་པས།"
 
-#: cmdline/apt-get.cc:2553
+#: cmdline/apt-get.cc:2555
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%s: %s་གི་དོན་ལུ་་%s་རྟེན་འབྲེལ་འདི་ངལ་རངས་འབད་ནི་འཐུས་ཤོར་བྱུང་ནུག"
 
-#: cmdline/apt-get.cc:2567
+#: cmdline/apt-get.cc:2569
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr " %s་གི་དོན་ལུ་བཟོ་བརྩིགས་-རྟེན་འབྲེལ་འདི་ངལ་རངས་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:2571
+#: cmdline/apt-get.cc:2573
 msgid "Failed to process build dependencies"
 msgstr "བཟོ་བརྩིགས་རྟེན་འབྲེལ་འདི་ལས་སྦྱོར་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན།"
 
-#: cmdline/apt-get.cc:2603
+#: cmdline/apt-get.cc:2605
 msgid "Supported modules:"
 msgstr "རྒྱབ་སྐྱོར་འབད་ཡོད་པའི་ཚད་གཞི་ཚུ:"
 
-#: cmdline/apt-get.cc:2644
+#: cmdline/apt-get.cc:2646
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1885,7 +1885,7 @@ msgstr "གནད་སྡུད་སོ་ཀེཊི་ མཐུད་ན�
 msgid "Unable to accept connection"
 msgstr "མཐུད་ལམ་འདི་དང་ལེན་འབད་མ་ཚུགས།"
 
-#: methods/ftp.cc:864 methods/http.cc:961 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "ཡིག་སྣོད་ལུ་་དྲྭ་རྟགས་བཀལ་བའི་བསྒང་དཀའ་ངལ།"
 
@@ -2083,15 +2083,20 @@ msgstr "སར་བར་ནང་ལས་ལྷག་པའི་བསྒང
 msgid "Error reading from server"
 msgstr "སར་བར་ནང་ལས་ལྷག་པའི་བསྒང་འཛོལ་བ།"
 
-#: methods/http.cc:1106
+#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#, fuzzy
+msgid "Failed to truncate file"
+msgstr "%s་ཡིག་སྣོད་འདི་འབྲི་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
+
+#: methods/http.cc:1107
 msgid "Bad header data"
 msgstr "མགོ་ཡིག་གནད་སྡུད་བྱང་ཉེས།"
 
-#: methods/http.cc:1123 methods/http.cc:1178
+#: methods/http.cc:1124 methods/http.cc:1179
 msgid "Connection failed"
 msgstr "བཐུད་ལམ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: methods/http.cc:1230
+#: methods/http.cc:1231
 msgid "Internal error"
 msgstr "ནང་འཁོད་འཛོལ་བ།"
 
@@ -2103,6 +2108,10 @@ msgstr "ཡིག་སྣོད་སྟོངམ་འདི་mmap་འབ�
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "%lu་བཱའིཊིསི་གི་mmap་བཟོ་མ་ཚུགས།"
+
+#: apt-pkg/contrib/mmap.cc:213
+msgid "Dynamic MMap ran out of room"
+msgstr ""
 
 #: apt-pkg/contrib/strutl.cc:1014
 #, c-format
@@ -2220,13 +2229,14 @@ msgstr "ནུས་མེད་བཀོལ་སྤྱོད་%s"
 msgid "Unable to stat the mount point %s"
 msgstr "སྦྱར་བརྩེགས་ས་ཚིགས་%s་འདི་ངོ་བཤུས་འབད་མ་ཚུགས།"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/acquire.cc:424 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
+#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "%s་ལུ་བསྒྱུར་བཅོས་འབད་མ་ཚུགས།"
 
-#: apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/contrib/cdromutl.cc:188
 msgid "Failed to stat the cdrom"
 msgstr "སི་ཌི་རོམ་འདི་ངོ་བཤུས་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
@@ -2515,12 +2525,12 @@ msgstr "ཡིག་མཛོད་སྣོད་ཐོ་ %s་ ཆ་ཤས�
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:827
+#: apt-pkg/acquire.cc:828
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr "%li་ གི་བརླག་སྟོར་ཞུགས་པའི་ཡིག་སྣོད་%li (%s ལྷག་ལུས་དོ།)"
 
-#: apt-pkg/acquire.cc:829
+#: apt-pkg/acquire.cc:830
 #, c-format
 msgid "Retrieving file %li of %li"
 msgstr " %li་གི་བརླག་སྟོར་ཟུགསཔའི་ཡིག་སྣོད་ %li"
@@ -2820,106 +2830,123 @@ msgstr "འབྱུང་ཁུངས་ཀྱི་ཐོ་ཡིག་གས
 msgid "Source list entries for this disc are:\n"
 msgstr "འ་ནི་ ཌིསིཀ་གི་དོན་ལུ་ འབྱུང་ཁུངས་ཧྲིལ་བུ་ཚུ་:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:823
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "%i་དྲན་མཐོ་དེ་ཚུ་བྲིས་ཡོད།\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:825
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "%i བྱིག་འགྱོ་ཡོད་པའི་ཡིག་སྣོད་ཚུ་དང་གཅིག་ཁར་ %i དྲན་ཐོ་འདི་ཚུ་བྲིས་ཡོད།\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:828
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "%i་མཐུན་སྒྲིག་མེདཔ་པའི་ཡིག་སྣོད་ཚུ་དང་གཅིག་ཁར་ %i་དྲན་ཐོ་ཚུ་བྲིས་བཞག་ཡོདཔ་ཨིན།\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:831
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
 "%i བྱིག་འགྱོ་ཡོད་པའི་ཡིག་སྣོད་ཚུ་དང་ %iམཐུན་སྒྲིག་མེད་པའི་ཡིག་སྣོད་ཚུ་དང་གཅིག་ཁར་ %i དྲན་ཐོ་འདི་ཚུ་བྲིས་"
 "ཡོདཔ་ཨིན།\n"
 
-#: apt-pkg/deb/dpkgpm.cc:488
+#: apt-pkg/deb/dpkgpm.cc:497
 #, fuzzy, c-format
 msgid "Directory '%s' missing"
 msgstr "ཐོ་བཀོད་འབད་མི་སྣོད་ཐོ་%s་ཆ་ཤས་འདི་བརླག་སྟོར་ཟུགས་ཏེ་འདུག"
 
-#: apt-pkg/deb/dpkgpm.cc:572
+#: apt-pkg/deb/dpkgpm.cc:581
 #, c-format
 msgid "Preparing %s"
 msgstr "%s་ གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:573
+#: apt-pkg/deb/dpkgpm.cc:582
 #, c-format
 msgid "Unpacking %s"
 msgstr " %s་ གི་སྦུང་ཚན་བཟོ་བཤོལ་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:578
+#: apt-pkg/deb/dpkgpm.cc:587
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s་ རིམ་སྒྲིག་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:579 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
 #, c-format
 msgid "Configuring %s"
 msgstr "%s་རིམ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:581 apt-pkg/deb/dpkgpm.cc:582
+#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
 #, fuzzy, c-format
 msgid "Processing triggers for %s"
 msgstr "སྣོད་ཐོ་%s་ལས་སྦྱོར་འབདཝ་ད་འཛོལ་བ་འཐོན་ཡི།"
 
-#: apt-pkg/deb/dpkgpm.cc:584
+#: apt-pkg/deb/dpkgpm.cc:593
 #, c-format
 msgid "Installed %s"
 msgstr "གཞི་བཙུགས་འབད་ཡོད་པའི་%s།"
 
-#: apt-pkg/deb/dpkgpm.cc:589 apt-pkg/deb/dpkgpm.cc:591
-#: apt-pkg/deb/dpkgpm.cc:592
+#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:601
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s་ རྩ་བསྐྲད་གཏང་ནིའི་དོན་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:594 apt-pkg/deb/dpkgpm.cc:609
+#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
 #, c-format
 msgid "Removing %s"
 msgstr "%s་རྩ་བསྐྲད་གཏང་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:604
 #, c-format
 msgid "Removed %s"
 msgstr "རྩ་བསྐྲད་བཏང་ཡོད་པའི་%s"
 
-#: apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:609
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s མཇུག་བསྡུཝ་སྦེ་རང་རྩ་བསྐྲད་གཏང་ནིའི་དོན་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:601
+#: apt-pkg/deb/dpkgpm.cc:610
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s མཇུག་བསྡུཝ་སྦེ་རང་རྩ་བསྐྲད་བཏང་ཡོད།"
 
 #. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:607
+#: apt-pkg/deb/dpkgpm.cc:616
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "གཞི་བཙུགས་འབད་ཡོད་པའི་%s།"
 
-#: apt-pkg/deb/dpkgpm.cc:610
+#: apt-pkg/deb/dpkgpm.cc:619
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:770
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:960
+#: apt-pkg/deb/dpkgpm.cc:969
 msgid "No apport report written because MaxReports is reached already"
+msgstr ""
+
+#. check if its not a follow up error
+#: apt-pkg/deb/dpkgpm.cc:974
+msgid "dependency problems - leaving unconfigured"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:976
+msgid ""
+"No apport report written because the error message indicates its a followup "
+"error from a previous failure."
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:982
+msgid ""
+"No apport report written because the error message indicates a disk full "
+"error"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

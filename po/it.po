@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-05 11:00+0200\n"
+"POT-Creation-Date: 2008-08-14 18:30+0200\n"
 "PO-Revision-Date: 2008-05-04 12:26+0200\n"
 "Last-Translator: Samuele Giovanni Tonon <samu@debian.org>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -155,7 +155,7 @@ msgstr "       %4i %s\n"
 
 #: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2598 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s per %s compilato il %s %s\n"
@@ -1251,25 +1251,25 @@ msgstr ""
 "La dipendenza %s per %s non è stata soddisfatta: il pacchetto installato %s "
 "è troppo nuovo"
 
-#: cmdline/apt-get.cc:2553
+#: cmdline/apt-get.cc:2555
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "La dipendenza %s per %s: %s è fallita"
 
-#: cmdline/apt-get.cc:2567
+#: cmdline/apt-get.cc:2569
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Non è stato possibile soddisfare le dipendenze di costruzione per %s."
 
-#: cmdline/apt-get.cc:2571
+#: cmdline/apt-get.cc:2573
 msgid "Failed to process build dependencies"
 msgstr "Il calcolo delle dipendenze per la costruzione è fallito"
 
-#: cmdline/apt-get.cc:2603
+#: cmdline/apt-get.cc:2605
 msgid "Supported modules:"
 msgstr "Moduli supportati:"
 
-#: cmdline/apt-get.cc:2644
+#: cmdline/apt-get.cc:2646
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1893,7 +1893,7 @@ msgstr "Tempo limite di connessione esaurito per il socket dati"
 msgid "Unable to accept connection"
 msgstr "Impossibile accettare connessioni"
 
-#: methods/ftp.cc:864 methods/http.cc:961 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problemi nella creazione dell'hash del file"
 
@@ -2093,15 +2093,20 @@ msgstr ""
 msgid "Error reading from server"
 msgstr "Errore nella lettura dal server"
 
-#: methods/http.cc:1106
+#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#, fuzzy
+msgid "Failed to truncate file"
+msgstr "Impossibile scrivere il file %s"
+
+#: methods/http.cc:1107
 msgid "Bad header data"
 msgstr "Header dei dati malformato"
 
-#: methods/http.cc:1123 methods/http.cc:1178
+#: methods/http.cc:1124 methods/http.cc:1179
 msgid "Connection failed"
 msgstr "Connessione fallita"
 
-#: methods/http.cc:1230
+#: methods/http.cc:1231
 msgid "Internal error"
 msgstr "Errore interno"
 
@@ -2113,6 +2118,10 @@ msgstr "Impossibile eseguire mmap su un file vuoto"
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Impossibile eseguire mmap di %lu byte"
+
+#: apt-pkg/contrib/mmap.cc:213
+msgid "Dynamic MMap ran out of room"
+msgstr ""
 
 #: apt-pkg/contrib/strutl.cc:1014
 #, c-format
@@ -2234,13 +2243,14 @@ msgstr "Operazione non valida %s"
 msgid "Unable to stat the mount point %s"
 msgstr "Impossibile accedere al mount point %s"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/acquire.cc:424 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
+#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Impossibile raggiungere %s"
 
-#: apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/contrib/cdromutl.cc:188
 msgid "Failed to stat the cdrom"
 msgstr "Impossibile accedere al cdrom"
 
@@ -2527,12 +2537,12 @@ msgstr "Manca la directory di archivio %spartial."
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:827
+#: apt-pkg/acquire.cc:828
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr "Scaricamento file %li di %li (%s rimanente)"
 
-#: apt-pkg/acquire.cc:829
+#: apt-pkg/acquire.cc:830
 #, c-format
 msgid "Retrieving file %li of %li"
 msgstr "Scaricamento file %li di %li"
@@ -2845,104 +2855,121 @@ msgstr "Scrittura di una nuova lista sorgenti in corso\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Le voci lista sorgenti per questo Disco sono:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:823
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Scritti %i record.\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:825
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Scritti %i record con %i file mancanti.\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:828
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Scritti %i record con %i file senza match\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:831
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "Scritti %i record con %i file mancanti e %i file senza match\n"
 
-#: apt-pkg/deb/dpkgpm.cc:488
+#: apt-pkg/deb/dpkgpm.cc:497
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Manca la directory '%s'"
 
-#: apt-pkg/deb/dpkgpm.cc:572
+#: apt-pkg/deb/dpkgpm.cc:581
 #, c-format
 msgid "Preparing %s"
 msgstr "Preparazione di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:573
+#: apt-pkg/deb/dpkgpm.cc:582
 #, c-format
 msgid "Unpacking %s"
 msgstr "Scompattamento di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:578
+#: apt-pkg/deb/dpkgpm.cc:587
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Preparazione alla configurazione di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:579 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
 #, c-format
 msgid "Configuring %s"
 msgstr "Configurazione di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:581 apt-pkg/deb/dpkgpm.cc:582
+#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
 #, c-format
 msgid "Processing triggers for %s"
 msgstr "Elaborazione opzioni addizionali per %s"
 
-#: apt-pkg/deb/dpkgpm.cc:584
+#: apt-pkg/deb/dpkgpm.cc:593
 #, c-format
 msgid "Installed %s"
 msgstr "%s Installato"
 
-#: apt-pkg/deb/dpkgpm.cc:589 apt-pkg/deb/dpkgpm.cc:591
-#: apt-pkg/deb/dpkgpm.cc:592
+#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:601
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Preparazione per la rimozione di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:594 apt-pkg/deb/dpkgpm.cc:609
+#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
 #, c-format
 msgid "Removing %s"
 msgstr "Rimozione di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:604
 #, c-format
 msgid "Removed %s"
 msgstr "%s rimosso"
 
-#: apt-pkg/deb/dpkgpm.cc:600
+#: apt-pkg/deb/dpkgpm.cc:609
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Preparazione alla rimozione totale di %s in corso"
 
-#: apt-pkg/deb/dpkgpm.cc:601
+#: apt-pkg/deb/dpkgpm.cc:610
 #, c-format
 msgid "Completely removed %s"
 msgstr "Rimozione totale completata %s"
 
 #. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:607
+#: apt-pkg/deb/dpkgpm.cc:616
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "%s Installato"
 
-#: apt-pkg/deb/dpkgpm.cc:610
+#: apt-pkg/deb/dpkgpm.cc:619
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:770
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr "Impossibile scrivere un log, openpty() fallito (/dev/pts è montato?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:960
+#: apt-pkg/deb/dpkgpm.cc:969
 msgid "No apport report written because MaxReports is reached already"
+msgstr ""
+
+#. check if its not a follow up error
+#: apt-pkg/deb/dpkgpm.cc:974
+msgid "dependency problems - leaving unconfigured"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:976
+msgid ""
+"No apport report written because the error message indicates its a followup "
+"error from a previous failure."
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:982
+msgid ""
+"No apport report written because the error message indicates a disk full "
+"error"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

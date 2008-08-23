@@ -5,16 +5,16 @@
 .\"    Manual: 
 .\"    Source: Linux
 .\"
-.TH "SOURCES\.LIST" "5" "29 February 2004" "Linux" ""
+.TH "SOURCES\&.LIST" "5" "29 February 2004" "Linux" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-sources.list - APT 用パッケージリソースリスト
+sources.list \- APT 用パッケージリソースリスト
 .SH "説明"
 .PP
-このパッケージリソースリストは、 システムで使用するパッケージの保管場所を特定するのに使用されます。 今回このマニュアルページには、 Debian GNU/Linux システムで使用するパッケージシステムについてのみ記述します。 この制御ファイルは、\fI/etc/apt/sources\.list\fR
+このパッケージリソースリストは、 システムで使用するパッケージの保管場所を特定するのに使用されます。 今回このマニュアルページには、 Debian GNU/Linux システムで使用するパッケージシステムについてのみ記述します。 この制御ファイルは、\fI/etc/apt/sources\&.list\fR
 にあります。
 .PP
 ソースリストは複数の有効な取得元と、 様々な取得メディアをサポートしています。 ファイルには 1 行ごと取得元を列挙し、上の方にあるものから使用します。 行のフォーマットは、タイプ uri 引数
@@ -27,11 +27,11 @@ uri
 は Universal Resource Identifier (URI) で、 よく知られた URL のスーパーセットです。 行の残りに # を付けて、コメントにできます。
 .SH "SOURCES.LIST.D"
 .PP
-\fI/etc/apt/sources\.list\.d\fR
+\fI/etc/apt/sources\&.list\&.d\fR
 ディレクトリに ファイル名が
-\.list
-で終わる個別ファイルを置いておくと、 sources\.list エントリに追加できます。フォーマットは、 通常の
-\fIsources\.list\fR
+\&.list
+で終わる個別ファイルを置いておくと、 sources\&.list エントリに追加できます。フォーマットは、 通常の
+\fIsources\&.list\fR
 ファイルと同じです。
 .SH "DEB タイプと DEB-SRC タイプ"
 .PP
@@ -57,12 +57,12 @@ deb
 タイプと
 deb\-src
 タイプで使用する
-\fIsources\.list\fR
+\fIsources\&.list\fR
 エントリのフォーマットは、以下になります。
 .sp
 .RS 4
 .nf
-deb uri distribution [component1] [component2] [\.\.\.]
+deb uri distribution [component1] [component2] [\&.\&.\&.]
 .fi
 .RE
 .PP
@@ -81,8 +81,8 @@ distribution
 $(ARCH)
 変数を含む場合があります。
 $(ARCH)
-変数は、システムで使用している Debian アーキテクチャ (i386, m68k, powerpc, \.\.\.) に展開されます。 これにより、アーキテクチャに依存しない
-\fIsources\.list\fR
+変数は、システムで使用している Debian アーキテクチャ (i386, m68k, powerpc, \&.\&.\&.) に展開されます。 これにより、アーキテクチャに依存しない
+\fIsources\&.list\fR
 ファイルを使用できます。 一般的に、これは正しいパスを指定するときに気にするだけです。 そうでない場合は、APT
 は現在のアーキテクチャで URI を自動的に生成します。
 .PP
@@ -94,8 +94,8 @@ $(ARCH)
 .sp
 .RS 4
 .nf
-deb http://http\.us\.debian\.org/debian stable main contrib non\-free
-deb http://http\.us\.debian\.org/debian dists/stable\-updates/
+deb http://http\&.us\&.debian\&.org/debian stable main contrib non\-free
+deb http://http\&.us\&.debian\&.org/debian dists/stable\-updates/
    
 .fi
 .RE
@@ -121,7 +121,7 @@ http スキームはアーカイブとして、HTTP サーバを指定します。 環境変数
 \fBhttp_proxy\fR
 が、 http://server:port/ と言った形で指定されていれば、
 \fBhttp_proxy\fR
-で指定した プロキシサーバを使用します。 ユーザ認証が必要な HTTP/1\.1 プロキシの場合、 http://user:pass@server:port/ と言う形で指定してください。 この認証方法は安全ではないことに注意してください。
+で指定した プロキシサーバを使用します。 ユーザ認証が必要な HTTP/1\&.1 プロキシの場合、 http://user:pass@server:port/ と言う形で指定してください。 この認証方法は安全ではないことに注意してください。
 .RE
 .PP
 ftp
@@ -171,41 +171,41 @@ deb\-src file:/home/jason/debian unstable main contrib non\-free
 .fi
 .RE
 .PP
-archive\.debian\.org のアーカイブに HTTP アクセスし、 hamm/main のみを使用します。
+archive\&.debian\&.org のアーカイブに HTTP アクセスし、 hamm/main のみを使用します。
 .sp
 .RS 4
 .nf
-deb http://archive\.debian\.org/debian\-archive hamm main
+deb http://archive\&.debian\&.org/debian\-archive hamm main
 .fi
 .RE
 .PP
-ftp\.debian\.org のアーカイブに FTP アクセスし、 debian ディレクトリ以下の stable/contrib のみを使用します。
+ftp\&.debian\&.org のアーカイブに FTP アクセスし、 debian ディレクトリ以下の stable/contrib のみを使用します。
 .sp
 .RS 4
 .nf
-deb ftp://ftp\.debian\.org/debian stable contrib
+deb ftp://ftp\&.debian\&.org/debian stable contrib
 .fi
 .RE
 .PP
-ftp\.debian\.org のアーカイブに FTP アクセスし、 debian ディレクトリ以下の unstable/contrib を使用します。
-\fIsources\.list\fR
+ftp\&.debian\&.org のアーカイブに FTP アクセスし、 debian ディレクトリ以下の unstable/contrib を使用します。
+\fIsources\&.list\fR
 に上記サンプルと一緒に指定された場合、 両方のリソース行に対応する FTP セッションはひとつだけになります。
 .sp
 .RS 4
 .nf
-deb ftp://ftp\.debian\.org/debian unstable contrib
+deb ftp://ftp\&.debian\&.org/debian unstable contrib
 .fi
 .RE
 .PP
-nonus\.debian\.org のアーカイブに HTTP アクセスし、 debian\-non\-US ディレクトリ以下を使用します。
+nonus\&.debian\&.org のアーカイブに HTTP アクセスし、 debian\-non\-US ディレクトリ以下を使用します。
 .sp
 .RS 4
 .nf
-deb http://nonus\.debian\.org/debian\-non\-US stable/non\-US main contrib non\-free
+deb http://nonus\&.debian\&.org/debian\-non\-US stable/non\-US main contrib non\-free
 .fi
 .RE
 .PP
-nonus\.debian\.org のアーカイブに HTTP アクセスし、 debian\-non\-US ディレクトリ以下を使用します。 また、i386 マシンでは
+nonus\&.debian\&.org のアーカイブに HTTP アクセスし、 debian\-non\-US ディレクトリ以下を使用します。 また、i386 マシンでは
 \fIunstable/binary\-i386\fR
 以下にあるファイル、 m68k マシンでは
 \fIunstable/binary\-m68k\fR
@@ -213,7 +213,7 @@ nonus\.debian\.org のアーカイブに HTTP アクセスし、 debian\-non\-US ディレクトリ
 .sp
 .RS 4
 .nf
-deb http://ftp\.de\.debian\.org/debian\-non\-US unstable/binary\-$(ARCH)/
+deb http://ftp\&.de\&.debian\&.org/debian\-non\-US unstable/binary\-$(ARCH)/
 .fi
 .RE
 .sp
@@ -224,16 +224,16 @@ deb http://ftp\.de\.debian\.org/debian\-non\-US unstable/binary\-$(ARCH)/
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\.or\.jp>
+<nabetaro@debian\&.or\&.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\.or\.jp>
+<debian\-doc@debian\&.or\&.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR

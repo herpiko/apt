@@ -5,33 +5,33 @@
 .\"    Manual: 
 .\"    Source: Linux
 .\"
-.TH "APT\.CONF" "5" "29 February 2004" "Linux" ""
+.TH "APT\&.CONF" "5" "29 February 2004" "Linux" ""
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt.conf - Configuration file for APT
+apt.conf \- Configuration file for APT
 .SH "DESCRIPTION"
 .PP
-\fIapt\.conf\fR
-is the main configuration file for the APT suite of tools, all tools make use of the configuration file and a common command line parser to provide a uniform environment\. When an APT tool starts up it will read the configuration specified by the
+\fIapt\&.conf\fR
+is the main configuration file for the APT suite of tools, all tools make use of the configuration file and a common command line parser to provide a uniform environment\&. When an APT tool starts up it will read the configuration specified by the
 \fBAPT_CONFIG\fR
 environment variable (if any) and then read the files in
 Dir::Etc::Parts
 then read the main configuration file specified by
 Dir::Etc::main
-then finally apply the command line options to override the configuration directives, possibly loading even more config files\.
+then finally apply the command line options to override the configuration directives, possibly loading even more config files\&.
 .PP
-The configuration file is organized in a tree with options organized into functional groups\. option specification is given with a double colon notation, for instance
+The configuration file is organized in a tree with options organized into functional groups\&. option specification is given with a double colon notation, for instance
 APT::Get::Assume\-Yes
-is an option within the APT tool group, for the Get tool\. options do not inherit from their parent groups\.
+is an option within the APT tool group, for the Get tool\&. options do not inherit from their parent groups\&.
 .PP
-Syntactically the configuration language is modeled after what the ISC tools such as bind and dhcp use\. Lines starting with
+Syntactically the configuration language is modeled after what the ISC tools such as bind and dhcp use\&. Lines starting with
 //
-are treated as comments (ignored)\. Each line is of the form
+are treated as comments (ignored)\&. Each line is of the form
 APT::Get::Assume\-Yes "true";
-The trailing semicolon is required and the quotes are optional\. A new scope can be opened with curly braces, like:
+The trailing semicolon is required and the quotes are optional\&. A new scope can be opened with curly braces, like:
 .sp
 .RS 4
 .nf
@@ -45,7 +45,7 @@ APT {
 .fi
 .RE
 .PP
-with newlines placed to make it more readable\. Lists can be created by opening a scope and including a single word enclosed in quotes followed by a semicolon\. Multiple entries can be included, each separated by a semicolon\.
+with newlines placed to make it more readable\&. Lists can be created by opening a scope and including a single word enclosed in quotes followed by a semicolon\&. Multiple entries can be included, each separated by a semicolon\&.
 .sp
 .RS 4
 .nf
@@ -55,85 +55,85 @@ DPkg::Pre\-Install\-Pkgs {"/usr/sbin/dpkg\-preconfigure \-\-apt";};
 .RE
 .PP
 In general the sample configuration file in
-\fI/usr/share/doc/apt/examples/apt\.conf\fR
-\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
-is a good guide for how it should look\.
+\fI/usr/share/doc/apt/examples/apt\&.conf\fR
+\fI/usr/share/doc/apt/examples/configure\-index\&.gz\fR
+is a good guide for how it should look\&.
 .PP
 Two specials are allowed,
 #include
 and
 #clear
 #include
-will include the given file, unless the filename ends in a slash, then the whole directory is included\.
+will include the given file, unless the filename ends in a slash, then the whole directory is included\&.
 #clear
-is used to erase a list of names\.
+is used to erase a list of names\&.
 .PP
-All of the APT tools take a \-o option which allows an arbitrary configuration directive to be specified on the command line\. The syntax is a full option name (APT::Get::Assume\-Yes
-for instance) followed by an equals sign then the new value of the option\. Lists can be appended too by adding a trailing :: to the list name\.
+All of the APT tools take a \-o option which allows an arbitrary configuration directive to be specified on the command line\&. The syntax is a full option name (APT::Get::Assume\-Yes
+for instance) followed by an equals sign then the new value of the option\&. Lists can be appended too by adding a trailing :: to the list name\&.
 .SH "THE APT GROUP"
 .PP
-This group of options controls general APT behavior as well as holding the options for all of the tools\.
+This group of options controls general APT behavior as well as holding the options for all of the tools\&.
 .PP
 Architecture
 .RS 4
-System Architecture; sets the architecture to use when fetching files and parsing package lists\. The internal default is the architecture apt was compiled for\.
+System Architecture; sets the architecture to use when fetching files and parsing package lists\&. The internal default is the architecture apt was compiled for\&.
 .RE
 .PP
 Ignore\-Hold
 .RS 4
-Ignore Held packages; This global option causes the problem resolver to ignore held packages in its decision making\.
+Ignore Held packages; This global option causes the problem resolver to ignore held packages in its decision making\&.
 .RE
 .PP
 Clean\-Installed
 .RS 4
-Defaults to on\. When turned on the autoclean feature will remove any packages which can no longer be downloaded from the cache\. If turned off then packages that are locally installed are also excluded from cleaning \- but note that APT provides no direct means to reinstall them\.
+Defaults to on\&. When turned on the autoclean feature will remove any packages which can no longer be downloaded from the cache\&. If turned off then packages that are locally installed are also excluded from cleaning \- but note that APT provides no direct means to reinstall them\&.
 .RE
 .PP
 Immediate\-Configure
 .RS 4
-Disable Immediate Configuration; This dangerous option disables some of APT\'s ordering code to cause it to make fewer dpkg calls\. Doing so may be necessary on some extremely slow single user systems but is very dangerous and may cause package install scripts to fail or worse\. Use at your own risk\.
+Disable Immediate Configuration; This dangerous option disables some of APT\'s ordering code to cause it to make fewer dpkg calls\&. Doing so may be necessary on some extremely slow single user systems but is very dangerous and may cause package install scripts to fail or worse\&. Use at your own risk\&.
 .RE
 .PP
 Force\-LoopBreak
 .RS 4
-Never Enable this option unless you \-really\- know what you are doing\. It permits APT to temporarily remove an essential package to break a Conflicts/Conflicts or Conflicts/Pre\-Depend loop between two essential packages\. SUCH A LOOP SHOULD NEVER EXIST AND IS A GRAVE BUG\. This option will work if the essential packages are not tar, gzip, libc, dpkg, bash or anything that those packages depend on\.
+Never Enable this option unless you \-really\- know what you are doing\&. It permits APT to temporarily remove an essential package to break a Conflicts/Conflicts or Conflicts/Pre\-Depend loop between two essential packages\&. SUCH A LOOP SHOULD NEVER EXIST AND IS A GRAVE BUG\&. This option will work if the essential packages are not tar, gzip, libc, dpkg, bash or anything that those packages depend on\&.
 .RE
 .PP
 Cache\-Limit
 .RS 4
-APT uses a fixed size memory mapped cache file to store the \'available\' information\. This sets the size of that cache (in bytes)\.
+APT uses a fixed size memory mapped cache file to store the \'available\' information\&. This sets the size of that cache (in bytes)\&.
 .RE
 .PP
 Build\-Essential
 .RS 4
-Defines which package(s) are considered essential build dependencies\.
+Defines which package(s) are considered essential build dependencies\&.
 .RE
 .PP
 Get
 .RS 4
 The Get subsection controls the
 \fBapt-get\fR(8)
-tool, please see its documentation for more information about the options here\.
+tool, please see its documentation for more information about the options here\&.
 .RE
 .PP
 Cache
 .RS 4
 The Cache subsection controls the
 \fBapt-cache\fR(8)
-tool, please see its documentation for more information about the options here\.
+tool, please see its documentation for more information about the options here\&.
 .RE
 .PP
 CDROM
 .RS 4
 The CDROM subsection controls the
 \fBapt-cdrom\fR(8)
-tool, please see its documentation for more information about the options here\.
+tool, please see its documentation for more information about the options here\&.
 .RE
 .SH "THE ACQUIRE GROUP"
 .PP
 The
 Acquire
-group of options controls the download of packages and the URI handlers\.
+group of options controls the download of packages and the URI handlers\&.
 .PP
 Queue\-Mode
 .RS 4
@@ -143,62 +143,62 @@ can be one of
 host
 or
 access
-which determines how APT parallelizes outgoing connections\.
+which determines how APT parallelizes outgoing connections\&.
 host
 means that one connection per target host will be opened,
 access
-means that one connection per URI type will be opened\.
+means that one connection per URI type will be opened\&.
 .RE
 .PP
 Retries
 .RS 4
-Number of retries to perform\. If this is non\-zero APT will retry failed files the given number of times\.
+Number of retries to perform\&. If this is non\-zero APT will retry failed files the given number of times\&.
 .RE
 .PP
 Source\-Symlinks
 .RS 4
-Use symlinks for source archives\. If set to true then source archives will be symlinked when possible instead of copying\. True is the default\.
+Use symlinks for source archives\&. If set to true then source archives will be symlinked when possible instead of copying\&. True is the default\&.
 .RE
 .PP
 http
 .RS 4
-HTTP URIs; http::Proxy is the default http proxy to use\. It is in the standard form of
-http://[[user][:pass]@]host[:port]/\. Per host proxies can also be specified by using the form
+HTTP URIs; http::Proxy is the default http proxy to use\&. It is in the standard form of
+http://[[user][:pass]@]host[:port]/\&. Per host proxies can also be specified by using the form
 http::Proxy::<host>
 with the special keyword
 DIRECT
-meaning to use no proxies\. The
+meaning to use no proxies\&. The
 \fBhttp_proxy\fR
-environment variable will override all settings\.
+environment variable will override all settings\&.
 .sp
-Three settings are provided for cache control with HTTP/1\.1 compliant proxy caches\.
+Three settings are provided for cache control with HTTP/1\&.1 compliant proxy caches\&.
 No\-Cache
 tells the proxy to not use its cached response under any circumstances,
 Max\-Age
-is sent only for index files and tells the cache to refresh its object if it is older than the given number of seconds\. Debian updates its index files daily so the default is 1 day\.
+is sent only for index files and tells the cache to refresh its object if it is older than the given number of seconds\&. Debian updates its index files daily so the default is 1 day\&.
 No\-Store
-specifies that the cache should never store this request, it is only set for archive files\. This may be useful to prevent polluting a proxy cache with very large \.deb files\. Note: Squid 2\.0\.2 does not support any of these options\.
+specifies that the cache should never store this request, it is only set for archive files\&. This may be useful to prevent polluting a proxy cache with very large \&.deb files\&. Note: Squid 2\&.0\&.2 does not support any of these options\&.
 .sp
 The option
 timeout
-sets the timeout timer used by the method, this applies to all things including connection timeout and data timeout\.
+sets the timeout timer used by the method, this applies to all things including connection timeout and data timeout\&.
 .sp
-One setting is provided to control the pipeline depth in cases where the remote server is not RFC conforming or buggy (such as Squid 2\.0\.2)
+One setting is provided to control the pipeline depth in cases where the remote server is not RFC conforming or buggy (such as Squid 2\&.0\&.2)
 Acquire::http::Pipeline\-Depth
-can be a value from 0 to 5 indicating how many outstanding requests APT should send\. A value of zero MUST be specified if the remote host does not properly linger on TCP connections \- otherwise data corruption will occur\. Hosts which require this are in violation of RFC 2068\.
+can be a value from 0 to 5 indicating how many outstanding requests APT should send\&. A value of zero MUST be specified if the remote host does not properly linger on TCP connections \- otherwise data corruption will occur\&. Hosts which require this are in violation of RFC 2068\&.
 .RE
 .PP
 ftp
 .RS 4
-FTP URIs; ftp::Proxy is the default proxy server to use\. It is in the standard form of
+FTP URIs; ftp::Proxy is the default proxy server to use\&. It is in the standard form of
 ftp://[[user][:pass]@]host[:port]/
 and is overridden by the
 \fBftp_proxy\fR
-environment variable\. To use a ftp proxy you will have to set the
+environment variable\&. To use a ftp proxy you will have to set the
 ftp::ProxyLogin
-script in the configuration file\. This entry specifies the commands to send to tell the proxy server what to connect to\. Please see
-\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
-for an example of how to do this\. The substitution variables available are
+script in the configuration file\&. This entry specifies the commands to send to tell the proxy server what to connect to\&. Please see
+\fI/usr/share/doc/apt/examples/configure\-index\&.gz\fR
+for an example of how to do this\&. The substitution variables available are
 $(PROXY_USER)
 $(PROXY_PASS)
 $(SITE_USER)
@@ -206,17 +206,17 @@ $(SITE_PASS)
 $(SITE)
 and
 $(SITE_PORT)
-Each is taken from it\'s respective URI component\.
+Each is taken from it\'s respective URI component\&.
 .sp
 The option
 timeout
-sets the timeout timer used by the method, this applies to all things including connection timeout and data timeout\.
+sets the timeout timer used by the method, this applies to all things including connection timeout and data timeout\&.
 .sp
-Several settings are provided to control passive mode\. Generally it is safe to leave passive mode on, it works in nearly every environment\. However some situations require that passive mode be disabled and port mode ftp used instead\. This can be done globally, for connections that go through a proxy or for a specific host (See the sample config file for examples)\.
+Several settings are provided to control passive mode\&. Generally it is safe to leave passive mode on, it works in nearly every environment\&. However some situations require that passive mode be disabled and port mode ftp used instead\&. This can be done globally, for connections that go through a proxy or for a specific host (See the sample config file for examples)\&.
 .sp
 It is possible to proxy FTP over HTTP by setting the
 \fBftp_proxy\fR
-environment variable to a http url \- see the discussion of the http method above for syntax\. You cannot set this in the configuration file and it is not recommended to use FTP over HTTP due to its low efficiency\.
+environment variable to a http url \- see the discussion of the http method above for syntax\&. You cannot set this in the configuration file and it is not recommended to use FTP over HTTP due to its low efficiency\&.
 .sp
 The setting
 ForceExtended
@@ -224,7 +224,7 @@ controls the use of RFC2428
 EPSV
 and
 EPRT
-commands\. The default is false, which means these commands are only used if the control connection is IPv6\. Setting this to true forces their use even on IPv4 connections\. Note that most FTP servers do not support RFC2428\.
+commands\&. The default is false, which means these commands are only used if the control connection is IPv6\&. Setting this to true forces their use even on IPv4 connections\&. Note that most FTP servers do not support RFC2428\&.
 .RE
 .PP
 cdrom
@@ -232,7 +232,7 @@ cdrom
 CDROM URIs; the only setting for CDROM URIs is the mount point,
 cdrom::Mount
 which must be the mount point for the CDROM drive as specified in
-\fI/etc/fstab\fR\. It is possible to provide alternate mount and unmount commands if your mount point cannot be listed in the fstab (such as an SMB mount and old mount packages)\. The syntax is to put
+\fI/etc/fstab\fR\&. It is possible to provide alternate mount and unmount commands if your mount point cannot be listed in the fstab (such as an SMB mount and old mount packages)\&. The syntax is to put
 .sp
 .RS 4
 .nf
@@ -240,31 +240,31 @@ which must be the mount point for the CDROM drive as specified in
 .fi
 .RE
 .sp
-within the cdrom block\. It is important to have the trailing slash\. Unmount commands can be specified using UMount\.
+within the cdrom block\&. It is important to have the trailing slash\&. Unmount commands can be specified using UMount\&.
 .RE
 .PP
 gpgv
 .RS 4
-GPGV URIs; the only option for GPGV URIs is the option to pass additional parameters to gpgv\.
+GPGV URIs; the only option for GPGV URIs is the option to pass additional parameters to gpgv\&.
 gpgv::Options
-Additional options passed to gpgv\.
+Additional options passed to gpgv\&.
 .RE
 .SH "DIRECTORIES"
 .PP
 The
 Dir::State
-section has directories that pertain to local state information\.
+section has directories that pertain to local state information\&.
 lists
 is the directory to place downloaded package lists in and
 status
-is the name of the dpkg status file\.
+is the name of the dpkg status file\&.
 preferences
-is the name of the APT preferences file\.
+is the name of the APT preferences file\&.
 Dir::State
 contains the default directory to prefix on all sub items if they do not start with
 \fI/\fR
 or
-\fI\./\fR\.
+\fI\&./\fR\&.
 .PP
 Dir::Cache
 contains locations pertaining to local cache information, such as the two package caches
@@ -272,7 +272,7 @@ srcpkgcache
 and
 pkgcache
 as well as the location to place downloaded archives,
-Dir::Cache::archives\. Generation of caches can be turned off by setting their names to be blank\. This will slow down startup but save disk space\. It is probably preferred to turn off the pkgcache rather than the srcpkgcache\. Like
+Dir::Cache::archives\&. Generation of caches can be turned off by setting their names to be blank\&. This will slow down startup but save disk space\&. It is probably preferred to turn off the pkgcache rather than the srcpkgcache\&. Like
 Dir::State
 the default directory is contained in
 Dir::Cache
@@ -283,14 +283,14 @@ sourcelist
 gives the location of the sourcelist and
 main
 is the default configuration file (setting has no effect, unless it is done from the config file specified by
-\fBAPT_CONFIG\fR)\.
+\fBAPT_CONFIG\fR)\&.
 .PP
 The
 Dir::Parts
-setting reads in all the config fragments in lexical order from the directory specified\. After this is done then the main config file is loaded\.
+setting reads in all the config fragments in lexical order from the directory specified\&. After this is done then the main config file is loaded\&.
 .PP
 Binary programs are pointed to by
-Dir::Bin\.
+Dir::Bin\&.
 Dir::Bin::Methods
 specifies the location of the method handlers and
 gzip,
@@ -300,15 +300,15 @@ dpkg\-source
 dpkg\-buildpackage
 and
 apt\-cache
-specify the location of the respective programs\.
+specify the location of the respective programs\&.
 .PP
 The configuration item
 RootDir
-has a special meaning\. If set, all paths in
+has a special meaning\&. If set, all paths in
 Dir::
 will be relative to
 RootDir,
-\fIeven paths that are specified absolutely\fR\. So, for instance, if
+\fIeven paths that are specified absolutely\fR\&. So, for instance, if
 RootDir
 is set to
 \fI/tmp/staging\fR
@@ -316,88 +316,88 @@ and
 Dir::State::status
 is set to
 \fI/var/lib/dpkg/status\fR, then the status file will be looked up in
-\fI/tmp/staging/var/lib/dpkg/status\fR\.
+\fI/tmp/staging/var/lib/dpkg/status\fR\&.
 .SH "APT IN DSELECT"
 .PP
 When APT is used as a
 \fBdselect\fR(8)
-method several configuration directives control the default behaviour\. These are in the
+method several configuration directives control the default behaviour\&. These are in the
 DSelect
-section\.
+section\&.
 .PP
 Clean
 .RS 4
-Cache Clean mode; this value may be one of always, prompt, auto, pre\-auto and never\. always and prompt will remove all packages from the cache after upgrading, prompt (the default) does so conditionally\. auto removes only those packages which are no longer downloadable (replaced with a new version for instance)\. pre\-auto performs this action before downloading new packages\.
+Cache Clean mode; this value may be one of always, prompt, auto, pre\-auto and never\&. always and prompt will remove all packages from the cache after upgrading, prompt (the default) does so conditionally\&. auto removes only those packages which are no longer downloadable (replaced with a new version for instance)\&. pre\-auto performs this action before downloading new packages\&.
 .RE
 .PP
 options
 .RS 4
 The contents of this variable is passed to
 \fBapt-get\fR(8)
-as command line options when it is run for the install phase\.
+as command line options when it is run for the install phase\&.
 .RE
 .PP
 Updateoptions
 .RS 4
 The contents of this variable is passed to
 \fBapt-get\fR(8)
-as command line options when it is run for the update phase\.
+as command line options when it is run for the update phase\&.
 .RE
 .PP
 PromptAfterUpdate
 .RS 4
 If true the [U]pdate operation in
 \fBdselect\fR(8)
-will always prompt to continue\. The default is to prompt only on error\.
+will always prompt to continue\&. The default is to prompt only on error\&.
 .RE
 .SH "HOW APT CALLS DPKG"
 .PP
 Several configuration directives control how APT invokes
-\fBdpkg\fR(8)\. These are in the
+\fBdpkg\fR(8)\&. These are in the
 DPkg
-section\.
+section\&.
 .PP
 options
 .RS 4
-This is a list of options to pass to dpkg\. The options must be specified using the list notation and each list item is passed as a single argument to
-\fBdpkg\fR(8)\.
+This is a list of options to pass to dpkg\&. The options must be specified using the list notation and each list item is passed as a single argument to
+\fBdpkg\fR(8)\&.
 .RE
 .PP
 Pre\-Invoke, Post\-Invoke
 .RS 4
 This is a list of shell commands to run before/after invoking
-\fBdpkg\fR(8)\. Like
+\fBdpkg\fR(8)\&. Like
 options
-this must be specified in list notation\. The commands are invoked in order using
-\fI/bin/sh\fR, should any fail APT will abort\.
+this must be specified in list notation\&. The commands are invoked in order using
+\fI/bin/sh\fR, should any fail APT will abort\&.
 .RE
 .PP
 Pre\-Install\-Pkgs
 .RS 4
-This is a list of shell commands to run before invoking dpkg\. Like
+This is a list of shell commands to run before invoking dpkg\&. Like
 options
-this must be specified in list notation\. The commands are invoked in order using
-\fI/bin/sh\fR, should any fail APT will abort\. APT will pass to the commands on standard input the filenames of all \.deb files it is going to install, one per line\.
+this must be specified in list notation\&. The commands are invoked in order using
+\fI/bin/sh\fR, should any fail APT will abort\&. APT will pass to the commands on standard input the filenames of all \&.deb files it is going to install, one per line\&.
 .sp
-Version 2 of this protocol dumps more information, including the protocol version, the APT configuration space and the packages, files and versions being changed\. Version 2 is enabled by setting
+Version 2 of this protocol dumps more information, including the protocol version, the APT configuration space and the packages, files and versions being changed\&. Version 2 is enabled by setting
 DPkg::Tools::options::cmd::Version
-to 2\.
+to 2\&.
 cmd
 is a command given to
-Pre\-Install\-Pkgs\.
+Pre\-Install\-Pkgs\&.
 .RE
 .PP
 Run\-Directory
 .RS 4
 APT chdirs to this directory before invoking dpkg, the default is
-\fI/\fR\.
+\fI/\fR\&.
 .RE
 .PP
 Build\-options
 .RS 4
 These options are passed to
 \fBdpkg-buildpackage\fR(1)
-when compiling packages, the default is to disable signing and produce all binaries\.
+when compiling packages, the default is to disable signing and produce all binaries\&.
 .RE
 .SH "DEBUG OPTIONS"
 .PP
@@ -405,34 +405,34 @@ Most of the options in the
 debug
 section are not interesting to the normal user, however
 Debug::pkgProblemResolver
-shows interesting output about the decisions dist\-upgrade makes\.
+shows interesting output about the decisions dist\-upgrade makes\&.
 Debug::NoLocking
 disables file locking so APT can do some operations as non\-root and
 Debug::pkgDPkgPM
-will print out the command line for each dpkg invokation\.
+will print out the command line for each dpkg invokation\&.
 Debug::IdentCdrom
-will disable the inclusion of statfs data in CDROM IDs\.
+will disable the inclusion of statfs data in CDROM IDs\&.
 Debug::Acquire::gpgv
-Debugging of the gpgv method\.
+Debugging of the gpgv method\&.
 .SH "EXAMPLES"
 .PP
-\fI/usr/share/doc/apt/examples/configure\-index\.gz\fR
-is a configuration file showing example values for all possible options\.
+\fI/usr/share/doc/apt/examples/configure\-index\&.gz\fR
+is a configuration file showing example values for all possible options\&.
 .SH "FILES"
 .PP
-\fI/etc/apt/apt\.conf\fR
+\fI/etc/apt/apt\&.conf\fR
 .SH "SEE ALSO"
 .PP
 \fBapt-cache\fR(8),
 \fBapt-config\fR(8),
-\fBapt_preferences\fR(5)\.
+\fBapt_preferences\fR(5)\&.
 .SH "BUGS"
 .PP
-\fIAPT bug page\fR\&[1]\. If you wish to report a bug in APT, please see
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fIAPT bug page\fR\&[1]\&. If you wish to report a bug in APT, please see
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 or the
 \fBreportbug\fR(1)
-command\.
+command\&.
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR

@@ -25,6 +25,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <errno.h>
+#include <string.h>
 #include <stdio.h>
 #include <sstream>
 #include <map>
@@ -341,7 +342,7 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       'processing: trigproc: trigger'
 	    
    */
-   char* list[5];
+   char* list[6];
    //        dpkg sends multiline error messages sometimes (see
    //        #374195 for a example. we should support this by
    //        either patching dpkg to not send multiline over the
@@ -387,6 +388,14 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 
    if(strncmp(action,"error",strlen("error")) == 0)
    {
+      // urgs, sometime has ":" in its error string so that we
+      // end up with the error message split between list[3]
+      // and list[4], e.g. the message: 
+      // "failed in buffer_write(fd) (10, ret=-1): backend dpkg-deb ..."
+      // concat them again
+      if( list[4] != NULL )
+	 list[3][strlen(list[3])] = ':';
+
       status << "pmerror:" << list[1]
 	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
 	     << ":" << list[3]
@@ -498,7 +507,7 @@ bool pkgDPkgPM::OpenLog()
       struct tm *tmp = localtime(&t);
       strftime(outstr, sizeof(outstr), "%F  %T", tmp);
       fprintf(term_out, "\nLog started: ");
-      fprintf(term_out, outstr);
+      fprintf(term_out, "%s", outstr);
       fprintf(term_out, "\n");
    }
    return true;
@@ -513,7 +522,7 @@ bool pkgDPkgPM::CloseLog()
       struct tm *tmp = localtime(&t);
       strftime(outstr, sizeof(outstr), "%F  %T", tmp);
       fprintf(term_out, "Log ended: ");
-      fprintf(term_out, outstr);
+      fprintf(term_out, "%s", outstr);
       fprintf(term_out, "\n");
       fclose(term_out);
    }
@@ -954,10 +963,23 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
       return;
    }
 
-   // only report the first error
+   // only report the first errors
    if(pkgFailures > _config->FindI("APT::Apport::MaxReports", 3))
    {
       std::clog << _("No apport report written because MaxReports is reached already") << std::endl;
+      return;
+   }
+
+   // check if its not a follow up error 
+   const char *needle = dgettext("dpkg", "dependency problems - leaving unconfigured");
+   if(strstr(errormsg, needle) != NULL) {
+      std::clog << _("No apport report written because the error message indicates its a followup error from a previous failure.") << std::endl;
+      return;
+   }
+
+   // do not report disk-full failures 
+   if(strstr(errormsg, strerror(ENOSPC)) != NULL) {
+      std::clog << _("No apport report written because the error message indicates a disk full error") << std::endl;
       return;
    }
 

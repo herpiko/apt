@@ -11,7 +11,7 @@
 .\" disable justification (adjust text to left margin only)
 .ad l
 .SH "NAME"
-apt-get - APT package handling utility -- コマンドラインインターフェース
+apt-get \- APT package handling utility -- コマンドラインインターフェース
 .SH "SYNOPSIS"
 .HP 8
 \fBapt\-get\fR [\fB\-hvs\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[update] | [upgrade] | [dselect\-upgrade] | [install\ \fIpkg\fR...] | [remove\ \fIpkg\fR...] | [source\ \fIpkg\fR...] | [build\-dep\ \fIpkg\fR...] | [check] | [clean] | [autoclean]}
@@ -28,9 +28,9 @@ apt-get - APT package handling utility -- コマンドラインインターフェース
 update
 .RS 4
 updateは、 取得元からパッケージインデックスファイルの再同期を行うのに使用します。 利用可能なパッケージのインデックスは、
-\fI/etc/apt/sources\.list\fR
+\fI/etc/apt/sources\&.list\fR
 に記述した場所から取得します。 例えば Debian アーカイブを利用する際、 このコマンドが
-\fIPackages\.gz\fR
+\fIPackages\&.gz\fR
 ファイルを検索することで、 新規または更新されたパッケージの情報が利用可能となります。
 update
 は、upgrade
@@ -43,7 +43,7 @@ upgrade
 .RS 4
 upgrade
 は、 現在システムにインストールされている全パッケージの最新バージョンを、
-\fI/etc/apt/sources\.list\fR
+\fI/etc/apt/sources\&.list\fR
 に列挙した取得元からインストールするのに使用します。 現在インストール中のパッケージに新しいバージョンがあれば更新しますが、 いかなる時も現在インストール中のパッケージの削除は行いません。 対象のパッケージが、 他のパッケージのインストール状態を変更せずに更新できない場合は、 現在のバージョンのままとなります。 最初に
 update
 を実行しておき、
@@ -73,7 +73,7 @@ upgrade
 の機能に加え、 新バージョンのパッケージに対する依存関係の変更を知的に操作します。
 \fBapt\-get\fR
 は「洗練された」競合解決システムを持ち、 必要とあらば比較的重要でないパッケージを犠牲にして、 最重要パッケージの更新を試みます。
-\fI/etc/apt/sources\.list\fR
+\fI/etc/apt/sources\&.list\fR
 ファイルには、 必要なパッケージファイルを検索する場所のリストが含まれています。 特定のパッケージ向けに、一般的な設定を上書きする機構については、
 \fBapt_preferences\fR(5)
 をご覧ください。
@@ -83,9 +83,9 @@ install
 .RS 4
 install
 の後には、 インストールするパッケージを 1 つ以上指定します。 指定するパッケージは、完全なファイル名ではなくパッケージ名です。 (例えば Debian GNU/Linux システムでは、
-libc6_1\.9\.6\-2\.deb
+libc6_1\&.9\&.6\-2\&.deb
 ではなく libc6 を引数として与えます) インストールするよう指定したすべてのパッケージに対し、 検索・インストールを行います。
-\fI/etc/apt/sources\.list\fR
+\fI/etc/apt/sources\&.list\fR
 ファイルを、 要求するパッケージの場所を特定するのに使用します。 パッケージ名の後ろに (空白を含まず) ハイフンが追加されている場合、 そのパッケージがインストールされていれば削除します。 同様に、インストールするパッケージを明示するのにプラス記号も使用できます。 この記号は apt\-get の競合解決システムの判断に利用されるかもしれません。
 .sp
 パッケージにイコール記号とバージョンを続けることで、 選択したバージョンのパッケージをインストールすることができます。 つまり、指定のバージョンのパッケージをインストールするように選択する、 ということです。 別の方法としては、ディストリビューションを特定するのに、 パッケージ名に続けて、 スラッシュとディストリビューションのバージョンやアーカイブ名 (stable, testing, unstable) を記述できます。
@@ -95,7 +95,7 @@ libc6_1\.9\.6\-2\.deb
 最後に、\fBapt_preferences\fR(5)
 機構により、 特定のパッケージに対するインストールポリシーを作成できます。
 .sp
-構文に \'\.\', \'?\', \'*\' を含み、パッケージ名がマッチしなかった場合、 POSIX 正規表現であると見なし、 データベース内の全パッケージ名に対して適用します。 マッチしたパッケージすべてがインストール(もしくは削除)されます。 \'lo\.*\' のような文字列は、 \'how\-lo\' や \'lowest\' にマッチすることに注意してください。 そうしたくなければ、\'^\' や \'$\' を付けるか、 もっと詳しい正規表現を指定してください。
+構文に \'\&.\', \'?\', \'*\' を含み、パッケージ名がマッチしなかった場合、 POSIX 正規表現であると見なし、 データベース内の全パッケージ名に対して適用します。 マッチしたパッケージすべてがインストール(もしくは削除)されます。 \'lo\&.*\' のような文字列は、 \'how\-lo\' や \'lowest\' にマッチすることに注意してください。 そうしたくなければ、\'^\' や \'$\' を付けるか、 もっと詳しい正規表現を指定してください。
 .RE
 .PP
 remove
@@ -114,7 +114,7 @@ source
 \fBsources.list\fR(5)
 ファイルの
 deb\-src
-行から、ソースパッケージを追跡します。 これは、インストールした (またはインストールできる) パッケージと、 取得元を変えることができることを示しています。 \-\-compile オプションが指定された場合、dpkg\-buildpackage を用いて バイナリ \.deb ファイルへコンパイルを行います。 \-\-download\-only の場合はソースパッケージを展開しません。
+行から、ソースパッケージを追跡します。 これは、インストールした (またはインストールできる) パッケージと、 取得元を変えることができることを示しています。 \-\-compile オプションが指定された場合、dpkg\-buildpackage を用いて バイナリ \&.deb ファイルへコンパイルを行います。 \-\-download\-only の場合はソースパッケージを展開しません。
 .sp
 パッケージと同様に、 ソース名の後ろにイコールと取得したいバージョンを置くと、 指定したバージョンのソースを取得できます。
 APT::Get::Only\-Source
@@ -195,7 +195,7 @@ APT::Get::Fix\-Missing
 .PP
 \fB\-\-no\-download\fR
 .RS 4
-パッケージのダウンロードを無効にします。 これはすでにダウンロードした \.deb に対してのみ APT を行う場合に、
+パッケージのダウンロードを無効にします。 これはすでにダウンロードした \&.deb に対してのみ APT を行う場合に、
 \fB\-\-ignore\-missing\fR
 と併せて使うのがよいでしょう。 設定項目 \-
 APT::Get::Download
@@ -292,7 +292,7 @@ APT::Get::Purge
 \fB\-\-reinstall\fR
 .RS 4
 すでに最新版がインストールされていても、 パッケージを再インストールします。 設定項目 \-
-APT::Get::ReInstall\.
+APT::Get::ReInstall\&.
 .RE
 .PP
 \fB\-\-list\-cleanup\fR
@@ -304,13 +304,13 @@ APT::Get::ReInstall\.
 は古くなったファイルを確実に消去するため、 自動的に
 \fI/var/lib/apt/lists\fR
 の中身を管理します。 これを OFF にするのは、取得元リストを頻繁に変更する時ぐらいでしょう。 設定項目 \-
-APT::Get::List\-Cleanup\.
+APT::Get::List\-Cleanup\&.
 .RE
 .PP
 \fB\-t\fR, \fB\-\-target\-release\fR, \fB\-\-default\-release\fR
 .RS 4
 このオプションは、 ポリシーエンジンへのデフォルト入力を制御します。 これは、指定されたリリース文字列を使用し、 デフォルト pin を優先度 990 で作成することです。 優先ファイルはこの設定を上書きします。 要するにこのオプションで、 どの配布パッケージを取得するかを簡単に管理します。 一般的な例としては、
-\fB\-t \'2\.1*\'\fR
+\fB\-t \'2\&.1*\'\fR
 や
 \fB\-t unstable\fR
 でしょう。 設定項目 \-
@@ -390,19 +390,19 @@ APT::Get::AllowUnauthenticated
 .RE
 .SH "ファイル"
 .PP
-\fI/etc/apt/sources\.list\fR
+\fI/etc/apt/sources\&.list\fR
 .RS 4
 パッケージの取得元。 設定項目 \-
 Dir::Etc::SourceList
 .RE
 .PP
-\fI/etc/apt/apt\.conf\fR
+\fI/etc/apt/apt\&.conf\fR
 .RS 4
 APT 設定ファイル。 設定項目 \-
 Dir::Etc::Main
 .RE
 .PP
-\fI/etc/apt/apt\.conf\.d/\fR
+\fI/etc/apt/apt\&.conf\&.d/\fR
 .RS 4
 APT 設定ファイルの断片。 設定項目 \-
 Dir::Etc::Parts
@@ -457,16 +457,16 @@ Dir::State::Lists
 .SH "バグ"
 .PP
 \fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\.txt\fR
+\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\.or\.jp>
+<nabetaro@debian\&.or\&.jp>
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\.or\.jp>
+<debian\-doc@debian\&.or\&.jp>
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
