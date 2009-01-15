@@ -175,14 +175,6 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    for (;dlhs > lhs && *dlhs != '-'; dlhs--);
    for (;drhs > rhs && *drhs != '-'; drhs--);
 
-   if (!getenv ("BLANKON_UBUNTU_MODE")) 
-   {
-      if (dlhs < AEnd && strstr(dlhs, "blankon"))
-         for (dlhs--; dlhs > lhs && *dlhs != '-'; dlhs--);
-      if (drhs < BEnd && strstr(drhs, "blankon"))
-         for (drhs--; drhs > rhs && *drhs != '-'; drhs--);
-   }
-
    if (dlhs == lhs)
       dlhs = AEnd;
    if (drhs == rhs)
@@ -198,26 +190,6 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
       dlhs++;
    if (drhs != rhs)
       drhs++;
-
-   if (getenv ("BLANKON_UBUNTU_MODE"))
-      return CmpFragment(dlhs,AEnd,drhs,BEnd);
-     
-   if (dlhs >= AEnd && drhs >= BEnd)
-      return 0;
-   if (dlhs >= AEnd)
-   {
-      if (*drhs == '~') return 1;
-      return -1;
-   }
-   if (drhs >= BEnd)
-   {
-      if (*dlhs == '~') return -1;
-      return 1;
-   }
-   if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
-      return 1;
-   if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
-      return -1;
    
    return CmpFragment(dlhs,AEnd,drhs,BEnd);
 }

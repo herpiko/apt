@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-14 18:30+0200\n"
+"POT-Creation-Date: 2008-11-24 11:43+0100\n"
 "PO-Revision-Date: 2006-06-12 14:35+0545\n"
 "Last-Translator: Shiva Pokharel <pokharelshiva@hotmail.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -23,7 +23,7 @@ msgstr "प्याकेज %s संस्करण %s संग एउटा
 
 #: cmdline/apt-cache.cc:181 cmdline/apt-cache.cc:550 cmdline/apt-cache.cc:644
 #: cmdline/apt-cache.cc:800 cmdline/apt-cache.cc:1022
-#: cmdline/apt-cache.cc:1423 cmdline/apt-cache.cc:1574
+#: cmdline/apt-cache.cc:1423 cmdline/apt-cache.cc:1575
 #, c-format
 msgid "Unable to locate package %s"
 msgstr "प्याकेज %s तोक्न असक्षम भयो"
@@ -111,60 +111,56 @@ msgstr "कुनै प्याकेजहरू फेला परेन"
 msgid "Package files:"
 msgstr "प्याकेज फाइलहरू:"
 
-#: cmdline/apt-cache.cc:1535 cmdline/apt-cache.cc:1621
+#: cmdline/apt-cache.cc:1535 cmdline/apt-cache.cc:1622
 msgid "Cache is out of sync, can't x-ref a package file"
 msgstr "क्यास sync  भन्दा बाहिर छ, प्याकेज फाइल x-ref गर्न सक्दैन"
 
-#: cmdline/apt-cache.cc:1536
-#, c-format
-msgid "%4i %s\n"
-msgstr "%4i %s\n"
-
 #. Show any packages have explicit pins
-#: cmdline/apt-cache.cc:1548
+#: cmdline/apt-cache.cc:1549
 msgid "Pinned packages:"
 msgstr "पिन गरिएका प्याकेजहरू:"
 
-#: cmdline/apt-cache.cc:1560 cmdline/apt-cache.cc:1601
+#: cmdline/apt-cache.cc:1561 cmdline/apt-cache.cc:1602
 msgid "(not found)"
 msgstr "(फेला परेन)"
 
 #. Installed version
-#: cmdline/apt-cache.cc:1581
+#: cmdline/apt-cache.cc:1582
 msgid "  Installed: "
 msgstr "  स्थापना भयो:"
 
-#: cmdline/apt-cache.cc:1583 cmdline/apt-cache.cc:1591
+#: cmdline/apt-cache.cc:1584 cmdline/apt-cache.cc:1592
 msgid "(none)"
 msgstr "(कुनै पनि होइन)"
 
 #. Candidate Version
-#: cmdline/apt-cache.cc:1588
+#: cmdline/apt-cache.cc:1589
 msgid "  Candidate: "
 msgstr "  उमेद्वार:"
 
-#: cmdline/apt-cache.cc:1598
+#: cmdline/apt-cache.cc:1599
 msgid "  Package pin: "
 msgstr "प्याकेज पिन:"
 
 #. Show the priority tables
-#: cmdline/apt-cache.cc:1607
+#: cmdline/apt-cache.cc:1608
 msgid "  Version table:"
 msgstr "  संस्करण तालिका:"
 
-#: cmdline/apt-cache.cc:1622
+#: cmdline/apt-cache.cc:1623
 #, c-format
 msgid "       %4i %s\n"
 msgstr "       %4i %s\n"
 
-#: cmdline/apt-cache.cc:1718 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
+#: cmdline/apt-cache.cc:1719 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2600 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2602 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s को लागि %s %s, %s %s मा कम्पाएल गरिएको छ\n"
 
-#: cmdline/apt-cache.cc:1725
+#: cmdline/apt-cache.cc:1726
+#, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
 "       apt-cache [options] add file1 [file2 ...]\n"
@@ -187,8 +183,8 @@ msgid ""
 "   show - Show a readable record for the package\n"
 "   depends - Show raw dependency information for a package\n"
 "   rdepends - Show reverse dependency information for a package\n"
-"   pkgnames - List the names of all packages\n"
-"   dotty - Generate package graphs for GraphVis\n"
+"   pkgnames - List the names of all packages in the system\n"
+"   dotty - Generate package graphs for GraphViz\n"
 "   xvcg - Generate package graphs for xvcg\n"
 "   policy - Show policy settings\n"
 "\n"
@@ -225,7 +221,7 @@ msgstr ""
 "   आधारित - प्याकेजको लागि कच्चा निर्भरता सूचना देखाउनुहोस्\n"
 "   rdepends - प्याकेजको लागि उल्टो निर्भरता सूचना देखाउनुहोस्\n"
 "   pkgnames - सबै प्याकेजहरुको नामहरू सूचिबद्ध गर्नुहोस्\n"
-"   dotty - GraphVis को लागि प्याकेज ग्राफहरू सिर्जना गर्नुहोस्\n"
+"   dotty - GraphViz को लागि प्याकेज ग्राफहरू सिर्जना गर्नुहोस्\n"
 "   xvcg - xvcg को लागि प्याकेज ग्राफहरू सिर्जना गर्नुहोस्\n"
 "   नीति - नीति सेटिङ्गहरू देखाउनुहोस्\n"
 "\n"
@@ -312,7 +308,7 @@ msgstr ""
 "  -c=? यो कनफिगरेसन फाइल पढ्नुहोस्\n"
 "  -o=? एउटा स्वेच्छाचारी कनफिगरेसन विकल्प सेट गर्नुहोस्, जस्तै -o dir::cache=/tmp\n"
 
-#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:815
+#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:827
 #, c-format
 msgid "Unable to write to %s"
 msgstr " %s मा लेख्न असक्षम"
@@ -817,11 +813,11 @@ msgstr "प्याकेजहरू हट्न चाहदैछन् त
 msgid "Internal error, Ordering didn't finish"
 msgstr "आन्तरिक त्रुटि, आदेश समाप्त भएको छैन"
 
-#: cmdline/apt-get.cc:809 cmdline/apt-get.cc:1990 cmdline/apt-get.cc:2023
+#: cmdline/apt-get.cc:809 cmdline/apt-get.cc:1992 cmdline/apt-get.cc:2025
 msgid "Unable to lock the download directory"
 msgstr "डाउनलोड डाइरेक्ट्री ताल्चा मार्न असक्षम"
 
-#: cmdline/apt-get.cc:819 cmdline/apt-get.cc:2071 cmdline/apt-get.cc:2344
+#: cmdline/apt-get.cc:819 cmdline/apt-get.cc:2073 cmdline/apt-get.cc:2346
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "स्रोतहरुको सूचि पढ्न सकिएन ।"
@@ -850,7 +846,7 @@ msgstr "अनप्याक गरिसके पछि थप डिस्�
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "%sB अनप्याक गरिसके पछि डिस्क खाली ठाउँ खाली हुनेछ ।\n"
 
-#: cmdline/apt-get.cc:864 cmdline/apt-get.cc:2193
+#: cmdline/apt-get.cc:864 cmdline/apt-get.cc:2195
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr " %s मा खाली ठाऊँ निर्धारण गर्न सकिएन"
@@ -887,7 +883,7 @@ msgstr "परित्याग गर्नुहोस् ।"
 msgid "Do you want to continue [Y/n]? "
 msgstr "के तपाईँ निरन्तरता दिन चाहनुहुन्छ [Y/n]? "
 
-#: cmdline/apt-get.cc:984 cmdline/apt-get.cc:2241 apt-pkg/algorithms.cc:1343
+#: cmdline/apt-get.cc:984 cmdline/apt-get.cc:2243 apt-pkg/algorithms.cc:1348
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "%s  %s तान्न असफल भयो\n"
@@ -896,7 +892,7 @@ msgstr "%s  %s तान्न असफल भयो\n"
 msgid "Some files failed to download"
 msgstr "केही फाइलहरू डाउनलोड गर्न असफल भयो"
 
-#: cmdline/apt-get.cc:1003 cmdline/apt-get.cc:2250
+#: cmdline/apt-get.cc:1003 cmdline/apt-get.cc:2252
 msgid "Download complete and in download only mode"
 msgstr "डाउनलोड समाप्त भयो र डाउनलोडमा मोड मात्रै छ"
 
@@ -1022,7 +1018,17 @@ msgid ""
 "shouldn't happen. Please file a bug report against apt."
 msgstr ""
 
-#: cmdline/apt-get.cc:1445 cmdline/apt-get.cc:1733
+#.
+#. if (Packages == 1)
+#. {
+#. c1out << endl;
+#. c1out <<
+#. _("Since you only requested a single operation it is extremely likely that\n"
+#. "the package is simply not installable and a bug report against\n"
+#. "that package should be filed.") << endl;
+#. }
+#.
+#: cmdline/apt-get.cc:1445 cmdline/apt-get.cc:1735
 msgid "The following information may help to resolve the situation:"
 msgstr "निम्न सूचनाले अवस्थालाई हल गर्न मद्दत गर्नेछ: "
 
@@ -1080,65 +1086,55 @@ msgstr ""
 " वितरण अहिले सम्म सिर्जना\n"
 " भएको छैन वा आवगमन विनानै सर्यो ।"
 
-#: cmdline/apt-get.cc:1728
-msgid ""
-"Since you only requested a single operation it is extremely likely that\n"
-"the package is simply not installable and a bug report against\n"
-"that package should be filed."
-msgstr ""
-"तपाईँले एकल सञ्चालन मात्र अनुरोध गरे पछि\n"
-" यो प्याकेज साधरण तरिकाले नितान्त  स्थापनायोग्य देखिदैन र त्यो प्याकेज विरुद्धको\n"
-" बग प्रतिवेदन भरिनेछ ।"
-
-#: cmdline/apt-get.cc:1736
+#: cmdline/apt-get.cc:1738
 msgid "Broken packages"
 msgstr "भाँचिएका प्याकेजहरू"
 
-#: cmdline/apt-get.cc:1765
+#: cmdline/apt-get.cc:1767
 msgid "The following extra packages will be installed:"
 msgstr "निम्न अतिरिक्त प्याकेजहरू स्थापना हुनेछन्:"
 
-#: cmdline/apt-get.cc:1854
+#: cmdline/apt-get.cc:1856
 msgid "Suggested packages:"
 msgstr "सुझाव दिएका प्याकेजहरू:"
 
-#: cmdline/apt-get.cc:1855
+#: cmdline/apt-get.cc:1857
 msgid "Recommended packages:"
 msgstr "सिफारिस गरिएका प्याकेजहरू:"
 
-#: cmdline/apt-get.cc:1883
+#: cmdline/apt-get.cc:1885
 msgid "Calculating upgrade... "
 msgstr "स्तर वृद्धि गणना गरिदैछ..."
 
-#: cmdline/apt-get.cc:1886 methods/ftp.cc:702 methods/connect.cc:111
+#: cmdline/apt-get.cc:1888 methods/ftp.cc:702 methods/connect.cc:111
 msgid "Failed"
 msgstr "असफल भयो"
 
-#: cmdline/apt-get.cc:1891
+#: cmdline/apt-get.cc:1893
 msgid "Done"
 msgstr "काम भयो"
 
-#: cmdline/apt-get.cc:1958 cmdline/apt-get.cc:1966
+#: cmdline/apt-get.cc:1960 cmdline/apt-get.cc:1968
 msgid "Internal error, problem resolver broke stuff"
 msgstr "आन्तरिक त्रुटि,समस्या हलकर्ताले उत्तम गुण भाँच्यो "
 
-#: cmdline/apt-get.cc:2066
+#: cmdline/apt-get.cc:2068
 msgid "Must specify at least one package to fetch source for"
 msgstr "को लागि स्रोत तान्न कम्तिमा एउटा प्याकेज निर्दिष्ट गर्नुपर्छ"
 
-#: cmdline/apt-get.cc:2096 cmdline/apt-get.cc:2362
+#: cmdline/apt-get.cc:2098 cmdline/apt-get.cc:2364
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "%s को लागि स्रोत प्याकेज फेला पार्न असफल भयो"
 
-#: cmdline/apt-get.cc:2112
+#: cmdline/apt-get.cc:2114
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2117
+#: cmdline/apt-get.cc:2119
 #, c-format
 msgid ""
 "Please use:\n"
@@ -1146,81 +1142,81 @@ msgid ""
 "to retrieve the latest (possible unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2172
+#: cmdline/apt-get.cc:2174
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "पहिल्यै डाउनलोड भएका फाइलहरु फड्काइदैछ '%s'\n"
 
-#: cmdline/apt-get.cc:2200
+#: cmdline/apt-get.cc:2202
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "तपाईँ संग %s मा पर्याप्त खाली ठाऊँ छैन"
 
-#: cmdline/apt-get.cc:2206
+#: cmdline/apt-get.cc:2208
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "स्रोत संग्रहहरुको %sB/%sB प्राप्त गर्न आवश्यक छ ।\n"
 
-#: cmdline/apt-get.cc:2209
+#: cmdline/apt-get.cc:2211
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "स्रोत संग्रहहरुको %sB प्राप्त गर्न आवश्यक छ ।\n"
 
-#: cmdline/apt-get.cc:2215
+#: cmdline/apt-get.cc:2217
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "स्रोत फड्काउनुहोस् %s\n"
 
-#: cmdline/apt-get.cc:2246
+#: cmdline/apt-get.cc:2248
 msgid "Failed to fetch some archives."
 msgstr "केही संग्रह फड्काउन असफल भयो ।"
 
-#: cmdline/apt-get.cc:2274
+#: cmdline/apt-get.cc:2276
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr " %s मा पहिल्यै अनप्याक गरिएका स्रोतको अनप्याक फड्काइदैछ\n"
 
-#: cmdline/apt-get.cc:2286
+#: cmdline/apt-get.cc:2288
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "अनप्याक आदेश '%s' असफल भयो ।\n"
 
-#: cmdline/apt-get.cc:2287
+#: cmdline/apt-get.cc:2289
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "जाँच्नुहोस् यदि 'dpkg-dev' प्याकेज स्थापना भयो ।\n"
 
-#: cmdline/apt-get.cc:2304
+#: cmdline/apt-get.cc:2306
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "निर्माण आदेश '%s' असफल भयो ।\n"
 
-#: cmdline/apt-get.cc:2323
+#: cmdline/apt-get.cc:2325
 msgid "Child process failed"
 msgstr "शाखा प्रक्रिया असफल भयो"
 
-#: cmdline/apt-get.cc:2339
+#: cmdline/apt-get.cc:2341
 msgid "Must specify at least one package to check builddeps for"
 msgstr "को लागि builddeps जाँच्न कम्तिमा एउटा प्याकेज निर्दष्ट गर्नुपर्छ"
 
-#: cmdline/apt-get.cc:2367
+#: cmdline/apt-get.cc:2369
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "%s को लागि निर्माण-निर्भरता सूचना प्राप्त गर्न असक्षम भयो"
 
-#: cmdline/apt-get.cc:2387
+#: cmdline/apt-get.cc:2389
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s कुनै निर्माणमा आधारित हुदैन ।\n"
 
-#: cmdline/apt-get.cc:2439
+#: cmdline/apt-get.cc:2441
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "%s को लागि %s निर्भरता सन्तुष्ट हुन सकेन किनभने प्याकेज %s फेला पार्न सकिएन"
 
-#: cmdline/apt-get.cc:2492
+#: cmdline/apt-get.cc:2494
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1229,30 +1225,30 @@ msgstr ""
 "%sको लागि %s निर्भरता सन्तुष्ट हुन सकेन किन भने प्याकेज %s को कुनै उपलब्ध संस्करणले संस्करण "
 "आवश्यकताहरुलाई सन्तुष्ट पार्न सकेन "
 
-#: cmdline/apt-get.cc:2528
+#: cmdline/apt-get.cc:2530
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr "%s को लागि %s निर्भरता सन्तुष्ट पार्न असफल भयो: स्थापित प्याकेज %s अति नयाँ छ"
 
-#: cmdline/apt-get.cc:2555
+#: cmdline/apt-get.cc:2557
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%s को लागि %s निर्भरता सन्तुष्ट गर्न असफल: %s"
 
-#: cmdline/apt-get.cc:2569
+#: cmdline/apt-get.cc:2571
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "%s को लागि निर्माण निर्भरताहरू सन्तुष्ट गर्न सकिएन । "
 
-#: cmdline/apt-get.cc:2573
+#: cmdline/apt-get.cc:2575
 msgid "Failed to process build dependencies"
 msgstr "निर्माण निर्भरताहरू प्रक्रिया गर्न असफल"
 
-#: cmdline/apt-get.cc:2605
+#: cmdline/apt-get.cc:2607
 msgid "Supported modules:"
 msgstr "समर्थित मोड्युलहरू:"
 
-#: cmdline/apt-get.cc:2646
+#: cmdline/apt-get.cc:2648
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1597,9 +1593,9 @@ msgid "The info and temp directories need to be on the same filesystem"
 msgstr "सूचना र टेम्प डाइरेक्ट्रीहरू एउटै फाइल प्रणालीमा हुनपर्छ"
 
 #. Build the status cache
-#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:748
-#: apt-pkg/pkgcachegen.cc:817 apt-pkg/pkgcachegen.cc:822
-#: apt-pkg/pkgcachegen.cc:945
+#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:760
+#: apt-pkg/pkgcachegen.cc:829 apt-pkg/pkgcachegen.cc:834
+#: apt-pkg/pkgcachegen.cc:957
 msgid "Reading package lists"
 msgstr "प्याकेज सूचिहरू पढिदैछ"
 
@@ -2456,13 +2452,13 @@ msgstr ""
 msgid "Index file type '%s' is not supported"
 msgstr "अनुक्रमणिका फाइल प्रकार '%s' समर्थित छैन"
 
-#: apt-pkg/algorithms.cc:247
+#: apt-pkg/algorithms.cc:248
 #, c-format
 msgid ""
 "The package %s needs to be reinstalled, but I can't find an archive for it."
 msgstr "प्याकेज %s पुन:स्थापना हुन चाहन्छ, तर यसको लागि मैले एउटा संग्रह फेला पार्न सकिन ।"
 
-#: apt-pkg/algorithms.cc:1106
+#: apt-pkg/algorithms.cc:1107
 msgid ""
 "Error, pkgProblemResolver::Resolve generated breaks, this may be caused by "
 "held packages."
@@ -2470,11 +2466,11 @@ msgstr ""
 "त्रुटि, pkgProblemResolver:: समाधानले विच्छेदन सिर्जना गर्दछ, यो भइरहेको प्याकेजहरुको "
 "कारणले गर्दा हो ।"
 
-#: apt-pkg/algorithms.cc:1108
+#: apt-pkg/algorithms.cc:1109
 msgid "Unable to correct problems, you have held broken packages."
 msgstr "समस्याहरू सुधार्न असक्षम भयो, तपाईँले प्याकेजहरु भाँच्नुभयो ।"
 
-#: apt-pkg/algorithms.cc:1369 apt-pkg/algorithms.cc:1371
+#: apt-pkg/algorithms.cc:1374 apt-pkg/algorithms.cc:1376
 msgid ""
 "Some index files failed to download, they have been ignored, or old ones "
 "used instead."
@@ -2572,83 +2568,83 @@ msgstr " %s प्रक्रिया गर्दा त्रुटि द�
 msgid "Error occurred while processing %s (UsePackage1)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (प्याकेज १ प्रयोग गर्नुहोस्)"
 
-#: apt-pkg/pkgcachegen.cc:153
+#: apt-pkg/pkgcachegen.cc:164
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc1)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (नयाँ फाइल संस्करण १)"
 
-#: apt-pkg/pkgcachegen.cc:178
+#: apt-pkg/pkgcachegen.cc:189
 #, c-format
 msgid "Error occurred while processing %s (UsePackage2)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (प्याकेज २ प्रयोग गर्नुहोस्)"
 
-#: apt-pkg/pkgcachegen.cc:182
+#: apt-pkg/pkgcachegen.cc:193
 #, c-format
 msgid "Error occurred while processing %s (NewFileVer1)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (नयाँ फाइल संस्करण १)"
 
-#: apt-pkg/pkgcachegen.cc:213
+#: apt-pkg/pkgcachegen.cc:224
 #, c-format
 msgid "Error occurred while processing %s (NewVersion1)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (नयाँ संस्करण १)"
 
-#: apt-pkg/pkgcachegen.cc:217
+#: apt-pkg/pkgcachegen.cc:228
 #, c-format
 msgid "Error occurred while processing %s (UsePackage3)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (प्याकेज ३ प्रयोग गर्नुहोस्)"
 
-#: apt-pkg/pkgcachegen.cc:221
+#: apt-pkg/pkgcachegen.cc:232
 #, c-format
 msgid "Error occurred while processing %s (NewVersion2)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (नयाँ संस्करण २)"
 
-#: apt-pkg/pkgcachegen.cc:245
+#: apt-pkg/pkgcachegen.cc:256
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc2)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (नयाँ फाइल संस्करण १)"
 
-#: apt-pkg/pkgcachegen.cc:251
+#: apt-pkg/pkgcachegen.cc:262
 msgid "Wow, you exceeded the number of package names this APT is capable of."
 msgstr "वाऊ, APT ले सक्षम गरेको प्याकेज नामहरुको नम्बरलाई तपाईँले उछिन्नुभयो । "
 
-#: apt-pkg/pkgcachegen.cc:254
+#: apt-pkg/pkgcachegen.cc:265
 msgid "Wow, you exceeded the number of versions this APT is capable of."
 msgstr "वाऊ, APT ले सक्षम गरेको संस्करणहरुको नम्बरलाई तपाईँले उछिन्नुभयो । "
 
-#: apt-pkg/pkgcachegen.cc:257
+#: apt-pkg/pkgcachegen.cc:268
 #, fuzzy
 msgid "Wow, you exceeded the number of descriptions this APT is capable of."
 msgstr "वाऊ, APT ले सक्षम गरेको संस्करणहरुको नम्बरलाई तपाईँले उछिन्नुभयो । "
 
-#: apt-pkg/pkgcachegen.cc:260
+#: apt-pkg/pkgcachegen.cc:271
 msgid "Wow, you exceeded the number of dependencies this APT is capable of."
 msgstr "वाऊ, APT ले सक्षम गरेको निर्भरताहरुको नम्बरलाई तपाईँले उछिन्नुभयो । "
 
-#: apt-pkg/pkgcachegen.cc:288
+#: apt-pkg/pkgcachegen.cc:299
 #, c-format
 msgid "Error occurred while processing %s (FindPkg)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (pkg फेला पार्नुहोस् )"
 
-#: apt-pkg/pkgcachegen.cc:301
+#: apt-pkg/pkgcachegen.cc:312
 #, c-format
 msgid "Error occurred while processing %s (CollectFileProvides)"
 msgstr " %s प्रक्रिया गर्दा त्रुटि देखा पर्यो (संकलन फाइलले उपलब्ध गर्दछ)"
 
-#: apt-pkg/pkgcachegen.cc:307
+#: apt-pkg/pkgcachegen.cc:318
 #, c-format
 msgid "Package %s %s was not found while processing file dependencies"
 msgstr "फाइल निर्भरताहरू प्रक्रिया गर्दा प्याकेज %s %s फेला परेन"
 
-#: apt-pkg/pkgcachegen.cc:678
+#: apt-pkg/pkgcachegen.cc:690
 #, c-format
 msgid "Couldn't stat source package list %s"
 msgstr "स्रोत प्याकेज सूची %s स्थिर गर्न सकिएन "
 
-#: apt-pkg/pkgcachegen.cc:763
+#: apt-pkg/pkgcachegen.cc:775
 msgid "Collecting File Provides"
 msgstr "फाइल उपलब्धताहरू संकलन गरिदैछ"
 
-#: apt-pkg/pkgcachegen.cc:890 apt-pkg/pkgcachegen.cc:897
+#: apt-pkg/pkgcachegen.cc:902 apt-pkg/pkgcachegen.cc:909
 msgid "IO Error saving source cache"
 msgstr "स्रोत क्यास बचत गर्दा IO त्रुटि"
 
@@ -2661,28 +2657,28 @@ msgstr "पुन:नामकरण असफल गरियो, %s (%s -> %s)
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum मेल भएन"
 
-#: apt-pkg/acquire-item.cc:696 apt-pkg/acquire-item.cc:1460
+#: apt-pkg/acquire-item.cc:707 apt-pkg/acquire-item.cc:1478
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "MD5Sum मेल भएन"
 
-#: apt-pkg/acquire-item.cc:1152
+#: apt-pkg/acquire-item.cc:1170
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "निम्न कुञ्जी IDs को लागि कुनै सार्वजनिक कुञ्जी उपलब्ध छैन:\n"
 
-#: apt-pkg/acquire-item.cc:1226
+#: apt-pkg/acquire-item.cc:1244
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used.GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1235
+#: apt-pkg/acquire-item.cc:1253
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1265
+#: apt-pkg/acquire-item.cc:1283
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2691,7 +2687,7 @@ msgstr ""
 "%s प्याकेजको लागि मैले फाइल स्थित गर्न सकिन । यसको मतलब तपाईँले म्यानुल्ली यो प्याकेज "
 "निश्चित गर्नुहोस् । (arch हराएरहेको कारणले) "
 
-#: apt-pkg/acquire-item.cc:1324
+#: apt-pkg/acquire-item.cc:1342
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2700,13 +2696,13 @@ msgstr ""
 "%s प्याकेजको लागि मैले फाइल स्थित गर्न सकिन । यसको मतलब तपाईँले म्यानुल्ली यो प्याकेज "
 "निश्चित गर्नुहोस् ।"
 
-#: apt-pkg/acquire-item.cc:1365
+#: apt-pkg/acquire-item.cc:1383
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "प्याकेज अनुक्रमणिका फाइलहरू दूषित भए । प्याकेज %s को लागि कुनै फाइलनाम: फाँट छैन ।"
 
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "साइज मेल खाएन"
 
@@ -2817,98 +2813,97 @@ msgstr "मेल नखाएका फाइल %i हरू संगै %i �
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "हराइरहेको फाइल %i हरू र मेल नखाएका फाइल %i हरू संगै %i रेकर्डहरू लेख्नुहोस् ।\n"
 
-#: apt-pkg/deb/dpkgpm.cc:497
-#, fuzzy, c-format
-msgid "Directory '%s' missing"
-msgstr "आंशिक सूचिहरुको डाइरेक्ट्री %s हराइरहेछ ।"
-
-#: apt-pkg/deb/dpkgpm.cc:581
-#, c-format
-msgid "Preparing %s"
-msgstr " %s तयार गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:582
-#, c-format
-msgid "Unpacking %s"
-msgstr " %s अनप्याक गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:587
-#, c-format
-msgid "Preparing to configure %s"
-msgstr " %s कनफिगर गर्न तयार गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:588 apt-pkg/deb/dpkgpm.cc:617
-#, c-format
-msgid "Configuring %s"
-msgstr " %s कनफिगर गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:590 apt-pkg/deb/dpkgpm.cc:591
-#, fuzzy, c-format
-msgid "Processing triggers for %s"
-msgstr "डाइरेक्ट्री %s प्रक्रिया गर्दा त्रुटि"
-
-#: apt-pkg/deb/dpkgpm.cc:593
-#, c-format
-msgid "Installed %s"
-msgstr " %s स्थापना भयो"
-
-#: apt-pkg/deb/dpkgpm.cc:598 apt-pkg/deb/dpkgpm.cc:600
-#: apt-pkg/deb/dpkgpm.cc:601
-#, c-format
-msgid "Preparing for removal of %s"
-msgstr " %s हटाउन तयार गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:603 apt-pkg/deb/dpkgpm.cc:618
-#, c-format
-msgid "Removing %s"
-msgstr " %s हटाइदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:604
-#, c-format
-msgid "Removed %s"
-msgstr " %s हट्यो"
-
-#: apt-pkg/deb/dpkgpm.cc:609
-#, c-format
-msgid "Preparing to completely remove %s"
-msgstr " %s पूर्ण रुपले हटाउन तयार गरिदैछ"
-
-#: apt-pkg/deb/dpkgpm.cc:610
-#, c-format
-msgid "Completely removed %s"
-msgstr " %s पूर्ण रुपले हट्यो"
-
-#. populate the "processing" map
-#: apt-pkg/deb/dpkgpm.cc:616
+#: apt-pkg/deb/dpkgpm.cc:51
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr " %s स्थापना भयो"
 
-#: apt-pkg/deb/dpkgpm.cc:619
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:628
+#, c-format
+msgid "Configuring %s"
+msgstr " %s कनफिगर गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:643
+#, c-format
+msgid "Removing %s"
+msgstr " %s हटाइदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:54
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:770
+#: apt-pkg/deb/dpkgpm.cc:532
+#, fuzzy, c-format
+msgid "Directory '%s' missing"
+msgstr "आंशिक सूचिहरुको डाइरेक्ट्री %s हराइरहेछ ।"
+
+#: apt-pkg/deb/dpkgpm.cc:621
+#, c-format
+msgid "Preparing %s"
+msgstr " %s तयार गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:622
+#, c-format
+msgid "Unpacking %s"
+msgstr " %s अनप्याक गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:627
+#, c-format
+msgid "Preparing to configure %s"
+msgstr " %s कनफिगर गर्न तयार गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:630 apt-pkg/deb/dpkgpm.cc:631
+#, fuzzy, c-format
+msgid "Processing triggers for %s"
+msgstr "डाइरेक्ट्री %s प्रक्रिया गर्दा त्रुटि"
+
+#: apt-pkg/deb/dpkgpm.cc:633
+#, c-format
+msgid "Installed %s"
+msgstr " %s स्थापना भयो"
+
+#: apt-pkg/deb/dpkgpm.cc:638 apt-pkg/deb/dpkgpm.cc:640
+#: apt-pkg/deb/dpkgpm.cc:641
+#, c-format
+msgid "Preparing for removal of %s"
+msgstr " %s हटाउन तयार गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:644
+#, c-format
+msgid "Removed %s"
+msgstr " %s हट्यो"
+
+#: apt-pkg/deb/dpkgpm.cc:649
+#, c-format
+msgid "Preparing to completely remove %s"
+msgstr " %s पूर्ण रुपले हटाउन तयार गरिदैछ"
+
+#: apt-pkg/deb/dpkgpm.cc:650
+#, c-format
+msgid "Completely removed %s"
+msgstr " %s पूर्ण रुपले हट्यो"
+
+#: apt-pkg/deb/dpkgpm.cc:807
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:969
+#: apt-pkg/deb/dpkgpm.cc:1013
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:974
+#: apt-pkg/deb/dpkgpm.cc:1018
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:976
+#: apt-pkg/deb/dpkgpm.cc:1020
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:982
+#: apt-pkg/deb/dpkgpm.cc:1026
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -2929,6 +2924,18 @@ msgstr "फाइल %s खोल्न सकिएन"
 #: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "जडान असमायिक बन्द भयो"
+
+#~ msgid "%4i %s\n"
+#~ msgstr "%4i %s\n"
+
+#~ msgid ""
+#~ "Since you only requested a single operation it is extremely likely that\n"
+#~ "the package is simply not installable and a bug report against\n"
+#~ "that package should be filed."
+#~ msgstr ""
+#~ "तपाईँले एकल सञ्चालन मात्र अनुरोध गरे पछि\n"
+#~ " यो प्याकेज साधरण तरिकाले नितान्त  स्थापनायोग्य देखिदैन र त्यो प्याकेज विरुद्धको\n"
+#~ " बग प्रतिवेदन भरिनेछ ।"
 
 #, fuzzy
 #~ msgid "Line %d too long (max %lu)"
