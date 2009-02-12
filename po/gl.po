@@ -1,18 +1,22 @@
+# translation of apt_po_gl.po to galician
 # Galician translation of apt
 # This file is put in the public domain.
-# Jacobo Tarrío <jtarrio@debian.org>, 2005, 2007, 2008.
 #
+# Jacobo Tarrío <jtarrio@debian.org>, 2005, 2007, 2008.
+# mvillarino <mvillarino@users.sourceforge.net>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: apt\n"
+"Project-Id-Version: apt_po_gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
-"PO-Revision-Date: 2008-07-28 22:28+0100\n"
-"Last-Translator: Jacobo Tarrío <jtarrio@debian.org>\n"
-"Language-Team: Galician <proxecto@trasno.net>\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
+"PO-Revision-Date: 2008-12-17 22:44+0100\n"
+"Last-Translator: mvillarino <mvillarino@users.sourceforge.net>\n"
+"Language-Team: galician <proxecto@trasno.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: cmdline/apt-cache.cc:141
 #, c-format
@@ -158,7 +162,6 @@ msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s para %s compilado o %s %s\n"
 
 #: cmdline/apt-cache.cc:1726
-#, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
 "       apt-cache [options] add file1 [file2 ...]\n"
@@ -998,6 +1001,11 @@ msgstr "Non se atopou a versión \"%s\" de \"%s\""
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Escolleuse a versión %s (%s) de %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "A orde \"update\" non toma argumentos"
@@ -1266,6 +1274,7 @@ msgid "Supported modules:"
 msgstr "Módulos soportados:"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1281,7 +1290,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1884,7 +1893,7 @@ msgstr "A conexión do socket de datos esgotou o tempo"
 msgid "Unable to accept connection"
 msgstr "Non se pode aceptar a conexión"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problema ao calcular o hash do ficheiro"
 
@@ -2022,81 +2031,80 @@ msgstr "Non se puido abrir unha canle para %s"
 msgid "Read error from %s process"
 msgstr "Erro de lectura do proceso %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "A agardar polas cabeceiras"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Recibiuse unha soa liña de cabeceira en %u caracteres"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Liña de cabeceira incorrecta"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "O servidor HTTP enviou unha cabeceira de resposta non válida"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "O servidor HTTP enviou unha cabeceira Content-Length non válida"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "O servidor HTTP enviou unha cabeceira Content-Range non válida"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "Este servidor HTTP ten un soporte de rangos roto"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Formato de data descoñecido"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Fallou a chamada a select"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "A conexión esgotou o tempo"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Erro ao escribir no ficheiro de saída"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Erro ao escribir nun ficheiro"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Erro ao escribir no ficheiro"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Erro ao ler do servidor. O extremo remoto pechou a conexión"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Erro ao ler do servidor"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
-#, fuzzy
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
-msgstr "Non se puido gravar o ficheiro %s"
+msgstr "Non se puido truncar o ficheiro"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Datos da cabeceira incorrectos"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "A conexión fallou"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Erro interno"
 
@@ -2109,11 +2117,38 @@ msgstr "Non se pode facer mmap sobre un ficheiro baleiro"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Non se puido facer mmap de %lu bytes"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "Non se atopou a selección %s"
@@ -2542,7 +2577,7 @@ msgstr "Non se puido atopar o controlador de métodos %s."
 msgid "Method %s did not start correctly"
 msgstr "O método %s non se iniciou correctamente"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Introduza o disco etiquetado: \"%s\" na unidade \"%s\" e prema Intro."
@@ -2742,6 +2777,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "Os tamaños non coinciden"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Non se pode analizar o ficheiro de paquetes %s (1)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Nota, escóllese %s no canto de %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2951,6 +3001,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Non se puido bloquear o directorio de listas"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -2969,55 +3047,5 @@ msgstr "A conexión pechouse prematuramente"
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
 
-#~ msgid ""
-#~ "Since you only requested a single operation it is extremely likely that\n"
-#~ "the package is simply not installable and a bug report against\n"
-#~ "that package should be filed."
-#~ msgstr ""
-#~ "Xa que só solicitou unha soa operación, é bastante probable que o\n"
-#~ "paquete non sea instalable e que se deba informar dun erro no paquete."
-
-#~ msgid "Line %d too long (max %lu)"
-#~ msgstr "Liña %d longa de máis (máximo %lu)"
-
-#, fuzzy
-#~ msgid "Line %d too long (max %d)"
-#~ msgstr "Liña %d longa de máis (máximo %u)"
-
-#, fuzzy
-#~ msgid "Error occured while processing %s (NewFileDesc1)"
-#~ msgstr "Ocorreu un erro ao procesar %s (NewFileDesc1)"
-
-#, fuzzy
-#~ msgid "Error occured while processing %s (NewFileDesc2)"
-#~ msgstr "Ocorreu un erro ao procesar %s (NewFileDesc2)"
-
-#, fuzzy
-#~ msgid "Stored label: %s \n"
-#~ msgstr "Etiqueta armacenada: %s \n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Found %i package indexes, %i source indexes, %i translation indexes and %"
-#~ "i signatures\n"
-#~ msgstr ""
-#~ "Atopáronse %u índices de paquetes, %u índices de fontes, %u índices de "
-#~ "traducións e %u sinaturas\n"
-
-#~ msgid "openpty failed\n"
-#~ msgstr "Fallou a chamada a openpty\n"
-
-#~ msgid "File date has changed %s"
-#~ msgstr "A data do ficheiro cambiou %s"
-
-#~ msgid "Reading file list"
-#~ msgstr "A ler a lista de paquetes"
-
-#~ msgid "Could not execute "
-#~ msgstr "Non se puido executar "
-
-#~ msgid "Preparing for remove with config %s"
-#~ msgstr "A se preparar para a eliminación con config %s"
-
-#~ msgid "Removed with config %s"
-#~ msgstr "Eliminouse con config %s"
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "O MMap Dinámico esgotou o espazo"

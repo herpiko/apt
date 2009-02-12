@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po_km\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2006-10-10 09:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -991,6 +991,11 @@ msgstr "រក​មិន​ឃើញ​កំណែ​ '%s' សម្រាប
 msgid "Selected version %s (%s) for %s\n"
 msgstr "បានជ្រើស​កំណែ​ %s (%s) សម្រាប់ %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "ពាក្យ​បញ្ជា​ដែលធ្វើ​ឲ្យ​ទាន់​សម័យ​គ្មាន​អាគុយម៉ង់​ទេ"
@@ -1265,7 +1270,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1857,7 +1862,7 @@ msgstr "ការតភ្ជាប់​រន្ធ​​ទិន្នន័
 msgid "Unable to accept connection"
 msgstr "មិនអាច​ទទួលយក​ការតភ្ជាប់​បានឡើយ"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "បញ្ហា​ធ្វើឲ្យខូច​ឯកសារ"
 
@@ -1988,81 +1993,81 @@ msgstr "មិន​អាច​បើក​បំពុង​សម្រាប
 msgid "Read error from %s process"
 msgstr "អាចន​កំហុស​ពី​ដំណើរការ %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "កំពុង​រង់ចាំ​បឋមកថា"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "យកបន្ទាត់​បឋមកថា​តែមួយ​​ ដែលលើស %u តួអក្សរ"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "ជួរ​បឋមកថា​ខូច​"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "ម៉ាស៊ីន​បម្រើ​ HTTP បានផ្ញើបឋមកថាចម្លើយតបមិនត្រឹមត្រូវ"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "ម៉ាស៊ីន​បម្រើ​ HTTP បានផ្ញើ​​បឋមកថាប្រវែង​​​មាតិកា​មិនត្រឹមត្រូវ​"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "ម៉ាស៊ីន​បម្រើ​ HTTP បានផ្ញើ​បឋមកថា​ជួរ​មាតិកា​មិន​ត្រឹមត្រូវ​"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "ម៉ាស៊ីន​បម្រើ HTTP នេះបាន​ខូច​​​ជួរ​គាំទ្រ​"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "មិនស្គាល់​ទ្រង់ទ្រាយ​កាលបរិច្ឆេទ"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "ជ្រើស​បាន​បរាជ័យ​"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "ការតភ្ជាប់​បាន​អស់ពេល​"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "កំហុស​ក្នុងការ​សរសេរទៅកាន់​ឯកសារលទ្ធផល"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "កំហុស​ក្នុងការ​សរសេរទៅកាន់​ឯកសារ"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "កំហុសក្នុងការ​សរសេរ​ទៅកាន់​ឯកសារ"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "កំហុស​ក្នុងការ​អាន​ពី​ម៉ាស៊ីនបម្រើ ។ ការបញ្ចប់​ពីចម្ងាយ​បានបិទការតភ្ជាប់"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "កំហុស​ក្នុងការអាន​ពី​ម៉ាស៊ីន​បម្រើ"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "បរាជ័យ​ក្នុងការ​សរសេរ​ឯកសារ %s"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "ទិន្នន័យ​បឋមកថា​ខូច"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "ការតភ្ជាប់​បាន​បរាជ័យ​"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "កំហុស​ខាង​ក្នុង​"
 
@@ -2075,11 +2080,38 @@ msgstr "មិនអាច mmap ឯកសារទទេ​បានឡើយ"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "មិន​អាច​បង្កើត​ mmap នៃ​ %lu បៃបានឡើយ"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "ជម្រើស​ %s រក​មិន​ឃើញ​ឡើយ"
@@ -2506,7 +2538,7 @@ msgstr "មិនអាច​រកឃើញ​កម្មវិធី​បញ
 msgid "Method %s did not start correctly"
 msgstr "វិធីសាស្ត្រ​ %s មិន​អាច​ចាប់​ផ្តើម​ត្រឹមត្រូវ​ទេ​"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "សូម​បញ្ចូល​ស្លាក​ឌីស​ ៖ '%s' ក្នុង​ដ្រាយ​ '%s' ហើយ​សង្កត់​ចូល ។"
@@ -2700,6 +2732,21 @@ msgstr "កញ្ចប់​ឯកសារ​លិបិក្រម​ត្
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "ទំហំ​មិនបាន​ផ្គួផ្គង​"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "មិនអាច​ញែក​ឯកសារកញ្ចប់ %s (1) បានឡើយ"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "ចំណាំ កំពុង​ជ្រើស​ %s ជំនួស​ %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2902,6 +2949,34 @@ msgstr ""
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "មិន​អាច​ចាក់​សោ​ថត​បញ្ជីបានឡើយ"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

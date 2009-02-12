@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.7.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
-"PO-Revision-Date: 2008-09-05 17:03+0930\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
+"PO-Revision-Date: 2008-12-22 19:04+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.7b3\n"
+"X-Generator: LocFactoryEditor 1.8\n"
 
 #: cmdline/apt-cache.cc:141
 #, c-format
@@ -160,7 +160,6 @@ msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s cho %s được biên dịch trên %s %s\n"
 
 #: cmdline/apt-cache.cc:1726
-#, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
 "       apt-cache [options] add file1 [file2 ...]\n"
@@ -198,7 +197,7 @@ msgid ""
 "  -o=? Set an arbitrary configuration option, eg -o dir::cache=/tmp\n"
 "See the apt-cache(8) and apt.conf(5) manual pages for more information.\n"
 msgstr ""
-"Cách sử dụng: apt-cache [tùy_chọn...] lệnh\n"
+"Sử dụng: apt-cache [tùy_chọn...] lệnh\n"
 "       apt-cache [tùy_chọn...] add tập_tin1 [tập_tin2 ...]\n"
 "       apt-cache [tùy_chọn...] showpkg gói1 [gói2 ...]\n"
 "       apt-cache [tùy_chọn...] showsrc gói1 [gói2 ...]\n"
@@ -238,7 +237,7 @@ msgstr ""
 "\t\t\tcho lệnh chưa thực hiện.\n"
 "  -c=? \t\tĐọc tập tin _cấu hình_ này\n"
 "  -o=? \t\tLập một tùy chọn cấu hình nhiệm ý, v.d. « -o dir::cache=/tmp »\n"
-"Để tìm thông tin thêm thì bạn hãy xem hai trang « man » (hướng dẫn)\n"
+"Để tìm thông tin thêm, xem hai trang « man » (hướng dẫn)\n"
 "\t\t\tapt-cache(8) và apt.conf(5).\n"
 
 #: cmdline/apt-cdrom.cc:78
@@ -1022,6 +1021,11 @@ msgstr "Không tìm thấy phiên bản « %s » cho « %s »"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Đã chọn phiên bản %s (%s) cho %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "Lệnh cập nhật không chấp nhật đối số"
@@ -1284,6 +1288,7 @@ msgid "Supported modules:"
 msgstr "Mô-đun đã hỗ trợ :"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1299,7 +1304,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1912,7 +1917,7 @@ msgstr "Kết nối ổ cắm dữ liệu đã quá giờ"
 msgid "Unable to accept connection"
 msgstr "Không thể chấp nhận kết nối"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Gặp khó khăn băm tập tin"
 
@@ -2045,85 +2050,84 @@ msgstr "Không thể mở ống dẫn cho %s"
 msgid "Read error from %s process"
 msgstr "Gặp lỗi đọc từ tiến trình %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "Đang đợi những phần đầu..."
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Đã lấy một dòng đầu riêng lẻ chứa hơn %u ky tự"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Dòng đầu sai"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "Máy phục vụ HTTP đã gởi một dòng đầu trả lời không hợp lệ"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr ""
 "Máy phục vụ HTTP đã gởi một dòng đầu Content-Length (độ dài nội dụng) không "
 "hợp lệ"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr ""
 "Máy phục vụ HTTP đã gởi một dòng đầu Content-Range (phạm vị nội dụng) không "
 "hợp lệ"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "Máy phục vụ HTTP đã ngắt cách hỗ trợ phạm vị"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Không biết dạng ngày"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Việc chọn bị lỗi"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Kết nối đã quá giờ"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Gặp lỗi khi ghi vào tập tin xuất"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Gặp lỗi khi ghi vào tập tin"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Gặp lỗi khi ghi vào tập tin đó"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Gặp lỗi khi đọc từ máy phục vụ : cuối ở xa đã đóng kết nối"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Gặp lỗi khi đọc từ máy phục vụ"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
-#, fuzzy
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
-msgstr "Việc ghi tập tin %s bị lỗi"
+msgstr "Lỗi cắt ngắn tập tin"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Dữ liệu dòng đầu sai"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Kết nối bị ngắt"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Gặp lỗi nội bộ"
 
@@ -2136,11 +2140,38 @@ msgstr "Không thể mmap (ảnh xạ bộ nhớ) tâp tin rỗng"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Không thể tạo mmap (ảnh xạ bộ nhớ) kích cỡ %lu byte"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "Không tìm thấy vùng chọn %s"
@@ -2571,7 +2602,7 @@ msgstr "Không tìm thấy trình điều khiển phương pháp %s."
 msgid "Method %s did not start correctly"
 msgstr "Phương pháp %s đã không bắt đầu cho đúng."
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Hãy nạp đĩa có nhãn « %s » vào ổ « %s » và bấm nút Enter."
@@ -2772,6 +2803,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "Kích cỡ không khớp được"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Không thể phân tách tập tin gói %s (1)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Ghi chú : đang chọn %s thay vì %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2978,6 +3024,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Không thể khóa thư mục danh sách"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -2996,6 +3070,9 @@ msgstr "Kết nối bị đóng quá sớm."
 # Variable: do not translate/ biến: đừng dịch
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
+
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "Hết chỗ tạo sơ đồ bộ nhớ động (Dynamic MMap)"
 
 #~ msgid ""
 #~ "Since you only requested a single operation it is extremely likely that\n"

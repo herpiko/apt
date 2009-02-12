@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2006-10-20 21:28+0300\n"
 "Last-Translator: Ossama M. Khayat <okhayat@yahoo.com>\n"
 "Language-Team: Arabic <support@arabeyes.org>\n"
@@ -888,6 +888,11 @@ msgstr "تعذر العثور على النسخة '%s' للحزمة '%s'"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "النسخة المحددة %s (%s) للإصدارة %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "لا يقبل الأمر update أية مُعطيات"
@@ -1155,7 +1160,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1698,7 +1703,7 @@ msgstr ""
 msgid "Unable to accept connection"
 msgstr "تعذر قبول الاتصال"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr ""
 
@@ -1829,81 +1834,81 @@ msgstr ""
 msgid "Read error from %s process"
 msgstr ""
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "بانتظار الترويسات"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr ""
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "سطر ترويسة سيء"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "أرسل خادم http ترويسة ردّ غير صالحة"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "أرسل خادم http ترويسة طول محتويات (ِContent-Length) غير صالحة"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "أرسل خادم http ترويسة مدى محتويات (ِContent-Range) غير صالحة"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "خادم http له دعم مدى معطوب"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "نسق تاريخ مجهول"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "فشل التحديد"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "انتهى وقت الاتصال"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "خطأ في الكتابة إلى ملف المُخرجات"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "خطأ في الكتابة إلى الملف"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "خطأ في الكتابة إلى الملف"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "خطأ في القراءة من الخادم. أقفل الطرف الآخر الاتصال"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "خطأ في القراءة من الخادم"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "فشلت كتابة الملف %s"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "بيانات ترويسة سيئة"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "فشل الاتصال"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "خطأ داخلي"
 
@@ -1916,11 +1921,38 @@ msgstr ""
 msgid "Couldn't make mmap of %lu bytes"
 msgstr ""
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "تعذر العثور على التحديد %s"
@@ -2341,7 +2373,7 @@ msgstr ""
 msgid "Method %s did not start correctly"
 msgstr ""
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "الرجاء إدخال القرص المُسمّى  '%s' في السوّاقة '%s' وضغط مفتاح الإدخال."
@@ -2531,6 +2563,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "الحجم غير متطابق"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "تعذر فتح ملف قاعدة البيانات %s: %s"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "لاحظ، تحديد %s بدلاً من %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2731,6 +2778,34 @@ msgstr ""
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "تعذر قفل دليل القائمة"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

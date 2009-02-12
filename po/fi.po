@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.26\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
-"PO-Revision-Date: 2008-05-04 19:30+0300\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
+"PO-Revision-Date: 2008-12-11 14:52+0200\n"
 "Last-Translator: Tapio Lehtonen <tale@debian.org>\n"
 "Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,6 @@ msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s laitealustalle %s käännöksen päiväys %s %s\n"
 
 #: cmdline/apt-cache.cc:1726
-#, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
 "       apt-cache [options] add file1 [file2 ...]\n"
@@ -217,7 +216,7 @@ msgstr ""
 "   show - Näytä paketin tietue luettavassa muodossa\n"
 "   depends - Näytä paketin riippuvuustiedot käsittelemättömässä muodossa\n"
 "   rdepends - Näytä paketin käänteiset riippuvuudet\n"
-"   pkgnames - Luettele kaikkien pakettien nimet\n"
+"   pkgnames - Luettele järjestelmän kaikkien pakettien nimet\n"
 "   dotty - Tee paketeista graafit GraphViz-muodossa\n"
 "   xvcg - Tee paketeista graafit xvcg-muodossa\n"
 "   policy - Näytä mistä asennuspaketteja haetaan\n"
@@ -990,6 +989,11 @@ msgstr "Versiota \"%s\" paketille \"%s\" ei löytynyt"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Valittiin versio %s (%s) paketille %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "Komento update ei käytä parametreja"
@@ -1255,6 +1259,7 @@ msgid "Supported modules:"
 msgstr "Tuetut moduulit:"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1270,7 +1275,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1870,7 +1875,7 @@ msgstr "Pistokkeen kytkeminen aikakatkaistiin"
 msgid "Unable to accept connection"
 msgstr "Yhteyttä ei voitu hyväksyä"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Pulmia tiedoston hajautuksessa"
 
@@ -2006,81 +2011,80 @@ msgstr "Putkea %s ei voitu avata"
 msgid "Read error from %s process"
 msgstr "Prosessi %s ilmoitti lukuvirheestä"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "Odotetaan otsikoita"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Vastaanotettiin yksi otsikkorivi pituudeltaan yli %u merkkiä"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Virheellinen otsikkorivi"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "HTTP-palvelin lähetti virheellisen vastausotsikon"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "HTTP-palvelin lähetti virheellisen Content-Length-otsikon"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "HTTP-palvelin lähetti virheellisen Content-Range-otsikon"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "HTTP-palvelimen arvoaluetuki on rikki"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Tuntematon päiväysmuoto"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Select ei toiminut"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Yhteys aikakatkaistiin"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Tapahtui virhe kirjoitettaessa tulostustiedostoon"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Tapahtui virhe kirjoitettaessa tiedostoon"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Tapahtui virhe kirjoitettaessa tiedostoon"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Tapahtui virhe luettaessa palvelimelta. Etäpää sulki yhteyden"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Tapahtui virhe luettaessa palvelimelta"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
-#, fuzzy
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
-msgstr "Tiedoston %s kirjoittaminen ei onnistunut"
+msgstr "Tiedoston typistäminen ei onnistunut"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Virheellinen otsikkotieto"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Yhteys ei toiminut"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Sisäinen virhe"
 
@@ -2093,11 +2097,38 @@ msgstr "Tyhjälle tiedostolle ei voi tehdä mmap:ia"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Ei voitu tehdä %lu tavun mmap:ia"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "Valintaa %s ei löydy"
@@ -2524,7 +2555,7 @@ msgstr "Menetelmän ajuria %s ei löytynyt"
 msgid "Method %s did not start correctly"
 msgstr "Menetelmä %s ei käynnistynyt oikein"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Pistä levy nimeltään: \"%s\" asemaan \"%s\" ja paina Enter."
@@ -2722,6 +2753,21 @@ msgstr ""
 msgid "Size mismatch"
 msgstr "Koko ei täsmää"
 
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Pakettitiedostoa %s (1) ei voi jäsentää"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Huomautus, valitaan %s eikä %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
+
 #: apt-pkg/vendorlist.cc:66
 #, c-format
 msgid "Vendor block %s contains no fingerprint"
@@ -2833,9 +2879,9 @@ msgstr ""
 "tiedostoa\n"
 
 #: apt-pkg/deb/dpkgpm.cc:51
-#, fuzzy, c-format
+#, c-format
 msgid "Installing %s"
-msgstr "%s asennettu"
+msgstr "Asennetaan %s"
 
 #: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:628
 #, c-format
@@ -2850,7 +2896,7 @@ msgstr "Poistetaan %s"
 #: apt-pkg/deb/dpkgpm.cc:54
 #, c-format
 msgid "Running post-installation trigger %s"
-msgstr ""
+msgstr "Suoritetaan jälkiasennusliipaisin %s"
 
 #: apt-pkg/deb/dpkgpm.cc:532
 #, c-format
@@ -2930,6 +2976,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Luettelokansiota ei voitu lukita"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -2948,11 +3022,5 @@ msgstr "Yhteys katkesi ennenaikaisesti"
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
 
-#~ msgid ""
-#~ "Since you only requested a single operation it is extremely likely that\n"
-#~ "the package is simply not installable and a bug report against\n"
-#~ "that package should be filed."
-#~ msgstr ""
-#~ "Koska komennettiin vain yksi toimenpide, erittäin todennäköisesti\n"
-#~ "paketti ei lainkaan ole asennettavissa ja olisi tehtävä vikailmoitus\n"
-#~ "tuosta paketista."
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "Tila loppui kesken dynaamiselta MMap:lta"

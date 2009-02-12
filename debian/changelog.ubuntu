@@ -1,3 +1,122 @@
+apt (0.7.20.2ubuntu1) jaunty; urgency=low
+
+  [ Christian Perrier ]
+  * Translations:
+    - bg.po. Closes: #513211
+    - zh_TW.po. Closes: #513311
+    - nb.po. Closes: #513843
+  
+  [ Michael Vogt ]
+  * merged from the debian-sid branch
+  * [ABI break] merge support for http redirects, thanks to
+    Jeff Licquia and Anthony Towns
+  * [ABI break] use int for the package IDs (thanks to Steve Cotton)
+  * apt-pkg/contrib/strutl.cc:
+    - fix TimeToStr i18n (LP: #289807)
+  * debian/apt.conf.autoremove:
+    - readd "linux-image" (and friends) to the auto-remove
+     blacklist
+  * fix some i18n issues (thanks to  Gabor Kelemen)
+    LP: #263089
+  * apt-pkg/deb/dpkgpm.cc:
+    - filter "ENOMEM" errors when creating apport reports 
+  * cmdline/apt-get.cc:
+    - fix "apt-get source pkg=ver" if binary name != source name
+      (LP: #202219)
+  * apt-pkg/indexrecords.cc:
+    - fix some i18n issues
+  * apt-pkg/contrib/strutl.h:
+    - add new strprintf() function to make i18n strings easier
+  * apt-pkg/dev/debsystem.cc:
+    - add missing apti18n.h header
+  * cmdline/apt-get.cc:
+    - default to "false" for the "APT::Get::Build-Dep-Automatic"
+      option (follow debian here)
+  * apt-pkg/pkgcache.cc:
+    - do not run "dpkg --configure pkg" if pkg is in trigger-awaited
+      state (LP: #322955)
+  * methods/https.cc:
+    - add Acquire::https::AllowRedirect support
+    - do not unlink files in partial/ (thanks to robbiew)
+
+  [ Dereck Wonnacott ]
+  * Clarify the --help for 'purge' (LP: #243948)
+
+  [ Ian Weisser ]
+  * /apt-pkg/deb/debsystem.cc:
+    - add 'sudo' to the error message to "run 'dpkg --configure -a'"
+      (LP: #52697)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 09 Feb 2009 14:21:05 +0100
+
+apt (0.7.20.2) unstable; urgency=medium
+
+  [ Eugene V. Lyubimkin ]
+  * Urgency set to medium due to RC bug fix.
+  * doc/apt.ent, apt-get.8.xml:
+    - Fix invalid XML entities. (Closes: #514402)
+
+ -- Eugene V. Lyubimkin <jackyf.devel@gmail.com>  Sat, 07 Feb 2009 16:48:21 +0200
+
+apt (0.7.20.1) unstable; urgency=low
+
+  [ Michael Vogt ]
+  * apt-pkg/pkgcachegen.cc:
+    - fix apt-cache search for localized description 
+      (closes: #512110)
+  
+  [ Christian Perrier ]
+  * Translations:
+    - fr.po: fix spelling error to "défectueux". Thanks to Thomas Péteul.
+
+ -- Michael Vogt <mvo@debian.org>  Tue, 20 Jan 2009 09:35:05 +0100
+
+apt (0.7.20) unstable; urgency=low
+
+  [ Eugene V. Lyubimkin ]
+  * debian/changelog:
+    - Fixed place of 'merged install-recommends and install-task branches'
+      from 0.6.46.1 to 0.7.0. (Closes: #439866)
+  * buildlib/config.{sub,guess}:
+    - Renewed. This fixes lintian errors.
+  * doc/apt.conf.5.xml, debian/apt-transport-https:
+    - Documented briefly 'APT::https' group of options. (Closes: #507398)
+    - Applied patch from Daniel Burrows to document 'Debug' group of options.
+      (Closes: #457265)
+    - Mentioned 'APT::Periodic' and 'APT::Archives' groups of options.
+      (Closes: #438559)
+    - Mentioned '/* ... */' comments. (Closes: #507601)
+  * doc/examples/sources.list:
+    - Removed obsolete commented non-us deb-src entry, replaced it with
+      'deb-src security.debian.org' one. (Closes: #411298)
+  * apt-pkg/contrib/mmap.cc:
+    - Added instruction how to work around MMap error in MMap error message.
+      (Closes: #385674, 436028)
+  * COPYING:
+    - Actualized. Removed obsolete Qt section, added GPLv2 clause.
+      (Closes: #440049, #509337)
+
+  [ Michael Vogt ]
+  * add option to "apt-get build-dep" to mark the needed
+    build-dep packages as automatic installed.
+    This is controlled via the value of
+    APT::Get::Build-Dep-Automatic and is set "false" by default.
+    Thanks to Aaron Haviland, closes: #448743
+  * apt-inst/contrib/arfile.cc:
+    - support members ending with '/' as well (thanks to Michal Cihr,
+      closes: #500988)
+
+  [ Christian Perrier ]
+  * Translations:
+    - Finnish updated. Closes: #508449
+    - Galician updated. Closes: #509151
+    - Catalan updated. Closes: #509375
+    - Vietnamese updated. Closes: #509422
+    - Traditional Chinese added. Closes: #510664
+    - French corrected (remove awful use of first person)
+
+ -- Michael Vogt <mvo@debian.org>  Mon, 05 Jan 2009 08:59:20 +0100
+
 apt (0.7.19ubuntu1) jaunty; urgency=low
 
   * merge from debian
@@ -20,8 +139,9 @@ apt (0.7.19) unstable; urgency=low
       is a request to install only one package and it is not installable.
       (Closes: #419521)
 
-
   [ Michael Vogt ]
+  * doc/makefile:
+    - add examples/apt-https-method-example.conf
     - fix SIGHUP handling (closes: #463030)
 
   [ Christian Perrier ]
@@ -1578,6 +1698,16 @@ apt (0.7.0) experimental; urgency=low
   * support for unattended-upgrades (via unattended-upgrades
     package)
   * added apt-transport-https method
+  * merged "install-recommends" branch (ABI break): 
+    - new "--install-recommends"
+    - install new recommends on "upgrade" if --install-recommends is 
+      given
+    - new "--fix-policy" option to install all packages with unmet
+      important dependencies (usefull with --install-recommends to
+      see what not-installed recommends are on the system)
+    - fix of recommended packages display (only show CandidateVersion
+      fix or-group handling)
+  * merged "install-task" branch (use with "apt-get install taskname^")
 
  -- Michael Vogt <mvo@debian.org>  Fri, 12 Jan 2007 20:48:07 +0100
 
@@ -1711,16 +1841,6 @@ apt (0.6.46.2) unstable; urgency=low
 
 apt (0.6.46.1) unstable; urgency=low
 
-  * merged "install-recommends" branch (ABI break): 
-    - new "--install-recommends"
-    - install new recommends on "upgrade" if --install-recommends is 
-      given
-    - new "--fix-policy" option to install all packages with unmet
-      important dependencies (usefull with --install-recommends to
-      see what not-installed recommends are on the system)
-    - fix of recommended packages display (only show CandidateVersion
-      fix or-group handling)
-  * merged "install-task" branch (use with "apt-get install taskname^")
   * methods/gzip.cc:
     - deal with empty files 
   * Applied patch from Daniel Schepler to make apt bin-NMU able.

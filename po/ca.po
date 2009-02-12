@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 0.7.19\n"
+"Project-Id-Version: apt 0.7.20\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
-"PO-Revision-Date: 2008-11-13 08:00+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
+"PO-Revision-Date: 2008-12-21 20:24+0100\n"
 "Last-Translator: Jordi Mallach <jordi@debian.org>\n"
 "Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -993,6 +993,11 @@ msgstr "No s'ha trobat la versió «%s» per a «%s»"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Versió seleccionada %s (%s) per a %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "L'ordre update no pren arguments"
@@ -1264,6 +1269,7 @@ msgid "Supported modules:"
 msgstr "Mòduls suportats:"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1279,7 +1285,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1884,7 +1890,7 @@ msgstr "S'ha esgotat el temps de connexió al sòcol de dades"
 msgid "Unable to accept connection"
 msgstr "No es pot acceptar la connexió"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problema escollint el fitxer"
 
@@ -2023,81 +2029,81 @@ msgstr "No s'ha pogut obrir un conducte per a %s"
 msgid "Read error from %s process"
 msgstr "S'ha produït un error en llegir des del procés %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "S'estan esperant les capçaleres"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "S'ha obtingut una capçalera d'una sola línea de més de %u caràcters"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Línia de capçalera incorrecta"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "El servidor HTTP ha enviat una capçalera de resposta no vàlida"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "El servidor HTTP ha enviat una capçalera de Content-Length no vàlida"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "El servidor HTTP ha enviat una capçalera de Content-Range no vàlida"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "Aquest servidor HTTP té el suport d'abast trencat"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Format de la data desconegut"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Ha fallat la selecció"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Connexió finalitzada"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "S'ha produït un error en escriure al fitxer de sortida"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "S'ha produït un error en escriure al fitxer"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "S'ha produït un error en escriure al fitxer"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr ""
 "S'ha produït un error en llegir, el servidor remot ha tancat la connexió"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "S'ha produït un error en llegir des del servidor"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
 msgstr "No s'ha pogut truncar el fitxer %s"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Capçalera de dades no vàlida"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Ha fallat la connexió"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Error intern"
 
@@ -2110,11 +2116,40 @@ msgstr "No es pot transferir un fitxer buit a memòria"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "No s'ha pogut crear un mapa de memòria de %lu octets"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
-msgstr "L'MMap dinàmic s'ha quedat sense espai"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
+msgstr ""
+"No hi ha espai per al «Dynamic MMap». Incrementeu la mida d'APT::Cache-Limit. "
+"Valor actual: %lu. (man 5 apt.conf)"
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "No s'ha trobat la selecció %s"
@@ -2546,7 +2581,7 @@ msgstr "No s'ha pogut trobar el mètode de control %s."
 msgid "Method %s did not start correctly"
 msgstr "El mètode %s no s'ha iniciat correctament"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Inseriu el disc amb l'etiqueta: «%s» en la unitat «%s» i premeu Intro."
@@ -2752,6 +2787,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "La mida no concorda"
+
+#: apt-pkg/indexrecords.cc:40
+#, c-format
+msgid "Unable to parse Release file %s"
+msgstr "No es pot analitzar el fitxer Release %s"
+
+#: apt-pkg/indexrecords.cc:47
+#, c-format
+msgid "No sections in Release file %s"
+msgstr "No hi ha seccions al fitxer Release %s"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr "No hi ha una entrada Hash al fitxer Release %s"
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2961,6 +3011,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "No es pot blocar el directori de la llista"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -2978,6 +3056,15 @@ msgstr "La connexió s'ha tancat prematurament"
 
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
+
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "L'MMap dinàmic s'ha quedat sense espai"
+
+#~ msgid "Release file expired, ignoring %s (valid until %s)"
+#~ msgstr "El fitxer Release ha caducat, s'està ignorant %s (vàlid fins a %s)"
+
+#~ msgid "Conflicting distribution: %s (expected %s but got %s)"
+#~ msgstr "Distribució en conflicte: %s (s'esperava %s però s'ha obtingut %s)"
 
 #~ msgid ""
 #~ "Since you only requested a single operation it is extremely likely that\n"

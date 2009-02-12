@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_nn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2005-02-14 23:30+0100\n"
 "Last-Translator: Havard Korsvoll <korsvoll@skulelinux.no>\n"
 "Language-Team: Norwegian nynorsk <i18n-nn@lister.ping.uio.no>\n"
@@ -996,6 +996,11 @@ msgstr "Fann ikkje versjonen «%s» av «%s»"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Vald versjon %s (%s) for %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "Oppdateringskommandoen tek ingen argument"
@@ -1273,7 +1278,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1872,7 +1877,7 @@ msgstr "Tidsavbrot på tilkopling til datasokkel"
 msgid "Unable to accept connection"
 msgstr "Klarte ikkje godta tilkoplinga"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problem ved oppretting av nøkkel for fil"
 
@@ -2004,81 +2009,81 @@ msgstr "Klarte ikkje opna røyr for %s"
 msgid "Read error from %s process"
 msgstr "Lesefeil frå %s-prosessen"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "Ventar på hovud"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Fekk ei enkel hovudlinje over %u teikn"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Øydelagd hovudlinje"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "HTTP-tenaren sende eit ugyldig svarhovud"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "HTTP-tenaren sende eit ugyldig «Content-Length»-hovud"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "HTTP-tenaren sende eit ugyldig «Content-Range»-hovud"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "Denne HTTP-tenaren har øydelagd støtte for område"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Ukjend datoformat"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Utvalet mislukkast"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Tidsavbrot på sambandet"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Feil ved skriving til utfil"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Feil ved skriving til fil"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Feil ved skriving til fila"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Feil ved lesing frå tenaren. Sambandet vart lukka i andre enden"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Feil ved lesing frå tenaren"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "Klarte ikkje skriva fila %s"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Øydelagde hovuddata"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Sambandet mislukkast"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Intern feil"
 
@@ -2091,11 +2096,38 @@ msgstr "Kan ikkje utføra mmap på ei tom fil"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Klarte ikkje laga mmap av %lu byte"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "Fann ikkje utvalet %s"
@@ -2525,7 +2557,7 @@ msgstr "Finn ikkje metodedrivaren %s."
 msgid "Method %s did not start correctly"
 msgstr "Metoden %s starta ikkje rett"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, fuzzy, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2724,6 +2756,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "Feil storleik"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Klarte ikkje tolka pakkefila %s (1)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Merk, vel %s i staden for %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2926,6 +2973,34 @@ msgstr ""
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Klarte ikkje låsa listekatalogen"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

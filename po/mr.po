@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2008-11-20 23:27+0530\n"
 "Last-Translator: Sampada <sampadanakhare@gmail.com>\n"
 "Language-Team: Marathi, janabhaaratii, C-DAC, Mumbai, India "
@@ -985,6 +985,11 @@ msgstr "'%s' साठी '%s' आवृत्ती सापडली ना�
 msgid "Selected version %s (%s) for %s\n"
 msgstr "%s साठी %s (%s) निवडलेली आवृत्ती.\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "सुधारित आवृत्तीचा विधान आर्ग्युमेंटस घेऊ    शकत नाही."
@@ -1246,6 +1251,7 @@ msgid "Supported modules:"
 msgstr "प्रोग्राम गटाला तांत्रिक मदत दिली:"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1261,7 +1267,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1858,7 +1864,7 @@ msgstr "डेटा सॉकेट जोडणी वेळेअभावी
 msgid "Unable to accept connection"
 msgstr "जोडणी स्विकारण्यास असमर्थ"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "फाईल हॅश करण्यात त्रुटी"
 
@@ -1991,80 +1997,80 @@ msgstr "%s साठी पाईप उघडता येत नाही"
 msgid "Read error from %s process"
 msgstr "%s क्रियेपासून चूक वाचा"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "शीर्षकासाठी थांबले आहे...."
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "%u अक्षरांवर एक शीर्षक ओळ मिळाली"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "वाईट शीर्षक ओळ"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "HTTP सर्व्हरने अवैध प्रत्त्युत्तर शीर्षक पाठविले"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "HTTP सर्व्हरने अवैध मजकूर-लांबी शीर्षक पाठविले "
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "HTTP सर्व्हरने अवैध मजकूर-विस्तार शीर्षक पाठविले"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "HTTP सर्व्हरने विस्तार तांत्रिक मदत जोडली"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "अपरिचित दिनांक प्रकार/स्वरूप "
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "चुकले/असमर्थ निवड करा"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "जोडणी वेळेअभावी तुटली"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "निर्गत फाईल मध्ये लिहिताना त्रुटी/चूक"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "फाईल मध्ये लिहिण्यात चूक/त्रुटी"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "फाईल मध्ये लिहिण्यात चूक/त्रुटी"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "सर्व्हर मधून वाचण्यात चूक. लांब शेवट आणि बंद झालेली जोडणी"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "सर्व्हर मधून वाचण्यात चूक"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
 msgstr "फाईल छोटी करणे असफल"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "चुकीचा शीर्षक डाटा"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "जोडणी अयशस्वी"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "अंतर्गत त्रुटी"
 
@@ -2077,11 +2083,38 @@ msgstr "रिकामी फाईल mmap करता येणार ना
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "mmap चे %lu बाईटस् करता येणार नाहीत"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
-msgstr "Dynamic MMap ला ज आगा कमी पडली"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
+msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "%s निवडक भाग सापडत नाही"
@@ -2509,7 +2542,7 @@ msgstr "%s कार्यपध्दतीचा ड्राइव्हर �
 msgid "Method %s did not start correctly"
 msgstr "%s कार्यपध्दती योग्य रीतीने सुरु झालेली नाही"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "कृपया '%s' लेबल असलेली डिस्क '%s' या ड्राइव्हमध्ये ठेवा आणि एन्टर कळ दाबा."
@@ -2709,6 +2742,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "आकार जुळतनाही"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "%s (1) पॅकेज फाईल पार्स करण्यात असमर्थ"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "लक्षात घ्या,%s ऐवजी %s ची निवड करत आहे \n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2914,6 +2962,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "संचयिका यादीला कुलुप लावण्यात असमर्थ"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -2931,6 +3007,9 @@ msgstr "जोडणी अकाली बंद झाली"
 
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
+
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "Dynamic MMap ला ज आगा कमी पडली"
 
 #~ msgid ""
 #~ "Since you only requested a single operation it is extremely likely that\n"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2006-06-12 14:35+0545\n"
 "Last-Translator: Shiva Pokharel <pokharelshiva@hotmail.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -989,6 +989,11 @@ msgstr " '%s' को लागि '%s' संस्करण फेला पा
 msgid "Selected version %s (%s) for %s\n"
 msgstr "%s को लागि चयन भएको संस्करण %s (%s)\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "अद्यावधिक आदेशले कुनै तर्कहरू लिदैन"
@@ -1265,7 +1270,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1860,7 +1865,7 @@ msgstr "डेटा सकेटको जडान समय सकियो"
 msgid "Unable to accept connection"
 msgstr "जडान स्वीकार गर्न असक्षम भयो"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "समस्या द्रुतान्वेषण फाइल"
 
@@ -1991,81 +1996,81 @@ msgstr "%s को लागि पाइप खोल्न सकिएन"
 msgid "Read error from %s process"
 msgstr "%s प्रक्रियाबाट त्रुटि पढ्नुहोस् "
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "हेडरहरुको लागि पर्खिदैछ"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr " %u chars माथि एकल हेडर लाइन प्राप्त गर्नुहोस्"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "खराब हेडर लाइन"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "HTTP सर्भरले अवैध जवाफ हेडर पठायो"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "HTTP सर्भरले अवैध सामग्री-लम्बाई हेडर पठायो"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "HTTP सर्भरले अवैध सामग्री-दायरा हेडर पठायो"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "HTTP सर्भर संग भाँचिएको दायरा समर्थन छ"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "अज्ञात मिति ढाँचा"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "असफल चयन गर्नुहोस्"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "जडान समय सकियो"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "निर्गात फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "सर्भरबाट त्रुटि पढिदैछ । दूर गन्तब्य बन्द जडान"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "सर्भरबाट त्रुटि पढिदैछ"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "फाइल %s लेख्न असफल भयो"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "खराब हेडर डेटा"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "जडान असफल भयो"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "आन्तरिक त्रुटि"
 
@@ -2078,11 +2083,38 @@ msgstr "एउटा खाली फाइल mmap बनाउन सकिए
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "%lu बाइटहरुको mmap बनाउन सकिएन"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "चयन %s फेला पार्न सकिएन"
@@ -2510,7 +2542,7 @@ msgstr "विधि ड्राइभर %s फेला पार्न स�
 msgid "Method %s did not start correctly"
 msgstr "विधि %s सही रुपले सुरू हुन सकेन"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "कृपया डिस्क लेबुल: '%s' ड्राइभ '%s'मा घुसउनुहोस् र इन्टर थिच्नुहोस् । "
@@ -2705,6 +2737,21 @@ msgstr "प्याकेज अनुक्रमणिका फाइलह�
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "साइज मेल खाएन"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "प्याकेज फाइल पद वर्णन गर्न असक्षम %s (१)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "द्रष्टब्य, %s को सट्टा  %s चयन भइरहेछ\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -2907,6 +2954,34 @@ msgstr ""
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "सूचि डाइरेक्ट्री ताल्चा मार्न असफल"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead

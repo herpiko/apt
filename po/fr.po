@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2008-11-12 22:42+0100\n"
 "Last-Translator: Christian Perrier <bubulle@debian.org>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -1010,6 +1010,11 @@ msgstr "La version « %s » de « %s » n'a pu être trouvée"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Version choisie %s (%s) pour %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "La commande de mise à jour ne prend pas d'argument"
@@ -1284,6 +1289,7 @@ msgid "Supported modules:"
 msgstr "Modules reconnus :"
 
 #: cmdline/apt-get.cc:2648
+#, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1299,7 +1305,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1911,7 +1917,7 @@ msgstr "Délai de connexion au port de données dépassé"
 msgid "Unable to accept connection"
 msgstr "Impossible d'accepter une connexion"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problème de hachage du fichier"
 
@@ -2051,80 +2057,80 @@ msgstr "Ne parvient pas à ouvrir le tube pour %s"
 msgid "Read error from %s process"
 msgstr "Erreur de lecture du processus %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "Attente des fichiers d'en-tête"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "J'ai une simple ligne d'en-tête au-dessus du caractère %u"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Mauvaise ligne d'en-tête"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 msgid "The HTTP server sent an invalid reply header"
 msgstr "Le serveur http a envoyé une réponse dont l'en-tête est invalide"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "Le serveur http a envoyé un en-tête « Content-Length » invalide"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "Le serveur http a envoyé un en-tête « Content-Range » invalide"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 msgid "This HTTP server has broken range support"
 msgstr "Ce serveur http possède un support des limites non-valide"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Format de date inconnu"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Sélection défaillante"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Délai de connexion dépassé"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Erreur d'écriture du fichier de sortie"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Erreur d'écriture sur un fichier"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Erreur d'écriture sur le fichier"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Erreur de lecture depuis le serveur distant et clôture de la connexion"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Erreur de lecture du serveur"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 msgid "Failed to truncate file"
 msgstr "Échec de la troncature du fichier"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 msgid "Bad header data"
 msgstr "Mauvais en-tête de donnée"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Échec de la connexion"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Erreur interne"
 
@@ -2137,11 +2143,38 @@ msgstr "Impossible de mapper un fichier vide en mémoire"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Impossible de réaliser un mapping de %lu octets en mémoire"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
-msgstr "La zone dynamique d'allocation mémoire n'a plus de place"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
+msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "La sélection %s n'a pu être trouvée"
@@ -2521,7 +2554,7 @@ msgstr "Le type de fichier d'index « %s » n'est pas accepté"
 msgid ""
 "The package %s needs to be reinstalled, but I can't find an archive for it."
 msgstr ""
-"Le paquet %s doit être réinstallé, mais je ne parviens pas à trouver son "
+"Le paquet %s doit être réinstallé, mais il est impossible de trouver son "
 "archive."
 
 #: apt-pkg/algorithms.cc:1107
@@ -2535,7 +2568,7 @@ msgstr ""
 #: apt-pkg/algorithms.cc:1109
 msgid "Unable to correct problems, you have held broken packages."
 msgstr ""
-"Impossible de corriger les problèmes, des paquets défecteux sont en mode "
+"Impossible de corriger les problèmes, des paquets défectueux sont en mode "
 "« garder en l'état »."
 
 #: apt-pkg/algorithms.cc:1374 apt-pkg/algorithms.cc:1376
@@ -2578,7 +2611,7 @@ msgstr "Le pilote pour la méthode %s n'a pu être trouvé."
 msgid "Method %s did not start correctly"
 msgstr "La méthode %s n'a pas démarré correctement"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2769,9 +2802,8 @@ msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
 "to manually fix this package. (due to missing arch)"
 msgstr ""
-"Je ne suis pas parvenu à localiser un fichier du paquet %s. Ceci signifie "
-"sans doute que vous devrez corriger ce paquet manuellement (absence "
-"d'architecture)."
+"Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
+"devrez corriger ce paquet vous-même (absence d'architecture)."
 
 #: apt-pkg/acquire-item.cc:1342
 #, c-format
@@ -2779,8 +2811,8 @@ msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
 "manually fix this package."
 msgstr ""
-"Je ne suis pas parvenu à localiser un fichier du paquet %s. Ceci signifie "
-"que vous devrez corriger manuellement ce paquet."
+"Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
+"devrez corriger ce paquet vous-même."
 
 #: apt-pkg/acquire-item.cc:1383
 #, c-format
@@ -2793,6 +2825,21 @@ msgstr ""
 #: apt-pkg/acquire-item.cc:1470
 msgid "Size mismatch"
 msgstr "Taille incohérente"
+
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Impossible de traiter le fichier %s (1)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Note, sélection de %s au lieu de %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
@@ -3002,6 +3049,34 @@ msgid ""
 "error"
 msgstr ""
 
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Impossible de verrouiller le répertoire de liste"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
+msgstr ""
+
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
 #: methods/mirror.cc:170
@@ -3019,3 +3094,6 @@ msgstr "Connexion fermée prématurément"
 
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
+
+#~ msgid "Dynamic MMap ran out of room"
+#~ msgstr "La zone dynamique d'allocation mémoire n'a plus de place"

@@ -331,23 +331,27 @@ string TimeToStr(unsigned long Sec)
    {
       if (Sec > 60*60*24)
       {
-	 sprintf(S,"%lid %lih%limin%lis",Sec/60/60/24,(Sec/60/60) % 24,(Sec/60) % 60,Sec % 60);
+	 //d means days, h means hours, min means minutes, s means seconds
+	 sprintf(S,_("%lid %lih %limin %lis"),Sec/60/60/24,(Sec/60/60) % 24,(Sec/60) % 60,Sec % 60);
 	 break;
       }
       
       if (Sec > 60*60)
       {
-	 sprintf(S,"%lih%limin%lis",Sec/60/60,(Sec/60) % 60,Sec % 60);
+	 //h means hours, min means minutes, s means seconds
+	 sprintf(S,_("%lih %limin %lis"),Sec/60/60,(Sec/60) % 60,Sec % 60);
 	 break;
       }
       
       if (Sec > 60)
       {
-	 sprintf(S,"%limin%lis",Sec/60,Sec % 60);
+	 //min means minutes, s means seconds
+	 sprintf(S,_("%limin %lis"),Sec/60,Sec % 60);
 	 break;
       }
-      
-      sprintf(S,"%lis",Sec);
+
+      //s means seconds
+      sprintf(S,_("%lis"),Sec);
       break;
    }
    
@@ -1030,6 +1034,21 @@ void ioprintf(ostream &out,const char *format,...)
    char S[400];
    vsnprintf(S,sizeof(S),format,args);
    out << S;
+}
+									/*}}}*/
+// strprintf - C format string outputter to C++ strings 		/*{{{*/
+// ---------------------------------------------------------------------
+/* This is used to make the internationalization strings easier to translate
+   and to allow reordering of parameters */
+void strprintf(string &out,const char *format,...) 
+{
+   va_list args;
+   va_start(args,format);
+   
+   // sprintf the description
+   char S[1024];
+   vsnprintf(S,sizeof(S),format,args);
+   out = string(S);
 }
 									/*}}}*/
 // safe_snprintf - Safer snprintf					/*{{{*/

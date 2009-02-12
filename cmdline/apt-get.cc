@@ -1295,9 +1295,9 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
    {
       string Ver = Parse->Version();
       
-      // Skip name mismatches
-      if (IsMatch == true && Parse->Package() != Src)
-	 continue;
+      // show name mismatches
+      if (IsMatch == true && Parse->Package() != Src) 
+	 ioprintf(c1out,  _("No source package '%s' picking '%s' instead"), Parse->Package().c_str(), Src.c_str());
       
       if (VerTag.empty() == false)
       {
@@ -2542,7 +2542,7 @@ bool DoBuildDep(CommandLine &CmdL)
             {
                // We successfully installed something; skip remaining alternatives
                skipAlternatives = hasAlternatives;
-	       if(_config->FindB("APT::Get::Build-Dep-Automatic", true) == true)
+	       if(_config->FindB("APT::Get::Build-Dep-Automatic", false) == true)
 		  Cache->MarkAuto(Pkg, true);
                continue;
             }
@@ -2659,7 +2659,7 @@ bool ShowHelp(CommandLine &CmdL)
       "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
       "   remove - Remove packages\n"
       "   autoremove - Remove automatically all unused packages\n"
-      "   purge - Remove and purge packages\n"
+      "   purge - Remove packages and config files\n"
       "   source - Download source archives\n"
       "   build-dep - Configure build-dependencies for source packages\n"
       "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"

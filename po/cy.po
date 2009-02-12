@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 11:43+0100\n"
+"POT-Creation-Date: 2009-02-09 15:55+0100\n"
 "PO-Revision-Date: 2005-06-06 13:46+0100\n"
 "Last-Translator: Dafydd Harries <daf@muse.19inch.net>\n"
 "Language-Team: Welsh <cy@pengwyn.linux.org.uk>\n"
@@ -1025,6 +1025,11 @@ msgstr "Ni chanfuwyd y fersiwn '%s' o '%s' "
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Dewiswyd fersiwn %s (%s) ar gyfer %s\n"
 
+#: cmdline/apt-get.cc:1300
+#, c-format
+msgid "No source package '%s' picking '%s' instead"
+msgstr ""
+
 #: cmdline/apt-get.cc:1338
 msgid "The update command takes no arguments"
 msgstr "Nid yw'r gorchymyn diweddaru yn derbyn ymresymiadau"
@@ -1312,7 +1317,7 @@ msgid ""
 "   install - Install new packages (pkg is libc6 not libc6.deb)\n"
 "   remove - Remove packages\n"
 "   autoremove - Remove automatically all unused packages\n"
-"   purge - Remove and purge packages\n"
+"   purge - Remove packages and config files\n"
 "   source - Download source archives\n"
 "   build-dep - Configure build-dependencies for source packages\n"
 "   dist-upgrade - Distribution upgrade, see apt-get(8)\n"
@@ -1934,7 +1939,7 @@ msgstr "Goramserodd cysylltiad y soced data"
 msgid "Unable to accept connection"
 msgstr "Methwyd derbyn cysylltiad"
 
-#: methods/ftp.cc:864 methods/http.cc:962 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problem wrth stwnshio ffeil"
 
@@ -2067,87 +2072,87 @@ msgstr "Methwyd agor pibell ar gyfer %s"
 msgid "Read error from %s process"
 msgstr "Gwall darllen o broses %s"
 
-#: methods/http.cc:376
+#: methods/http.cc:378
 msgid "Waiting for headers"
 msgstr "Yn aros am benawdau"
 
-#: methods/http.cc:522
+#: methods/http.cc:524
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Derbynnwyd llinell pennaws sengl dros %u nod"
 
-#: methods/http.cc:530
+#: methods/http.cc:532
 msgid "Bad header line"
 msgstr "Llinell pennawd gwael"
 
-#: methods/http.cc:549 methods/http.cc:556
+#: methods/http.cc:551 methods/http.cc:558
 #, fuzzy
 msgid "The HTTP server sent an invalid reply header"
 msgstr "Danfonodd y gweinydd HTTP bennawd ateb annilys"
 
-#: methods/http.cc:585
+#: methods/http.cc:587
 #, fuzzy
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "Danfonodd y gweinydd HTTP bennawd Content-Length annilys"
 
-#: methods/http.cc:600
+#: methods/http.cc:602
 #, fuzzy
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "Danfonodd y gweinydd HTTP bennawd Content-Range annilys"
 
-#: methods/http.cc:602
+#: methods/http.cc:604
 #, fuzzy
 msgid "This HTTP server has broken range support"
 msgstr "Mae cynaliaeth amrediad y gweinydd hwn wedi torri"
 
-#: methods/http.cc:626
+#: methods/http.cc:628
 msgid "Unknown date format"
 msgstr "Fformat dyddiad anhysbys"
 
-#: methods/http.cc:773
+#: methods/http.cc:781
 msgid "Select failed"
 msgstr "Methwyd dewis"
 
-#: methods/http.cc:778
+#: methods/http.cc:786
 msgid "Connection timed out"
 msgstr "Goramserodd y cysylltiad"
 
-#: methods/http.cc:801
+#: methods/http.cc:809
 msgid "Error writing to output file"
 msgstr "Gwall wrth ysgrifennu i ffeil allbwn"
 
-#: methods/http.cc:832
+#: methods/http.cc:840
 msgid "Error writing to file"
 msgstr "Gwall wrth ysgrifennu at ffeil"
 
-#: methods/http.cc:860
+#: methods/http.cc:868
 msgid "Error writing to the file"
 msgstr "Gwall wrth ysgrifennu at y ffeil"
 
-#: methods/http.cc:874
+#: methods/http.cc:882
 #, fuzzy
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Gwall wrth ddarllen o'r gweinydd: caeodd yr ochr pell y cysylltiad"
 
-#: methods/http.cc:876
+#: methods/http.cc:884
 msgid "Error reading from server"
 msgstr "Gwall wrth ddarllen o'r gweinydd"
 
-#: methods/http.cc:947 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "Methwyd ysgrifennu ffeil %s"
 
-#: methods/http.cc:1107
+#: methods/http.cc:1143
 #, fuzzy
 msgid "Bad header data"
 msgstr "Data pennawd gwael"
 
-#: methods/http.cc:1124 methods/http.cc:1179
+#: methods/http.cc:1160 methods/http.cc:1215
 msgid "Connection failed"
 msgstr "Methodd y cysylltiad"
 
-#: methods/http.cc:1231
+#: methods/http.cc:1307
 msgid "Internal error"
 msgstr "Gwall mewnol"
 
@@ -2160,11 +2165,38 @@ msgstr "Ni ellir defnyddio mmap() ar ffeil gwag"
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Methwyd gwneud mmap() efo %lu beit"
 
-#: apt-pkg/contrib/mmap.cc:213
-msgid "Dynamic MMap ran out of room"
+#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#, c-format
+msgid ""
+"Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
+"Current value: %lu. (man 5 apt.conf)"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1014
+#. d means days, h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:335
+#, c-format
+msgid "%lid %lih %limin %lis"
+msgstr ""
+
+#. h means hours, min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:342
+#, c-format
+msgid "%lih %limin %lis"
+msgstr ""
+
+#. min means minutes, s means seconds
+#: apt-pkg/contrib/strutl.cc:349
+#, c-format
+msgid "%limin %lis"
+msgstr ""
+
+#. s means seconds
+#: apt-pkg/contrib/strutl.cc:354
+#, c-format
+msgid "%lis"
+msgstr ""
+
+#: apt-pkg/contrib/strutl.cc:1018
 #, c-format
 msgid "Selection %s not found"
 msgstr "Ni chanfuwyd y dewis %s"
@@ -2608,7 +2640,7 @@ msgstr "Methwyd canfod y gyrrydd dull %s."
 msgid "Method %s did not start correctly"
 msgstr "Ni gychwynodd y dull %s yn gywir"
 
-#: apt-pkg/acquire-worker.cc:399
+#: apt-pkg/acquire-worker.cc:413
 #, fuzzy, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2815,6 +2847,22 @@ msgstr ""
 msgid "Size mismatch"
 msgstr "Camgyfatebiaeth maint"
 
+# FIXME: number?
+#: apt-pkg/indexrecords.cc:40
+#, fuzzy, c-format
+msgid "Unable to parse Release file %s"
+msgstr "Ni ellir gramadegu ffeil becynnau %s (1)"
+
+#: apt-pkg/indexrecords.cc:47
+#, fuzzy, c-format
+msgid "No sections in Release file %s"
+msgstr "Sylwer, yn dewis %s yn hytrach na %s\n"
+
+#: apt-pkg/indexrecords.cc:81
+#, c-format
+msgid "No Hash entry in Release file %s"
+msgstr ""
+
 #: apt-pkg/vendorlist.cc:66
 #, c-format
 msgid "Vendor block %s contains no fingerprint"
@@ -3015,6 +3063,34 @@ msgstr ""
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1032
+msgid ""
+"No apport report written because the error message indicates a out of memory "
+"error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:70
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:73
+#, fuzzy, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr "Ni ellir cloi'r cyfeiriadur rhestr"
+
+#: apt-pkg/deb/debsystem.cc:82
+msgid ""
+"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
+"correct the problem. "
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:100
+msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead
