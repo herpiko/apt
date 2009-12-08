@@ -111,6 +111,9 @@ class CacheFile : public pkgCacheFile
 	 return Open(true);
    }
    CacheFile() : List(0) {};
+   ~CacheFile() {
+      delete[] List;
+   }
 };
 									/*}}}*/
 
@@ -594,7 +597,6 @@ void Stats(ostream &out,pkgDepCache &Dep)
 	       Dep.BadCount());
 }
 									/*}}}*/
-
 // CacheFile::NameComp - QSort compare by name				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -687,7 +689,10 @@ bool CacheFile::CheckDeps(bool AllowBroken)
       
    return true;
 }
-
+									/*}}}*/
+// CheckAuth - check if each download comes form a trusted source	/*{{{*/
+// ---------------------------------------------------------------------
+/* */
 static bool CheckAuth(pkgAcquire& Fetcher)
 {
    string UntrustedList;
@@ -728,10 +733,7 @@ static bool CheckAuth(pkgAcquire& Fetcher)
 
    return _error->Error(_("There are problems and -y was used without --force-yes"));
 }
-
-
 									/*}}}*/
-
 // InstallPackages - Actually download and install the packages		/*{{{*/
 // ---------------------------------------------------------------------
 /* This displays the informative messages describing what is going to 
@@ -866,8 +868,11 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask = true,
       if (unsigned(Buf.f_bfree) < (FetchBytes - FetchPBytes)/Buf.f_bsize)
       {
          struct statfs Stat;
-         if (statfs(OutputDir.c_str(),&Stat) != 0 ||
-			 unsigned(Stat.f_type) != RAMFS_MAGIC)
+         if (statfs(OutputDir.c_str(),&Stat) != 0
+#if HAVE_STRUCT_STATFS_F_TYPE
+             || unsigned(Stat.f_type) != RAMFS_MAGIC
+#endif
+             )
             return _error->Error(_("You don't have enough free space in %s."),
                 OutputDir.c_str());
       }
@@ -1215,17 +1220,25 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
 {
    // We want to pull the version off the package specification..
    string VerTag;
+   string DefRel;
    string TmpSrc = Name;
-   string::size_type Slash = TmpSrc.rfind('=');
+   const size_t found = TmpSrc.find_last_of("/=");
 
    // honor default release
-   string DefRel = _config->Find("APT::Default-Release");
+   if (found != string::npos && TmpSrc[found] == '/')
+   {
+      DefRel = TmpSrc.substr(found+1);
+      TmpSrc = TmpSrc.substr(0,found);
+   }
+   else
+      DefRel = _config->Find("APT::Default-Release");
+
    pkgCache::PkgIterator Pkg = Cache.FindPkg(TmpSrc);
 
-   if (Slash != string::npos)
+   if (found != string::npos && TmpSrc[found] == '=')
    {
-      VerTag = string(TmpSrc.begin() + Slash + 1,TmpSrc.end());
-      TmpSrc = string(TmpSrc.begin(),TmpSrc.begin() + Slash);
+      VerTag = TmpSrc.substr(found+1);
+      TmpSrc = TmpSrc.substr(0,found);
    } 
    else  if(!Pkg.end() && DefRel.empty() == false)
    {
@@ -1247,10 +1260,13 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
 		pkgCache::Flag::NotSource && Pkg.CurrentVer() != Ver)
 	    continue;
 	    
-	    //std::cout << VF.File().Archive() << std::endl;
-	    if(VF.File().Archive() && (VF.File().Archive() == DefRel)) 
+	    if((VF.File().Archive() != 0 && VF.File().Archive() == DefRel) ||
+		(VF.File().Codename() != 0 && VF.File().Codename() == DefRel))
 	    {
-	       VerTag = Ver.VerStr();
+	       pkgRecords::Parser &Parse = Recs.Lookup(VF);
+	       VerTag = Parse.SourceVer();
+	       if (VerTag.empty())
+		  VerTag = Ver.VerStr();
 	       break;
 	    }
 	 }
@@ -1260,7 +1276,8 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
    /* Lookup the version of the package we would install if we were to
       install a version and determine the source package name, then look
       in the archive for a source package of the same name. */
-   if (_config->FindB("APT::Get::Only-Source") == false)
+   bool MatchSrcOnly = _config->FindB("APT::Get::Only-Source");
+   if (MatchSrcOnly == false)
    {
       if (Pkg.end() == false)
       {
@@ -1278,7 +1295,6 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
    unsigned long Offset = 0;
    string Version;
    bool IsMatch = false;
-   bool MatchSrcOnly = false;
 
    // No source package name..
    if (Src.empty() == true)
@@ -1301,10 +1317,10 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
    while ((Parse = SrcRecs.Find(Src.c_str(), MatchSrcOnly)) != 0)
    {
       string Ver = Parse->Version();
-      
+
       // show name mismatches
-      if (IsMatch == true && Parse->Package() != Src) 
-	 ioprintf(c1out,  _("No source package '%s' picking '%s' instead\n"), Parse->Package().c_str(), Src.c_str());
+      if (IsMatch == true && Parse->Package() != Src)       
+	 ioprintf(c1out,  _("No source package '%s' picking '%s' instead\n"), Src.c_str(), Parse->Package().c_str());
       
       if (VerTag.empty() == false)
       {
@@ -1335,7 +1351,6 @@ pkgSrcRecords::Parser *FindSrc(const char *Name,pkgRecords &Recs,
    return Last;
 }
 									/*}}}*/
-
 // DoUpdate - Update the package lists					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -1399,20 +1414,29 @@ bool DoAutomaticRemove(CacheFile &Cache)
    bool Debug = _config->FindI("Debug::pkgAutoRemove",false);
    bool doAutoRemove = _config->FindB("APT::Get::AutomaticRemove", false);
    bool hideAutoRemove = _config->FindB("APT::Get::HideAutoRemove");
-   pkgDepCache::ActionGroup group(*Cache);
 
+   pkgDepCache::ActionGroup group(*Cache);
    if(Debug)
       std::cout << "DoAutomaticRemove()" << std::endl;
 
-   if (_config->FindB("APT::Get::Remove",true) == false &&
-       doAutoRemove == true)
+   // we don't want to autoremove and we don't want to see it, so why calculating?
+   if (doAutoRemove == false && hideAutoRemove == true)
+      return true;
+
+   if (doAutoRemove == true &&
+	_config->FindB("APT::Get::Remove",true) == false)
    {
       c1out << _("We are not supposed to delete stuff, can't start "
 		 "AutoRemover") << std::endl;
-      doAutoRemove = false;
+      return false;
    }
 
+   bool purgePkgs = _config->FindB("APT::Get::Purge", false);
+   bool smallList = (hideAutoRemove == false &&
+	strcasecmp(_config->Find("APT::Get::HideAutoRemove","").c_str(),"small") == 0);
+
    string autoremovelist, autoremoveversions;
+   unsigned long autoRemoveCount = 0;
    // look over the cache to see what can be removed
    for (pkgCache::PkgIterator Pkg = Cache->PkgBegin(); ! Pkg.end(); ++Pkg)
    {
@@ -1421,30 +1445,43 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	 if(Pkg.CurrentVer() != 0 || Cache[Pkg].Install())
 	    if(Debug)
 	       std::cout << "We could delete %s" <<  Pkg.Name() << std::endl;
-	  
-	 // only show stuff in the list that is not yet marked for removal
-	 if(Cache[Pkg].Delete() == false) 
-	 {
-	    autoremovelist += string(Pkg.Name()) + " ";
-	    autoremoveversions += string(Cache[Pkg].CandVersion) + "\n";
-	 }
+
 	 if (doAutoRemove)
 	 {
 	    if(Pkg.CurrentVer() != 0 && 
 	       Pkg->CurrentState != pkgCache::State::ConfigFiles)
-	       Cache->MarkDelete(Pkg, _config->FindB("APT::Get::Purge", false));
+	       Cache->MarkDelete(Pkg, purgePkgs);
 	    else
 	       Cache->MarkKeep(Pkg, false, false);
 	 }
+	 else
+	 {
+	    // only show stuff in the list that is not yet marked for removal
+	    if(Cache[Pkg].Delete() == false) 
+	    {
+	       // we don't need to fill the strings if we don't need them
+	       if (smallList == true)
+		  ++autoRemoveCount;
+	       else
+	       {
+		 autoremovelist += string(Pkg.Name()) + " ";
+		 autoremoveversions += string(Cache[Pkg].CandVersion) + "\n";
+	       }
+	    }
+	 }
       }
    }
-   if (!hideAutoRemove) 
-      ShowList(c1out, _("The following packages were automatically installed and are no longer required:"), autoremovelist, autoremoveversions);
-   if (!doAutoRemove && !hideAutoRemove && autoremovelist.size() > 0)
+   // if we don't remove them, we should show them!
+   if (doAutoRemove == false && (autoremovelist.empty() == false || autoRemoveCount != 0))
+   {
+      if (smallList == false)
+	 ShowList(c1out, _("The following packages were automatically installed and are no longer required:"), autoremovelist, autoremoveversions);
+      else
+	 ioprintf(c1out, _("%lu packages were automatically installed and are no longer required.\n"), autoRemoveCount);
       c1out << _("Use 'apt-get autoremove' to remove them.") << std::endl;
-
-   // Now see if we destroyed anything
-   if (Cache->BrokenCount() != 0)
+   }
+   // Now see if we had destroyed anything (if we had done anything)
+   else if (Cache->BrokenCount() != 0)
    {
       c1out << _("Hmm, seems like the AutoRemover destroyed something which really\n"
 	         "shouldn't happen. Please file a bug report against apt.") << endl;
@@ -1457,7 +1494,7 @@ bool DoAutomaticRemove(CacheFile &Cache)
    }
    return true;
 }
-
+									/*}}}*/
 // DoUpgrade - Upgrade all packages					/*{{{*/
 // ---------------------------------------------------------------------
 /* Upgrade all packages without installing new packages or erasing old
@@ -1532,7 +1569,7 @@ bool TryInstallTask(pkgDepCache &Cache, pkgProblemResolver &Fix,
    regfree(&Pattern);
    return res;
 }
-
+									/*}}}*/
 // DoInstall - Install packages from the command line			/*{{{*/
 // ---------------------------------------------------------------------
 /* Install named packages */
@@ -1870,7 +1907,8 @@ bool DoInstall(CommandLine &CmdL)
    // cache.commit()
    if (AutoMarkChanged > 0 &&
        Cache->DelCount() == 0 && Cache->InstCount() == 0 &&
-       Cache->BadCount() == 0)
+       Cache->BadCount() == 0 &&
+       _config->FindB("APT::Get::Simulate",false) == false)
       Cache->writeStateFile(NULL);
 
    // See if we need to prompt
@@ -2125,7 +2163,7 @@ bool DoSource(CommandLine &CmdL)
 	 if(vcs == "Bzr") 
 	    ioprintf(c1out,_("Please use:\n"
 			     "bzr get %s\n"
-			     "to retrieve the latest (possible unreleased) "
+			     "to retrieve the latest (possibly unreleased) "
 			     "updates to the package.\n"),
 		     uri.c_str());
 	 break;
@@ -2204,8 +2242,11 @@ bool DoSource(CommandLine &CmdL)
    if (unsigned(Buf.f_bfree) < (FetchBytes - FetchPBytes)/Buf.f_bsize)
      {
        struct statfs Stat;
-       if (statfs(OutputDir.c_str(),&Stat) != 0 || 
-           unsigned(Stat.f_type) != RAMFS_MAGIC) 
+       if (statfs(OutputDir.c_str(),&Stat) != 0
+#if HAVE_STRUCT_STATFS_F_TYPE
+           || unsigned(Stat.f_type) != RAMFS_MAGIC
+#endif
+           ) 
           return _error->Error(_("You don't have enough free space in %s"),
               OutputDir.c_str());
       }
@@ -2575,7 +2616,10 @@ bool DoBuildDep(CommandLine &CmdL)
       
       // Now we check the state of the packages,
       if (Cache->BrokenCount() != 0)
-         return _error->Error(_("Build-dependencies for %s could not be satisfied."),*I);
+      {
+	 ShowBroken(cout, Cache, false);
+	 return _error->Error(_("Build-dependencies for %s could not be satisfied."),*I);
+      }
    }
   
    if (InstallPackages(Cache, false, true) == false)
@@ -2590,15 +2634,13 @@ bool DoBuildDep(CommandLine &CmdL)
 bool DoMoo(CommandLine &CmdL)
 {
    cout << 
-      "Tolong!                     .---.       \n"
-      "       \\               .---/-----\\---.\n"
-      "          (__)         ===============  \n"
-      "   /------(oo)             `-----'      \n"
-      "  / |   ||(__)                          \n"
-      " *  /\\--/\\                            \n"
-      "                                        \n"
-      "                                        \n"
-      "~~~~~~~~~~~~~~~~ hati-hati diculik UFO  \n";
+      "         (__) \n"
+      "         (oo) \n"
+      "   /------\\/ \n"
+      "  / |    ||   \n" 
+      " *  /\\---/\\ \n"
+      "    ~~   ~~   \n"
+      "....\"Have you mooed today?\"...\n";
 			    
    return true;
 }
@@ -2727,8 +2769,7 @@ void SigWinch(int)
 #endif
 }
 									/*}}}*/
-
-int main(int argc,const char *argv[])
+int main(int argc,const char *argv[])					/*{{{*/
 {
    CommandLine::Args Args[] = {
       {'h',"help","help",0},
@@ -2780,7 +2821,6 @@ int main(int argc,const char *argv[])
                                    {"remove",&DoInstall},
                                    {"purge",&DoInstall},
 				   {"autoremove",&DoInstall},
-				   {"purge",&DoInstall},
                                    {"dist-upgrade",&DoDistUpgrade},
                                    {"dselect-upgrade",&DoDSelectUpgrade},
 				   {"build-dep",&DoBuildDep},
@@ -2817,7 +2857,19 @@ int main(int argc,const char *argv[])
       ShowHelp(CmdL);
       return 0;
    }
-   
+
+   // simulate user-friendly if apt-get has no root privileges
+   if (getuid() != 0 && _config->FindB("APT::Get::Simulate") == true)
+   {
+      if (_config->FindB("APT::Get::Show-User-Simulation-Note",true) == true)
+	 cout << _("NOTE: This is only a simulation!\n"
+	    "      apt-get needs root privileges for real execution.\n"
+	    "      Keep also in mind that locking is deactivated,\n"
+	    "      so don't depend on the relevance to the real current situation!"
+	 ) << std::endl;
+      _config->Set("Debug::NoLocking",true);
+   }
+
    // Deal with stdout not being a tty
    if (!isatty(STDOUT_FILENO) && _config->FindI("quiet",0) < 1)
       _config->Set("quiet","1");
@@ -2849,3 +2901,4 @@ int main(int argc,const char *argv[])
    
    return 0;   
 }
+									/*}}}*/

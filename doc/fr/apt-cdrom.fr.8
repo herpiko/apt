@@ -1,102 +1,110 @@
+'\" t
 .\"     Title: apt-cdrom
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 14 Février 2004
-.\"    Manual: 
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
+.\"      Date: 14 F\('evrier 2004
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: French
 .\"
-.TH "APT\-CDROM" "8" "14 Février 2004" "Linux" ""
+.TH "APT\-CDROM" "8" "14 F\('evrier 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NOM"
-apt-cdrom \- Gestion des cédéroms par APT
+apt-cdrom \- Gestion des c\('ed\('eroms par APT
 .SH "SYNOPSIS"
-.HP 10
-\fBapt\-cdrom\fR [\fB\-hvrmfan\fR] [\fB\-d=\fR\fB\fIpoint\ de\ montage\ du\ cédérom\fR\fR] [\fB\-o=\fR\fB\fIoption\ de\ configuration\fR\fR] [\fB\-c=\fR\fB\fIfichier\fR\fR] [[add] | [ident]]
+.HP \w'\fBapt\-cdrom\fR\ 'u
+\fBapt\-cdrom\fR [\fB\-hvrmfan\fR] [\fB\-d=\fR\fB\fIpoint\ de\ montage\ du\ c\('ed\('erom\fR\fR] [\fB\-o=\fR\fB\fIoption\ de\ configuration\fR\fR] [\fB\-c=\fR\fB\fIfichier\fR\fR] [[add] | [ident]]
 .SH "DESCRIPTION"
 .PP
 
 \fBapt\-cdrom\fR
-est utilisé pour ajouter un nouveau cédérom à la liste des sources disponibles\&.
+est utilis\('e pour ajouter un nouveau c\('ed\('erom \(`a la liste des sources disponibles\&.
 \fBapt\-cdrom\fR
-prend soin de déterminer la structure du disque, de corriger de possibles erreurs de gravure et de vérifier les fichiers d\'index\&.
+prend soin de d\('eterminer la structure du disque, de corriger de possibles erreurs de gravure et de v\('erifier les fichiers d\'index\&.
 .PP
-Il est nécessaire d\'utiliser
+Il est n\('ecessaire d\'utiliser
 \fBapt\-cdrom\fR
-pour ajouter des cédéroms au système APT, cela ne peut être réalisé \(Fo\ \&à la main\ \&\(Fc\&. Par ailleurs, chaque disque d\'un ensemble de cédéroms doit être séparément inséré et parcouru pour prendre en compte de possibles erreurs de gravure\&.
+pour ajouter des c\('ed\('eroms au syst\(`eme APT, cela ne peut \(^etre r\('ealis\('e \(Fo\ \&\(`a la main\ \&\(Fc\&. Par ailleurs, chaque disque d\'un ensemble de c\('ed\('eroms doit \(^etre s\('epar\('ement ins\('er\('e et parcouru pour prendre en compte de possibles erreurs de gravure\&.
 .PP
-À moins que l\'option
+\(`A moins que l\'option
 \fB\-h\fR
 ou
 \fB\-\-help\fR
-ne soit donnée, l\'une des commandes suivantes doit être présente\&.
+ne soit donn\('ee, l\'une des commandes suivantes doit \(^etre pr\('esente\&.
 .PP
 add
 .RS 4
 La commande
 add
-est utilisée pour ajouter un nouveau disque à la liste des sources\&. Elle démonte le cédérom, réclame l\'insertion d\'un disque, parcourt ensuite le disque et copie les fichiers d\'index\&. Si le disque ne possède pas de répertoire
-\fIdisk/\fR
-correct, un titre descriptif est demandé\&.
+est utilis\('ee pour ajouter un nouveau disque \(`a la liste des sources\&. Elle d\('emonte le c\('ed\('erom, r\('eclame l\'insertion d\'un disque, parcourt ensuite le disque et copie les fichiers d\'index\&. Si le disque ne poss\(`ede pas de r\('epertoire
+disk/
+correct, un titre descriptif est demand\('e\&.
 .sp
-APT utilise un identifiant de cédérom pour reconnaître le disque qui se trouve actuellement dans le lecteur et maintient une base de données de ces identifiants dans
-\fI/var/lib/apt/cdroms\&.list\fR\&.
+APT utilise un identifiant de c\('ed\('erom pour reconna\(^itre le disque qui se trouve actuellement dans le lecteur et maintient une base de donn\('ees de ces identifiants dans
+/var/lib/apt/cdroms\&.list\&.
 .RE
 .PP
 ident
 .RS 4
-Un outil de débogage pour rapporter l\'identifiant du disque actuel ainsi que le nom du fichier stocké\&.
+Un outil de d\('ebogage pour rapporter l\'identifiant du disque actuel ainsi que le nom du fichier stock\('e\&.
 .RE
 .SH "OPTIONS"
 .PP
-Toutes les options en ligne de commande peuvent être positionnées via le fichier de configuration\ \&; les descriptifs indiquent l\'option de configuration à positionner\&. En ce qui concerne les options booléennes, on peut annuler le fichier de configuration en utilisant quelque chose comme
+Toutes les options en ligne de commande peuvent \(^etre positionn\('ees via le fichier de configuration\ \&; les descriptifs indiquent l\'option de configuration \(`a positionner\&. En ce qui concerne les options bool\('eennes, on peut annuler le fichier de configuration en utilisant quelque chose comme
 \fB\-f\-\fR,\fB\-\-no\-f\fR,
 \fB\-f=no\fR
 ou d\'autres variantes\&.
 .PP
 \fB\-d\fR, \fB\-\-cdrom\fR
 .RS 4
-Point de montage\ \&; spécifie l\'emplacement de montage du cédérom\&. Ce point de montage doit être spécifié dans
-\fI/etc/fstab\fR
-et correctement configuré\&. Élément de configuration\ \&:
+Point de montage\ \&; sp\('ecifie l\'emplacement de montage du c\('ed\('erom\&. Ce point de montage doit \(^etre sp\('ecifi\('e dans
+/etc/fstab
+et correctement configur\('e\&. \('El\('ement de configuration\ \&:
 Acquire::cdrom::mount\&.
 .RE
 .PP
 \fB\-r\fR, \fB\-\-rename\fR
 .RS 4
-Change le nom d\'un disque\ \&; change le nom d\'un disque ou annule le nom donné aux disques\&. Cette option oblige
+Change le nom d\'un disque\ \&; change le nom d\'un disque ou annule le nom donn\('e aux disques\&. Cette option oblige
 \fBapt\-cdrom\fR
-à demander un nouveau nom à l\'utilisateur\&. Élément de configuration\ \&:
+\(`a demander un nouveau nom \(`a l\'utilisateur\&. \('El\('ement de configuration\ \&:
 APT::CDROM::Rename\&.
 .RE
 .PP
 \fB\-m\fR, \fB\-\-no\-mount\fR
 .RS 4
-Pas de montage\ \&; empêche
+Pas de montage\ \&; emp\(^eche
 \fBapt\-cdrom\fR
-de monter ou démonter le point de montage\&. Élément de configuration\ \&:
+de monter ou d\('emonter le point de montage\&. \('El\('ement de configuration\ \&:
 APT::CDROM::NoMount\&.
 .RE
 .PP
 \fB\-f\fR, \fB\-\-fast\fR
 .RS 4
-Copie rapide\ \&; suppose que les paquets sont valides et ne vérifie pas chaque paquet\&. Cette option ne devrait être utilisée que si
+Copie rapide\ \&; suppose que les paquets sont valides et ne v\('erifie pas chaque paquet\&. Cette option ne devrait \(^etre utilis\('ee que si
 \fBapt\-cdrom\fR
-a préalablement utilisé ce disque et n\'a trouvé aucune erreur\&. Élément de configuration\ \&:
+a pr\('ealablement utilis\('e ce disque et n\'a trouv\('e aucune erreur\&. \('El\('ement de configuration\ \&:
 APT::CDROM::Fast\&.
 .RE
 .PP
 \fB\-a\fR, \fB\-\-thorough\fR
 .RS 4
-Parcours minutieux des paquets\ \&; cette option peut être nécessaire avec de vieux cédéroms de systèmes Debian 1\&.1 ou 1\&.2 dont les fichiers Packages sont situés dans des endroits étranges\&. Il faudra plus de temps pour parcourir le CD mais tous les paquets seront repérés\&.
+Parcours minutieux des paquets\ \&; cette option peut \(^etre n\('ecessaire avec de vieux c\('ed\('eroms de syst\(`emes Debian 1\&.1 ou 1\&.2 dont les fichiers Packages sont situ\('es dans des endroits \('etranges\&. Il faudra plus de temps pour parcourir le CD mais tous les paquets seront rep\('er\('es\&.
 .RE
 .PP
 \fB\-n\fR, \fB\-\-just\-print\fR, \fB\-\-recon\fR, \fB\-\-no\-act\fR
 .RS 4
 Aucune modification\ \&; ne pas modifier le fichier
-\fBsources.list\fR(5)ni les fichiers d\'index\&. Cependant, tout est vérifié\&. Élément de configuration\ \&:
+\fBsources.list\fR(5)ni les fichiers d\'index\&. Cependant, tout est v\('erifi\('e\&. \('El\('ement de configuration\ \&:
 APT::CDROM::NoAct\&.
 .RE
 .PP
@@ -112,7 +120,7 @@ Affiche la version du programme\&.
 .PP
 \fB\-c\fR, \fB\-\-config\-file\fR
 .RS 4
-Fichier de configuration\ \&; indique quel fichier de configuration utiliser\&. Le programme lit le fichier de configuration par défaut, puis celui\-ci\&. Voyez
+Fichier de configuration\ \&; indique quel fichier de configuration utiliser\&. Le programme lit le fichier de configuration par d\('efaut, puis celui\-ci\&. Voyez
 \fBapt.conf\fR(5)
 pour la syntaxe\&.
 .RE
@@ -131,29 +139,29 @@ Donne une option de configuration\ \&; cela fixe une option de configuration arb
 .SH "DIAGNOSTICS"
 .PP
 \fBapt\-cdrom\fR
-retourne zéro après un déroulement normal, et le nombre décimal 100 en cas d\'erreur\&.
+retourne z\('ero apr\(`es un d\('eroulement normal, et le nombre d\('ecimal 100 en cas d\'erreur\&.
 .SH "BOGUES"
 .PP
 Voyez la
-\fI page concernant les bogues d\'APT\fR\&[1]\&. Si vous voulez signaler un bogue, consultez le texte
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fB page concernant les bogues d\'APT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous voulez signaler un bogue, consultez le texte
+/usr/share/doc/debian/bug\-reporting\&.txt
 ou utilisez la commande
 \fBreportbug\fR(1)\&.
 .SH "TRADUCTION"
 .PP
-Jérôme Marant\&. 2000\ \&; mise à jour : Philippe Batailler\&. 2005\&.
-<debian\-l10n\-french@lists\&.debian\&.org>\&.
+J\('er\(^ome Marant\&. 2000\ \&; mise \(`a jour : Philippe Batailler\&. 2005\&.
+debian\-l10n\-french@lists\&.debian\&.org\&.
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Auteur.
+.RE
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Auteur.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 page concernant les bogues d'APT

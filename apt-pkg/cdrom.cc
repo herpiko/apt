@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-
 #include "indexcopy.h"
 
 using namespace std;
@@ -160,7 +159,7 @@ bool pkgCdrom::FindPackages(string CD,
    
    return !_error->PendingError();
 }
-
+									/*}}}*/
 // Score - We compute a 'score' for a path				/*{{{*/
 // ---------------------------------------------------------------------
 /* Paths are scored based on how close they come to what I consider
@@ -210,7 +209,6 @@ int pkgCdrom::Score(string Path)
 
    return Res;
 }
-
 									/*}}}*/
 // DropBinaryArch - Dump dirs with a string like /binary-<foo>/		/*{{{*/
 // ---------------------------------------------------------------------
@@ -248,8 +246,7 @@ bool pkgCdrom::DropBinaryArch(vector<string> &List)
    
    return true;
 }
-
-
+									/*}}}*/
 // DropRepeats - Drop repeated files resulting from symlinks		/*{{{*/
 // ---------------------------------------------------------------------
 /* Here we go and stat every file that we found and strip dup inodes. */
@@ -304,7 +301,6 @@ bool pkgCdrom::DropRepeats(vector<string> &List,const char *Name)
    return true;
 }
 									/*}}}*/
-
 // ReduceSourceList - Takes the path list and reduces it		/*{{{*/
 // ---------------------------------------------------------------------
 /* This takes the list of source list expressed entires and collects
@@ -513,9 +509,8 @@ bool pkgCdrom::WriteSourceList(string Name,vector<string> &List,bool Source)
    
    return true;
 }
-
-
-bool pkgCdrom::Ident(string &ident, pkgCdromStatus *log)
+									/*}}}*/
+bool pkgCdrom::Ident(string &ident, pkgCdromStatus *log)		/*{{{*/
 {
    stringstream msg;
 
@@ -573,9 +568,8 @@ bool pkgCdrom::Ident(string &ident, pkgCdromStatus *log)
 
    return true;
 }
-
-
-bool pkgCdrom::Add(pkgCdromStatus *log)
+									/*}}}*/
+bool pkgCdrom::Add(pkgCdromStatus *log)					/*{{{*/
 {
    stringstream msg;
 
@@ -686,7 +680,7 @@ bool pkgCdrom::Add(pkgCdromStatus *log)
    {
       if (_config->FindB("APT::CDROM::NoMount",false) == false) 
 	 UnmountCdrom(CDROM);
-      return _error->Error("Unable to locate any package files, perhaps this is not a Debian Disc");
+      return _error->Error(_("Unable to locate any package files, perhaps this is not a Debian Disc or the wrong architecture?"));
    }
 
    // Check if the CD is in the database
@@ -844,3 +838,4 @@ bool pkgCdrom::Add(pkgCdromStatus *log)
 
    return true;
 }
+									/*}}}*/

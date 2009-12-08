@@ -18,7 +18,8 @@ AC_CONFIG_AUX_DIR(buildlib)
 AC_CONFIG_HEADER(include/config.h:buildlib/config.h.in include/apti18n.h:buildlib/apti18n.h.in)
 
 dnl -- SET THIS TO THE RELEASE VERSION --
-AC_DEFINE_UNQUOTED(VERSION,"0.7.20.2ubuntu6+blankon1")
+
+AC_DEFINE_UNQUOTED(VERSION,"0.7.23.1ubuntu2")
 PACKAGE="apt"
 AC_DEFINE_UNQUOTED(PACKAGE,"$PACKAGE")
 AC_SUBST(PACKAGE)
@@ -111,6 +112,10 @@ if test x"$HAVE_STATVFS" != x"yes"; then
    AC_EGREP_HEADER(statfs,sys/mount.h,[AC_DEFINE(HAVE_MOUNT_H)],[AC_MSG_ERROR(failed: Need statvfs)])
    ])
 fi
+
+AC_CHECK_MEMBERS([struct statfs.f_type],,,
+    [$ac_includes_default
+     #include <sys/vfs.h>])
 
 dnl We should use the real timegm function if we have it.
 AC_CHECK_FUNC(timegm,AC_DEFINE(HAVE_TIMEGM))

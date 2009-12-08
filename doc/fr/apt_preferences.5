@@ -1,219 +1,297 @@
+'\" t
 .\"     Title: apt_preferences
 .\"    Author: APT team
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 29 Février 2004
-.\"    Manual: 
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
+.\"      Date: 29 F\('evrier 2004
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: French
 .\"
-.TH "APT_PREFERENCES" "5" "29 Février 2004" "Linux" ""
+.TH "APT_PREFERENCES" "5" "29 F\('evrier 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NOM"
-apt_preferences \- Un fichier de contrôle des préférences pour APT
+apt_preferences \- Un fichier de contr\(^ole des pr\('ef\('erences pour APT
 .SH "DESCRIPTION"
 .PP
 Le fichier d\'APT,
-\fI/etc/apt/preferences\fR, peut être utilisé pour choisir la version des paquets que l\'on veut installer\&.
+/etc/apt/preferences, peut \(^etre utilis\('e pour choisir la version des paquets que l\'on veut installer\&.
 .PP
 Quand le fichier
-\fBsources.list\fR(5)contient des références à plusieurs distributions (par exemple,
+\fBsources.list\fR(5)contient des r\('ef\('erences \(`a plusieurs distributions (par exemple,
 stable
 et
-testing), plusieurs versions d\'un paquet peuvent être installées\&. APT affecte une priorité à chaque version disponible\&. La commande
-\fBapt\-get\fR, tenant compte des contraintes de dépendance, installe la version qui possède la priorité la plus haute\&. Le fichier des préférences annule les priorités assignées par défaut aux versions des paquets\ \&: ainsi l\'utilisateur peut choisir la version qu\'il veut installer\&.
+testing), plusieurs versions d\'un paquet peuvent \(^etre install\('ees\&. APT affecte une priorit\('e \(`a chaque version disponible\&. La commande
+\fBapt\-get\fR, tenant compte des contraintes de d\('ependance, installe la version qui poss\(`ede la priorit\('e la plus haute\&. Le fichier des pr\('ef\('erences annule les priorit\('es assign\('ees par d\('efaut aux versions des paquets\ \&: ainsi l\'utilisateur peut choisir la version qu\'il veut installer\&.
 .PP
 Si le fichier
-\fBsources.list\fR(5)contient, pour une même distribution, des références à plusieurs sites de téléchargement, il peut exister plusieurs exemplaires de la même version d\'un paquet\&. Dans ce cas,
+\fBsources.list\fR(5)contient, pour une m\(^eme distribution, des r\('ef\('erences \(`a plusieurs sites de t\('el\('echargement, il peut exister plusieurs exemplaires de la m\(^eme version d\'un paquet\&. Dans ce cas,
 \fBapt\-get\fR
-télécharge l\'exemplaire qui apparaît en premier dans le fichier
-\fBsources.list\fR(5)\&. Le fichier des préférences n\'influe pas sur le choix des exemplaires, seulement sur le choix de la version\&.
-.SS "Les priorités affectées par défaut"
+t\('el\('echarge l\'exemplaire qui appara\(^it en premier dans le fichier
+\fBsources.list\fR(5)\&. Le fichier des pr\('ef\('erences n\'influe pas sur le choix des exemplaires, seulement sur le choix de la version\&.
+.SS "Les priorit\('es affect\('ees par d\('efaut"
 .PP
-Quand le fichier des préférences n\'existe pas, ou quand aucune entrée de ce fichier ne s\'applique à une version précise, la priorité affectée à cette version est la priorité de la distribution à laquelle elle appartient\&. On peut distinguer une distribution et lui donner une priorité plus haute que celle des autres distributions\ \&: on l\'appelle la distribution par défaut ou \(Fo\ \&target release\ \&\(Fc et elle peut être définie sur la ligne de commande de
+Quand le fichier des pr\('ef\('erences n\'existe pas, ou quand aucune entr\('ee de ce fichier ne s\'applique \(`a une version pr\('ecise, la priorit\('e affect\('ee \(`a cette version est la priorit\('e de la distribution \(`a laquelle elle appartient\&. On peut distinguer une distribution et lui donner une priorit\('e plus haute que celle des autres distributions\ \&: on l\'appelle la distribution par d\('efaut ou \(Fo\ \&target release\ \&\(Fc et elle peut \(^etre d\('efinie sur la ligne de commande de
 \fBapt\-get\fR
 ou dans le fichier de configuration d\'APT,
-\fI/etc/apt/apt\&.conf\fR\&. Par exemple\ \&:
+/etc/apt/apt\&.conf\&. Par exemple\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 \fBapt\-get install \-t testing \fR\fB\fIpaquet\fR\fR
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 APT::Default\-Release "stable";
 .fi
+.if n \{\
 .RE
+.\}
 .PP
-Quand une distribution par défaut a été indiquée, APT utilise l\'algorithme suivant pour déterminer la priorité des versions d\'un paquet\ \&:
+Quand une distribution par d\('efaut a \('et\('e indiqu\('ee, APT utilise l\'algorithme suivant pour d\('eterminer la priorit\('e des versions d\'un paquet\ \&:
 .PP
-une priorité égale à 100
+une priorit\('e \('egale \(`a 100
 .RS 4
-est affectée à la version déjà installée (si elle existe)\&.
+est affect\('ee \(`a la version d\('ej\(`a install\('ee (si elle existe)\&.
 .RE
 .PP
-une priorité égale à 500
+une priorit\('e \('egale \(`a 500
 .RS 4
-est affectée aux versions qui ne sont pas installées et qui n\'appartiennent pas à la distribution par défaut\&.
+est affect\('ee aux versions qui ne sont pas install\('ees et qui n\'appartiennent pas \(`a la distribution par d\('efaut\&.
 .RE
 .PP
-une priorité égale à 990
+une priorit\('e \('egale \(`a 990
 .RS 4
-est affectée aux versions qui ne sont pas installées et qui appartiennent à la distribution par défaut\&.
+est affect\('ee aux versions qui ne sont pas install\('ees et qui appartiennent \(`a la distribution par d\('efaut\&.
 .RE
 .PP
-Quand aucune distribution par défaut n\'a été indiquée, APT affecte simplement une priorité égale à 100 à toute version installée d\'un paquet et une priorité égale à 500 à tout version non installée\&.
+Quand aucune distribution par d\('efaut n\'a \('et\('e indiqu\('ee, APT affecte simplement une priorit\('e \('egale \(`a 100 \(`a toute version install\('ee d\'un paquet et une priorit\('e \('egale \(`a 500 \(`a tout version non install\('ee\&.
 .PP
-Puis APT applique les règles suivantes pour déterminer la version du paquet qu\'il faut installer (elles sont listées par ordre de priorité)\ \&:
+Puis APT applique les r\(`egles suivantes pour d\('eterminer la version du paquet qu\'il faut installer (elles sont list\('ees par ordre de priorit\('e)\ \&:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'Ne jamais revenir en arrière, sauf si la priorité d\'une version disponible dépasse 1000\&. \(Fo\ \&Revenir en arrière\ \&\(Fc signifie installer une version moins récente que la version installée\&. Il faut noter qu\'aucune des priorités par défaut n\'excède 1000\ \&; de telles valeurs ne peuvent être définies que dans le fichier des préférences\&. Notez aussi qu\'il est risqué de revenir en arrière\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Ne jamais revenir en arri\(`ere, sauf si la priorit\('e d\'une version disponible d\('epasse 1000\&. \(Fo\ \&Revenir en arri\(`ere\ \&\(Fc signifie installer une version moins r\('ecente que la version install\('ee\&. Il faut noter qu\'aucune des priorit\('es par d\('efaut n\'exc\(`ede 1000\ \&; de telles valeurs ne peuvent \(^etre d\('efinies que dans le fichier des pr\('ef\('erences\&. Notez aussi qu\'il est risqu\('e de revenir en arri\(`ere\&.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'Installer la version qui possède la priorité la plus haute\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Installer la version qui poss\(`ede la priorit\('e la plus haute\&.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'Quand deux (ou plus) versions ont la même priorité, installer la version la plus récente (c\&.\-à\-d\&. celle dont le numéro de version est le plus grand)\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Quand deux (ou plus) versions ont la m\(^eme priorit\('e, installer la version la plus r\('ecente (c\&.\-\(`a\-d\&. celle dont le num\('ero de version est le plus grand)\&.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'Quand deux (ou plus) versions ont la même priorité et le même numéro de version, mais soit les paquets diffèrent par certaines métadonnées, soit l\'option
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Quand deux (ou plus) versions ont la m\(^eme priorit\('e et le m\(^eme num\('ero de version, mais soit les paquets diff\(`erent par certaines m\('etadonn\('ees, soit l\'option
 \-\-reinstall
-a été donnée, installer la version qui n\'est pas installée\&.
+a \('et\('e donn\('ee, installer la version qui n\'est pas install\('ee\&.
 .RE
 .sp
 .RE
 .PP
-En général, la version installée d\'un paquet (priorité 100) n\'est pas aussi récente que les versions disponibles dans les sources listées dans le fichier
-\fBsources.list\fR(5)(priorité 500 ou 990)\&. Et donc le paquet sera mis à niveau avec la commande\ \&:
+En g\('en\('eral, la version install\('ee d\'un paquet (priorit\('e 100) n\'est pas aussi r\('ecente que les versions disponibles dans les sources list\('ees dans le fichier
+\fBsources.list\fR(5)(priorit\('e 500 ou 990)\&. Et donc le paquet sera mis \(`a niveau avec la commande\ \&:
 \fBapt\-get install \fR\fB\fIpaquet\fR\fR
 ou
 \fBapt\-get dist\-upgrade\fR\&.
 .PP
-La version installée d\'un paquet peut être \- rarement \-
+La version install\('ee d\'un paquet peut \(^etre \- rarement \-
 \fIplus\fR
-récente que tout autre version disponible\&. Les commandes
+r\('ecente que tout autre version disponible\&. Les commandes
 \fBapt\-get install \fR\fB\fIpaquet\fR\fR
 ou
 \fBapt\-get upgrade\fR
-ne provoquent pas de retour en arrière\&.
+ne provoquent pas de retour en arri\(`ere\&.
 .PP
-Parfois, la version installée d\'un paquet est plus récente que la version appartenant à la distribution par défaut, mais moins récente que la version appartenant à une autre distribution\&. Une telle version sera mise à niveau par les commandes
+Parfois, la version install\('ee d\'un paquet est plus r\('ecente que la version appartenant \(`a la distribution par d\('efaut, mais moins r\('ecente que la version appartenant \(`a une autre distribution\&. Une telle version sera mise \(`a niveau par les commandes
 \fBapt\-get install \fR\fB\fIpaquet\fR\fR
 ou
 \fBapt\-get upgrade\fR
 car au moins
 \fIl\'une\fR
-des versions disponibles possède une plus haute priorité que celle de la version installée\&.
-.SS "Conséquences des préférences"
+des versions disponibles poss\(`ede une plus haute priorit\('e que celle de la version install\('ee\&.
+.SS "Cons\('equences des pr\('ef\('erences"
 .PP
-Le fichier des préférences permet à l\'administrateur système de contrôler l\'affectation des priorités\&. Ce fichier est constitué d\'une ou plusieurs entrées séparées par des lignes blanches\&. Ces entrées peuvent avoir deux formes, une forme particulière et une forme générale\&.
+Le fichier des pr\('ef\('erences permet \(`a l\'administrateur syst\(`eme de contr\(^oler l\'affectation des priorit\('es\&. Ce fichier est constitu\('e d\'une ou plusieurs entr\('ees s\('epar\('ees par des lignes blanches\&. Ces entr\('ees peuvent avoir deux formes, une forme particuli\(`ere et une forme g\('en\('erale\&.
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'La forme particulière affecte une priorité (\fIPin\-Priority\fR) à un paquet précis, à une version précise ou à un intervalle spécifiant plusieurs versions\&. Par exemple, l\'entrée suivante affecte une priorité haute à toutes les versions du paquet
-\fIperl\fR
-dont le numéro de version commence par
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+La forme particuli\(`ere affecte une priorit\('e (\fIPin\-Priority\fR) \(`a un paquet pr\('ecis, \(`a une version pr\('ecise ou \(`a un intervalle sp\('ecifiant plusieurs versions\&. Par exemple, l\'entr\('ee suivante affecte une priorit\('e haute \(`a toutes les versions du paquet
+perl
+dont le num\('ero de version commence par
 5\&.8\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: perl
 Pin: version 5\&.8*
 Pin\-Priority: 1001
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'La forme générale affecte une priorité à toutes les versions d\'un paquet dans une distribution donnée (c\'est\-à\-dire, à toutes les versions d\'un paquet qui sont listées dans un fichier
-\fIRelease\fR), ou à toutes les versions d\'un paquet provenant d\'un site internet identifié par un nom complètement qualifié\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+La forme g\('en\('erale affecte une priorit\('e \(`a toutes les versions d\'un paquet dans une distribution donn\('ee (c\'est\-\(`a\-dire, \(`a toutes les versions d\'un paquet qui sont list\('ees dans un fichier
+Release), ou \(`a toutes les versions d\'un paquet provenant d\'un site internet identifi\('e par un nom compl\(`etement qualifi\('e\&.
 .sp
-Cette forme générale des entrées du fichier des préférences s\'applique seulement aux groupes de paquets\&. Par exemple, l\'entrée suivante affecte une priorité haute à toutes les versions disponibles dans le site local\&.
+Cette forme g\('en\('erale des entr\('ees du fichier des pr\('ef\('erences s\'applique seulement aux groupes de paquets\&. Par exemple, l\'entr\('ee suivante affecte une priorit\('e haute \(`a toutes les versions disponibles dans le site local\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: *
 Pin: origin ""
 Pin\-Priority: 999
 .fi
+.if n \{\
 .RE
-Attention ! le mot\-clé utilisé ici,
-origin, ne doit pas être confondu avec l\'Origine d\'une distribution indiquée dans un fichier
-\fIRelease\fR\&. Ce qui suit l\'étiquette \(Fo\ \&Origin:\ \&\(Fc dans un fichier
-\fIRelease\fR
+.\}
+.sp
+Attention ! le mot\-cl\('e utilis\('e ici,
+origin, ne doit pas \(^etre confondu avec l\'Origine d\'une distribution indiqu\('ee dans un fichier
+Release\&. Ce qui suit l\'\('etiquette \(Fo\ \&Origin:\ \&\(Fc dans un fichier
+Release
 n\'est pas une adresse internet mais le nom d\'un auteur ou d\'un distributeur, comme Debian ou Ximian\&.
 .sp
-L\'entrée suivante affecte une priorité basse à toutes les versions d\'un paquet appartenant à toute distribution dont le nom d\'\(Fo\ \&Archive\ \&\(Fc est
+L\'entr\('ee suivante affecte une priorit\('e basse \(`a toutes les versions d\'un paquet appartenant \(`a toute distribution dont le nom d\'\(Fo\ \&Archive\ \&\(Fc est
 unstable\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: *
 Pin: release a=unstable
 Pin\-Priority: 50
 .fi
+.if n \{\
 .RE
-L\'entrée suivante affecte une priorité haute à toutes les versions d\'un paquet appartenant à toute distribution dont le nom d\'\(Fo\ \&Archive\ \&\(Fc est
+.\}
+.sp
+L\'entr\('ee suivante affecte une priorit\('e haute \(`a toutes les versions d\'un paquet appartenant \(`a toute distribution dont le nom d\'\(Fo\ \&Archive\ \&\(Fc est
 stable
-et dont le numéro de \(Fo\ \&Version\ \&\(Fc est
+et dont le num\('ero de \(Fo\ \&Version\ \&\(Fc est
 3\&.0\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: *
 Pin: release a=stable, v=3\&.0
 Pin\-Priority: 500
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .sp
 .RE
-.SS "Comment APT interprète\-t\-il les priorités\ \&?"
+.SS "Comment APT interpr\(`ete\-t\-il les priorit\('es\ \&?"
 .PP
-Les priorités (P) indiquées dans le fichier des préférences doivent être des entiers positifs ou négatifs\&. Ils sont interprétés à peu près comme suit\ \&:
+Les priorit\('es (P) indiqu\('ees dans le fichier des pr\('ef\('erences doivent \(^etre des entiers positifs ou n\('egatifs\&. Ils sont interpr\('et\('es \(`a peu pr\(`es comme suit\ \&:
 .PP
 P > 1000
 .RS 4
-Cette priorité entraîne l\'installation du paquet même s\'il s\'agit d\'un retour en arrière\&.
+Cette priorit\('e entra\(^ine l\'installation du paquet m\(^eme s\'il s\'agit d\'un retour en arri\(`ere\&.
 .RE
 .PP
 990 < P <=1000
 .RS 4
-La version sera installée, même si elle n\'appartient pas à la distribution par défaut\ \&; mais elle ne sera pas installée si la version installée est plus récente\&.
+La version sera install\('ee, m\(^eme si elle n\'appartient pas \(`a la distribution par d\('efaut\ \&; mais elle ne sera pas install\('ee si la version install\('ee est plus r\('ecente\&.
 .RE
 .PP
 500 < P <=990
 .RS 4
-La version sera installée, sauf s\'il existe une version appartenant à la distribution par défaut ou si la version installée est plus récente\&.
+La version sera install\('ee, sauf s\'il existe une version appartenant \(`a la distribution par d\('efaut ou si la version install\('ee est plus r\('ecente\&.
 .RE
 .PP
 100 < P <=500
 .RS 4
-La version sera installée, sauf s\'il existe une version appartenant à une autre distribution ou si la version installée est plus récente\&.
+La version sera install\('ee, sauf s\'il existe une version appartenant \(`a une autre distribution ou si la version install\('ee est plus r\('ecente\&.
 .RE
 .PP
 0 < P <=100
 .RS 4
-La version sera installée si aucune version du paquet n\'est installée\&.
+La version sera install\('ee si aucune version du paquet n\'est install\('ee\&.
 .RE
 .PP
 P < 0
 .RS 4
-Cette priorité empêche l\'installation de la version\&.
+Cette priorit\('e emp\(^eche l\'installation de la version\&.
 .RE
 .PP
-Si l\'une des entrées de forme particulière correspond à la version disponible d\'un paquet, la première entrée trouvée détermine la priorité de cette version\&. S\'il n\'en existe pas, et si l\'une des entrées de forme générale correspond à la version disponible d\'un paquet, la première entrée trouvée détermine la priorité\&.
+Si l\'une des entr\('ees de forme particuli\(`ere correspond \(`a la version disponible d\'un paquet, la premi\(`ere entr\('ee trouv\('ee d\('etermine la priorit\('e de cette version\&. S\'il n\'en existe pas, et si l\'une des entr\('ees de forme g\('en\('erale correspond \(`a la version disponible d\'un paquet, la premi\(`ere entr\('ee trouv\('ee d\('etermine la priorit\('e\&.
 .PP
-Supposons par exemple que le fichier des préférences contienne les trois entrées décrites ci\-dessous\ \&:
+Supposons par exemple que le fichier des pr\('ef\('erences contienne les trois entr\('ees d\('ecrites ci\-dessous\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: perl
 Pin: version 5\&.8*
@@ -227,44 +305,67 @@ Package: *
 Pin: release unstable
 Pin\-Priority: 50
 .fi
+.if n \{\
 .RE
+.\}
 .PP
 Alors\ \&:
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'La version la plus récente du paquet
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+La version la plus r\('ecente du paquet
 perl
-sera installé pour autant que son numéro de version commence par
+sera install\('e pour autant que son num\('ero de version commence par
 5\&.8\&. Si l\'\fIune\fR
-des versions 5\&.8* existe et si la version installée est une version 5\&.9*, il y aura un retour en arrière\&.
+des versions 5\&.8* existe et si la version install\('ee est une version 5\&.9*, il y aura un retour en arri\(`ere\&.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'Les versions des paquets (autres que
-perl) disponibles dans le site local ont priorité sur les autres versions, même celles appartenant à la distribution par défaut\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Les versions des paquets (autres que
+perl) disponibles dans le site local ont priorit\('e sur les autres versions, m\(^eme celles appartenant \(`a la distribution par d\('efaut\&.
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'La version d\'un paquet dont l\'origine n\'est pas le site local mais un site internet listé dans
-\fBsources.list\fR(5)et qui appartient à une distribution
-unstable, ne sera installée que si aucune version du paquet n\'est déjà installée\&.
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+La version d\'un paquet dont l\'origine n\'est pas le site local mais un site internet list\('e dans
+\fBsources.list\fR(5)et qui appartient \(`a une distribution
+unstable, ne sera install\('ee que si aucune version du paquet n\'est d\('ej\(`a install\('ee\&.
 .RE
 .sp
 .RE
-.SS "Détermination de la version des paquets et des propriétés des distributions"
+.SS "D\('etermination de la version des paquets et des propri\('et\('es des distributions"
 .PP
-Chaque source listée dans le fichier
+Chaque source list\('ee dans le fichier
 \fBsources.list\fR(5)doit fournir les fichiers
-\fIPackages\fR
+Packages
 et
-\fIRelease\fR
-qui décrivent les paquets disponibles à cet endroit\&.
+Release
+qui d\('ecrivent les paquets disponibles \(`a cet endroit\&.
 .PP
 Le fichier
-\fIPackages\fR
-se trouve normalement dans le répertoire
-\fI\&.\&.\&./dists/\fR\fI\fIdist\-name\fR\fR\fI/\fR\fI\fIcomponent\fR\fR\fI/\fR\fI\fIarch\fR\fR, par exemple,
-\fI\&.\&.\&./dists/stable/main/binary\-i386/Packages\fR\&. Il consiste en entrées composées de lignes, une pour chaque paquet disponible dans le répertoire\&. Seules deux lignes des entrées sont pertinentes pour la détermination des priorités\ \&:
+Packages
+se trouve normalement dans le r\('epertoire
+\&.\&.\&./dists/\fIdist\-name\fR/\fIcomponent\fR/\fIarch\fR, par exemple,
+\&.\&.\&./dists/stable/main/binary\-i386/Packages\&. Il consiste en entr\('ees compos\('ees de lignes, une pour chaque paquet disponible dans le r\('epertoire\&. Seules deux lignes des entr\('ees sont pertinentes pour la d\('etermination des priorit\('es\ \&:
 .PP
 La ligne Package:
 .RS 4
@@ -273,109 +374,129 @@ donne le nom du paquet
 .PP
 La ligne Version:
 .RS 4
-donne le numéro de version du paquet
+donne le num\('ero de version du paquet
 .RE
 .PP
 Le fichier
-\fIRelease\fR
-se trouve normalement dans le répertoire
-\fI\&.\&.\&./dists/\fR\fI\fIdist\-name\fR\fR, par exemple,
-\fI\&.\&.\&./dists/stable/Release\fR, ou
-\fI\&.\&.\&./dists/woody/Release\fR\&. Il consiste en une seule entrée composée de plusieurs lignes qui s\'applique à
+Release
+se trouve normalement dans le r\('epertoire
+\&.\&.\&./dists/\fIdist\-name\fR, par exemple,
+\&.\&.\&./dists/stable/Release, ou
+\&.\&.\&./dists/woody/Release\&. Il consiste en une seule entr\('ee compos\('ee de plusieurs lignes qui s\'applique \(`a
 \fItous\fR
-les paquets situés dans les répertoires sous le répertoire parent\&. Contrairement au fichier
-\fIPackages\fR, presque toutes les lignes du fichier
-\fIRelease\fR
-sont pertinentes pour déterminer les priorités\ \&:
+les paquets situ\('es dans les r\('epertoires sous le r\('epertoire parent\&. Contrairement au fichier
+Packages, presque toutes les lignes du fichier
+Release
+sont pertinentes pour d\('eterminer les priorit\('es\ \&:
 .PP
 La ligne Archive:
 .RS 4
-nomme l\'archive à laquelle appartiennent tous les paquets situés dans les répertoires\&. Par exemple, la ligne
+nomme l\'archive \(`a laquelle appartiennent tous les paquets situ\('es dans les r\('epertoires\&. Par exemple, la ligne
 Archive: stable
-indique que tous les paquets dans les répertoires situés sous le répertoire parent du fichier
-\fIRelease\fR
-appartiennent à l\'archive
-stable\&. Indiquer cette valeur dans le fichier des préférences demanderait cette ligne\ \&:
+indique que tous les paquets dans les r\('epertoires situ\('es sous le r\('epertoire parent du fichier
+Release
+appartiennent \(`a l\'archive
+stable\&. Indiquer cette valeur dans le fichier des pr\('ef\('erences demanderait cette ligne\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Pin: release a=stable
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 La ligne Version:
 .RS 4
-indique la version de la distribution\&. Par exemple, les paquets dans les répertoires peuvent appartenir à la distribution Debian GNU/Linux version 3\&.0\&. Il n\'y a pas de numéro de version pour les distributions
+indique la version de la distribution\&. Par exemple, les paquets dans les r\('epertoires peuvent appartenir \(`a la distribution Debian GNU/Linux version 3\&.0\&. Il n\'y a pas de num\('ero de version pour les distributions
 testing
 et
 unstable
-car elles n\'ont pas encore été publiées\&. Indiquer cette valeur dans le fichier des préférences demanderait ces lignes\ \&:
+car elles n\'ont pas encore \('et\('e publi\('ees\&. Indiquer cette valeur dans le fichier des pr\('ef\('erences demanderait ces lignes\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Pin: release v=3\&.0
 Pin: release a=stable, v=3\&.0
 Pin: release 3\&.0
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 La ligne Component:
 .RS 4
-nomme un composant qui indique le type de licence associée aux paquets situés dans les répertoires sous le fichier
-\fIRelease\fR\&. Par exemple, la ligne
+nomme un composant qui indique le type de licence associ\('ee aux paquets situ\('es dans les r\('epertoires sous le fichier
+Release\&. Par exemple, la ligne
 Component: main
-indique que tous les exemplaires dans les répertoires appartiennent au composant
-main, c\'est\-à\-dire que leur licence est en accord avec les Directives Debian pour le logiciel libre\&. Indiquer ce composant dans le fichier des préférences demanderait cette ligne\ \&:
+indique que tous les exemplaires dans les r\('epertoires appartiennent au composant
+main, c\'est\-\(`a\-dire que leur licence est en accord avec les Directives Debian pour le logiciel libre\&. Indiquer ce composant dans le fichier des pr\('ef\('erences demanderait cette ligne\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Pin: release c=main
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 La ligne Origin:
 .RS 4
-nomme l\'origine des paquets situés dans les répertoires sous le fichier
-\fIRelease\fR\&. En général, c\'est
-Debian\&. Indiquer cette origine dans le fichier des préférences demanderait cette ligne\ \&:
+nomme l\'origine des paquets situ\('es dans les r\('epertoires sous le fichier
+Release\&. En g\('en\('eral, c\'est
+Debian\&. Indiquer cette origine dans le fichier des pr\('ef\('erences demanderait cette ligne\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Pin: release o=Debian
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 La ligne Label:
 .RS 4
-indique un label pour les paquets qui se trouvent dans les répertoires sous le fichier
-\fIRelease\fR\&. En général, c\'est
-Debian\&. Indiquer cette origine dans le fichier des préférences demanderait cette ligne\ \&:
+indique un label pour les paquets qui se trouvent dans les r\('epertoires sous le fichier
+Release\&. En g\('en\('eral, c\'est
+Debian\&. Indiquer cette origine dans le fichier des pr\('ef\('erences demanderait cette ligne\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Pin: release l=Debian
 .fi
+.if n \{\
 .RE
+.\}
 .RE
 .PP
 Tous les fichiers
-\fIPackages\fR
+Packages
 et
-\fIRelease\fR
-récupérés dans des sources listées par le fichier
-\fBsources.list\fR(5)sont conservés dans le répertoire
-\fI/var/lib/apt/lists\fR
-ou dans le fichier spécifié par la variable
+Release
+r\('ecup\('er\('es dans des sources list\('ees par le fichier
+\fBsources.list\fR(5)sont conserv\('es dans le r\('epertoire
+/var/lib/apt/lists
+ou dans le fichier sp\('ecifi\('e par la variable
 Dir::State::Lists
 dans le fichier
-\fIapt\&.conf\fR\&. Par exemple, le fichier
-\fIdebian\&.lcs\&.mit\&.edu_debian_dists_unstable_contrib_binary\-i386_Release\fR
+apt\&.conf\&. Par exemple, le fichier
+debian\&.lcs\&.mit\&.edu_debian_dists_unstable_contrib_binary\-i386_Release
 contient le fichier
-\fIRelease\fR
+Release
 du site
 debian\&.lcs\&.mit\&.edu, architecture
 binary\-i386
@@ -383,24 +504,26 @@ et composant
 contrib
 de la distribution
 unstable\&.
-.SS "Lignes facultatives dans le fichier des préférences"
+.SS "Lignes facultatives dans le fichier des pr\('ef\('erences"
 .PP
-Toute entrée du fichier des préférences peut commencer par une ou plusieurs lignes contenant le mot
+Toute entr\('ee du fichier des pr\('ef\('erences peut commencer par une ou plusieurs lignes contenant le mot
 Explanation:\&. Cela permet des commentaires\&.
 .PP
 La ligne
 Pin\-Priority:
-d\'une entrée est facultative\&. Si elle n\'existe pas, APT affecte une priorité inférieure de 1 à la valeur spécifiée sur une ligne commençant par
+d\'une entr\('ee est facultative\&. Si elle n\'existe pas, APT affecte une priorit\('e inf\('erieure de 1 \(`a la valeur sp\('ecifi\('ee sur une ligne commen\(,cant par
 Pin\-Priority: release \&.\&.\&.\&.
 .SH "EXEMPLES"
 .SS "Comment suivre Stable\ \&?"
 .PP
-Le fichier des préférences suivant affecte une priorité plus haute que la priorité par défaut (500) à tous les exemplaires appartenant à la distribution
+Le fichier des pr\('ef\('erences suivant affecte une priorit\('e plus haute que la priorit\('e par d\('efaut (500) \(`a tous les exemplaires appartenant \(`a la distribution
 stable
-et une priorité prohibitivement basse à tous les exemplaires appartenant à d\'autres distributions
+et une priorit\('e prohibitivement basse \(`a tous les exemplaires appartenant \(`a d\'autres distributions
 Debian\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Explanation: Ne pas installer des exemplaires d\'origine Debian
 Explanation: sauf ceux de la distribution stable
@@ -412,40 +535,52 @@ Package: *
 Pin: release o=Debian
 Pin\-Priority: \-10
 .fi
+.if n \{\
 .RE
+.\}
 .PP
-Avec le fichier des préférences ci\-dessus et un fichier
-\fBsources.list\fR(5)adéquat, les commandes suivantes utiliseront les versions les plus récentes de
+Avec le fichier des pr\('ef\('erences ci\-dessus et un fichier
+\fBsources.list\fR(5)ad\('equat, les commandes suivantes utiliseront les versions les plus r\('ecentes de
 stable
-pour faire la mise à niveau\ \&:
+pour faire la mise \(`a niveau\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 apt\-get install \fIpaquet\fR
 apt\-get upgrade
 apt\-get dist\-upgrade
 .fi
+.if n \{\
 .RE
+.\}
 .PP
-La commande suivante utilisera la version la plus récente de la distribution
+La commande suivante utilisera la version la plus r\('ecente de la distribution
 testing
-pour mettre à niveau le paquet spécifié\ \&; cependant les mises à niveau ultérieures du paquet ne se feront pas à moins de relancer la commande\&.
+pour mettre \(`a niveau le paquet sp\('ecifi\('e\ \&; cependant les mises \(`a niveau ult\('erieures du paquet ne se feront pas \(`a moins de relancer la commande\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 apt\-get install \fIpaquet\fR/testing
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 .SS "Comment suivre Testing ou Unstable\ \&?"
 .PP
-Le fichier des préférences suivant affecte une priorité haute aux versions des paquets appartenant à la distribution
-testing, une priorité moindre aux versions appartenant à la distribution
+Le fichier des pr\('ef\('erences suivant affecte une priorit\('e haute aux versions des paquets appartenant \(`a la distribution
+testing, une priorit\('e moindre aux versions appartenant \(`a la distribution
 unstable
-et une priorité prohibitivement basse aux versions appartenant à d\'autres distributions
+et une priorit\('e prohibitivement basse aux versions appartenant \(`a d\'autres distributions
 Debian\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: *
 Pin: release a=testing
@@ -459,36 +594,46 @@ Package: *
 Pin: release o=Debian
 Pin\-Priority: \-10
 .fi
+.if n \{\
 .RE
+.\}
 .PP
 Avec un fichier
-\fBsources.list\fR(5)approprié et le fichier des préférences ci\-dessus, les commandes suivantes utiliseront les versions les plus récentes de
+\fBsources.list\fR(5)appropri\('e et le fichier des pr\('ef\('erences ci\-dessus, les commandes suivantes utiliseront les versions les plus r\('ecentes de
 testing
-pour faire la mise à niveau\ \&:
+pour faire la mise \(`a niveau\ \&:
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 apt\-get install \fIpaquet\fR
 apt\-get upgrade
 apt\-get dist\-upgrade
 .fi
+.if n \{\
 .RE
+.\}
 .PP
-La commande suivante utilisera la version la plus récente de la distribution
+La commande suivante utilisera la version la plus r\('ecente de la distribution
 unstable
-pour mettre à niveau le paquet spécifié\ \&; Par la suite,
+pour mettre \(`a niveau le paquet sp\('ecifi\('e\ \&; Par la suite,
 \fBapt\-get upgrade\fR
-mettra le paquet à jour avec la plus récente version dans
+mettra le paquet \(`a jour avec la plus r\('ecente version dans
 testing
-si elle est plus récente que la version installée ou avec la plus récente version dans
+si elle est plus r\('ecente que la version install\('ee ou avec la plus r\('ecente version dans
 unstable
-si elle est plus récente que la version installée\&.
+si elle est plus r\('ecente que la version install\('ee\&.
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 apt\-get install \fIpaquet\fR/unstable
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 .SH "SEE ALSO"
 .PP
@@ -500,20 +645,20 @@ apt\-get install \fIpaquet\fR/unstable
 .SH "BOGUES"
 .PP
 Voyez la
-\fI page concernant les bogues d\'APT\fR\&[1]\&. Si vous voulez signaler un bogue, consultez le texte
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fB page concernant les bogues d\'APT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous voulez signaler un bogue, consultez le texte
+/usr/share/doc/debian/bug\-reporting\&.txt
 ou utilisez la commande
 \fBreportbug\fR(1)\&.
 .SH "TRADUCTION"
 .PP
 Philippe Batailler\&.
-<debian\-l10n\-french@lists\&.debian\&.org>\&. 2005\&.
+debian\-l10n\-french@lists\&.debian\&.org\&. 2005\&.
 .SH "AUTEUR"
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Auteur.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 page concernant les bogues d'APT

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_nn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-15 15:53+0200\n"
+"POT-Creation-Date: 2009-10-15 19:16+0200\n"
 "PO-Revision-Date: 2005-02-14 23:30+0100\n"
 "Last-Translator: Havard Korsvoll <korsvoll@skulelinux.no>\n"
 "Language-Team: Norwegian nynorsk <i18n-nn@lister.ping.uio.no>\n"
@@ -24,8 +24,8 @@ msgid "Package %s version %s has an unmet dep:\n"
 msgstr "Pakken %s versjon %s har eit krav som ikkje er oppfylt:\n"
 
 #: cmdline/apt-cache.cc:181 cmdline/apt-cache.cc:550 cmdline/apt-cache.cc:644
-#: cmdline/apt-cache.cc:800 cmdline/apt-cache.cc:1022
-#: cmdline/apt-cache.cc:1423 cmdline/apt-cache.cc:1575
+#: cmdline/apt-cache.cc:797 cmdline/apt-cache.cc:1021
+#: cmdline/apt-cache.cc:1425 cmdline/apt-cache.cc:1577
 #, c-format
 msgid "Unable to locate package %s"
 msgstr "Finn ikkje pakken %s"
@@ -96,72 +96,72 @@ msgstr "Slingringsmon: "
 msgid "Total space accounted for: "
 msgstr "Brukt plass i alt: "
 
-#: cmdline/apt-cache.cc:469 cmdline/apt-cache.cc:1222
+#: cmdline/apt-cache.cc:469 cmdline/apt-cache.cc:1221
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Pakkefila %s er ute av takt."
 
-#: cmdline/apt-cache.cc:1297
+#: cmdline/apt-cache.cc:1299
 msgid "You must give exactly one pattern"
 msgstr "Du må oppgi nøyaktig eitt mnster"
 
-#: cmdline/apt-cache.cc:1451
+#: cmdline/apt-cache.cc:1453
 msgid "No packages found"
 msgstr "Fann ingen pakkar"
 
-#: cmdline/apt-cache.cc:1528
+#: cmdline/apt-cache.cc:1530
 msgid "Package files:"
 msgstr "Pakkefiler:"
 
-#: cmdline/apt-cache.cc:1535 cmdline/apt-cache.cc:1622
+#: cmdline/apt-cache.cc:1537 cmdline/apt-cache.cc:1624
 msgid "Cache is out of sync, can't x-ref a package file"
 msgstr "Mellomlageret er ute av takt, kan ikkje x-referera ei pakkefil"
 
 #. Show any packages have explicit pins
-#: cmdline/apt-cache.cc:1549
+#: cmdline/apt-cache.cc:1551
 msgid "Pinned packages:"
 msgstr "Spikra pakkar:"
 
-#: cmdline/apt-cache.cc:1561 cmdline/apt-cache.cc:1602
+#: cmdline/apt-cache.cc:1563 cmdline/apt-cache.cc:1604
 msgid "(not found)"
 msgstr "(ikkje funne)"
 
 #. Installed version
-#: cmdline/apt-cache.cc:1582
+#: cmdline/apt-cache.cc:1584
 msgid "  Installed: "
 msgstr "  Installert: "
 
-#: cmdline/apt-cache.cc:1584 cmdline/apt-cache.cc:1592
+#: cmdline/apt-cache.cc:1586 cmdline/apt-cache.cc:1594
 msgid "(none)"
 msgstr "(ingen)"
 
 #. Candidate Version
-#: cmdline/apt-cache.cc:1589
+#: cmdline/apt-cache.cc:1591
 msgid "  Candidate: "
 msgstr "  Kandidat: "
 
-#: cmdline/apt-cache.cc:1599
+#: cmdline/apt-cache.cc:1601
 msgid "  Package pin: "
 msgstr "  Pakke spikra til: "
 
 #. Show the priority tables
-#: cmdline/apt-cache.cc:1608
+#: cmdline/apt-cache.cc:1610
 msgid "  Version table:"
 msgstr "  Versjonstabell:"
 
-#: cmdline/apt-cache.cc:1623
+#: cmdline/apt-cache.cc:1625
 #, c-format
 msgid "       %4i %s\n"
 msgstr "       %4i %s\n"
 
-#: cmdline/apt-cache.cc:1719 cmdline/apt-cdrom.cc:138 cmdline/apt-config.cc:70
+#: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:134 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2609 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2653 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s for %s %s kompilert på %s %s\n"
 
-#: cmdline/apt-cache.cc:1726
+#: cmdline/apt-cache.cc:1727
 #, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
@@ -236,11 +236,11 @@ msgstr ""
 "  -o=? Set ei vilkårleg innstilling, t.d. «-o dir::cache=/tmp».\n"
 "Du finn meir informasjon på manualsidene apt-cache(8) og apt.conf(5).\n"
 
-#: cmdline/apt-cdrom.cc:78
+#: cmdline/apt-cdrom.cc:77
 msgid "Please provide a name for this Disc, such as 'Debian 2.1r1 Disk 1'"
 msgstr ""
 
-#: cmdline/apt-cdrom.cc:93
+#: cmdline/apt-cdrom.cc:92
 #, fuzzy
 msgid "Please insert a Disc in the drive and press enter"
 msgstr ""
@@ -248,7 +248,7 @@ msgstr ""
 " «%s»\n"
 "i stasjonen «%s» og trykk Enter.\n"
 
-#: cmdline/apt-cdrom.cc:117
+#: cmdline/apt-cdrom.cc:114
 msgid "Repeat this process for the rest of the CDs in your set."
 msgstr ""
 
@@ -313,7 +313,7 @@ msgstr ""
 "  -c=? Les denne innstillingsfila.\n"
 "  -o=? Set ei vilkårleg innstilling, t.d. «-o dir::cache=/tmp».\n"
 
-#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:827
+#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:830
 #, c-format
 msgid "Unable to write to %s"
 msgstr "Klarte ikkje skriva til %s"
@@ -650,79 +650,79 @@ msgstr "Problem ved oppheving av lenkje til %s"
 msgid "Failed to rename %s to %s"
 msgstr "Klarte ikkje endra namnet på %s til %s"
 
-#: cmdline/apt-get.cc:124
+#: cmdline/apt-get.cc:127
 msgid "Y"
 msgstr "J"
 
-#: cmdline/apt-get.cc:146 cmdline/apt-get.cc:1658
+#: cmdline/apt-get.cc:149 cmdline/apt-get.cc:1695
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Regex-kompileringsfeil - %s"
 
-#: cmdline/apt-get.cc:241
+#: cmdline/apt-get.cc:244
 msgid "The following packages have unmet dependencies:"
 msgstr "Følgjande pakkar har krav som ikkje er oppfylte:"
 
-#: cmdline/apt-get.cc:331
+#: cmdline/apt-get.cc:334
 #, c-format
 msgid "but %s is installed"
 msgstr "men %s er installert"
 
-#: cmdline/apt-get.cc:333
+#: cmdline/apt-get.cc:336
 #, c-format
 msgid "but %s is to be installed"
 msgstr "men %s skal installerast"
 
-#: cmdline/apt-get.cc:340
+#: cmdline/apt-get.cc:343
 msgid "but it is not installable"
 msgstr "men lèt seg ikkje installera"
 
-#: cmdline/apt-get.cc:342
+#: cmdline/apt-get.cc:345
 msgid "but it is a virtual package"
 msgstr "men er ein virtuell pakke"
 
-#: cmdline/apt-get.cc:345
+#: cmdline/apt-get.cc:348
 msgid "but it is not installed"
 msgstr "men er ikkje installert"
 
-#: cmdline/apt-get.cc:345
+#: cmdline/apt-get.cc:348
 msgid "but it is not going to be installed"
 msgstr "men skal ikkje installerast"
 
-#: cmdline/apt-get.cc:350
+#: cmdline/apt-get.cc:353
 msgid " or"
 msgstr " eller"
 
-#: cmdline/apt-get.cc:379
+#: cmdline/apt-get.cc:382
 msgid "The following NEW packages will be installed:"
 msgstr "Dei følgjande NYE pakkane vil verta installerte:"
 
-#: cmdline/apt-get.cc:405
+#: cmdline/apt-get.cc:408
 msgid "The following packages will be REMOVED:"
 msgstr "Dei følgjande pakkane vil verta FJERNA:"
 
-#: cmdline/apt-get.cc:427
+#: cmdline/apt-get.cc:430
 msgid "The following packages have been kept back:"
 msgstr "Dei følgjande pakkane er haldne tilbake:"
 
-#: cmdline/apt-get.cc:448
+#: cmdline/apt-get.cc:451
 msgid "The following packages will be upgraded:"
 msgstr "Dei følgjande pakkane vil verta oppgraderte:"
 
-#: cmdline/apt-get.cc:469
+#: cmdline/apt-get.cc:472
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Dei følgjande pakkane vil verta NEDGRADERTE:"
 
-#: cmdline/apt-get.cc:489
+#: cmdline/apt-get.cc:492
 msgid "The following held packages will be changed:"
 msgstr "Dei følgjande pakkane som er haldne tilbake vil verta endra:"
 
-#: cmdline/apt-get.cc:542
+#: cmdline/apt-get.cc:545
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (fordi %s) "
 
-#: cmdline/apt-get.cc:550
+#: cmdline/apt-get.cc:553
 #, fuzzy
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
@@ -731,145 +731,145 @@ msgstr ""
 "ÅTVARING: Dei følgjande nødvendige pakkane vil verta fjerna.\n"
 "Dette bør IKKJE gjerast utan at du er fullstendig klar over kva du gjer!"
 
-#: cmdline/apt-get.cc:581
+#: cmdline/apt-get.cc:584
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu oppgraderte, %lu nyleg installerte, "
 
-#: cmdline/apt-get.cc:585
+#: cmdline/apt-get.cc:588
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu installerte på nytt, "
 
-#: cmdline/apt-get.cc:587
+#: cmdline/apt-get.cc:590
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu nedgraderte, "
 
-#: cmdline/apt-get.cc:589
+#: cmdline/apt-get.cc:592
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu skal fjernast og %lu skal ikkje oppgraderast.\n"
 
-#: cmdline/apt-get.cc:593
+#: cmdline/apt-get.cc:596
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu ikkje fullstendig installerte eller fjerna.\n"
 
-#: cmdline/apt-get.cc:667
+#: cmdline/apt-get.cc:669
 msgid "Correcting dependencies..."
 msgstr "Rettar på krav ..."
 
-#: cmdline/apt-get.cc:670
+#: cmdline/apt-get.cc:672
 msgid " failed."
 msgstr " mislukkast."
 
-#: cmdline/apt-get.cc:673
+#: cmdline/apt-get.cc:675
 msgid "Unable to correct dependencies"
 msgstr "Klarte ikkje retta på krav"
 
-#: cmdline/apt-get.cc:676
+#: cmdline/apt-get.cc:678
 msgid "Unable to minimize the upgrade set"
 msgstr "Klarte ikkje minimera oppgraderingsmengda"
 
-#: cmdline/apt-get.cc:678
+#: cmdline/apt-get.cc:680
 msgid " Done"
 msgstr " Ferdig"
 
-#: cmdline/apt-get.cc:682
+#: cmdline/apt-get.cc:684
 msgid "You might want to run `apt-get -f install' to correct these."
 msgstr "Du vil kanskje prøva å retta på desse ved å køyra «apt-get -f install»."
 
-#: cmdline/apt-get.cc:685
+#: cmdline/apt-get.cc:687
 msgid "Unmet dependencies. Try using -f."
 msgstr "Nokre krav er ikkje oppfylte. Prøv med «-f»."
 
-#: cmdline/apt-get.cc:707
+#: cmdline/apt-get.cc:712
 msgid "WARNING: The following packages cannot be authenticated!"
 msgstr "ÅTVARING: Klarer ikkje autentisere desse pakkane."
 
-#: cmdline/apt-get.cc:711
+#: cmdline/apt-get.cc:716
 msgid "Authentication warning overridden.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:718
+#: cmdline/apt-get.cc:723
 msgid "Install these packages without verification [y/N]? "
 msgstr "Installer desse pakkane utan verifikasjon [j/N]? "
 
-#: cmdline/apt-get.cc:720
+#: cmdline/apt-get.cc:725
 msgid "Some packages could not be authenticated"
 msgstr "Nokre pakkar kunne ikkje bli autentisert"
 
-#: cmdline/apt-get.cc:729 cmdline/apt-get.cc:881
+#: cmdline/apt-get.cc:734 cmdline/apt-get.cc:886
 msgid "There are problems and -y was used without --force-yes"
 msgstr "Det oppstod problem, og «-y» vart brukt utan «--force-yes»"
 
-#: cmdline/apt-get.cc:773
+#: cmdline/apt-get.cc:775
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr ""
 
-#: cmdline/apt-get.cc:782
+#: cmdline/apt-get.cc:784
 msgid "Packages need to be removed but remove is disabled."
 msgstr "Nokre pakkar må fjernast, men fjerning er slått av."
 
-#: cmdline/apt-get.cc:793
+#: cmdline/apt-get.cc:795
 #, fuzzy
 msgid "Internal error, Ordering didn't finish"
 msgstr "Intern feil ved tilleggjing av avleiing"
 
-#: cmdline/apt-get.cc:809 cmdline/apt-get.cc:1999 cmdline/apt-get.cc:2032
+#: cmdline/apt-get.cc:811 cmdline/apt-get.cc:2037 cmdline/apt-get.cc:2070
 msgid "Unable to lock the download directory"
 msgstr "Klarte ikkje låsa nedlastingskatalogen"
 
-#: cmdline/apt-get.cc:819 cmdline/apt-get.cc:2080 cmdline/apt-get.cc:2353
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2118 cmdline/apt-get.cc:2394
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "Kjeldelista kan ikkje lesast."
 
-#: cmdline/apt-get.cc:834
+#: cmdline/apt-get.cc:836
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 
-#: cmdline/apt-get.cc:839
+#: cmdline/apt-get.cc:841
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Må henta %sB/%sB med arkiv.\n"
 
-#: cmdline/apt-get.cc:842
+#: cmdline/apt-get.cc:844
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "Må henta %sB med arkiv.\n"
 
-#: cmdline/apt-get.cc:847
+#: cmdline/apt-get.cc:849
 #, fuzzy, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "Etter utpakking vil %sB meir diskplass verta brukt.\n"
 
-#: cmdline/apt-get.cc:850
+#: cmdline/apt-get.cc:852
 #, fuzzy, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "Etter utpakking vil %sB meir diskplass verta frigjort.\n"
 
-#: cmdline/apt-get.cc:864 cmdline/apt-get.cc:2202
+#: cmdline/apt-get.cc:866 cmdline/apt-get.cc:2240
 #, fuzzy, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Du har ikkje nok ledig plass i %s"
 
-#: cmdline/apt-get.cc:871
+#: cmdline/apt-get.cc:876
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "Du har ikkje nok ledig plass i %s."
 
-#: cmdline/apt-get.cc:887 cmdline/apt-get.cc:907
+#: cmdline/apt-get.cc:892 cmdline/apt-get.cc:912
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr ""
 "«Trivial Only» var spesifisert, men dette er ikkje noka triviell handling."
 
-#: cmdline/apt-get.cc:889
+#: cmdline/apt-get.cc:894
 msgid "Yes, do as I say!"
 msgstr "Ja, gjer som eg seier!"
 
-#: cmdline/apt-get.cc:891
+#: cmdline/apt-get.cc:896
 #, fuzzy, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -880,28 +880,28 @@ msgstr ""
 "For å halda fram, må du skriva nøyaktig «%s».\n"
 " ?] "
 
-#: cmdline/apt-get.cc:897 cmdline/apt-get.cc:916
+#: cmdline/apt-get.cc:902 cmdline/apt-get.cc:921
 msgid "Abort."
 msgstr "Avbryt."
 
-#: cmdline/apt-get.cc:912
+#: cmdline/apt-get.cc:917
 msgid "Do you want to continue [Y/n]? "
 msgstr "Vil du halda fram [J/n]? "
 
-#: cmdline/apt-get.cc:984 cmdline/apt-get.cc:2250 apt-pkg/algorithms.cc:1348
+#: cmdline/apt-get.cc:989 cmdline/apt-get.cc:2291 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Klarte ikkje henta %s  %s\n"
 
-#: cmdline/apt-get.cc:1002
+#: cmdline/apt-get.cc:1007
 msgid "Some files failed to download"
 msgstr "Klarte ikkje henta nokre av filene"
 
-#: cmdline/apt-get.cc:1003 cmdline/apt-get.cc:2259
+#: cmdline/apt-get.cc:1008 cmdline/apt-get.cc:2300
 msgid "Download complete and in download only mode"
 msgstr "Nedlastinga er ferdig i nedlastingsmodus"
 
-#: cmdline/apt-get.cc:1009
+#: cmdline/apt-get.cc:1014
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -909,49 +909,49 @@ msgstr ""
 "Klarte ikkje henta nokre av arkiva. Du kan prøva med «apt-get update» eller «--"
 "fix-missing»."
 
-#: cmdline/apt-get.cc:1013
+#: cmdline/apt-get.cc:1018
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "«--fix-missing» og byte av medium er ikkje støtta for tida"
 
-#: cmdline/apt-get.cc:1018
+#: cmdline/apt-get.cc:1023
 msgid "Unable to correct missing packages."
 msgstr "Klarte ikkje retta opp manglande pakkar."
 
-#: cmdline/apt-get.cc:1019
+#: cmdline/apt-get.cc:1024
 msgid "Aborting install."
 msgstr "Avbryt installasjon."
 
-#: cmdline/apt-get.cc:1053
+#: cmdline/apt-get.cc:1058
 #, c-format
 msgid "Note, selecting %s instead of %s\n"
 msgstr "Merk, vel %s i staden for %s\n"
 
-#: cmdline/apt-get.cc:1063
+#: cmdline/apt-get.cc:1068
 #, c-format
 msgid "Skipping %s, it is already installed and upgrade is not set.\n"
 msgstr ""
 "Hoppar over %s, for den er installert frå før og ikkje sett til "
 "oppgradering.\n"
 
-#: cmdline/apt-get.cc:1081
+#: cmdline/apt-get.cc:1086
 #, c-format
 msgid "Package %s is not installed, so not removed\n"
 msgstr "Pakken %s er ikkje installert, og vert difor ikkje fjerna\n"
 
-#: cmdline/apt-get.cc:1092
+#: cmdline/apt-get.cc:1097
 #, c-format
 msgid "Package %s is a virtual package provided by:\n"
 msgstr "Pakken %s er ein virtuell pakke, tilbydd av:\n"
 
-#: cmdline/apt-get.cc:1104
+#: cmdline/apt-get.cc:1109
 msgid " [Installed]"
 msgstr " [Installert]"
 
-#: cmdline/apt-get.cc:1109
+#: cmdline/apt-get.cc:1114
 msgid "You should explicitly select one to install."
 msgstr "Du må velja ein som skal installerast."
 
-#: cmdline/apt-get.cc:1114
+#: cmdline/apt-get.cc:1119
 #, c-format
 msgid ""
 "Package %s is not available, but is referred to by another package.\n"
@@ -962,69 +962,74 @@ msgstr ""
 "av ein annan pakke. Dette tyder at pakket manglar, er gjort overflødig\n"
 "eller er berre tilgjengeleg frå ei anna kjelde\n"
 
-#: cmdline/apt-get.cc:1133
+#: cmdline/apt-get.cc:1138
 msgid "However the following packages replace it:"
 msgstr "Dei følgjande pakkane kan brukast i staden:"
 
-#: cmdline/apt-get.cc:1136
+#: cmdline/apt-get.cc:1141
 #, c-format
 msgid "Package %s has no installation candidate"
 msgstr "Det finst ingen installasjonskandidat for pakken %s"
 
-#: cmdline/apt-get.cc:1156
+#: cmdline/apt-get.cc:1161
 #, c-format
 msgid "Reinstallation of %s is not possible, it cannot be downloaded.\n"
 msgstr "%s kan ikkje installerast på nytt, for pakken kan ikkje lastast ned.\n"
 
-#: cmdline/apt-get.cc:1164
+#: cmdline/apt-get.cc:1169
 #, c-format
 msgid "%s is already the newest version.\n"
 msgstr "Den nyaste versjonen av %s er installert frå før.\n"
 
-#: cmdline/apt-get.cc:1193
+#: cmdline/apt-get.cc:1198
 #, c-format
 msgid "Release '%s' for '%s' was not found"
 msgstr "Fann ikkje utgåva «%s» av «%s»"
 
-#: cmdline/apt-get.cc:1195
+#: cmdline/apt-get.cc:1200
 #, c-format
 msgid "Version '%s' for '%s' was not found"
 msgstr "Fann ikkje versjonen «%s» av «%s»"
 
-#: cmdline/apt-get.cc:1201
+#: cmdline/apt-get.cc:1206
 #, c-format
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Vald versjon %s (%s) for %s\n"
 
-#: cmdline/apt-get.cc:1307
+#: cmdline/apt-get.cc:1323
 #, c-format
 msgid "No source package '%s' picking '%s' instead\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:1345
+#: cmdline/apt-get.cc:1360
 msgid "The update command takes no arguments"
 msgstr "Oppdateringskommandoen tek ingen argument"
 
-#: cmdline/apt-get.cc:1358
+#: cmdline/apt-get.cc:1373
 msgid "Unable to lock the list directory"
 msgstr "Klarte ikkje låsa listekatalogen"
 
-#: cmdline/apt-get.cc:1410
+#: cmdline/apt-get.cc:1429
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr ""
 
-#: cmdline/apt-get.cc:1442
+#: cmdline/apt-get.cc:1478
 #, fuzzy
 msgid ""
 "The following packages were automatically installed and are no longer "
 "required:"
 msgstr "Dei følgjande NYE pakkane vil verta installerte:"
 
-#: cmdline/apt-get.cc:1444
+#: cmdline/apt-get.cc:1480
+#, fuzzy, c-format
+msgid "%lu packages were automatically installed and are no longer required.\n"
+msgstr "Dei følgjande NYE pakkane vil verta installerte:"
+
+#: cmdline/apt-get.cc:1481
 msgid "Use 'apt-get autoremove' to remove them."
 msgstr ""
 
-#: cmdline/apt-get.cc:1449
+#: cmdline/apt-get.cc:1486
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1040,44 +1045,44 @@ msgstr ""
 #. "that package should be filed.") << endl;
 #. }
 #.
-#: cmdline/apt-get.cc:1452 cmdline/apt-get.cc:1742
+#: cmdline/apt-get.cc:1489 cmdline/apt-get.cc:1779
 msgid "The following information may help to resolve the situation:"
 msgstr "Følgjande informasjon kan hjelpa med å løysa situasjonen:"
 
-#: cmdline/apt-get.cc:1456
+#: cmdline/apt-get.cc:1493
 #, fuzzy
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Intern feil. AllUpgrade øydelagde noko"
 
-#: cmdline/apt-get.cc:1475
+#: cmdline/apt-get.cc:1512
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Intern feil. AllUpgrade øydelagde noko"
 
-#: cmdline/apt-get.cc:1530
+#: cmdline/apt-get.cc:1567
 #, fuzzy, c-format
 msgid "Couldn't find task %s"
 msgstr "Fann ikkje pakken %s"
 
-#: cmdline/apt-get.cc:1645 cmdline/apt-get.cc:1681
+#: cmdline/apt-get.cc:1682 cmdline/apt-get.cc:1718
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Fann ikkje pakken %s"
 
-#: cmdline/apt-get.cc:1668
+#: cmdline/apt-get.cc:1705
 #, c-format
 msgid "Note, selecting %s for regex '%s'\n"
 msgstr "Merk, vel %s i staden for regex «%s»\n"
 
-#: cmdline/apt-get.cc:1699
+#: cmdline/apt-get.cc:1736
 #, fuzzy, c-format
 msgid "%s set to manually installed.\n"
 msgstr "men %s skal installerast"
 
-#: cmdline/apt-get.cc:1712
+#: cmdline/apt-get.cc:1749
 msgid "You might want to run `apt-get -f install' to correct these:"
 msgstr "Du vil kanskje prøva å retta på desse ved å køyra «apt-get -f install»."
 
-#: cmdline/apt-get.cc:1715
+#: cmdline/apt-get.cc:1752
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1085,7 +1090,7 @@ msgstr ""
 "Nokre krav er ikkje oppfylte. Du kan prøva «apt-get -f install» (eller velja "
 "ei løysing)."
 
-#: cmdline/apt-get.cc:1727
+#: cmdline/apt-get.cc:1764
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1097,138 +1102,138 @@ msgstr ""
 "distribusjonen, kan det òg henda at nokre av pakkane som trengst ikkje\n"
 "er laga enno eller at dei framleis ligg i «Incoming»."
 
-#: cmdline/apt-get.cc:1745
+#: cmdline/apt-get.cc:1782
 msgid "Broken packages"
 msgstr "Øydelagde pakkar"
 
-#: cmdline/apt-get.cc:1774
+#: cmdline/apt-get.cc:1811
 msgid "The following extra packages will be installed:"
 msgstr "Dei følgjande tilleggspakkane vil verta installerte:"
 
-#: cmdline/apt-get.cc:1863
+#: cmdline/apt-get.cc:1900
 msgid "Suggested packages:"
 msgstr "Føreslåtte pakkar:"
 
-#: cmdline/apt-get.cc:1864
+#: cmdline/apt-get.cc:1901
 msgid "Recommended packages:"
 msgstr "Tilrådde pakkar"
 
-#: cmdline/apt-get.cc:1892
+#: cmdline/apt-get.cc:1930
 msgid "Calculating upgrade... "
 msgstr "Reknar ut oppgradering ... "
 
-#: cmdline/apt-get.cc:1895 methods/ftp.cc:702 methods/connect.cc:111
+#: cmdline/apt-get.cc:1933 methods/ftp.cc:702 methods/connect.cc:111
 msgid "Failed"
 msgstr "Mislukkast"
 
-#: cmdline/apt-get.cc:1900
+#: cmdline/apt-get.cc:1938
 msgid "Done"
 msgstr "Ferdig"
 
-#: cmdline/apt-get.cc:1967 cmdline/apt-get.cc:1975
+#: cmdline/apt-get.cc:2005 cmdline/apt-get.cc:2013
 #, fuzzy
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Intern feil. AllUpgrade øydelagde noko"
 
-#: cmdline/apt-get.cc:2075
+#: cmdline/apt-get.cc:2113
 msgid "Must specify at least one package to fetch source for"
 msgstr "Du må velja minst éin pakke som kjeldekoden skal hentast for"
 
-#: cmdline/apt-get.cc:2105 cmdline/apt-get.cc:2371
+#: cmdline/apt-get.cc:2143 cmdline/apt-get.cc:2412
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Finn ingen kjeldepakke for %s"
 
-#: cmdline/apt-get.cc:2121
+#: cmdline/apt-get.cc:2159
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2126
+#: cmdline/apt-get.cc:2164
 #, c-format
 msgid ""
 "Please use:\n"
 "bzr get %s\n"
-"to retrieve the latest (possible unreleased) updates to the package.\n"
+"to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2181
+#: cmdline/apt-get.cc:2219
 #, fuzzy, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Hoppar over utpakking av kjeldekode som er utpakka frå før i %s\n"
 
-#: cmdline/apt-get.cc:2209
+#: cmdline/apt-get.cc:2250
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Du har ikkje nok ledig plass i %s"
 
-#: cmdline/apt-get.cc:2215
+#: cmdline/apt-get.cc:2256
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Må henta %sB/%sB med kjeldekodearkiv.\n"
 
-#: cmdline/apt-get.cc:2218
+#: cmdline/apt-get.cc:2259
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Må henta %sB med kjeldekodearkiv.\n"
 
-#: cmdline/apt-get.cc:2224
+#: cmdline/apt-get.cc:2265
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Hent kjeldekode %s\n"
 
-#: cmdline/apt-get.cc:2255
+#: cmdline/apt-get.cc:2296
 msgid "Failed to fetch some archives."
 msgstr "Klarte ikkje henta nokre av arkiva."
 
-#: cmdline/apt-get.cc:2283
+#: cmdline/apt-get.cc:2324
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Hoppar over utpakking av kjeldekode som er utpakka frå før i %s\n"
 
-#: cmdline/apt-get.cc:2295
+#: cmdline/apt-get.cc:2336
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Utpakkingskommandoen «%s» mislukkast.\n"
 
-#: cmdline/apt-get.cc:2296
+#: cmdline/apt-get.cc:2337
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2313
+#: cmdline/apt-get.cc:2354
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Byggjekommandoen «%s» mislukkast.\n"
 
-#: cmdline/apt-get.cc:2332
+#: cmdline/apt-get.cc:2373
 msgid "Child process failed"
 msgstr "Barneprosessen mislukkast"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2389
 msgid "Must specify at least one package to check builddeps for"
 msgstr "Du må velja minst ein pakke som byggjekrava skal sjekkast for"
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2417
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Klarte ikkje henta byggjekrav for %s"
 
-#: cmdline/apt-get.cc:2396
+#: cmdline/apt-get.cc:2437
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s har ingen byggjekrav.\n"
 
-#: cmdline/apt-get.cc:2448
+#: cmdline/apt-get.cc:2489
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "Kravet %s for %s kan ikkje oppfyllast fordi pakken %s ikkje finst"
 
-#: cmdline/apt-get.cc:2501
+#: cmdline/apt-get.cc:2542
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1237,31 +1242,31 @@ msgstr ""
 "Kravet %s for %s kan ikkje oppfyllast fordi det ikkje finst nokon "
 "tilgjengelege versjonar av pakken %s som oppfyller versjonskrava"
 
-#: cmdline/apt-get.cc:2537
+#: cmdline/apt-get.cc:2578
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Klarte ikkje oppfylla kravet %s for %s: Den installerte pakken %s er for ny"
 
-#: cmdline/apt-get.cc:2564
+#: cmdline/apt-get.cc:2605
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Klarte ikkje oppfylla kravet %s for %s: %s"
 
-#: cmdline/apt-get.cc:2578
+#: cmdline/apt-get.cc:2621
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Byggjekrav for %s kunne ikkje tilfredstillast."
 
-#: cmdline/apt-get.cc:2582
+#: cmdline/apt-get.cc:2626
 msgid "Failed to process build dependencies"
 msgstr "Klarte ikkje behandla byggjekrava"
 
-#: cmdline/apt-get.cc:2614
+#: cmdline/apt-get.cc:2658
 msgid "Supported modules:"
 msgstr "Støtta modular:"
 
-#: cmdline/apt-get.cc:2655
+#: cmdline/apt-get.cc:2699
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1344,6 +1349,14 @@ msgstr ""
 "Du finn meir informasjon og fleire kommandolinjeval på manualsidene\n"
 "til apt-get(8), sources.list(5) og apt.conf(5).\n"
 "                       APT har superku-krefter.\n"
+
+#: cmdline/apt-get.cc:2865
+msgid ""
+"NOTE: This is only a simulation!\n"
+"      apt-get needs root privileges for real execution.\n"
+"      Keep also in mind that locking is deactivated,\n"
+"      so don't depend on the relevance to the real current situation!"
+msgstr ""
 
 #: cmdline/acqprogress.cc:55
 msgid "Hit "
@@ -1473,7 +1486,12 @@ msgstr "Ugyldig arkivsignatur"
 msgid "Error reading archive member header"
 msgstr "Feil ved lesing av arkivmedlemshovud"
 
-#: apt-inst/contrib/arfile.cc:90 apt-inst/contrib/arfile.cc:102
+#: apt-inst/contrib/arfile.cc:90
+#, fuzzy, c-format
+msgid "Invalid archive member header %s"
+msgstr "Ugyldig arkivmedlemshovud"
+
+#: apt-inst/contrib/arfile.cc:102
 msgid "Invalid archive member header"
 msgstr "Ugyldig arkivmedlemshovud"
 
@@ -1573,9 +1591,13 @@ msgstr "Skriv over pakketreff utan versjon for %s"
 msgid "File %s/%s overwrites the one in the package %s"
 msgstr "Fila %s/%s skriv over den tilsvarande fila i pakken %s"
 
-#: apt-inst/extract.cc:464 apt-pkg/contrib/configuration.cc:821
-#: apt-pkg/contrib/cdromutl.cc:150 apt-pkg/sourcelist.cc:320
-#: apt-pkg/acquire.cc:418 apt-pkg/clean.cc:34 methods/mirror.cc:85
+#. Only warn if there are no sources.list.d.
+#. Only warn if there is no sources.list file.
+#: apt-inst/extract.cc:464 apt-pkg/contrib/configuration.cc:822
+#: apt-pkg/contrib/cdromutl.cc:157 apt-pkg/sourcelist.cc:166
+#: apt-pkg/sourcelist.cc:172 apt-pkg/sourcelist.cc:327 apt-pkg/acquire.cc:419
+#: apt-pkg/init.cc:90 apt-pkg/init.cc:98 apt-pkg/clean.cc:33
+#: apt-pkg/policy.cc:281 apt-pkg/policy.cc:287 methods/mirror.cc:85
 #, c-format
 msgid "Unable to read %s"
 msgstr "Klarte ikkje lesa %s"
@@ -1606,9 +1628,9 @@ msgstr ""
 "Infokatalogen og den mellombelse katalogen må vera på det same filsystemet"
 
 #. Build the status cache
-#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:760
-#: apt-pkg/pkgcachegen.cc:829 apt-pkg/pkgcachegen.cc:834
-#: apt-pkg/pkgcachegen.cc:957
+#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:763
+#: apt-pkg/pkgcachegen.cc:832 apt-pkg/pkgcachegen.cc:837
+#: apt-pkg/pkgcachegen.cc:961
 msgid "Reading package lists"
 msgstr "Les pakkelister"
 
@@ -1712,12 +1734,12 @@ msgstr "Fann ikkje noka gyldig kontrollfil"
 msgid "Unparsable control file"
 msgstr "Kontrollfila kan ikkje tolkast"
 
-#: methods/cdrom.cc:114
+#: methods/cdrom.cc:144
 #, c-format
 msgid "Unable to read the cdrom database %s"
 msgstr "Klarte ikkje lesa CD-ROM-databasen %s"
 
-#: methods/cdrom.cc:123
+#: methods/cdrom.cc:153
 msgid ""
 "Please use apt-cdrom to make this CD-ROM recognized by APT. apt-get update "
 "cannot be used to add new CD-ROMs"
@@ -1725,22 +1747,22 @@ msgstr ""
 "Bruk «apt-cdrom» for å gjera denne CD-plata tilgjengeleg for APT. Du kan "
 "ikkje bruka «apt-get update» til å leggja til nye CD-plater."
 
-#: methods/cdrom.cc:131
+#: methods/cdrom.cc:163
 msgid "Wrong CD-ROM"
 msgstr "Feil CD-plate"
 
-#: methods/cdrom.cc:166
+#: methods/cdrom.cc:186
 #, c-format
 msgid "Unable to unmount the CD-ROM in %s, it may still be in use."
 msgstr ""
 "Klarte ikkje montera CD-plata i %s. Det kan henda plata framleis er i bruk."
 
-#: methods/cdrom.cc:171
+#: methods/cdrom.cc:191
 #, fuzzy
 msgid "Disk not found."
 msgstr "Fann ikkje fila"
 
-#: methods/cdrom.cc:179 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:199 methods/file.cc:79 methods/rsh.cc:264
 msgid "File not found"
 msgstr "Fann ikkje fila"
 
@@ -1811,7 +1833,7 @@ msgstr "Tidsavbrot på samband"
 msgid "Server closed the connection"
 msgstr "Tenaren lukka sambandet"
 
-#: methods/ftp.cc:338 apt-pkg/contrib/fileutl.cc:538 methods/rsh.cc:190
+#: methods/ftp.cc:338 apt-pkg/contrib/fileutl.cc:543 methods/rsh.cc:190
 msgid "Read error"
 msgstr "Lesefeil"
 
@@ -1823,7 +1845,7 @@ msgstr "Eit svar flaumde over bufferen."
 msgid "Protocol corruption"
 msgstr "Protokolløydeleggjing"
 
-#: methods/ftp.cc:446 apt-pkg/contrib/fileutl.cc:577 methods/rsh.cc:232
+#: methods/ftp.cc:446 apt-pkg/contrib/fileutl.cc:582 methods/rsh.cc:232
 msgid "Write error"
 msgstr "Skrivefeil"
 
@@ -1877,7 +1899,7 @@ msgstr "Tidsavbrot på tilkopling til datasokkel"
 msgid "Unable to accept connection"
 msgstr "Klarte ikkje godta tilkoplinga"
 
-#: methods/ftp.cc:864 methods/http.cc:993 methods/rsh.cc:303
+#: methods/ftp.cc:864 methods/http.cc:994 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problem ved oppretting av nøkkel for fil"
 
@@ -2009,94 +2031,94 @@ msgstr "Klarte ikkje opna røyr for %s"
 msgid "Read error from %s process"
 msgstr "Lesefeil frå %s-prosessen"
 
-#: methods/http.cc:378
+#: methods/http.cc:379
 msgid "Waiting for headers"
 msgstr "Ventar på hovud"
 
-#: methods/http.cc:524
+#: methods/http.cc:525
 #, c-format
 msgid "Got a single header line over %u chars"
 msgstr "Fekk ei enkel hovudlinje over %u teikn"
 
-#: methods/http.cc:532
+#: methods/http.cc:533
 msgid "Bad header line"
 msgstr "Øydelagd hovudlinje"
 
-#: methods/http.cc:551 methods/http.cc:558
+#: methods/http.cc:552 methods/http.cc:559
 msgid "The HTTP server sent an invalid reply header"
 msgstr "HTTP-tenaren sende eit ugyldig svarhovud"
 
-#: methods/http.cc:587
+#: methods/http.cc:588
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "HTTP-tenaren sende eit ugyldig «Content-Length»-hovud"
 
-#: methods/http.cc:602
+#: methods/http.cc:603
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "HTTP-tenaren sende eit ugyldig «Content-Range»-hovud"
 
-#: methods/http.cc:604
+#: methods/http.cc:605
 msgid "This HTTP server has broken range support"
 msgstr "Denne HTTP-tenaren har øydelagd støtte for område"
 
-#: methods/http.cc:628
+#: methods/http.cc:629
 msgid "Unknown date format"
 msgstr "Ukjend datoformat"
 
-#: methods/http.cc:781
+#: methods/http.cc:782
 msgid "Select failed"
 msgstr "Utvalet mislukkast"
 
-#: methods/http.cc:786
+#: methods/http.cc:787
 msgid "Connection timed out"
 msgstr "Tidsavbrot på sambandet"
 
-#: methods/http.cc:809
+#: methods/http.cc:810
 msgid "Error writing to output file"
 msgstr "Feil ved skriving til utfil"
 
-#: methods/http.cc:840
+#: methods/http.cc:841
 msgid "Error writing to file"
 msgstr "Feil ved skriving til fil"
 
-#: methods/http.cc:868
+#: methods/http.cc:869
 msgid "Error writing to the file"
 msgstr "Feil ved skriving til fila"
 
-#: methods/http.cc:882
+#: methods/http.cc:883
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Feil ved lesing frå tenaren. Sambandet vart lukka i andre enden"
 
-#: methods/http.cc:884
+#: methods/http.cc:885
 msgid "Error reading from server"
 msgstr "Feil ved lesing frå tenaren"
 
-#: methods/http.cc:978 apt-pkg/contrib/mmap.cc:196
+#: methods/http.cc:979 apt-pkg/contrib/mmap.cc:215
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "Klarte ikkje skriva fila %s"
 
-#: methods/http.cc:1143
+#: methods/http.cc:1144
 msgid "Bad header data"
 msgstr "Øydelagde hovuddata"
 
-#: methods/http.cc:1160 methods/http.cc:1215
+#: methods/http.cc:1161 methods/http.cc:1216
 msgid "Connection failed"
 msgstr "Sambandet mislukkast"
 
-#: methods/http.cc:1307
+#: methods/http.cc:1308
 msgid "Internal error"
 msgstr "Intern feil"
 
-#: apt-pkg/contrib/mmap.cc:80
+#: apt-pkg/contrib/mmap.cc:76
 msgid "Can't mmap an empty file"
 msgstr "Kan ikkje utføra mmap på ei tom fil"
 
-#: apt-pkg/contrib/mmap.cc:85
+#: apt-pkg/contrib/mmap.cc:81 apt-pkg/contrib/mmap.cc:187
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Klarte ikkje laga mmap av %lu byte"
 
-#: apt-pkg/contrib/mmap.cc:213 apt-pkg/contrib/mmap.cc:276
+#: apt-pkg/contrib/mmap.cc:234
 #, c-format
 msgid ""
 "Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
@@ -2127,7 +2149,7 @@ msgstr ""
 msgid "%lis"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1018
+#: apt-pkg/contrib/strutl.cc:1029
 #, c-format
 msgid "Selection %s not found"
 msgstr "Fann ikkje utvalet %s"
@@ -2142,42 +2164,42 @@ msgstr "Ukjend typeforkorting: «%c»"
 msgid "Opening configuration file %s"
 msgstr "Opnar oppsettsfila %s"
 
-#: apt-pkg/contrib/configuration.cc:662
+#: apt-pkg/contrib/configuration.cc:663
 #, c-format
 msgid "Syntax error %s:%u: Block starts with no name."
 msgstr "Syntaksfeil %s:%u: Blokka startar utan namn."
 
-#: apt-pkg/contrib/configuration.cc:681
+#: apt-pkg/contrib/configuration.cc:682
 #, c-format
 msgid "Syntax error %s:%u: Malformed tag"
 msgstr "Syntaksfeil %s:%u: Misforma tagg"
 
-#: apt-pkg/contrib/configuration.cc:698
+#: apt-pkg/contrib/configuration.cc:699
 #, c-format
 msgid "Syntax error %s:%u: Extra junk after value"
 msgstr "Syntaksfeil %s:%u: Ekstra rot etter verdien"
 
-#: apt-pkg/contrib/configuration.cc:738
+#: apt-pkg/contrib/configuration.cc:739
 #, c-format
 msgid "Syntax error %s:%u: Directives can only be done at the top level"
 msgstr "Syntaksfeil %s:%u: Direktiva kan berre liggja i det øvste nivået"
 
-#: apt-pkg/contrib/configuration.cc:745
+#: apt-pkg/contrib/configuration.cc:746
 #, c-format
 msgid "Syntax error %s:%u: Too many nested includes"
 msgstr "Syntaksfeil %s:%u: For mange nøsta inkluderte filer"
 
-#: apt-pkg/contrib/configuration.cc:749 apt-pkg/contrib/configuration.cc:754
+#: apt-pkg/contrib/configuration.cc:750 apt-pkg/contrib/configuration.cc:755
 #, c-format
 msgid "Syntax error %s:%u: Included from here"
 msgstr "Syntaksfeil %s:%u: Inkludert herifrå"
 
-#: apt-pkg/contrib/configuration.cc:758
+#: apt-pkg/contrib/configuration.cc:759
 #, c-format
 msgid "Syntax error %s:%u: Unsupported directive '%s'"
 msgstr "Syntaksfeil %s:%u: Direktivet «%s» er ikkje støtta"
 
-#: apt-pkg/contrib/configuration.cc:809
+#: apt-pkg/contrib/configuration.cc:810
 #, c-format
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "Syntaksfeil %s:%u: Ekstra rot til slutt i fila"
@@ -2243,14 +2265,14 @@ msgstr "Ugyldig operasjon %s"
 msgid "Unable to stat the mount point %s"
 msgstr "Klarte ikkje få status til monteringspunktet %s"
 
-#: apt-pkg/contrib/cdromutl.cc:146 apt-pkg/contrib/cdromutl.cc:180
-#: apt-pkg/acquire.cc:424 apt-pkg/acquire.cc:449 apt-pkg/clean.cc:40
+#: apt-pkg/contrib/cdromutl.cc:153 apt-pkg/contrib/cdromutl.cc:187
+#: apt-pkg/acquire.cc:425 apt-pkg/acquire.cc:450 apt-pkg/clean.cc:39
 #: methods/mirror.cc:91
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Klarte ikkje byta til %s"
 
-#: apt-pkg/contrib/cdromutl.cc:188
+#: apt-pkg/contrib/cdromutl.cc:195
 msgid "Failed to stat the cdrom"
 msgstr "Klarte ikkje få status til CD-ROM"
 
@@ -2279,144 +2301,153 @@ msgstr "Klarte ikkje låsa %s"
 msgid "Waited for %s but it wasn't there"
 msgstr "Venta på %s, men den fanst ikkje"
 
-#: apt-pkg/contrib/fileutl.cc:454
+#: apt-pkg/contrib/fileutl.cc:456
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
 msgstr "Underprosessen %s mottok ein segmenteringsfeil."
 
-#: apt-pkg/contrib/fileutl.cc:457
+#: apt-pkg/contrib/fileutl.cc:458
+#, fuzzy, c-format
+msgid "Sub-process %s received signal %u."
+msgstr "Underprosessen %s mottok ein segmenteringsfeil."
+
+#: apt-pkg/contrib/fileutl.cc:462
 #, c-format
 msgid "Sub-process %s returned an error code (%u)"
 msgstr "Underprosessen %s returnerte ein feilkode (%u)"
 
-#: apt-pkg/contrib/fileutl.cc:459
+#: apt-pkg/contrib/fileutl.cc:464
 #, c-format
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Underprosessen %s avslutta uventa"
 
-#: apt-pkg/contrib/fileutl.cc:503
+#: apt-pkg/contrib/fileutl.cc:508
 #, c-format
 msgid "Could not open file %s"
 msgstr "Klarte ikkje opna fila %s"
 
-#: apt-pkg/contrib/fileutl.cc:559
+#: apt-pkg/contrib/fileutl.cc:564
 #, c-format
 msgid "read, still have %lu to read but none left"
 msgstr "lese, har framleis %lu att å lesa, men ingen att"
 
-#: apt-pkg/contrib/fileutl.cc:589
+#: apt-pkg/contrib/fileutl.cc:594
 #, c-format
 msgid "write, still have %lu to write but couldn't"
 msgstr "skrive, har framleis %lu att å skrive, men klarte ikkje"
 
-#: apt-pkg/contrib/fileutl.cc:664
+#: apt-pkg/contrib/fileutl.cc:669
 msgid "Problem closing the file"
 msgstr "Problem ved låsing av fila"
 
-#: apt-pkg/contrib/fileutl.cc:670
+#: apt-pkg/contrib/fileutl.cc:675
 msgid "Problem unlinking the file"
 msgstr "Problem ved oppheving av lenkje til fila"
 
-#: apt-pkg/contrib/fileutl.cc:681
+#: apt-pkg/contrib/fileutl.cc:686
 msgid "Problem syncing the file"
 msgstr "Problem ved synkronisering av fila"
 
-#: apt-pkg/pkgcache.cc:132
+#: apt-pkg/pkgcache.cc:133
 msgid "Empty package cache"
 msgstr "Tomt pakkelager"
 
-#: apt-pkg/pkgcache.cc:138
+#: apt-pkg/pkgcache.cc:139
 msgid "The package cache file is corrupted"
 msgstr "Pakkelagerfila er øydelagd"
 
-#: apt-pkg/pkgcache.cc:143
+#: apt-pkg/pkgcache.cc:144
 msgid "The package cache file is an incompatible version"
 msgstr "Versjonen til pakkelagerfila er ikkje kompatibel"
 
-#: apt-pkg/pkgcache.cc:148
+#: apt-pkg/pkgcache.cc:149
 #, c-format
 msgid "This APT does not support the versioning system '%s'"
 msgstr "APT støttar ikkje versjonssystemet «%s»"
 
-#: apt-pkg/pkgcache.cc:153
+#: apt-pkg/pkgcache.cc:154
 msgid "The package cache was built for a different architecture"
 msgstr "Pakkelageret er bygd for ein annan arkitektur"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:225
 msgid "Depends"
 msgstr "Krav"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:225
 msgid "PreDepends"
 msgstr "Forkrav"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:225
 msgid "Suggests"
 msgstr "Forslag"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:226
 msgid "Recommends"
 msgstr "Tilrådingar"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:226
 msgid "Conflicts"
 msgstr "Konflikt"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:226
 msgid "Replaces"
 msgstr "Byter ut"
 
-#: apt-pkg/pkgcache.cc:226
+#: apt-pkg/pkgcache.cc:227
 msgid "Obsoletes"
 msgstr "Foreldar"
 
-#: apt-pkg/pkgcache.cc:226
+#: apt-pkg/pkgcache.cc:227
 msgid "Breaks"
 msgstr ""
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:227
+msgid "Enhances"
+msgstr ""
+
+#: apt-pkg/pkgcache.cc:238
 msgid "important"
 msgstr "viktig"
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:238
 msgid "required"
 msgstr "påkravd"
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:238
 msgid "standard"
 msgstr "vanleg"
 
-#: apt-pkg/pkgcache.cc:238
+#: apt-pkg/pkgcache.cc:239
 msgid "optional"
 msgstr "valfri"
 
-#: apt-pkg/pkgcache.cc:238
+#: apt-pkg/pkgcache.cc:239
 msgid "extra"
 msgstr "tillegg"
 
-#: apt-pkg/depcache.cc:121 apt-pkg/depcache.cc:150
+#: apt-pkg/depcache.cc:123 apt-pkg/depcache.cc:152
 msgid "Building dependency tree"
 msgstr "Byggjer kravtre"
 
-#: apt-pkg/depcache.cc:122
+#: apt-pkg/depcache.cc:124
 msgid "Candidate versions"
 msgstr "Kandidatversjonar"
 
-#: apt-pkg/depcache.cc:151
+#: apt-pkg/depcache.cc:153
 msgid "Dependency generation"
 msgstr "Genererer kravforhold"
 
-#: apt-pkg/depcache.cc:172 apt-pkg/depcache.cc:191 apt-pkg/depcache.cc:195
+#: apt-pkg/depcache.cc:173 apt-pkg/depcache.cc:193 apt-pkg/depcache.cc:197
 #, fuzzy
 msgid "Reading state information"
 msgstr "Flettar informasjon om tilgjengelege pakkar"
 
-#: apt-pkg/depcache.cc:219
+#: apt-pkg/depcache.cc:223
 #, fuzzy, c-format
 msgid "Failed to open StateFile %s"
 msgstr "Klarte ikkje opna %s"
 
-#: apt-pkg/depcache.cc:225
+#: apt-pkg/depcache.cc:229
 #, fuzzy, c-format
 msgid "Failed to write temporary StateFile %s"
 msgstr "Klarte ikkje skriva fila %s"
@@ -2456,32 +2487,32 @@ msgstr "Misforma linje %lu i kjeldelista %s (absolutt dist)"
 msgid "Malformed line %lu in source list %s (dist parse)"
 msgstr "Misforma linje %lu i kjeldelista %s (dist-tolking)"
 
-#: apt-pkg/sourcelist.cc:199
+#: apt-pkg/sourcelist.cc:206
 #, c-format
 msgid "Opening %s"
 msgstr "Opnar %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:448
+#: apt-pkg/sourcelist.cc:223 apt-pkg/cdrom.cc:444
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "Linja %u i kjeldelista %s er for lang."
 
-#: apt-pkg/sourcelist.cc:236
+#: apt-pkg/sourcelist.cc:243
 #, c-format
 msgid "Malformed line %u in source list %s (type)"
 msgstr "Misforma linje %u i kjeldelista %s (type)"
 
-#: apt-pkg/sourcelist.cc:240
+#: apt-pkg/sourcelist.cc:247
 #, fuzzy, c-format
 msgid "Type '%s' is not known on line %u in source list %s"
 msgstr "Typen «%s» er ukjend i linja %u i kjeldelista %s"
 
-#: apt-pkg/sourcelist.cc:248 apt-pkg/sourcelist.cc:251
+#: apt-pkg/sourcelist.cc:255 apt-pkg/sourcelist.cc:258
 #, c-format
 msgid "Malformed line %u in source list %s (vendor id)"
 msgstr "Misforma linje %u i kjeldelista %s (utgjevar-ID)"
 
-#: apt-pkg/packagemanager.cc:428
+#: apt-pkg/packagemanager.cc:426
 #, c-format
 msgid ""
 "This installation run will require temporarily removing the essential "
@@ -2504,7 +2535,7 @@ msgid ""
 "The package %s needs to be reinstalled, but I can't find an archive for it."
 msgstr "Pakken %s må installerast på nytt, men arkivet finst ikkje."
 
-#: apt-pkg/algorithms.cc:1107
+#: apt-pkg/algorithms.cc:1138
 msgid ""
 "Error, pkgProblemResolver::Resolve generated breaks, this may be caused by "
 "held packages."
@@ -2512,12 +2543,12 @@ msgstr ""
 "Feil, «pkgProblemResolver::Resolve» har laga brot. Dette kan skuldast pakkar "
 "som er haldne tilbake."
 
-#: apt-pkg/algorithms.cc:1109
+#: apt-pkg/algorithms.cc:1140
 msgid "Unable to correct problems, you have held broken packages."
 msgstr ""
 "Klarte ikkje retta opp problema. Nokre øydelagde pakkar er haldne tilbake."
 
-#: apt-pkg/algorithms.cc:1374 apt-pkg/algorithms.cc:1376
+#: apt-pkg/algorithms.cc:1414 apt-pkg/algorithms.cc:1416
 msgid ""
 "Some index files failed to download, they have been ignored, or old ones "
 "used instead."
@@ -2525,24 +2556,24 @@ msgstr ""
 "Klarte ikkje lasta ned nokre av indeksfilene. Dei er ignorerte, eller gamle "
 "filer er brukte i staden."
 
-#: apt-pkg/acquire.cc:59
+#: apt-pkg/acquire.cc:60
 #, c-format
 msgid "Lists directory %spartial is missing."
 msgstr "Listekatalogen %spartial manglar."
 
-#: apt-pkg/acquire.cc:63
+#: apt-pkg/acquire.cc:64
 #, c-format
 msgid "Archive directory %spartial is missing."
 msgstr "Arkivkatalogen %spartial manglar."
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:828
+#: apt-pkg/acquire.cc:826
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr ""
 
-#: apt-pkg/acquire.cc:830
+#: apt-pkg/acquire.cc:828
 #, fuzzy, c-format
 msgid "Retrieving file %li of %li"
 msgstr "Les filliste"
@@ -2565,16 +2596,16 @@ msgstr ""
 " «%s»\n"
 "i stasjonen «%s» og trykk Enter.\n"
 
-#: apt-pkg/init.cc:125
+#: apt-pkg/init.cc:133
 #, c-format
 msgid "Packaging system '%s' is not supported"
 msgstr "Pakkesystemet «%s» er ikkje støtta"
 
-#: apt-pkg/init.cc:141
+#: apt-pkg/init.cc:149
 msgid "Unable to determine a suitable packaging system type"
 msgstr "Klarte ikkje avgjera ein eigna pakkesystemtype"
 
-#: apt-pkg/clean.cc:57
+#: apt-pkg/clean.cc:56
 #, c-format
 msgid "Unable to stat %s."
 msgstr "Klarte ikkje få status på %s."
@@ -2592,144 +2623,145 @@ msgid "You may want to run apt-get update to correct these problems"
 msgstr ""
 "Du vil kanskje prøva å retta på desse problema ved å køyra «apt-get update»."
 
-#: apt-pkg/policy.cc:267
-msgid "Invalid record in the preferences file, no Package header"
+#: apt-pkg/policy.cc:347
+#, fuzzy, c-format
+msgid "Invalid record in the preferences file %s, no Package header"
 msgstr "Ugyldig oppslag i innstillingsfila, manglar pakkehovud"
 
-#: apt-pkg/policy.cc:289
+#: apt-pkg/policy.cc:369
 #, c-format
 msgid "Did not understand pin type %s"
 msgstr "Skjønar ikkje spikringstypen %s"
 
-#: apt-pkg/policy.cc:297
+#: apt-pkg/policy.cc:377
 msgid "No priority (or zero) specified for pin"
 msgstr "Ingen prioritet (eller null) oppgitt for spiker"
 
-#: apt-pkg/pkgcachegen.cc:72
+#: apt-pkg/pkgcachegen.cc:74
 msgid "Cache has an incompatible versioning system"
 msgstr "Mellomlageret brukar eit inkompatibelt versjonssystem"
 
-#: apt-pkg/pkgcachegen.cc:115
+#: apt-pkg/pkgcachegen.cc:117
 #, c-format
 msgid "Error occurred while processing %s (NewPackage)"
 msgstr "Feil ved behandling av %s (NewPackage)"
 
-#: apt-pkg/pkgcachegen.cc:130
+#: apt-pkg/pkgcachegen.cc:132
 #, c-format
 msgid "Error occurred while processing %s (UsePackage1)"
 msgstr "Feil ved behandling av %s (UsePackage1)"
 
-#: apt-pkg/pkgcachegen.cc:164
+#: apt-pkg/pkgcachegen.cc:166
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc1)"
 msgstr "Feil ved behandling av %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:189
+#: apt-pkg/pkgcachegen.cc:191
 #, c-format
 msgid "Error occurred while processing %s (UsePackage2)"
 msgstr "Feil ved behandling av %s (UsePackage2)"
 
-#: apt-pkg/pkgcachegen.cc:193
+#: apt-pkg/pkgcachegen.cc:195
 #, c-format
 msgid "Error occurred while processing %s (NewFileVer1)"
 msgstr "Feil ved behandling av %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:224
+#: apt-pkg/pkgcachegen.cc:226
 #, c-format
 msgid "Error occurred while processing %s (NewVersion1)"
 msgstr "Feil ved behandling av %s (NewVersion1)"
 
-#: apt-pkg/pkgcachegen.cc:228
+#: apt-pkg/pkgcachegen.cc:230
 #, c-format
 msgid "Error occurred while processing %s (UsePackage3)"
 msgstr "Feil ved behandling av %s (UsePackage3)"
 
-#: apt-pkg/pkgcachegen.cc:232
+#: apt-pkg/pkgcachegen.cc:234
 #, c-format
 msgid "Error occurred while processing %s (NewVersion2)"
 msgstr "Feil ved behandling av %s (NewVersion2)"
 
-#: apt-pkg/pkgcachegen.cc:256
+#: apt-pkg/pkgcachegen.cc:258
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc2)"
 msgstr "Feil ved behandling av %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:262
+#: apt-pkg/pkgcachegen.cc:264
 msgid "Wow, you exceeded the number of package names this APT is capable of."
 msgstr "Jøss, du har overgått talet på pakkenamn som APT kan handtera."
 
-#: apt-pkg/pkgcachegen.cc:265
+#: apt-pkg/pkgcachegen.cc:267
 msgid "Wow, you exceeded the number of versions this APT is capable of."
 msgstr "Jøss, du har overgått talet på versjonar som APT kan handtera."
 
-#: apt-pkg/pkgcachegen.cc:268
+#: apt-pkg/pkgcachegen.cc:270
 #, fuzzy
 msgid "Wow, you exceeded the number of descriptions this APT is capable of."
 msgstr "Jøss, du har overgått talet på versjonar som APT kan handtera."
 
-#: apt-pkg/pkgcachegen.cc:271
+#: apt-pkg/pkgcachegen.cc:273
 msgid "Wow, you exceeded the number of dependencies this APT is capable of."
 msgstr "Jøss, du har overgått talet på krav som APT kan handtera."
 
-#: apt-pkg/pkgcachegen.cc:299
+#: apt-pkg/pkgcachegen.cc:301
 #, c-format
 msgid "Error occurred while processing %s (FindPkg)"
 msgstr "Feil ved behandling av %s (FindPkg)"
 
-#: apt-pkg/pkgcachegen.cc:312
+#: apt-pkg/pkgcachegen.cc:314
 #, c-format
 msgid "Error occurred while processing %s (CollectFileProvides)"
 msgstr "Feil ved behandling av %s (CollectFileProvides)"
 
-#: apt-pkg/pkgcachegen.cc:318
+#: apt-pkg/pkgcachegen.cc:320
 #, c-format
 msgid "Package %s %s was not found while processing file dependencies"
 msgstr "Fann ikkje pakken %s %s ved behandling av filkrav"
 
-#: apt-pkg/pkgcachegen.cc:690
+#: apt-pkg/pkgcachegen.cc:693
 #, c-format
 msgid "Couldn't stat source package list %s"
 msgstr "Klarte ikkje få status på kjeldepakkelista %s"
 
-#: apt-pkg/pkgcachegen.cc:775
+#: apt-pkg/pkgcachegen.cc:778
 msgid "Collecting File Provides"
 msgstr "Samlar inn filtilbod"
 
-#: apt-pkg/pkgcachegen.cc:902 apt-pkg/pkgcachegen.cc:909
+#: apt-pkg/pkgcachegen.cc:907 apt-pkg/pkgcachegen.cc:914
 msgid "IO Error saving source cache"
 msgstr "IU-feil ved lagring av kjeldelager"
 
-#: apt-pkg/acquire-item.cc:134
+#: apt-pkg/acquire-item.cc:135
 #, c-format
 msgid "rename failed, %s (%s -> %s)."
 msgstr "endring av namn mislukkast, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:451
+#: apt-pkg/acquire-item.cc:445
 msgid "MD5Sum mismatch"
 msgstr "Feil MD5-sum"
 
-#: apt-pkg/acquire-item.cc:707 apt-pkg/acquire-item.cc:1478
+#: apt-pkg/acquire-item.cc:698 apt-pkg/acquire-item.cc:1463
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "Feil MD5-sum"
 
-#: apt-pkg/acquire-item.cc:1170
+#: apt-pkg/acquire-item.cc:1158
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1244
+#: apt-pkg/acquire-item.cc:1231
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used.GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1253
+#: apt-pkg/acquire-item.cc:1240
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1283
+#: apt-pkg/acquire-item.cc:1268
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2738,7 +2770,7 @@ msgstr ""
 "Fann ikkje fila for pakken %s. Det kan henda du må fiksa denne pakken sjølv "
 "(fordi arkitekturen manglar)."
 
-#: apt-pkg/acquire-item.cc:1342
+#: apt-pkg/acquire-item.cc:1327
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2746,14 +2778,14 @@ msgid ""
 msgstr ""
 "Fann ikkje fila for pakken %s. Det kan henda du må fiksa denne pakken sjølv."
 
-#: apt-pkg/acquire-item.cc:1383
+#: apt-pkg/acquire-item.cc:1368
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "Pakkeindeksfilene er øydelagde. Feltet «Filename:» manglar for pakken %s."
 
-#: apt-pkg/acquire-item.cc:1470
+#: apt-pkg/acquire-item.cc:1455
 msgid "Size mismatch"
 msgstr "Feil storleik"
 
@@ -2777,7 +2809,7 @@ msgstr ""
 msgid "Vendor block %s contains no fingerprint"
 msgstr "Utgjevarblokka %s inneheld ingen fingeravtrykk"
 
-#: apt-pkg/cdrom.cc:529
+#: apt-pkg/cdrom.cc:524
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
@@ -2786,59 +2818,65 @@ msgstr ""
 "Brukar monteringspunktet %s for CD-ROM\n"
 "Monterer CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:538 apt-pkg/cdrom.cc:627
+#: apt-pkg/cdrom.cc:533 apt-pkg/cdrom.cc:621
 msgid "Identifying.. "
 msgstr "Identifiserer ... "
 
-#: apt-pkg/cdrom.cc:563
+#: apt-pkg/cdrom.cc:558
 #, c-format
 msgid "Stored label: %s\n"
 msgstr "Lagra etikett: %s \n"
 
-#: apt-pkg/cdrom.cc:570 apt-pkg/cdrom.cc:841
+#: apt-pkg/cdrom.cc:565 apt-pkg/cdrom.cc:835
 #, fuzzy
 msgid "Unmounting CD-ROM...\n"
 msgstr "Avmonterer CD-ROM ..."
 
-#: apt-pkg/cdrom.cc:590
+#: apt-pkg/cdrom.cc:584
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "Brukar monteringspunktet %s for CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:608
+#: apt-pkg/cdrom.cc:602
 msgid "Unmounting CD-ROM\n"
 msgstr "Avmonterer CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:612
+#: apt-pkg/cdrom.cc:606
 msgid "Waiting for disc...\n"
 msgstr "Ventar på disk ...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:620
+#: apt-pkg/cdrom.cc:614
 msgid "Mounting CD-ROM...\n"
 msgstr "Monterer CD-ROM ...\n"
 
-#: apt-pkg/cdrom.cc:638
+#: apt-pkg/cdrom.cc:632
 msgid "Scanning disc for index files..\n"
 msgstr "Leitar etter indeksfiler på disken ...\n"
 
-#: apt-pkg/cdrom.cc:678
+#: apt-pkg/cdrom.cc:672
 #, fuzzy, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
 "zu signatures\n"
 msgstr "Fann %i pakkeindeksar, %i kjeldeindeksar og %i signaturar\n"
 
-#: apt-pkg/cdrom.cc:715
+#: apt-pkg/cdrom.cc:683
+msgid ""
+"Unable to locate any package files, perhaps this is not a Debian Disc or the "
+"wrong architecture?"
+msgstr ""
+
+#: apt-pkg/cdrom.cc:709
 #, fuzzy, c-format
 msgid "Found label '%s'\n"
 msgstr "Lagra etikett: %s \n"
 
-#: apt-pkg/cdrom.cc:744
+#: apt-pkg/cdrom.cc:738
 msgid "That is not a valid name, try again.\n"
 msgstr "Det er ikkje eit gyldig namn, prøv igjen.\n"
 
-#: apt-pkg/cdrom.cc:760
+#: apt-pkg/cdrom.cc:754
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2847,34 +2885,34 @@ msgstr ""
 "Disken vert kalla: \n"
 "«%s»\n"
 
-#: apt-pkg/cdrom.cc:764
+#: apt-pkg/cdrom.cc:758
 msgid "Copying package lists..."
 msgstr "Kopierer pakkelister ..."
 
-#: apt-pkg/cdrom.cc:790
+#: apt-pkg/cdrom.cc:784
 msgid "Writing new source list\n"
 msgstr "Skriv ny kjeldeliste\n"
 
-#: apt-pkg/cdrom.cc:799
+#: apt-pkg/cdrom.cc:793
 msgid "Source list entries for this disc are:\n"
 msgstr "Kjeldelisteoppføringar for denne disken er:\n"
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:832
+#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:835
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Skreiv %i postar.\n"
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:834
+#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:837
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Skreiv %i postar med %i manglande filer.\n"
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:837
+#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:840
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Skreiv %i postar med %i filer som ikkje passa\n"
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:840
+#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:843
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "Skreiv %i postar med %i manglande filer og %i filer som ikkje passa\n"
@@ -2884,12 +2922,12 @@ msgstr "Skreiv %i postar med %i manglande filer og %i filer som ikkje passa\n"
 msgid "Installing %s"
 msgstr "  Installert: "
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:628
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:653
 #, fuzzy, c-format
 msgid "Configuring %s"
 msgstr "Koplar til %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:643
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:660
 #, fuzzy, c-format
 msgid "Removing %s"
 msgstr "Opnar %s"
@@ -2899,107 +2937,110 @@ msgstr "Opnar %s"
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:532
+#: apt-pkg/deb/dpkgpm.cc:557
 #, fuzzy, c-format
 msgid "Directory '%s' missing"
 msgstr "Listekatalogen %spartial manglar."
 
-#: apt-pkg/deb/dpkgpm.cc:621
+#: apt-pkg/deb/dpkgpm.cc:646
 #, fuzzy, c-format
 msgid "Preparing %s"
 msgstr "Opnar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:622
+#: apt-pkg/deb/dpkgpm.cc:647
 #, fuzzy, c-format
 msgid "Unpacking %s"
 msgstr "Opnar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:627
+#: apt-pkg/deb/dpkgpm.cc:652
 #, fuzzy, c-format
 msgid "Preparing to configure %s"
 msgstr "Opnar oppsettsfila %s"
 
-#: apt-pkg/deb/dpkgpm.cc:630 apt-pkg/deb/dpkgpm.cc:631
-#, fuzzy, c-format
-msgid "Processing triggers for %s"
-msgstr "Feil ved lesing av katalogen %s"
-
-#: apt-pkg/deb/dpkgpm.cc:633
+#: apt-pkg/deb/dpkgpm.cc:654
 #, fuzzy, c-format
 msgid "Installed %s"
 msgstr "  Installert: "
 
-#: apt-pkg/deb/dpkgpm.cc:638 apt-pkg/deb/dpkgpm.cc:640
-#: apt-pkg/deb/dpkgpm.cc:641
+#: apt-pkg/deb/dpkgpm.cc:659
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:644
+#: apt-pkg/deb/dpkgpm.cc:661
 #, fuzzy, c-format
 msgid "Removed %s"
 msgstr "Tilrådingar"
 
-#: apt-pkg/deb/dpkgpm.cc:649
+#: apt-pkg/deb/dpkgpm.cc:666
 #, fuzzy, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Opnar oppsettsfila %s"
 
-#: apt-pkg/deb/dpkgpm.cc:650
+#: apt-pkg/deb/dpkgpm.cc:667
 #, fuzzy, c-format
 msgid "Completely removed %s"
 msgstr "Klarte ikkje fjerna %s"
 
-#: apt-pkg/deb/dpkgpm.cc:805
+#: apt-pkg/deb/dpkgpm.cc:833
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1011
+#: apt-pkg/deb/dpkgpm.cc:862
+msgid "Running dpkg"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1061
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1016
+#: apt-pkg/deb/dpkgpm.cc:1066
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1018
+#: apt-pkg/deb/dpkgpm.cc:1068
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1024
+#: apt-pkg/deb/dpkgpm.cc:1074
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1030
+#: apt-pkg/deb/dpkgpm.cc:1080
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/debsystem.cc:70
+#: apt-pkg/deb/dpkgpm.cc:1087
+msgid ""
+"No apport report written because the error message indicates a dpkg I/O error"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc:69
 #, c-format
 msgid ""
 "Unable to lock the administration directory (%s), is another process using "
 "it?"
 msgstr ""
 
-#: apt-pkg/deb/debsystem.cc:73
+#: apt-pkg/deb/debsystem.cc:72
 #, fuzzy, c-format
 msgid "Unable to lock the administration directory (%s), are you root?"
 msgstr "Klarte ikkje låsa listekatalogen"
 
-#: apt-pkg/deb/debsystem.cc:82
+#: apt-pkg/deb/debsystem.cc:81
 msgid ""
 "dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
 "correct the problem. "
 msgstr ""
 
-#: apt-pkg/deb/debsystem.cc:100
+#: apt-pkg/deb/debsystem.cc:99
 msgid "Not locked"
 msgstr ""
 
@@ -3021,6 +3062,10 @@ msgstr "Sambandet vart uventa stengd"
 
 #~ msgid "%4i %s\n"
 #~ msgstr "%4i %s\n"
+
+#, fuzzy
+#~ msgid "Processing triggers for %s"
+#~ msgstr "Feil ved lesing av katalogen %s"
 
 #~ msgid ""
 #~ "Since you only requested a single operation it is extremely likely that\n"

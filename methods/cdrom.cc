@@ -9,6 +9,7 @@
 									/*}}}*/
 // Include Files							/*{{{*/
 #include <apt-pkg/acquire-method.h>
+#include <apt-pkg/cdrom.h>
 #include <apt-pkg/cdromutl.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/configuration.h>
@@ -27,15 +28,18 @@ using namespace std;
 class CDROMMethod : public pkgAcqMethod
 {
    bool DatabaseLoaded;
+   bool Debug;
+
    ::Configuration Database;
    string CurrentID;
    string CDROM;
    bool MountedByApt;
-   
+ 
+   bool IsCorrectCD(URI want, string MountPath);
    virtual bool Fetch(FetchItem *Itm);
    string GetID(string Name);
    virtual void Exit();
-   
+      
    public:
    
    CDROMMethod();
@@ -56,8 +60,8 @@ CDROMMethod::CDROMMethod() : pkgAcqMethod("1.0",SingleInstance | LocalOnly |
 // ---------------------------------------------------------------------
 /* */
 void CDROMMethod::Exit()
-{
-   if (MountedByApt == true)
+{ 
+  if (MountedByApt == true)
       UnmountCdrom(CDROM);
 }
 									/*}}}*/
@@ -81,16 +85,42 @@ string CDROMMethod::GetID(string Name)
    return string();
 }
 									/*}}}*/
+// CDROMMethod::IsCorrectCD                                             /*{{{*/
+// ---------------------------------------------------------------------
+/* */
+bool CDROMMethod::IsCorrectCD(URI want, string MountPath)
+{
+   string NewID;
+
+   for (unsigned int Version = 2; Version != 0; Version--)
+   {
+      if (IdentCdrom(MountPath,NewID,Version) == false)
+	 return false;
+      
+      if (Debug)
+	 clog << "ID " << Version << " " << NewID << endl;
+      
+      // A hit
+      if (Database.Find("CD::" + NewID) == want.Host)
+	 return true;
+   }
+   
+   return false;
+}
+									/*}}}*/
 // CDROMMethod::Fetch - Fetch a file					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
 bool CDROMMethod::Fetch(FetchItem *Itm)
 {
-   URI Get = Itm->Uri;
-   string File = Get.Path;
    FetchResult Res;
 
-   bool Debug = _config->FindB("Debug::Acquire::cdrom",false);
+   URI Get = Itm->Uri;
+   string File = Get.Path;
+   Debug = _config->FindB("Debug::Acquire::cdrom", false);
+
+   if (Debug)
+      clog << "CDROMMethod::Fetch " << Itm->Uri << endl;
 
    /* All IMS queries are returned as a hit, CDROMs are readonly so 
       time stamps never change */
@@ -126,38 +156,28 @@ bool CDROMMethod::Fetch(FetchItem *Itm)
    }
 
    // We already have a CD inserted, but it is the wrong one
-   if (CurrentID.empty() == false && Database.Find("CD::" + CurrentID) != Get.Host)
+   if (CurrentID.empty() == false && 
+       CurrentID != "FAIL" &&
+       Database.Find("CD::" + CurrentID) != Get.Host)
    {
       Fail(_("Wrong CD-ROM"),true);
       return true;
    }
-   
+
    CDROM = _config->FindDir("Acquire::cdrom::mount","/cdrom/");
+   if (Debug)
+      clog << "Looking for CDROM at " << CDROM << endl;
+
    if (CDROM[0] == '.')
       CDROM= SafeGetCWD() + '/' + CDROM;
    string NewID;
+
    while (CurrentID.empty() == true)
    {
-      bool Hit = false;
       if(!IsMounted(CDROM))
 	 MountedByApt = MountCdrom(CDROM);
-      for (unsigned int Version = 2; Version != 0; Version--)
-      {
-	 if (IdentCdrom(CDROM,NewID,Version) == false)
-	    return false;
-	 
-	 if (Debug == true)
-	    clog << "ID " << Version << " " << NewID << endl;
       
-	 // A hit
-	 if (Database.Find("CD::" + NewID) == Get.Host)
-	 {
-	    Hit = true;
-	    break;
-	 }	 
-      }
-
-      if (Hit == true)
+      if (IsCorrectCD(Get, CDROM))
 	 break;
 	 
       // I suppose this should prompt somehow?

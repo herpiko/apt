@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: apt-cdrom
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
 .\"      Date: 14 February 2004
-.\"    Manual: 
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: English
 .\"
-.TH "APT\-CDROM" "8" "14 February 2004" "Linux" ""
+.TH "APT\-CDROM" "8" "14 February 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 apt-cdrom \- APT CDROM 管理ユーティリティ
 .SH "SYNOPSIS"
-.HP 10
+.HP \w'\fBapt\-cdrom\fR\ 'u
 \fBapt\-cdrom\fR [\fB\-hvrmfan\fR] [\fB\-d=\fR\fB\fIcdrom\ mount\ point\fR\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] [[add] | [ident]]
 .SH "説明"
 .PP
@@ -35,11 +43,11 @@ add
 .RS 4
 add
 は、 新しいディスクを取得元リストに追加します。 CDROM デバイスのアンマウント、ディスク挿入のプロンプトの表示の後に、 ディスクのスキャンとインデックスファイルのコピーを行います。 ディスクに正しい
-\fIdisk\fR
+disk
 ディレクトリが存在しない場合、 タイトルを入力するよう促します。
 .sp
 APT は、現在ドライブにあるディスクのトラックから取得した、 CDROM ID を使用します。またその ID を、
-\fI/var/lib/apt/cdroms\&.list\fR
+/var/lib/apt/cdroms\&.list
 内のデータベースで管理します。
 .RE
 .PP
@@ -57,7 +65,7 @@ ident
 \fB\-d\fR, \fB\-\-cdrom\fR
 .RS 4
 マウントポイント \- cdrom をマウントする場所を指定します。 このマウントポイントは、
-\fI/etc/fstab\fR
+/etc/fstab
 に正しく設定されている必要があります。 設定項目 \-
 Acquire::cdrom::mount
 .RE
@@ -133,28 +141,28 @@ APT::CDROM::NoAct
 は正常終了時に 0 を返します。 エラー時には十進の 100 を返します。
 .SH "バグ"
 .PP
-\fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[1]\d\s+2を ご覧ください。 APT のバグを報告する場合は、
+/usr/share/doc/debian/bug\-reporting\&.txt
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\&.or\&.jp>
+nabetaro@debian\&.or\&.jp
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\&.or\&.jp>
+debian\-doc@debian\&.or\&.jp
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 APT バグページ

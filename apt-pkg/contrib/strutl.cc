@@ -304,13 +304,13 @@ string SizeToStr(double Size)
    {
       if (ASize < 100 && I != 0)
       {
-         sprintf(S,"%.1f%c",ASize,Ext[I]);
+         sprintf(S,"%'.1f%c",ASize,Ext[I]);
 	 break;
       }
       
       if (ASize < 10000)
       {
-         sprintf(S,"%.0f%c",ASize,Ext[I]);
+         sprintf(S,"%'.0f%c",ASize,Ext[I]);
 	 break;
       }
       ASize /= 1000.0;
@@ -385,6 +385,17 @@ string SubstVar(string Str,const struct SubstVar *Vars)
    for (; Vars->Subst != 0; Vars++)
       Str = SubstVar(Str,Vars->Subst,*Vars->Contents);
    return Str;
+}
+									/*}}}*/
+// OutputInDepth - return a string with separator multiplied with depth /*{{{*/
+// ---------------------------------------------------------------------
+/* Returns a string with the supplied separator depth + 1 times in it */
+std::string OutputInDepth(const unsigned long Depth, const char* Separator)
+{
+   std::string output = "";
+   for(unsigned long d=Depth+1; d > 0; d--)
+      output.append(Separator);
+   return output;
 }
 									/*}}}*/
 // URItoFileName - Convert the uri into a unique file name		/*{{{*/
@@ -1031,7 +1042,7 @@ void ioprintf(ostream &out,const char *format,...)
    va_start(args,format);
    
    // sprintf the description
-   char S[400];
+   char S[4096];
    vsnprintf(S,sizeof(S),format,args);
    out << S;
 }
@@ -1046,7 +1057,7 @@ void strprintf(string &out,const char *format,...)
    va_start(args,format);
    
    // sprintf the description
-   char S[1024];
+   char S[4096];
    vsnprintf(S,sizeof(S),format,args);
    out = string(S);
 }
@@ -1071,6 +1082,17 @@ char *safe_snprintf(char *Buffer,char *End,const char *Format,...)
    if (Did < 0 || Buffer + Did > End)
       return End;
    return Buffer + Did;
+}
+									/*}}}*/
+
+// tolower_ascii - tolower() function that ignores the locale		/*{{{*/
+// ---------------------------------------------------------------------
+/* */
+int tolower_ascii(int c)
+{
+   if (c >= 'A' and c <= 'Z')
+      return c + 32;
+   return c;
 }
 									/*}}}*/
 

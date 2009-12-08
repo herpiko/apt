@@ -48,6 +48,7 @@ string DeQuoteString(const string &Str);
 string SizeToStr(double Bytes);
 string TimeToStr(unsigned long Sec);
 string Base64Encode(const string &Str);
+string OutputInDepth(const unsigned long Depth, const char* Separator="  ");
 string URItoFileName(const string &URI);
 string TimeRFC1123(time_t Date);
 bool StrToTime(const string &Val,time_t &Result);
@@ -62,8 +63,10 @@ void ioprintf(ostream &out,const char *format,...) APT_FORMAT2;
 void strprintf(string &out,const char *format,...) APT_FORMAT2;
 char *safe_snprintf(char *Buffer,char *End,const char *Format,...) APT_FORMAT3;
 bool CheckDomainList(const string &Host, const string &List);
+int tolower_ascii(int c);
 
 #define APT_MKSTRCMP(name,func) \
+inline int name(const char *A,const char *B) {return func(A,A+strlen(A),B,B+strlen(B));}; \
 inline int name(const char *A,const char *AEnd,const char *B) {return func(A,AEnd,B,B+strlen(B));}; \
 inline int name(string A,const char *B) {return func(A.c_str(),A.c_str()+A.length(),B,B+strlen(B));}; \
 inline int name(string A,string B) {return func(A.c_str(),A.c_str()+A.length(),B.c_str(),B.c_str()+B.length());}; \

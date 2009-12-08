@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: apt-ftparchive
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
-.\"    Manual: 
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: English
 .\"
-.TH "APT\-FTPARCHIVE" "1" "29 February 2004" "Linux" ""
+.TH "APT\-FTPARCHIVE" "1" "29 February 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 apt-ftparchive \- インデックスファイル生成ユーティリティ
 .SH "SYNOPSIS"
-.HP 15
+.HP \w'\fBapt\-ftparchive\fR\ 'u
 \fBapt\-ftparchive\fR [\fB\-hvdsq\fR] [\fB\-\-md5\fR] [\fB\-\-delink\fR] [\fB\-\-readonly\fR] [\fB\-\-contents\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[packages\ \fIpath\fR...\ [\fIoverride\fR\ [\fIpathprefix\fR]]] | [sources\ \fIpath\fR...\ [\fIoverride\fR\ [\fIpathprefix\fR]]] | [contents\ \fIpath\fR] | [release\ \fIpath\fR] | [generate\ \fIconfig\-file\fR\ \fIsection\fR...] | [clean\ \fIconfig\-file\fR]}
 .SH "説明"
 .PP
@@ -137,7 +145,7 @@ ArchiveDir
 .RS 4
 
 FTP アーカイブのルートを指定します。 標準的な Debian 設定では、このディレクトリには
-\fIls\-LR\fR
+ls\-LR
 と dist ノードがあります。
 .RE
 .PP
@@ -237,7 +245,7 @@ Directory
 .RS 4
 
 \&.deb ディレクトリツリーの先頭を設定します。デフォルトは
-\fI$(DIST)/$(SECTION)/binary\-$(ARCH)/\fR
+$(DIST)/$(SECTION)/binary\-$(ARCH)/
 です。
 .RE
 .PP
@@ -245,7 +253,7 @@ SrcDirectory
 .RS 4
 
 ソースパッケージディレクトリツリーの先頭を設定します。デフォルトは
-\fI$(DIST)/$(SECTION)/source/\fR
+$(DIST)/$(SECTION)/source/
 です。
 .RE
 .PP
@@ -253,7 +261,7 @@ Packages
 .RS 4
 
 Packages ファイルの出力先を設定します。デフォルトは
-\fI$(DIST)/$(SECTION)/binary\-$(ARCH)/Packages\fR
+$(DIST)/$(SECTION)/binary\-$(ARCH)/Packages
 です。
 .RE
 .PP
@@ -261,7 +269,7 @@ Sources
 .RS 4
 
 Packages ファイルの出力先を設定します。デフォルトは
-\fI$(DIST)/$(SECTION)/source/Sources\fR
+$(DIST)/$(SECTION)/source/Sources
 です。
 .RE
 .PP
@@ -269,7 +277,7 @@ InternalPrefix
 .RS 4
 
 外部リンクではなく、内部リンクと見なす判断材料となる、 パスのプレフィックスを設定します。デフォルトは、
-\fI$(DIST)/$(SECTION)/\fR
+$(DIST)/$(SECTION)/
 です。
 .RE
 .PP
@@ -277,7 +285,7 @@ Contents
 .RS 4
 
 Contents ファイルの出力先を設定します。デフォルトは、
-\fI$(DIST)/Contents\-$(ARCH)\fR
+$(DIST)/Contents\-$(ARCH)
 です。 複数の Packages ファイルを ひとつの Contents ファイルにまとめられる設定 (デフォルト) の場合、\fBapt\-ftparchive\fR
 は自動でパッケージファイルをまとめます。
 .RE
@@ -321,7 +329,7 @@ Tree
 セクションは、
 $(DIST)
 変数で設定されているスコープタグをとり、 ツリーのルート (ArchiveDirが先頭につくパス) を定義します。 通常、この設定は
-\fIdists/woody\fR
+dists/woody
 のようになります。
 .PP
 
@@ -337,7 +345,7 @@ Tree
 セクションを処理する際、
 \fBapt\-ftparchive\fR
 は以下のような操作を行います。
-.sp .RS 4 .nf for i in Sections do for j in Architectures do Generate for DIST=scope SECTION=i ARCH=j .fi .RE
+.sp .if n \{\ .RS 4 .\} .nf for i in Sections do for j in Architectures do Generate for DIST=scope SECTION=i ARCH=j .fi .if n \{\ .RE .\}
 .PP
 Sections
 .RS 4
@@ -456,19 +464,27 @@ FileList, SourceFileList
 .PP
 メンテナフィールドは一般的には、
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 old [// oldn]* => new
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 という形式か、単純に
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 new
 .fi
+.if n \{\
 .RE
+.\}
 .sp
 となります。 最初の形式は、// で区切られた古い email アドレスのリストを許可します。 この形式がある場合は、メンテナフィールドになるよう new に置換してください。 2 番目の形式は無条件にメンテナフィールドに置換します。
 .SH "ソースオーバーライドファイル"
@@ -571,11 +587,15 @@ APT::FTPArchive::ReadOnlyDB
 .PP
 バイナリパッケージ (\&.deb) があるディレクトリの Packages ファイルを生成するには、以下のようにします。
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
-\fBapt\-ftparchive\fR packages \fIdirectory\fR | \fBgzip\fR > \fIPackages\&.gz\fR
+\fBapt\-ftparchive\fR packages \fIdirectory\fR | \fBgzip\fR > Packages\&.gz
 .fi
+.if n \{\
 .RE
+.\}
 .SH "関連項目"
 .PP
 \fBapt.conf\fR(5)
@@ -585,28 +605,28 @@ APT::FTPArchive::ReadOnlyDB
 は正常終了時に 0 を返します。 エラー時には十進の 100 を返します。
 .SH "バグ"
 .PP
-\fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[1]\d\s+2を ご覧ください。 APT のバグを報告する場合は、
+/usr/share/doc/debian/bug\-reporting\&.txt
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\&.or\&.jp>
+nabetaro@debian\&.or\&.jp
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\&.or\&.jp>
+debian\-doc@debian\&.or\&.jp
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 APT バグページ

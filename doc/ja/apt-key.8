@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: apt-key
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
 .\"      Date: 14 December 2003
-.\"    Manual: 
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: English
 .\"
-.TH "APT\-KEY" "8" "14 December 2003" "Linux" ""
+.TH "APT\-KEY" "8" "14 December 2003" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
 apt-key \- APT キー管理ユーティリティ
 .SH "SYNOPSIS"
-.HP 8
+.HP \w'\fBapt\-key\fR\ 'u
 \fBapt\-key\fR [\fIcommand\fR/] [\fB\fIarguments\fR\fR...]
 .SH "説明"
 .PP
@@ -54,22 +62,22 @@ Debian アーカイブキーで、ローカルキーリングを更新し、 もう有効でないキーをキーリ
 .RE
 .SH "ファイル"
 .PP
-\fI/etc/apt/trusted\&.gpg\fR
+/etc/apt/trusted\&.gpg
 .RS 4
 ローカル信頼キーのキーリング。 新しいキーはここに追加されます。
 .RE
 .PP
-\fI/etc/apt/trustdb\&.gpg\fR
+/etc/apt/trustdb\&.gpg
 .RS 4
 アーカイブキーのローカル信頼データベース
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-keyring\&.gpg\fR
+/usr/share/keyrings/debian\-archive\-keyring\&.gpg
 .RS 4
 Debian アーカイブ信頼キーのキーリング
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg\fR
+/usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg
 .RS 4
 削除された Debian アーカイブ信頼キーのキーリング
 .RE
@@ -80,30 +88,31 @@ Debian アーカイブ信頼キーのキーリング
 \fBapt-secure\fR(8)
 .SH "バグ"
 .PP
-\fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[1]\d\s+2を ご覧ください。 APT のバグを報告する場合は、
+/usr/share/doc/debian/bug\-reporting\&.txt
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "著者"
 .PP
 APT は the APT team
-<apt@packages\&.debian\&.org>
+apt@packages\&.debian\&.org
 によって 書かれました。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\&.or\&.jp>
+nabetaro@debian\&.or\&.jp
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\&.or\&.jp>
+debian\-doc@debian\&.or\&.jp
 .SH "AUTHOR"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .SH "COPYRIGHT"
-Copyright \(co 1998-2001 Jason Gunthorpe
+.br
+CopyrightCopyright \(co 1998-2001 Jason Gunthorpe
 .br
 .SH "NOTES"
 .IP " 1." 4

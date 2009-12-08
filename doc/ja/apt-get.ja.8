@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: apt-get
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
-.\"    Manual: 
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: English
 .\"
-.TH "APT\-GET" "8" "29 February 2004" "Linux" ""
+.TH "APT\-GET" "8" "29 February 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-apt-get \- APT package handling utility -- コマンドラインインターフェース
+apt-get \- APT package handling utility \-\- コマンドラインインターフェース
 .SH "SYNOPSIS"
-.HP 8
+.HP \w'\fBapt\-get\fR\ 'u
 \fBapt\-get\fR [\fB\-hvs\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[update] | [upgrade] | [dselect\-upgrade] | [install\ \fIpkg\fR...] | [remove\ \fIpkg\fR...] | [source\ \fIpkg\fR...] | [build\-dep\ \fIpkg\fR...] | [check] | [clean] | [autoclean]}
 .SH "説明"
 .PP
@@ -28,9 +36,9 @@ apt-get \- APT package handling utility -- コマンドラインインターフェース
 update
 .RS 4
 updateは、 取得元からパッケージインデックスファイルの再同期を行うのに使用します。 利用可能なパッケージのインデックスは、
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 に記述した場所から取得します。 例えば Debian アーカイブを利用する際、 このコマンドが
-\fIPackages\&.gz\fR
+Packages\&.gz
 ファイルを検索することで、 新規または更新されたパッケージの情報が利用可能となります。
 update
 は、upgrade
@@ -43,7 +51,7 @@ upgrade
 .RS 4
 upgrade
 は、 現在システムにインストールされている全パッケージの最新バージョンを、
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 に列挙した取得元からインストールするのに使用します。 現在インストール中のパッケージに新しいバージョンがあれば更新しますが、 いかなる時も現在インストール中のパッケージの削除は行いません。 対象のパッケージが、 他のパッケージのインストール状態を変更せずに更新できない場合は、 現在のバージョンのままとなります。 最初に
 update
 を実行しておき、
@@ -73,7 +81,7 @@ upgrade
 の機能に加え、 新バージョンのパッケージに対する依存関係の変更を知的に操作します。
 \fBapt\-get\fR
 は「洗練された」競合解決システムを持ち、 必要とあらば比較的重要でないパッケージを犠牲にして、 最重要パッケージの更新を試みます。
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 ファイルには、 必要なパッケージファイルを検索する場所のリストが含まれています。 特定のパッケージ向けに、一般的な設定を上書きする機構については、
 \fBapt_preferences\fR(5)
 をご覧ください。
@@ -85,7 +93,7 @@ install
 の後には、 インストールするパッケージを 1 つ以上指定します。 指定するパッケージは、完全なファイル名ではなくパッケージ名です。 (例えば Debian GNU/Linux システムでは、
 libc6_1\&.9\&.6\-2\&.deb
 ではなく libc6 を引数として与えます) インストールするよう指定したすべてのパッケージに対し、 検索・インストールを行います。
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 ファイルを、 要求するパッケージの場所を特定するのに使用します。 パッケージ名の後ろに (空白を含まず) ハイフンが追加されている場合、 そのパッケージがインストールされていれば削除します。 同様に、インストールするパッケージを明示するのにプラス記号も使用できます。 この記号は apt\-get の競合解決システムの判断に利用されるかもしれません。
 .sp
 パッケージにイコール記号とバージョンを続けることで、 選択したバージョンのパッケージをインストールすることができます。 つまり、指定のバージョンのパッケージをインストールするように選択する、 ということです。 別の方法としては、ディストリビューションを特定するのに、 パッケージ名に続けて、 スラッシュとディストリビューションのバージョンやアーカイブ名 (stable, testing, unstable) を記述できます。
@@ -139,9 +147,9 @@ clean
 .RS 4
 clean
 は、 取得したパッケージのローカルリポジトリを掃除します。
-\fI/var/cache/apt/archives/\fR
+/var/cache/apt/archives/
 と
-\fI/var/cache/apt/archives/partial/\fR
+/var/cache/apt/archives/partial/
 からロックファイル以外すべて削除します。 APT が
 \fBdselect\fR(8)
 から呼ばれるときには、 自動的に
@@ -302,7 +310,7 @@ APT::Get::ReInstall\&.
 としてください。 ON の場合、
 \fBapt\-get\fR
 は古くなったファイルを確実に消去するため、 自動的に
-\fI/var/lib/apt/lists\fR
+/var/lib/apt/lists
 の中身を管理します。 これを OFF にするのは、取得元リストを頻繁に変更する時ぐらいでしょう。 設定項目 \-
 APT::Get::List\-Cleanup\&.
 .RE
@@ -390,51 +398,51 @@ APT::Get::AllowUnauthenticated
 .RE
 .SH "ファイル"
 .PP
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 .RS 4
 パッケージの取得元。 設定項目 \-
 Dir::Etc::SourceList
 .RE
 .PP
-\fI/etc/apt/apt\&.conf\fR
+/etc/apt/apt\&.conf
 .RS 4
 APT 設定ファイル。 設定項目 \-
 Dir::Etc::Main
 .RE
 .PP
-\fI/etc/apt/apt\&.conf\&.d/\fR
+/etc/apt/apt\&.conf\&.d/
 .RS 4
 APT 設定ファイルの断片。 設定項目 \-
 Dir::Etc::Parts
 .RE
 .PP
-\fI/etc/apt/preferences\fR
+/etc/apt/preferences
 .RS 4
 バージョン優先ファイル。 ここに "pin" の設定を行います。 つまり、別々の取得元や異なるディストリビューションのバージョンの、 どこからパッケージを取得するかを設定します。 設定項目 \-
 Dir::Etc::Preferences
 .RE
 .PP
-\fI/var/cache/apt/archives/\fR
+/var/cache/apt/archives/
 .RS 4
 取得済みパッケージファイル格納エリア。 設定項目 \-
 Dir::Cache::Archives
 .RE
 .PP
-\fI/var/cache/apt/archives/partial/\fR
+/var/cache/apt/archives/partial/
 .RS 4
 取得中パッケージファイル格納エリア。 設定項目 \-
 Dir::Cache::Archives
 (必然的に不完全)
 .RE
 .PP
-\fI/var/lib/apt/lists/\fR
+/var/lib/apt/lists/
 .RS 4
 \fBsources.list\fR(5)
 のパッケージリソース特有の状態情報格納エリア。 設定項目 \-
 Dir::State::Lists
 .RE
 .PP
-\fI/var/lib/apt/lists/partial/\fR
+/var/lib/apt/lists/partial/
 .RS 4
 取得中の状態情報格納エリア。 設定項目 \-
 Dir::State::Lists
@@ -456,28 +464,28 @@ Dir::State::Lists
 は正常終了時に 0 を返します。 エラー時には十進の 100 を返します。
 .SH "バグ"
 .PP
-\fIAPT バグページ\fR\&[1]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[1]\d\s+2を ご覧ください。 APT のバグを報告する場合は、
+/usr/share/doc/debian/bug\-reporting\&.txt
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\&.or\&.jp>
+nabetaro@debian\&.or\&.jp
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\&.or\&.jp>
+debian\-doc@debian\&.or\&.jp
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 APT バグページ

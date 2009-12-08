@@ -17,8 +17,7 @@ case "$1" in
     configure)
 
         if ! test -f /etc/apt/trusted.gpg; then
-                apt-key add /usr/share/apt/blankon-archive.gpg
-                apt-key add /usr/share/apt/ubuntu-archive.gpg
+                cp /usr/share/apt/ubuntu-archive.gpg /etc/apt/trusted.gpg
         fi
 
     ;;
@@ -39,6 +38,5 @@ esac
 #DEBHELPER#
 
 exit 0
-
 
 

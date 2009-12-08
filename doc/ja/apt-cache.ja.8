@@ -1,19 +1,27 @@
+'\" t
 .\"     Title: apt-cache
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
 .\"      Date: 29 February 2004
-.\"    Manual: 
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: English
 .\"
-.TH "APT\-CACHE" "8" "29 February 2004" "Linux" ""
+.TH "APT\-CACHE" "8" "29 February 2004" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NAME"
-apt-cache \- APT パッケージ操作ユーティリティ -- キャッシュ操作
+apt-cache \- APT パッケージ操作ユーティリティ \-\- キャッシュ操作
 .SH "SYNOPSIS"
-.HP 10
+.HP \w'\fBapt\-cache\fR\ 'u
 \fBapt\-cache\fR [\fB\-hvsn\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[add\ \fIfile\fR...] | [gencaches] | [showpkg\ \fIpkg\fR...] | [showsrc\ \fIpkg\fR...] | [stats] | [dump] | [dumpavail] | [unmet] | [search\ \fIregex\fR] | [show\ \fIpkg\fR...] | [depends\ \fIpkg\fR...] | [rdepends\ \fIpkg\fR...] | [pkgnames\ \fIprefix\fR] | [dotty\ \fIpkg\fR...] | [policy\ \fIpkgs\fR...] | [madison\ \fIpkgs\fR...]}
 .SH "説明"
 .PP
@@ -41,7 +49,7 @@ gencaches
 と同じ動作を提供します。 これは
 \fBsources.list\fR(5)
 内の取得元と
-\fI/var/lib/dpkg/status\fRから、 ソースとパッケージのキャッシュを構築します。
+/var/lib/dpkg/statusから、 ソースとパッケージのキャッシュを構築します。
 .RE
 .PP
 showpkg \fIpkg(s)\fR
@@ -51,7 +59,9 @@ showpkg
 \fBapt\-cache showpkg libreadline2\fR
 の 出力を掲げます。
 .sp
+.if n \{\
 .RS 4
+.\}
 .nf
 Package: libreadline2
 Versions: 2\&.1\-12(/var/state/apt/lists/foo_Packages),
@@ -64,7 +74,9 @@ Provides:
 2\&.1\-12 \- 
 Reverse Provides: 
 .fi
+.if n \{\
 .RE
+.\}
 つまり、libreadline2 の version 2\&.1\-12 は、 libc5 と ncurses3\&.0 に依存していて、libreadline2 が動作するには、 これらをインストールする必要があるということが判ります。 一方、libreadlineg2 と libreadline2\-altdev は libreadline2 に依存しています。 libreadline2 をインストールするためには、libc5, ncurses3\&.0, ldso を すべてインストールしなければなりませんが、libreadlineg2 と libreadline2\-altdev はインストールする必要はありません。 出力の残りの部分の意味については、 apt のソースコードを調べるのが最良でしょう。
 .RE
 .PP
@@ -74,37 +86,93 @@ stats
 はキャッシュについての統計情報を表示します。 それ以上、引数は必要ありません。以下の統計情報を表示します。
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'パッケージ名総数は、 キャッシュに存在するパッケージ数を表します。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+パッケージ名総数は、 キャッシュに存在するパッケージ数を表します。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'通常パッケージは、 公式の普通のパッケージ数を表します。 これは、他のパッケージの依存関係で使用された名称で、それが一対一に対応 するパッケージです。 大多数のパッケージはこのカテゴリに入ります。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+通常パッケージは、 公式の普通のパッケージ数を表します。 これは、他のパッケージの依存関係で使用された名称で、それが一対一に対応 するパッケージです。 大多数のパッケージはこのカテゴリに入ります。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'純粋仮想パッケージは、 仮想パッケージ名としてのみ存在するパッケージ (仮想パッケージ名のみを「提供」し、 実際にはいかなるパッケージもその名称を持たない) の数を表します。 例えば、Debian GNU/Linux システムでは "mail\-transport\-agent" は純粋仮想パッケージです。 "mail\-transport\-agent" を提供するパッケージはいくつもありますが、 "mail\-transport\-agent" という名称のパッケージはありません。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+純粋仮想パッケージは、 仮想パッケージ名としてのみ存在するパッケージ (仮想パッケージ名のみを「提供」し、 実際にはいかなるパッケージもその名称を持たない) の数を表します。 例えば、Debian GNU/Linux システムでは "mail\-transport\-agent" は純粋仮想パッケージです。 "mail\-transport\-agent" を提供するパッケージはいくつもありますが、 "mail\-transport\-agent" という名称のパッケージはありません。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'単一仮想パッケージは、 特定の仮想パッケージ名を提供するパッケージが、 ただ一つの場合の数を表します。 例えば、Debian GNU/Linux システムでは、"X11\-text\-viewer" は仮想パッケージですが、"X11\-text\-viewer" を提供するパッケージは、 xless パッケージのみということです。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+単一仮想パッケージは、 特定の仮想パッケージ名を提供するパッケージが、 ただ一つの場合の数を表します。 例えば、Debian GNU/Linux システムでは、"X11\-text\-viewer" は仮想パッケージですが、"X11\-text\-viewer" を提供するパッケージは、 xless パッケージのみということです。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'複合仮想パッケージは、 その仮想パッケージ名を提供するパッケージが複数あるか、 またパッケージ名と同じ仮想パッケージ名を持つパッケージ数を表します。 例えば、Debian GNU/Linux システムでは、 debconf は実際のパッケージ名でもありますが、 debconf\-tiny によって提供もされています。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+複合仮想パッケージは、 その仮想パッケージ名を提供するパッケージが複数あるか、 またパッケージ名と同じ仮想パッケージ名を持つパッケージ数を表します。 例えば、Debian GNU/Linux システムでは、 debconf は実際のパッケージ名でもありますが、 debconf\-tiny によって提供もされています。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'欠落は、依存関係中には存在するのに、 どのパッケージにも提供されていないパッケージ名の数を表します。 このパッケージがあるということは、 全ディストリビューションにアクセスできていないか、 (実ないし仮想) パッケージがディストリビューションからはずされてしまった可能性もあります。 通常では、構文が矛盾するとこのようになります。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+欠落は、依存関係中には存在するのに、 どのパッケージにも提供されていないパッケージ名の数を表します。 このパッケージがあるということは、 全ディストリビューションにアクセスできていないか、 (実ないし仮想) パッケージがディストリビューションからはずされてしまった可能性もあります。 通常では、構文が矛盾するとこのようになります。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'個別バージョン総数は、 キャッシュに存在するパッケージのバージョンの数を表します。 そのため、この値は最小でもパッケージ名総数と一致します。 もし複数のディストリビューション (例 "stable" と "unstable" の両方) を利用した場合、 この値はパッケージ名総数よりもかなり大きい数になります。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+個別バージョン総数は、 キャッシュに存在するパッケージのバージョンの数を表します。 そのため、この値は最小でもパッケージ名総数と一致します。 もし複数のディストリビューション (例 "stable" と "unstable" の両方) を利用した場合、 この値はパッケージ名総数よりもかなり大きい数になります。
 .RE
 .sp
 .RS 4
-\h'-04'\(bu\h'+03'依存関係総数は、 キャッシュにあるすべてのパッケージで要求された依存関係の数です。
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+依存関係総数は、 キャッシュにあるすべてのパッケージで要求された依存関係の数です。
 .RE
-.IP "" 4
+.RS 4
 .RE
 .PP
 showsrc \fIpkg(s)\fR
@@ -181,7 +249,7 @@ dotty \fIpkg(s)\fR
 .RS 4
 dotty
 は、 コマンドライン上のパッケージ名から、
-\fIGraphViz\fR\&[1]
+\m[blue]\fBGraphViz\fR\m[]\&\s-2\u[1]\d\s+2
 パッケージの dotty コマンドで利用するのに便利な出力を生成します。 結果はパッケージの関係を表わす、ノード・エッジのセットで表現されます。 デフォルトでは、すべての依存パッケージをトレースするので、 非常に大きい図が得られます。 これは、APT::Cache::GivenOnly
 オプションを設定して解除できます。
 .sp
@@ -323,20 +391,20 @@ APT::Cache::Installed
 .RE
 .SH "ファイル"
 .PP
-\fI/etc/apt/sources\&.list\fR
+/etc/apt/sources\&.list
 .RS 4
 パッケージの取得元。 設定項目 \-
 Dir::Etc::SourceList
 .RE
 .PP
-\fI/var/lib/apt/lists/\fR
+/var/lib/apt/lists/
 .RS 4
 \fBsources.list\fR(5)
 に指定した、 パッケージリソースごとの状態情報格納エリア。 設定項目 \-
 Dir::State::Lists
 .RE
 .PP
-\fI/var/lib/apt/lists/partial/\fR
+/var/lib/apt/lists/partial/
 .RS 4
 取得中状態情報格納エリア。 設定項目 \-
 Dir::State::Lists
@@ -353,28 +421,28 @@ Dir::State::Lists
 は正常終了時に 0 を返します。 エラー時には十進の 100 を返します。
 .SH "バグ"
 .PP
-\fIAPT バグページ\fR\&[2]を ご覧ください。 APT のバグを報告する場合は、
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[2]\d\s+2を ご覧ください。 APT のバグを報告する場合は、
+/usr/share/doc/debian/bug\-reporting\&.txt
 や
 \fBreportbug\fR(1)
 コマンドをご覧ください。
 .SH "訳者"
 .PP
 倉澤 望
-<nabetaro@debian\&.or\&.jp>
+nabetaro@debian\&.or\&.jp
 (2003\-2006), Debian JP Documentation ML
-<debian\-doc@debian\&.or\&.jp>
+debian\-doc@debian\&.or\&.jp
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .PP
 \fBAPT team\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Author.
+.RE
 .SH "NOTES"
 .IP " 1." 4
 GraphViz

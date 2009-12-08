@@ -1,31 +1,39 @@
+'\" t
 .\"     Title: apt-key
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.73.2 <http://docbook.sf.net/>
-.\"      Date: 14 décembre 2003
-.\"    Manual: 
+.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
+.\"      Date: 14 d\('ecembre 2003
+.\"    Manual: [FIXME: manual]
 .\"    Source: Linux
+.\"  Language: French
 .\"
-.TH "APT\-KEY" "8" "14 décembre 2003" "Linux" ""
+.TH "APT\-KEY" "8" "14 d\('ecembre 2003" "Linux" "[FIXME: manual]"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
 .\" disable hyphenation
 .nh
 .\" disable justification (adjust text to left margin only)
 .ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
 .SH "NOM"
-apt-key \- Utilitaire de gestion des clés
+apt-key \- Utilitaire de gestion des cl\('es
 .SH "SYNOPSIS"
-.HP 8
+.HP \w'\fBapt\-key\fR\ 'u
 \fBapt\-key\fR [\fIcommand\fR/] [\fB\fIarguments\fR\fR...]
 .SH "DESCRIPTION"
 .PP
 
 \fBapt\-key\fR
-gère les clés dont se sert apt pour authentifier les paquets\&. Les paquets authentifiés par ces clés seront réputés fiables\&.
+g\(`ere les cl\('es dont se sert apt pour authentifier les paquets\&. Les paquets authentifi\('es par ces cl\('es seront r\('eput\('es fiables\&.
 .SH "COMMANDES"
 .PP
 add \fIfichier\fR
 .RS 4
-Ajouter une clé à la liste des clés fiables\&. La clé est lue dans
-\fIfichier\fR, ou sur l\'entrée standard si
+Ajouter une cl\('e \(`a la liste des cl\('es fiables\&. La cl\('e est lue dans
+\fIfichier\fR, ou sur l\'entr\('ee standard si
 \fIfichier\fR
 est
 \-\&.
@@ -33,38 +41,38 @@ est
 .PP
 del \fIkeyid\fR
 .RS 4
-Supprimer une clé de la liste des clés fiables\&.
+Supprimer une cl\('e de la liste des cl\('es fiables\&.
 .RE
 .PP
 list
 .RS 4
-Afficher la liste des clés fiables\&.
+Afficher la liste des cl\('es fiables\&.
 .RE
 .PP
 update
 .RS 4
-Mettre à jour le trousseau de clés local avec le trousseau de clés de l\'archive Debian et supprimer les clés qui sont périmées\&.
+Mettre \(`a jour le trousseau de cl\('es local avec le trousseau de cl\('es de l\'archive Debian et supprimer les cl\('es qui sont p\('erim\('ees\&.
 .RE
 .SH "FICHIERS"
 .PP
-\fI/etc/apt/trusted\&.gpg\fR
+/etc/apt/trusted\&.gpg
 .RS 4
-Trousseau de clés locales fiables, les nouvelles clés sont ajoutées ici\&.
+Trousseau de cl\('es locales fiables, les nouvelles cl\('es sont ajout\('ees ici\&.
 .RE
 .PP
-\fI/etc/apt/trustdb\&.gpg\fR
+/etc/apt/trustdb\&.gpg
 .RS 4
-Base de données locale fiable des clés de l\'archive\&.
+Base de donn\('ees locale fiable des cl\('es de l\'archive\&.
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-keyring\&.gpg\fR
+/usr/share/keyrings/debian\-archive\-keyring\&.gpg
 .RS 4
-Trousseau des clés fiables de l\'archive Debian\&.
+Trousseau des cl\('es fiables de l\'archive Debian\&.
 .RE
 .PP
-\fI/usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg\fR
+/usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg
 .RS 4
-Trousseau des clés fiables supprimées de l\'archive Debian\&.
+Trousseau des cl\('es fiables supprim\('ees de l\'archive Debian\&.
 .RE
 .SH "VOIR AUSSI"
 .PP
@@ -74,26 +82,27 @@ Trousseau des clés fiables supprimées de l\'archive Debian\&.
 .SH "BOGUES"
 .PP
 Voyez la
-\fI page concernant les bogues d\'APT\fR\&[1]\&. Si vous voulez signaler un bogue, consultez le texte
-\fI/usr/share/doc/debian/bug\-reporting\&.txt\fR
+\m[blue]\fB page concernant les bogues d\'APT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous voulez signaler un bogue, consultez le texte
+/usr/share/doc/debian/bug\-reporting\&.txt
 ou utilisez la commande
 \fBreportbug\fR(1)\&.
 .SH "AUTEUR"
 .PP
-APT a été écrit par l\'équipe APT
-<apt@packages\&.debian\&.org>\&.
+APT a \('et\('e \('ecrit par l\'\('equipe APT
+apt@packages\&.debian\&.org\&.
 .SH "TRADUCTION"
 .PP
 Philippe Batailler\&.
-<debian\-l10n\-french@lists\&.debian\&.org>\&. 2005\&.
+debian\-l10n\-french@lists\&.debian\&.org\&. 2005\&.
 .SH "AUTEUR"
 .PP
 \fBJason Gunthorpe\fR
-.sp -1n
-.IP "" 4
+.RS 4
 Auteur.
+.RE
 .SH "COPYRIGHT"
-Copyright \(co 1998-2001 Jason Gunthorpe
+.br
+CopyrightCopyright \(co 1998-2001 Jason Gunthorpe
 .br
 .SH "NOTES"
 .IP " 1." 4

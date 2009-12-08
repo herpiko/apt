@@ -76,6 +76,31 @@ namespace
   };
 }
 
+/* helper function to ionice the given PID 
+
+ there is no C header for ionice yet - just the syscall interface
+ so we use the binary from util-linux
+*/
+static bool
+ionice(int PID)
+{
+   if (!FileExists("/usr/bin/ionice"))
+      return false;
+   pid_t Process = ExecFork();      
+   if (Process == 0)
+   {
+      char buf[32];
+      snprintf(buf, sizeof(buf), "-p%d", PID);
+      const char *Args[4];
+      Args[0] = "/usr/bin/ionice";
+      Args[1] = "-c3";
+      Args[2] = buf;
+      Args[3] = 0;
+      execv(Args[0], (char **)Args);
+   }
+   return ExecWait(Process, "ionice");
+}
+
 // DPkgPM::pkgDPkgPM - Constructor					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -626,20 +651,12 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       { 
 	 {"unpacked",N_("Preparing to configure %s") },
 	 {"half-configured", N_("Configuring %s") },
-#if 0
-	 {"triggers-awaited", N_("Processing triggers for %s") },
-	 {"triggers-pending", N_("Processing triggers for %s") },
-#endif
 	 { "installed", N_("Installed %s")},
 	 {NULL, NULL}
       },
       // Remove operation
       { 
 	 {"half-configured", N_("Preparing for removal of %s")},
-#if 0
-	 {"triggers-awaited", N_("Preparing for removal of %s")},
-	 {"triggers-pending", N_("Preparing for removal of %s")},
-#endif
 	 {"half-installed", N_("Removing %s")},
 	 {"config-files",  N_("Removed %s")},
 	 {NULL, NULL}
@@ -676,10 +693,19 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    for (vector<Item>::iterator I = List.begin(); I != List.end();)
    {
       vector<Item>::iterator J = I;
-      for (; J != List.end() && J->Op == I->Op; J++);
+      for (; J != List.end() && J->Op == I->Op; J++)
+	 /* nothing */;
 
       // Generate the argument list
       const char *Args[MaxArgs + 50];
+      
+      // Now check if we are within the MaxArgs limit
+      //
+      // this code below is problematic, because it may happen that
+      // the argument list is split in a way that A depends on B
+      // and they are in the same "--configure A B" run
+      // - with the split they may now be configured in different
+      //   runs 
       if (J - I > (signed)MaxArgs)
 	 J = I + MaxArgs;
       
@@ -794,37 +820,49 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
       struct	termios tt;
       struct	winsize win;
-      int	master;
-      int	slave;
+      int	master = -1;
+      int	slave = -1;
 
-      // FIXME: setup sensible signal handling (*ick*)
-      tcgetattr(0, &tt);
-      ioctl(0, TIOCGWINSZ, (char *)&win);
-      if (openpty(&master, &slave, NULL, &tt, &win) < 0) 
+      // if tcgetattr does not return zero there was a error
+      // and we do not do any pty magic
+      if (tcgetattr(0, &tt) == 0)
       {
-	 const char *s = _("Can not write log, openpty() "
-			   "failed (/dev/pts not mounted?)\n");
-	 fprintf(stderr, "%s",s);
-	 fprintf(term_out, "%s",s);
-	 master = slave = -1;
-      }  else {
-	 struct termios rtt;
-	 rtt = tt;
-	 cfmakeraw(&rtt);
-	 rtt.c_lflag &= ~ECHO;
-	 // block SIGTTOU during tcsetattr to prevent a hang if
-	 // the process is a member of the background process group
-	 // http://www.opengroup.org/onlinepubs/000095399/functions/tcsetattr.html
-	 sigemptyset(&sigmask);
-	 sigaddset(&sigmask, SIGTTOU);
-	 sigprocmask(SIG_BLOCK,&sigmask, &original_sigmask);
-	 tcsetattr(0, TCSAFLUSH, &rtt);
-	 sigprocmask(SIG_SETMASK, &original_sigmask, 0);
+	 ioctl(0, TIOCGWINSZ, (char *)&win);
+	 if (openpty(&master, &slave, NULL, &tt, &win) < 0) 
+	 {
+	    const char *s = _("Can not write log, openpty() "
+	                      "failed (/dev/pts not mounted?)\n");
+	    fprintf(stderr, "%s",s);
+	    fprintf(term_out, "%s",s);
+	    master = slave = -1;
+	 }  else {
+	    struct termios rtt;
+	    rtt = tt;
+	    cfmakeraw(&rtt);
+	    rtt.c_lflag &= ~ECHO;
+	    // block SIGTTOU during tcsetattr to prevent a hang if
+	    // the process is a member of the background process group
+	    // http://www.opengroup.org/onlinepubs/000095399/functions/tcsetattr.html
+	    sigemptyset(&sigmask);
+	    sigaddset(&sigmask, SIGTTOU);
+	    sigprocmask(SIG_BLOCK,&sigmask, &original_sigmask);
+	    tcsetattr(0, TCSAFLUSH, &rtt);
+	    sigprocmask(SIG_SETMASK, &original_sigmask, 0);
+	 }
       }
 
        // Fork dpkg
       pid_t Child;
       _config->Set("APT::Keep-Fds::",fd[1]);
+      // send status information that we are about to fork dpkg
+      if(OutStatusFd > 0) {
+	 ostringstream status;
+	 status << "pmstatus:dpkg-exec:" 
+		<< (PackagesDone/float(PackagesTotal)*100.0) 
+		<< ":" << _("Running dpkg")
+		<< endl;
+	 write(OutStatusFd, status.str().c_str(), status.str().size());
+      }
       Child = ExecFork();
             
       // This is the child
@@ -841,6 +879,15 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    close(slave);
 	 }
 	 close(fd[0]); // close the read end of the pipe
+
+	 if (_config->FindDir("DPkg::Chroot-Directory","/") != "/") 
+	 {
+	    std::cerr << "Chrooting into " 
+		      << _config->FindDir("DPkg::Chroot-Directory") 
+		      << std::endl;
+	    if (chroot(_config->FindDir("DPkg::Chroot-Directory","/").c_str()) != 0)
+	       _exit(100);
+	 }
 
 	 if (chdir(_config->FindDir("DPkg::Run-Directory","/").c_str()) != 0)
 	    _exit(100);
@@ -861,7 +908,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	       _exit(100);
 	 }
 
-
 	 /* No Job Control Stop Env is a magic dpkg var that prevents it
 	    from using sigstop */
 	 putenv((char *)"DPKG_NO_TSTP=yes");
@@ -869,6 +915,10 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 cerr << "Could not exec dpkg!" << endl;
 	 _exit(100);
       }      
+
+      // apply ionice
+      if (_config->FindB("DPkg::UseIoNice", false) == true)
+	 ionice(Child);
 
       // clear the Keep-Fd again
       _config->Clear("APT::Keep-Fds",fd[1]);
@@ -1031,6 +1081,13 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
       return;
    }
 
+   // do not report dpkg I/O errors
+   // XXX - this message is localized, but this only matches the English version.  This is better than nothing.
+   if(strstr(errormsg, "short read in buffer_copy (")) {
+      std::clog << _("No apport report written because the error message indicates a dpkg I/O error") << std::endl;
+      return;
+   }
+
    // get the pkgname and reportfile
    pkgname = flNotDir(pkgpath);
    pos = pkgname.find('_');
@@ -1123,6 +1180,29 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
 	 fclose(log);
       }
    }
+
+   // log the ordering 
+   const char *ops_str[] = {"Install", "Configure","Remove","Purge"};
+   fprintf(report, "AptOrdering:\n");
+   for (vector<Item>::iterator I = List.begin(); I != List.end(); I++)
+      fprintf(report, " %s: %s\n", (*I).Pkg.Name(), ops_str[(*I).Op]);
+
+   // attach dmesg log (to learn about segfaults)
+   if (FileExists("/bin/dmesg"))
+   {
+      FILE *log = NULL;
+      char buf[1024];
+
+      fprintf(report, "Dmesg:\n");
+      log = popen("/bin/dmesg","r");
+      if(log != NULL)
+      {
+	 while( fgets(buf, sizeof(buf), log) != NULL)
+	    fprintf(report, " %s", buf);
+	 fclose(log);
+      }
+   }
    fclose(report);
+
 }
 									/*}}}*/
