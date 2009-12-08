@@ -2634,13 +2634,15 @@ bool DoBuildDep(CommandLine &CmdL)
 bool DoMoo(CommandLine &CmdL)
 {
    cout << 
-      "         (__) \n"
-      "         (oo) \n"
-      "   /------\\/ \n"
-      "  / |    ||   \n" 
-      " *  /\\---/\\ \n"
-      "    ~~   ~~   \n"
-      "....\"Have you mooed today?\"...\n";
+      "Tolong!                     .---.       \n"
+      "       \\               .---/-----\\---.\n"
+      "          (__)         ===============  \n"
+      "   /------(oo)             `-----'      \n"
+      "  / |   ||(__)                          \n"
+      " *  /\\--/\\                            \n"
+      "                                        \n"
+      "                                        \n"
+      "~~~~~~~~~~~~~~~~ hati-hati diculik UFO  \n";
 			    
    return true;
 }
