@@ -20,6 +20,7 @@
  <refmeta>
    <refentrytitle>apt_preferences</refentrytitle>
    <manvolnum>5</manvolnum>
+   <refmiscinfo class="manual">APT</refmiscinfo>
  </refmeta>
 
  <!-- Man page title -->
@@ -31,7 +32,8 @@
 <refsect1>
 <title>Description</title>
 <para>The APT preferences file <filename>/etc/apt/preferences</filename>
-can be used to control which versions of packages will be selected
+and the fragment files in the <filename>/etc/apt/preferences.d/</filename>
+folder can be used to control which versions of packages will be selected
 for installation.</para>
 
 <para>Several versions of a package may be available for installation when
@@ -50,6 +52,13 @@ In this case <command>apt-get</command> downloads the instance listed
 earliest in the &sources-list; file.
 The APT preferences file does not affect the choice of instance, only
 the choice of version.</para>
+
+<para>Note that the files in the <filename>/etc/apt/preferences.d</filename>
+directory are parsed in alphanumeric ascending order and need to obey the
+following naming convention: The files have no or "<literal>pref</literal>"
+as filename extension and which only contain alphanumeric,  hyphen (-),
+underscore (_) and period (.) characters - otherwise they will be silently
+ignored.</para>
 
 <refsect2><title>APT's Default Priority Assignments</title>
 
@@ -607,6 +616,13 @@ apt-get install <replaceable>package</replaceable>/sid
 </programlisting>
 </para>
 </refsect2>
+</refsect1>
+
+<refsect1>
+<title>Files</title>
+  <variablelist>
+    &file-preferences;
+  </variablelist>
 </refsect1>
 
 <refsect1>

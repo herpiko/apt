@@ -1,13 +1,22 @@
 '\" t
 .\"     Title: apt.conf
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
-.\"      Date: 11 juillet 2008
-.\"    Manual: [FIXME: manual]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 16 January 2010
+.\"    Manual: APT
 .\"    Source: Linux
-.\"  Language: French
+.\"  Language: English
 .\"
-.TH "APT\&.CONF" "5" "11 juillet 2008" "Linux" "[FIXME: manual]"
+.TH "APT\&.CONF" "5" "16 January 2010" "Linux" "APT"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -18,31 +27,76 @@
 .\" -----------------------------------------------------------------
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
-.SH "NOM"
+.SH "NAME"
 apt.conf \- Fichier de configuration pour APT
 .SH "DESCRIPTION"
 .PP
-Le fichier
 apt\&.conf
-est le principal fichier de configuration de la collection d\'outils que constitue APT\ \&; tous les outils font appel \(`a ce fichier de configuration et utilisent un analyseur syntaxique en ligne de commande commun afin de fournir un environnement uniforme\&. Quand un outil d\'APT d\('emarre, il lit la configuration d\('esign\('ee par variable d\'environnement
+is the main configuration file for the APT suite of tools, but by far not the only place changes to options can be made\&. All tools therefore share the configuration files and also use a common command line parser to provide a uniform environment\&.
+.PP
+When an APT tool starts up it will read the configuration files in the following order:
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 1.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  1." 4.2
+.\}
+the file specified by the
 \fBAPT_CONFIG\fR
-(si elle existe), puis il lit les fichiers situ\('es dans
+environment variable (if any)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 2.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  2." 4.2
+.\}
+all files in
 Dir::Etc::Parts
-ainsi que le principal fichier de configuration indiqu\('e par
-Dir::Etc::main\ \&; enfin il applique les options de la ligne de commande qui pr\('evalent sur les directives de configuration, chargeant si n\('ecessaire d\'autres fichiers de configuration\&.
+in alphanumeric ascending order which have no or "conf" as filename extension and which only contain alphanumeric, hyphen (\-), underscore (_) and period (\&.) characters \- otherwise they will be silently ignored\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 3.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  3." 4.2
+.\}
+the main configuration file specified by
+Dir::Etc::main
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 4.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  4." 4.2
+.\}
+the command line options are applied to override the configuration directives or to load even more configuration files\&.
+.RE
+.SH "SYNTAX"
 .PP
-Le fichier de configuration est construit comme un arbre d\'options organis\('ees en groupes fonctionnels\&. On se sert du double deux points (\(Fo\ \&::\ \&\(Fc) pour indiquer une option\ \&; par exemple,
+Le fichier de configuration est construit comme un arbre d\*(Aqoptions organisées en groupes fonctionnels\&. On se sert du double deux points (\(Fo\ \&::\ \&\(Fc) pour indiquer une option\ \&; par exemple,
 APT::Get::Assume\-Yes
-est une option pour le groupe d\'outils APT, destin\('ee \(`a l\'outil Get\&. Il n\'y a pas d\'h\('eritage des options des groupes parents\&.
+est une option pour le groupe d\*(Aqoutils APT, destinée à l\*(Aqoutil Get\&. Il n\*(Aqy a pas d\*(Aqhéritage des options des groupes parents\&.
 .PP
-Syntaxiquement, le langage de configuration est con\(,cu sur le m\(^eme mod\(`ele que les langages utilis\('es par des outils ISC tels que bind et dhcp\&. Une ligne qui commence par
+Syntaxiquement, le langage de configuration est conçu sur le même modèle que les langages utilisés par des outils ISC tels que bind et dhcp\&. Une ligne qui commence par
 //
-est trait\('ee comme un commentaire et ignor\('ee, de m\(^eme que les sections de texte plac\('ees entre
+est traitée comme un commentaire et ignorée, de même que les sections de texte placées entre
 /*
 et
 */, tout comme les commentaires C/C++\&. Chaque ligne est de la forme\ \&:
-.sp .if n \{\ .RS 4 .\} .nf APT::Get::Assume\-Yes "true"; .fi .if n \{\ .RE .\}
-Le point\-virgule final est obligatoire et les guillemets sont optionnels\&. On peut d\('eclarer un nouveau champ d\'action avec des accolades, comme suit\ \&:
+APT::Get::Assume\-Yes "true";\&. Le point\-virgule final est obligatoire et les guillemets sont optionnels\&. La valeur doit tenir sur une seule ligne et il n\*(Aqexiste pas de fusion de chaînes\&. Elle ne doit pas comporter de guillemets\&. Le comportement du caractère barre oblique inversée "\e" et les caractères utilisés avec séquence d\*(Aqéchappement dans une valeur ne sont pas déterministes et devraient être évités\&. Le nom d\*(Aqune option peut contenir des caractères alphanumériques et \(Fo\ \&/\-:\&._+\ \&\(Fc\&. On peut déclarer un nouveau champ d\*(Aqaction avec des accolades, comme suit\ \&:
 .sp
 .if n \{\
 .RS 4
@@ -60,7 +114,7 @@ APT {
 .RE
 .\}
 .PP
-avec des retours \(`a la ligne pour faciliter la lecture\&. On peut cr\('eer une liste en ouvrant un champ d\'action et en y ins\('erant une cha\(^ine entre guillemets suivie d\'un point virgule pour chaque \('el\('ement de la liste\&.
+avec des retours à la ligne pour faciliter la lecture\&. On peut créer une liste en ouvrant un champ d\*(Aqaction et en y insérant une chaîne entre guillemets suivie d\*(Aqun point virgule pour chaque élément de la liste\&.
 .sp
 .if n \{\
 .RS 4
@@ -73,205 +127,227 @@ DPkg::Pre\-Install\-Pkgs {"/usr/sbin/dpkg\-preconfigure \-\-apt";};
 .RE
 .\}
 .PP
-Les mod\(`eles
+Les modèles
 /usr/share/doc/apt/examples/apt\&.conf
 et
 /usr/share/doc/apt/examples/configure\-index\&.gz
-montrent \(`a quoi devrait ressembler le fichier de configuration\&.
+montrent à quoi devrait ressembler le fichier de configuration\&.
 .PP
-Les identifiants des options de configuration ne sont pas sensibles \(`a la casse\&. Dans l\'exemple pr\('ec\('edent, on pourrait donc aussi bien utiliser
+Les identifiants des options de configuration ne sont pas sensibles à la casse\&. Dans l\*(Aqexemple précédent, on pourrait donc aussi bien utiliser
 dpkg::pre\-install\-pkgs\&.
 .PP
-Deux \('el\('ements sp\('eciaux sont autoris\('es\ \&:
+Les noms des éléments de configuration sont optionnels si une liste est définie, comme cela peut se voir avec l\*(Aqexemple
+DPkg::Pre\-Install\-Pkgs
+précédent\&. Si vous n\*(Aqindiquez pas de nom, une nouvelle entrée ajoutera une nouvelle option à la liste\&. Dans le cas contraire, l\*(Aqoption correspondante peut être remplacée, comme toute autre option, en lui réaffectant une valeur\&.
+.PP
+Deux éléments spéciaux sont autorisés\ \&:
 #include
-et
+(qui est obsolète et n\*(Aqest plus géré par des implémentations alternatives) et
 #clear\&.
 #include
-inclut le fichier donn\('e en argument, \(`a moins que le nom ne se termine par une barre oblique auquel cas le r\('epertoire entier est inclus\&.
+inclut le fichier donné en paramètre, à moins que le nom ne se termine par une barre oblique auquel cas le répertoire entier est inclus\&.
 #clear
-sert \(`a effacer une partie de l\'arbre de configuration\&. L\'\('el\('ement d\('esign\('e et tout ses descendants sont supprim\('es\&.
+sert à effacer une partie de l\*(Aqarbre de configuration\&. L\*(Aqélément désigné et tout ses descendants sont supprimés\&. Veuillez noter que ces lignes doivent également se terminer avec un point\-virgule\&.
 .PP
-Tous les outils d\'APT poss\(`edent une option
+La commande #clear est la seule façon de supprimer une liste ou un champ d\*(Aqaction (\(Fo\ \&scope\ \&\(Fc)\&. La réouverture d\*(Aqun scope ou le style \(Fo\ \&::\-\ \&\(Fc décrit plus loin ne remplaceront
+\fIpas\fR
+les entrées écrites précédemment\&. Seules les options peuvent être remplacées en leur assignant une nouvelle valeur\&. Les listes et les champs d\*(Aqaction ne peuvent être remplacés mais seulement effacés\&.
+.PP
+Tous les outils d\*(AqAPT possèdent une option
 \fB\-o\fR
-qui permet de sp\('ecifier une configuration arbitraire depuis la ligne de commande\&. La syntaxe consiste en un nom complet d\'option (par exemple
-APT::Get::Assume\-Yes) suivi par un signe \('egal, puis par la nouvelle valeur de l\'option\&. On peut compl\('eter une liste en ajoutant un \(Fo\ \&::\ \&\(Fc au nom de la liste\&.
+qui permet de spécifier une configuration quelconque depuis la ligne de commande\&. La syntaxe consiste en un nom complet d\*(Aqoption (par exemple
+APT::Get::Assume\-Yes) suivi par un signe égal, puis par la nouvelle valeur de l\*(Aqoption\&. On peut compléter une liste en ajoutant un \(Fo\ \&::\ \&\(Fc au nom de la liste\&. Comme on peut s\*(Aqen douter, la syntaxe de champ d\*(Aqaction (\(Fo\ \&scope\ \&\(Fc) ne peut pas être indiquée à la ligne de commande\&.
+.PP
+Veuillez noter que vous ne pouvez utiliser \(Fo\ \&::\ \&\(Fc que pour ajouter un élément par ligne à la liste et que cela ne devrait pas être utilisé en combinaison avec la syntaxe de champ d\*(Aqaction (\(Fo\ \&scope\ \&\(Fc) qui inclut implicitement \(Fo\ \&::\ \&\(Fc\&. L\*(Aqutilisation simultanée des deux syntaxes déclenchera un bogue dont certains utilisateurs se servent comme d\*(Aqune fonctionnalité\ \&: une option avec le nom inhabituel \(Fo\ \&::\ \&\(Fc se comportera comme toute autre option nommée\&. Cela risque d\*(Aqavoir de nombreux problèmes comme conséquence, par exemple si un utilisateur écrit plusieurs lignes avec cette syntaxe
+\fIerronée\fR
+afin de faire un ajout à la liste, l\*(Aqeffet obtenu sera inverse puisque seule la dernière valeur pour l\*(Aqoption \(Fo\ \&::\ \&\(Fc sera utilisée\&. Les futures versions d\*(AqAPT retourneront une erreur et l\*(Aqexécution sera interrompue si cette utilisation incorrecte est rencontrée\&. Il est donc conseillé de corriger ces défauts tant qu\*(AqAPT ne s\*(Aqen plaint pas explicitement\&.
 .SH "LE GROUPE APT"
 .PP
-Ce groupe d\'options contr\(^ole le comportement global d\'APT et contient \('egalement des options communes \(`a tous les outils\&.
+Ce groupe d\*(Aqoptions contrôle le comportement global d\*(AqAPT et contient également des options communes à tous les outils\&.
 .PP
 Architecture
 .RS 4
-L\'architecture du syst\(`eme\ \&; cette option positionne l\'architecture \(`a utiliser pour r\('ecup\('erer des fichiers et analyser des listes de paquets\&. La valeur interne par d\('efaut est l\'architecture pour laquelle APT a \('et\('e compil\('e\&.
+L\*(Aqarchitecture du système\ \&; cette option positionne l\*(Aqarchitecture à utiliser pour récupérer des fichiers et analyser des listes de paquets\&. La valeur interne par défaut est l\*(Aqarchitecture pour laquelle APT a été compilé\&.
 .RE
 .PP
 Default\-Release
 .RS 4
-Indique la distribution \(`a utiliser par d\('efaut lors de l\'installation d\'un paquet si plusieurs versions sont disponibles\&. La valeur peut \(^etre un nom de distribution ou un num\('ero de version\&. Exemples\ \&: \(Fo\ \&stable\ \&\(Fc, \(Fo\ \&testing\ \&\(Fc, \(Fo\ \&4\&.0\ \&\(Fc, \(Fo\ \&5\&.0*\ \&\(Fc\&. Les noms de codes des distributions (\(Fo\ \&etch\ \&\(Fc, \(Fo\ \&lenny\ \&\(Fc, etc\&.) ne sont pas permis pour l\'instant\&. Voir aussi
+Indique la distribution à utiliser par défaut lors de l\*(Aqinstallation d\*(Aqun paquet si plusieurs versions sont disponibles\&. La valeur peut être un nom de distribution ou un numéro de version\&. Exemples\ \&: \(Fo\ \&stable\ \&\(Fc, \(Fo\ \&testing\ \&\(Fc, \(Fo\ \&lenny\ \&\(Fc, \(Fo\ \&squeeze\ \&\(Fc, \(Fo\ \&4\&.0\ \&\(Fc, \(Fo\ \&5\&.0*\ \&\(Fc\&. Voir aussi
 \fBapt_preferences\fR(5)\&.
 .RE
 .PP
 Ignore\-Hold
 .RS 4
-Ignore les paquets \(Fo\ \&gel\('es\ \&\(Fc\ \&; cette option globale indique au syst\(`eme de r\('esolution de ne pas tenir compte des paquets \(Fo\ \&gel\('es\ \&\(Fc dans sa prise de d\('ecision\&.
+Ignore les paquets \(Fo\ \&gelés\ \&\(Fc\ \&; cette option globale indique au système de résolution de ne pas tenir compte des paquets \(Fo\ \&gelés\ \&\(Fc dans sa prise de décision\&.
 .RE
 .PP
 Clean\-Installed
 .RS 4
-Avec cette option qui est activ\('ee par d\('efaut, la fonctionnalit\('e \(Fo\ \&autoclean\ \&\(Fc supprime du cache tout paquet qui ne peut plus \(^etre r\('ecup\('er\('e\&. Quand cette option est d\('esactiv\('ee, les paquets qui sont install\('es localement sont aussi exclus du nettoyage \- mais notez que APT ne fournit aucun moyen direct pour les r\('einstaller\&.
+Avec cette option qui est activée par défaut, la fonctionnalité \(Fo\ \&autoclean\ \&\(Fc supprime du cache tout paquet qui ne peut plus être récupéré\&. Quand cette option est désactivée, les paquets qui sont installés localement sont aussi exclus du nettoyage \- mais notez que APT ne fournit aucun moyen direct pour les réinstaller\&.
 .RE
 .PP
 Immediate\-Configure
 .RS 4
-D\('esactive la configuration imm\('ediate\ \&; cette dangereuse option d\('esactive une partie du code de mise en ordre de APT pour que ce dernier effectue le moins d\'appels possible \(`a
-\fBdpkg\fR(8)\&. \(,Ca peut \(^etre n\('ecessaire sur des syst\(`emes \(`a un seul utilisateur extr\(^emement lents, mais cette option est tr\(`es dangereuse et peut faire \('echouer les scripts d\'installation, voire pire\&. Utilisez\-la \(`a vos risques et p\('erils\&.
+Defaults to on which will cause APT to install essential and important packages as fast as possible in the install/upgrade operation\&. This is done to limit the effect of a failing
+\fBdpkg\fR(1)
+call: If this option is disabled APT does treat an important package in the same way as an extra package: Between the unpacking of the important package A and his configuration can then be many other unpack or configuration calls, e\&.g\&. for package B which has no relation to A, but causes the dpkg call to fail (e\&.g\&. because maintainer script of package B generates an error) which results in a system state in which package A is unpacked but unconfigured \- each package depending on A is now no longer guaranteed to work as their dependency on A is not longer satisfied\&. The immediate configuration marker is also applied to all dependencies which can generate a problem if the dependencies e\&.g\&. form a circle as a dependency with the immediate flag is comparable with a Pre\-Dependency\&. So in theory it is possible that APT encounters a situation in which it is unable to perform immediate configuration, errors out and refers to this option so the user can deactivate the immediate configuration temporarily to be able to perform an install/upgrade again\&. Note the use of the word "theory" here as this problem was only encountered by now in real world a few times in non\-stable distribution versions and was caused by wrong dependencies of the package in question or by a system in an already broken state, so you should not blindly disable this option as the mentioned scenario above is not the only problem immediate configuration can help to prevent in the first place\&. Before a big operation like
+dist\-upgrade
+is run with this option disabled it should be tried to explicitly
+install
+the package APT is unable to configure immediately, but please make sure to report your problem also to your distribution and to the APT team with the buglink below so they can work on improving or correcting the upgrade process\&.
 .RE
 .PP
 Force\-LoopBreak
 .RS 4
-Ne jamais activer cette option \(`a moins que vous ne sachiez \- r\('eellement \- ce que vous faites\&. Elle autorise APT \(`a supprimer temporairement un paquet essentiel pour mettre fin \(`a une boucle Conflicts / Conflicts ou Conflicts / Pre\-Depends entre deux paquets essentiels\&. UNE TELLE BOUCLE NE DOIT JAMAIS SE PRODUIRE\ \&: C\'EST UN BOGUE S\('ERIEUX\&. Cette option fonctionne si les paquets essentiels ne sont pas tar, gzip, libc, dpkg, bash ou tous les paquets dont ces paquets d\('ependent\&.
+Ne jamais activer cette option à moins que vous ne sachiez \- réellement \- ce que vous faites\&. Elle autorise APT à supprimer temporairement un paquet essentiel pour mettre fin à une boucle Conflicts / Conflicts ou Conflicts / Pre\-Depends entre deux paquets essentiels\&. Une telle boucle ne devrait jamais se produire\ \&: c\*(Aqest un bogue très important\&. Cette option fonctionne si les paquets essentiels ne sont pas tar, gzip, libc, dpkg, bash ou tous les paquets dont ces paquets dépendent\&.
 .RE
 .PP
 Cache\-Limit
 .RS 4
-APT utilise un fichier de cache charg\('e en m\('emoire avec mmap pour ranger les informations sur les paquets disponibles\&. Cette option fixe la taille m\('emoire allou\('ee pour le chargement de ce cache\&.
+APT utilise un fichier de cache chargé en mémoire avec mmap pour ranger les informations sur les paquets disponibles\&. Cette option fixe la taille mémoire allouée (en octets) pour le chargement de ce cache\&.
 .RE
 .PP
 Build\-Essential
 .RS 4
-Cette option d\('efinit les paquets qui sont consid\('er\('es comme faisant partie des d\('ependances essentielles pour la construction de paquets\&.
+Cette option définit les paquets qui sont considérés comme faisant partie des dépendances essentielles pour la construction de paquets\&.
 .RE
 .PP
 Get
 .RS 4
 La sous\-section
 Get
-contr\(^ole l\'outil
-\fBapt-get\fR(8), veuillez consulter sa documentation pour avoir plus d\'informations sur les options en question\&.
+contrôle l\*(Aqoutil
+\fBapt-get\fR(8), veuillez consulter sa documentation pour avoir plus d\*(Aqinformations sur les options en question\&.
 .RE
 .PP
 Cache
 .RS 4
 La sous\-section
 Cache
-contr\(^ole l\'outil
-\fBapt-cache\fR(8), veuillez consulter sa documentation pour avoir plus d\'informations sur les options en question\&.
+contrôle l\*(Aqoutil
+\fBapt-cache\fR(8), veuillez consulter sa documentation pour avoir plus d\*(Aqinformations sur les options en question\&.
 .RE
 .PP
 CDROM
 .RS 4
 La sous\-section
 CDROM
-contr\(^ole l\'outil
-\fBapt-cdrom\fR(8), veuillez consulter sa documentation pour avoir plus d\'informations sur les options en question\&.
+contrôle l\*(Aqoutil
+\fBapt-cdrom\fR(8), veuillez consulter sa documentation pour avoir plus d\*(Aqinformations sur les options en question\&.
 .RE
 .SH "LE GROUPE ACQUIRE"
 .PP
-Le groupe d\'options
+Le groupe d\*(Aqoptions
 Acquire
-contr\(^ole le t\('el\('echargement des paquets et les gestionnaires d\'URI\&.
+contrôle le téléchargement des paquets et les gestionnaires d\*(AqURI\&.
 .PP
 PDiffs
 .RS 4
-Essayer de t\('el\('echarger les fichiers diff\('erentiels appel\('es
+Essayer de télécharger les fichiers différentiels appelés
 PDiffs
-pour les paquets ou les fichiers sources, plut\(^ot que de les t\('el\('echarger enti\(`erement\&. Par d\('efaut \(`a \(Fo\ \&true\ \&\(Fc\&.
+pour les paquets ou les fichiers sources, plutôt que de les télécharger entièrement\&. Par défaut à \(Fo\ \&true\ \&\(Fc\&.
+.sp
+Two sub\-options to limit the use of PDiffs are also available: With
+FileLimit
+can be specified how many PDiff files are downloaded at most to patch a file\&.
+SizeLimit
+on the other hand is the maximum precentage of the size of all patches compared to the size of the targeted file\&. If one of these limits is exceeded the complete file is downloaded instead of the patches\&.
 .RE
 .PP
 Queue\-Mode
 .RS 4
-Le mode de file d\'attente\ \&;
+Mode de file d\*(Aqattente\ \&;
 Queue\-Mode
 peut prendre les valeurs
 host
 ou
-access
-et cela d\('etermine comment APT parall\('elise les connexions sortantes\&.
+access, ce qui détermine comment APT parallélise les connexions sortantes\&.
 Host
-signifie qu\'une connexion par cible sera initi\('ee, tandis que
+signifie qu\*(Aqune connexion par cible sera initiée, tandis que
 access
-signifie qu\'une connexion par type d\'URI sera initi\('ee\&.
+signifie qu\*(Aqune connexion par type d\*(AqURI sera initiée\&.
 .RE
 .PP
 Retries
 .RS 4
-Nombre d\'essais \(`a effectuer\&. Si ce nombre n\'est pas nul, APT essaie de r\('ecup\('erer, le nombre donn\('e de fois, les fichiers dont la r\('ecup\('eration a \('echou\('e\&.
+Nombre d\*(Aqessais à effectuer\&. Si ce nombre n\*(Aqest pas nul, APT essaie de récupérer, le nombre donné de fois, les fichiers dont la récupération a échoué\&.
 .RE
 .PP
 Source\-Symlinks
 .RS 4
-Utilise des liens symboliques pour les archives de sources\&. Positionn\('ee \(`a \(Fo\ \&true\ \&\(Fc, cette option cr\('ee si possible des liens symboliques vers les archives de sources au lieu de les copier\&. Par d\('efaut \(`a \(Fo\ \&true\ \&\(Fc\&.
+Utilise des liens symboliques pour les archives de sources\&. Positionnée à \(Fo\ \&true\ \&\(Fc, cette option crée si possible des liens symboliques vers les archives de sources au lieu de les copier\&. Par défaut à \(Fo\ \&true\ \&\(Fc\&.
 .RE
 .PP
 http
 .RS 4
-URI HTTP\ \&; http::Proxy est le mandataire (proxy) HTTP \(`a utiliser par d\('efaut\&. Il se pr\('esente sous la forme standard\ \&:
-http://[[user][:pass]@]host[:port]/\&. On peut sp\('ecifier un mandataire particulier par h\(^ote distant en utilisant la syntaxe\ \&:
-http::Proxy::<h\(^ote>\&. Le mot\-cl\('e sp\('ecial
+URI HTTP\ \&; http::Proxy est le mandataire (proxy) HTTP à utiliser par défaut\&. Il se présente sous la forme standard\ \&:
+http://[[utilisateur][:mot_de_passe]@]hôte[:port]/\&. On peut spécifier un mandataire particulier par hôte distant en utilisant la syntaxe\ \&:
+http::Proxy::<hôte>\&. Le mot\-clé spécial
 DIRECT
-indique alors de n\'utiliser aucun mandataire pour l\'h\(^ote\&. Lorsqu\'elle est d\('efinie, la variable d\'environnement
+indique alors de n\*(Aqutiliser aucun mandataire pour l\*(Aqhôte\&. Si aucun des paramètres précédents n\*(Aqest défini, la variable d\*(Aqenvironnement
 \fBhttp_proxy\fR
 annule et remplace toutes les options de mandataire HTTP\&.
 .sp
-Trois options de configuration sont fournies pour le contr\(^ole des caches compatibles avec HTTP/1\&.1\&.
+Trois options de configuration sont fournies pour le contrôle des caches compatibles avec HTTP/1\&.1\&.
 No\-Cache
-signifie que le mandataire ne doit jamais utiliser les r\('eponses qu\'il a stock\('ees\ \&;
+signifie que le mandataire ne doit jamais utiliser les réponses qu\*(Aqil a stockées\ \&;
 Max\-Age
-sert uniquement pour les fichiers d\'index\ \&: cela demande au cache de les mettre \(`a jour quand leur anciennet\('e est sup\('erieure au nombre de secondes donn\('e\&. Debian met \(`a jour ses fichiers d\'index de mani\(`ere quotidienne\ \&; la valeur par d\('efaut est donc de 1 jour\&.
+sert uniquement pour les fichiers d\*(Aqindex\ \&: cela demande au cache de les mettre à jour quand leur ancienneté est supérieure au nombre de secondes donné\&. Debian met à jour ses fichiers d\*(Aqindex de manière quotidienne\ \&; la valeur par défaut est donc de 1 jour\&.
 No\-Store
-sert uniquement pour les fichiers d\'archive\ \& et demande au cache de ne jamais garder la requ\(^ete\&. Cela peut \('eviter de polluer un cache mandataire avec des fichiers \&.deb tr\(`es grands\&. Note\ \&: Squid 2\&.0\&.2 ne prend en compte aucune de ces options\&.
+sert uniquement pour les fichiers d\*(Aqarchive et demande au cache de ne jamais garder la requête\&. Cela peut éviter de polluer un cache mandataire avec des fichiers \&.deb très grands\&. Note\ \&: Squid 2\&.0\&.2 ne prend en compte aucune de ces options\&.
 .sp
-L\'option
+L\*(Aqoption
 timeout
-positionne le compteur de temps mort (timeout) utilis\('e par la m\('ethode\&. Cela vaut pour tout, connexion et donn\('ees\&.
+positionne le compteur d\*(Aqexpiration du délai (timeout) utilisé par la méthode\&. Cela vaut pour tout, connexion et données\&.
 .sp
-Une option de configuration est fournie pour contr\(^oler la profondeur du tube pour le cas o\(`u un serveur distant n\'est pas conforme \(`a la RFC ou est bogu\('e (comme Squid 2\&.0\&.2)\&.
+Une option de configuration est fournie pour contrôler la profondeur du tube pour le cas où un serveur distant n\*(Aqest pas conforme à la RFC ou est bogué (comme Squid 2\&.0\&.2)\&.
 Acquire::http::Pipeline\-Depth
-a une valeur comprise entre 0 et 5\ \&: elle indique le nombre de requ\(^etes en attente qui peuvent \(^etre \('emises\&. Quand la machine distante ne conserve pas correctement les connexions TCP, on DOIT donner une valeur \('egale \(`a 0 \-\- sinon des donn\('ees seront corrompues\&. Les machines qui ont besoin de cette option ne respectent pas la RFC 2068\&.
+a une valeur comprise entre 0 et 5\ \&: elle indique le nombre de requêtes en attente qui peuvent être émises\&. Quand la machine distante ne conserve pas correctement les connexions TCP, la valeur doit égale à 0\&. Dans le cas contraire, des données seront corrompues\&. Les machines qui ont besoin de cette option ne respectent pas la RFC 2068\&.
+.sp
+La bande passante utilisée peut être limité avec
+Acquire::http::Dl\-Limit
+qui peut prendre une valeur entière, l\*(Aqunité utilisée étant le kilo\-octet\&. La valeur par défaut est 0, ce qui correspond à aucune limitation de bande passante\&. Veuillez noter que cette option désactive implicitement le téléchargement simultané depuis plusieurs serveurs\&.
+.sp
+L\*(Aqoption
+Acquire::http::User\-Agent
+peut être utilisée pour envoyer une valeur User\-Agent modifiée pour les téléchargements HTTP, ce qui peut par exemple être utile avec certains mandataires HTTP qui n\*(Aqautorisent l\*(Aqaccès qu\*(Aqaux client s\*(Aqidentifiant de manière spécifique\&.\&.
 .RE
 .PP
 https
 .RS 4
-URI HTTPS\&. Les options de contr\(^ole de cache et de mandataire (proxy) sont les m\(^emes que pour la m\('ethode
-http\&. L\'option
+URI HTTPS\&. Les options de contrôle de cache, de délai limite, d\*(Aqautorisation de redirection, de Dl\-Limit et de mandataire (proxy) sont les mêmes que pour la méthode
+http\&. Les valeurs par défaut sont les mêmes que pour l\*(Aqoption
+http
+sauf si des valeurs spécifiques à https sont indiquées\&. L\*(Aqoption
 Pipeline\-Depth
-n\'est pas encore support\('ee\&.
+n\*(Aqest pas encore gérée\&.
 .sp
 La sous\-option
 CaInfo
-sp\('ecifie le fichier contenant les informations sur les certificats de confiance\&. La sous\-option bool\('eenne
+spécifie le fichier contenant les informations sur les certificats de confiance\&. La sous\-option booléenne
 Verify\-Peer
-pr\('ecise si le certificat d\'h\(^ote du serveur doit \(^etre confront\('e aux certificats de confiance ou pas\&. La sous\-option bool\('eenne
+précise si le certificat d\*(Aqhôte du serveur doit être confronté aux certificats de confiance ou pas\&. La sous\-option booléenne
 Verify\-Host
-pr\('ecise s\'il faut v\('erifier ou pas le nom d\'h\(^ote du serveur\&.
+précise s\*(Aqil faut vérifier ou pas le nom d\*(Aqhôte du serveur\&.
 SslCert
-d\('etermine le certificat \(`a utiliser pour l\'authentification du client\&.
+détermine le certificat à utiliser pour l\*(Aqauthentification du client\&.
 SslKey
-d\('etermine quelle clef priv\('ee doit \(^etre utilis\('ee pour l\'authentification du client\&.
+détermine quelle clef privée doit être utilisée pour l\*(Aqauthentification du client\&.
 SslForceVersion
-surcharge la valeur par d\('efaut pour la version de SSL \(`a utiliser et peut contenir l\'une des cha\(^ines \'TLSv1\' ou \'SSLv3\'\&.
-.sp
-Chacune de ces options peut \(^etre sp\('ecifi\('ee pour un h\(^ote particulier en utilisant
-<h\(^ote>::CaInfo,
-<h\(^ote>::Verify\-Peer,
-<h\(^ote>::Verify\-Host,
-<h\(^ote>::SslCert,
-<h\(^ote>::SslKey
-et
-<h\(^ote>::SslForceVersion
-respectivement\&.
+surcharge la valeur par défaut pour la version de SSL à utiliser et peut contenir l\*(Aqune des chaînes \*(AqTLSv1\*(Aq ou \*(AqSSLv3\*(Aq\&.
 .RE
 .PP
 ftp
 .RS 4
-URI FTP\ \&; ftp::Proxy est le mandataire (proxy) FTP \(`a utiliser par d\('efaut\&. Il se pr\('esente sous la forme standard\ \&:
-ftp://[[user][:pass]@]host[:port]/\&. On peut sp\('ecifier un mandataire particulier par h\(^ote distant en utilisant la syntaxe\ \&:
-ftp::Proxy::<h\(^ote>\&. Le mot\-cl\('e sp\('ecial
+URI FTP\ \&; ftp::Proxy est le mandataire (proxy) FTP à utiliser par défaut\&. Il se présente sous la forme standard\ \&:
+ftp://[[user][:pass]@]host[:port]/\&. On peut spécifier un mandataire particulier par hôte distant en utilisant la syntaxe\ \&:
+ftp::Proxy::<hôte>\&. Le mot\-clé spécial
 DIRECT
-indique alors de n\'utiliser aucun mandataire pour l\'h\(^ote\&. Lorsqu\'elle est d\('efinie, la variable d\'environnement
+indique alors de n\*(Aqutiliser aucun mandataire pour l\*(Aqhôte\&. Si aucun des paramètres précédents n\*(Aqest définis, la variable d\*(Aqenvironnement
 \fBftp_proxy\fR
-annule et replace toutes les options de mandataire FTP\&. Pour utiliser un mandataire FTP, vous devrez renseigner l\'entr\('ee
+annule et replace toutes les options de mandataire FTP\&. Pour utiliser un mandataire FTP, vous devrez renseigner l\*(Aqentrée
 ftp::ProxyLogin
-dans le fichier de configuration\&. Cette entr\('ee sp\('ecifie les commandes \(`a envoyer au mandataire pour lui pr\('eciser \(`a quoi il doit se connecter\&. Voyez
+dans le fichier de configuration\&. Cette entrée spécifie les commandes à envoyer au mandataire pour lui préciser à quoi il doit se connecter\&. Voyez
 /usr/share/doc/apt/examples/configure\-index\&.gz
 pour savoir comment faire\&. Les variables de substitution disponibles sont\ \&:
 $(PROXY_USER),
@@ -280,31 +356,31 @@ $(SITE_USER),
 $(SITE_PASS),
 $(SITE)
 et
-$(SITE_PORT)\&. Chacune correspond \(`a l\'\('el\('ement respectif de l\'URI\&.
+$(SITE_PORT)\&. Chacune correspond à l\*(Aqélément respectif de l\*(AqURI\&.
 .sp
-L\'option
+L\*(Aqoption
 timeout
-positionne le compteur de temps mort (timeout) utilis\('e par la m\('ethode\&. Cela vaut pour tout, connexion et donn\('ees\&.
+positionne le compteur d\*(Aqexpiration du délai (timeout) utilisé par la méthode\&. Cela vaut pour tout, connexion et données\&.
 .sp
-Plusieurs options de configuration sont fournies pour contr\(^oler le mode passif\&. Il est g\('en\('eralement plus s\(^ur d\'activer le mode passif et cela marche dans presque tous les environnements\&. Cependant, certaines situations n\('ecessitent que le mode passif soit d\('esactiv\('e et que le mode \(Fo\ \&port\ \&\(Fc de ftp soit utilis\('e \(`a la place\&. On peut le faire globalement, pour des connexions qui passent par un mandataire ou pour une machine sp\('ecifique (examinez le mod\(`ele de fichier de configuration)\&.
+Plusieurs options de configuration sont fournies pour contrôler le mode passif\&. Il est généralement plus sûr d\*(Aqactiver le mode passif et cela marche dans presque tous les environnements\&. Cependant, certaines situations nécessitent que le mode passif soit désactivé et que le mode \(Fo\ \&port\ \&\(Fc de ftp soit utilisé à la place\&. On peut le faire globalement, pour des connexions qui passent par un mandataire ou pour une machine spécifique (examinez le modèle de fichier de configuration)\&.
 .sp
-Il est possible de faire transiter le trafic FTP par un mandataire HTTP en positionnant la variable d\'environnement
+Il est possible de faire transiter le trafic FTP par un mandataire HTTP en positionnant la variable d\*(Aqenvironnement
 \fBftp_proxy\fR
-\(`a une URL HTTP \-\- consultez la m\('ethode http ci\-dessus pour la syntaxe\&. On ne peut pas le faire dans le fichier de configuration et il n\'est de toute fa\(,con pas recommand\('e d\'utiliser FTP au travers de HTTP en raison la faible efficacit\('e de cette m\('ethode\&.
+à une URL HTTP \-\- consultez la méthode http ci\-dessus pour la syntaxe\&. On ne peut pas le faire dans le fichier de configuration et il n\*(Aqest de toute façon pas recommandé d\*(Aqutiliser FTP au travers de HTTP en raison de la faible efficacité de cette méthode\&.
 .sp
-L\'option
+L\*(Aqoption
 ForceExtended
-contr\(^ole l\'utilisation des commandes li\('ees \(`a la RFC 2428,
+contrôle l\*(Aqutilisation des commandes liées à la RFC 2428,
 EPSV
 et
-EPRT\&. Par d\('efaut, elle vaut \(Fo\ \&false\ \&\(Fc ce qui signifie que ces commandes ne sont utilis\('ees que pour une connexion de type IPv6\&. Quand elle vaut \(Fo\ \&true\ \&\(Fc, on les utilise m\(^eme si la connexion est de type IPv4\&. La plupart des serveurs FTP ne suivent pas la RFC 2428\&.
+EPRT\&. Par défaut, elle vaut \(Fo\ \&false\ \&\(Fc ce qui signifie que ces commandes ne sont utilisées que pour une connexion de type IPv6\&. Quand elle vaut \(Fo\ \&true\ \&\(Fc, on les utilise même si la connexion est de type IPv4\&. La plupart des serveurs FTP ne suivent pas la RFC 2428\&.
 .RE
 .PP
 cdrom
 .RS 4
-URI c\('ed\('erom\ \&; la seule option de configuration pour les URI de c\('ed\('erom est le point de montage\ \&:
-cdrom::Mount\ \&; il doit repr\('esenter le point de montage du lecteur de c\('ed\('erom indiqu\('e dans
-/etc/fstab\&. On peut fournir d\'autres commandes de montage et de d\('emontage quand le point de montage ne peut \(^etre list\('e dans le fichier
+URI CD\ \&; la seule option de configuration pour les URI de CD est le point de montage\ \&:
+cdrom::Mount\ \&; il doit représenter le point de montage du lecteur de CD\-ROM indiqué dans
+/etc/fstab\&. D\*(Aqautres commandes de montage et de démontage peuvent être fournies quand le point de montage ne peut être listé dans le fichier
 /etc/fstab
 (par exemple, un montage SMB)\&. Syntaxiquement, il faut placer
 .sp
@@ -312,215 +388,338 @@ cdrom::Mount\ \&; il doit repr\('esenter le point de montage du lecteur de c\('e
 .RS 4
 .\}
 .nf
-"/cdrom/"::Mount "foo";
+/cdrom/::Mount "foo";
 .fi
 .if n \{\
 .RE
 .\}
 .sp
-dans le bloc cdrom\&. La barre oblique finale est importante\&. Les commandes de d\('emontage peuvent \(^etre sp\('ecifi\('ees en utilisant
+dans le bloc cdrom\&. La barre oblique finale est importante\&. Les commandes de démontage peuvent être spécifiées en utilisant
 UMount\&.
 .RE
 .PP
 gpgv
 .RS 4
-URI GPGV\ \&; la seule option pour les URI GPGV est celle qui permet de passer des param\(`etres \(`a gpgv\&.
-gpgv::Options\ \&: options suppl\('ementaires pass\('ees \(`a gpgv\&.
+URI GPGV\ \&; la seule option pour les URI GPGV est celle qui permet de passer des paramètres à gpgv\&.
+gpgv::Options\ \&: options supplémentaires passées à gpgv\&.
 .RE
-.SH "LES R\('EPERTOIRES"
 .PP
-Les r\('epertoires de la section
+CompressionTypes
+.RS 4
+Cette option indique la liste des types de compression comprises par les méthodes d\*(Aqacquisition\&. Des fichiers comme
+Packages
+peuvent être disponibles dans divers formats de compression\&. Par défaut, les méthodes d\*(Aqacquisition décompressent les fichiers compressés avec
+\fBbzip2\fR,
+\fBlzma\fR
+et
+\fBgzip\fR\&. Ce réglage permet d\*(Aqajouter à la volée des formats supplémentaires ou de modifier la méthode utilisée\&. La syntaxe à utiliser est\ \&:\ \&
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Acquire::CompressionTypes::\fIExtensionFichier\fR "\fINomMethode\fR";
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Le sous\-groupe
+Order
+peut être également utilisé pour définir l\*(Aqordre dans lequel le système d\*(Aqacquisition tentera de télécharger les fichiers compressés\&. Le premier système mentionné sera essayé en premier, puis le suivant en cas d\*(Aqéchec\&. Ainsi, pour privilégier un format par rapport à un autre, il suffit de le placer en premier dans cette liste\&. Les types par défaut qui ne sont pas déjà indiqués seront ajoutés en fin de liste au moment de l\*(Aqexécution\&. Ainsi, par exemple,
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Acquire::CompressionTypes::Order:: "gz";
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+peut être utiliser de préférence les fichiers compressés avec
+\fBgzip\fR
+par rapport à
+\fBbzip2\fR
+et
+\fBlzma\fR\&. Si l\*(Aqobjectif est d\*(Aqutiliser
+\fBlzma\fR
+en priorité par rapport à
+\fBgzip\fR
+et
+\fBbzip2\fR, ce réglage doit ressembler à
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Acquire::CompressionTypes::Order { "lzma"; "gz"; };
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\&. Il est inutile d\*(Aqajouter explicitement
+bz2
+à liste car il sera ajouté automatiquement\&.
+.sp
+Veuillez noter qu\*(Aqà l\*(Aqexécution,
+Dir::Bin::\fIMethodname\fR
+sera vérifié\ \&: si ce réglage existe, la méthode ne sera utilisée que si ce fichier existe\&. Ainsi, pour la méthode bzip2, le réglage (utilisé en interne) est
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Dir::Bin::bzip2 "/bin/bzip2";
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\&. Veuillez également noter que les éléments de liste indiqués à la ligne de commande seront ajoutés à la fin de la liste indiquée dans les fichiers de configuration, mais avant les valeurs par défaut\&. Dans ce cas, pour établir une préférence par rapport aux types mentionnés dans les fichiers de configuration, il est possible de placer l\*(Aqoption directement, pas sous forme de liste\&. Cela ne remplacera pas la liste par défaut mais elle sera simplement préfixée avec l\*(Aqoption en question\&.
+.sp
+Bien qu\*(Aqil soit possible d\*(Aqajouter un type vide de compression à la liste ordonnée, APT ne l\*(Aqinterprétera pas correctement et affichera de nombreux messages d\*(Aqavertissement à propos d\*(Aqéchec de téléchargement, qui sont le plus souvent des avertissements sans conséquences\&. Dans de futures versions, il deviendra réellement possible d\*(Aqétablir une préférence pour des fichiers non compressés afin de gérer des miroirs locaux\&.
+.RE
+.SH "LES RéPERTOIRES"
+.PP
+Les répertoires de la section
 Dir::State
-concernent le syst\(`eme local\&.
+concernent le système local\&.
 lists
-est le r\('epertoire o\(`u placer les listes de paquets t\('el\('echarg\('es et
+est le répertoire où placer les listes de paquets téléchargés et
 status
-est le nom du fichier d\'\('etat de
-\fBdpkg\fR(8)\&.
+est le nom du fichier d\*(Aqétat de
+\fBdpkg\fR(1)\&.
 preferences
-concerne APT\ \&: c\'est le nom du fichier des pr\('ef\('erences\&.
+concerne APT\ \&: c\*(Aqest le nom du fichier des préférences\&.
 Dir::State
-contient le r\('epertoire par d\('efaut pr\('efix\('e \(`a tous les sous\-\('el\('ements, quand ceux\-ci ne commencent pas par
+contient le répertoire par défaut préfixé à tous les sous\-éléments, quand ceux\-ci ne commencent pas par
 /
 ou
 \&./\&.
 .PP
-
 Dir::Cache
 contient les emplacements qui renseignent sur le cache local\ \&: par exemple, les deux caches de paquets
 srcpkgcache
 et
-pkgcache, et aussi l\'endroit o\(`u sont plac\('ees les archives t\('el\('echarg\('ees,
-Dir::Cache::archives\&. On peut emp\(^echer la cr\('eation des caches en saisissant un nom vide\&. Cela ralentit le d\('emarrage mais sauve de l\'espace disque\&. Il vaut mieux se passer du cache
+pkgcache, ainsi que l\*(Aqendroit où sont placées les archives téléchargées,
+Dir::Cache::archives\&. On peut empêcher la création des caches en saisissant un nom vide\&. Cela ralentit le démarrage mais économise de l\*(Aqespace disque\&. Il vaut mieux se passer du cache
 pkgcache
-plut\(^ot que se passer du cache
+plutôt que se passer du cache
 srcpkgcache\&. Comme pour
-Dir::State, le r\('epertoire par d\('efaut est contenu dans
+Dir::State, le répertoire par défaut est contenu dans
 Dir::Cache\&.
 .PP
-
 Dir::Etc
-contient l\'emplacement des fichiers de configuration,
+contient l\*(Aqemplacement des fichiers de configuration,
 sourcelist
-indique l\'emplacement de la liste de sources et
+indique l\*(Aqemplacement de la liste de sources et
 main
-est le fichier de configuration par d\('efaut (le modifier n\'a aucun effet, \(`a moins qu\'on ne le modifie avec le fichier de configuration indiqu\('e par la variable
+est le fichier de configuration par défaut (le modifier n\*(Aqa aucun effet, à moins qu\*(Aqon ne le modifie avec le fichier de configuration indiqué par la variable
 \fBAPT_CONFIG\fR)\&.
 .PP
-
 Dir::Parts
-lit, par ordre d\'entr\('ee, tous les fragments de configuration dans le r\('epertoire indiqu\('e\&. Ensuite, le fichier principal de configuration est charg\('e\&.
+lit, par ordre d\*(Aqentrée, tous les fragments de configuration dans le répertoire indiqué\&. Ensuite, le fichier principal de configuration est chargé\&.
 .PP
-Les programmes binaires sont point\('es par
-Dir::Bin\&. L\'emplacement des gestionnaires de m\('ethodes est indiqu\('e par
+Les programmes binaires sont pointés par
+Dir::Bin\&. L\*(Aqemplacement des gestionnaires de méthodes est indiqué par
 Dir::Bin::Methods\ \&;
 gzip,
+bzip2,
+lzma,
 dpkg,
 apt\-get,
 dpkg\-source,
 dpkg\-buildpackage
 et
 apt\-cache
-indiquent l\'emplacement des programmes correspondants\&.
+indiquent l\*(Aqemplacement des programmes correspondants\&.
 .PP
-L\'option de configuration
+L\*(Aqoption de configuration
 RootDir
-a une signification particuli\(`ere\&. Lorsqu\'elle est d\('efinie, tous les chemins d\('eclar\('es dans
+a une signification particulière\&. Lorsqu\*(Aqelle est définie, tous les chemins déclarés dans
 Dir::
-sont consid\('er\('es relativement \(`a
+sont considérés relativement à
 RootDir,
-\fIm\(^eme les chemins sp\('ecifi\('es de mani\(`ere absolue\fR\&. Ainsi par exemple si
+\fImême les chemins spécifiés de manière absolue\fR\&. Ainsi par exemple si
 RootDir
-est d\('efini comme
-/tmp/staging, et que chemin du fichier d\'\('etat
+est défini comme
+/tmp/staging, et que chemin du fichier d\*(Aqétat
 Dir::State::status
-est d\('eclar\('e comme
+est déclaré comme
 /var/lib/dpkg/status
-alors ce fichier sera cherch\('e dans
+alors ce fichier sera cherché dans
 /tmp/staging/var/lib/dpkg/status\&.
 .SH "APT ET DSELECT"
 .PP
-Quand APT est utilis\('e comme une m\('ethode de
-\fBdselect\fR(8), plusieurs directives contr\(^olent le comportement par d\('efaut\&. On les trouve dans la section
+Quand APT est utilisé comme une méthode de
+\fBdselect\fR(1), plusieurs directives contrôlent le comportement par défaut\&. On les trouve dans la section
 DSelect\&.
 .PP
 Clean
 .RS 4
-Mode de nettoyage du cache\ \&; cette variable peut prendre l\'une des valeurs suivantes\ \&: \(Fo\ \&always\ \&\(Fc, \(Fo\ \&prompt\ \&\(Fc, \(Fo\ \&auto\ \&\(Fc, \(Fo\ \&pre\-auto\ \&\(Fc et \(Fo\ \&never\ \&\(Fc\&. \(Fo\ \&always\ \&\(Fc et \(Fo\ \&prompt\ \&\(Fc suppriment tous les paquets du cache apr\(`es la mise \(`a niveau\ \&; \(Fo\ \&prompt\ \&\(Fc (valeur par d\('efaut) les supprime apr\(`es une demande et \(Fo\ \&auto\ \&\(Fc ne supprime que les archives qui ne peuvent plus \(^etre t\('el\('echarg\('ees (remplac\('ees, par exemple, par une nouvelle version)\&. \(Fo\ \&pre\-auto\ \&\(Fc les supprime avant de r\('ecup\('erer de nouveaux paquets\&.
+Mode de nettoyage du cache\ \&; cette variable peut prendre l\*(Aqune des valeurs suivantes\ \&: \(Fo\ \&always\ \&\(Fc, \(Fo\ \&prompt\ \&\(Fc, \(Fo\ \&auto\ \&\(Fc, \(Fo\ \&pre\-auto\ \&\(Fc et \(Fo\ \&never\ \&\(Fc\&. \(Fo\ \&always\ \&\(Fc et \(Fo\ \&prompt\ \&\(Fc suppriment tous les paquets du cache après la mise à niveau\ \&; \(Fo\ \&prompt\ \&\(Fc (valeur par défaut) les supprime après une demande et \(Fo\ \&auto\ \&\(Fc ne supprime que les archives qui ne peuvent plus être téléchargées (remplacées, par exemple, par une nouvelle version)\&. \(Fo\ \&pre\-auto\ \&\(Fc les supprime avant de récupérer de nouveaux paquets\&.
 .RE
 .PP
-Options
+options
 .RS 4
-Le contenu de cette variable est pass\('e comme options de ligne de commande \(`a
+Le contenu de cette variable est passé comme options de ligne de commande à
 \fBapt-get\fR(8)
-lors de la phase d\'installation\&.
+lors de la phase d\*(Aqinstallation\&.
 .RE
 .PP
 UpdateOptions
 .RS 4
-Le contenu de cette variable est pass\('e comme options de ligne de commande \(`a
+Le contenu de cette variable est passé comme options de ligne de commande à
 \fBapt-get\fR(8)
-lors de la phase de mise \(`a jour\&.
+lors de la phase de mise à jour\&.
 .RE
 .PP
 PromptAfterUpdate
 .RS 4
-Si cette option est \(Fo\ \&vraie\ \&\(Fc, l\'op\('eration [U]pdate de
-\fBdselect\fR(8)
-interroge toujours l\'utilisateur avant de continuer\&. Par d\('efaut, ce n\'est qu\'en cas d\'erreur que l\'on propose \(`a l\'utilisateur d\'intervenir\&.
+Si cette option est \(Fo\ \&true\ \&\(Fc, l\*(Aqopération [U]pdate de
+\fBdselect\fR(1)
+interroge toujours l\*(Aqutilisateur avant de continuer\&. Par défaut, ce n\*(Aqest qu\*(Aqen cas d\*(Aqerreur que l\*(Aqon propose à l\*(Aqutilisateur d\*(Aqintervenir\&.
 .RE
-.SH "COMMENT APT APPELLE DPKG(8)"
+.SH "MéTHODE D'APPEL DE DPKG(1) PAR APT"
 .PP
-Plusieurs directives de configuration contr\(^olent la mani\(`ere dont APT invoque
-\fBdpkg\fR(8)\ \&: elles figurent dans la section
+Plusieurs directives de configuration contrôlent la manière dont APT invoque
+\fBdpkg\fR(1)\ \&: elles figurent dans la section
 DPkg\&.
 .PP
-Options
+options
 .RS 4
-Il s\'agit d\'une liste d\'options \(`a passer \(`a
-\fBdpkg\fR(8)\&. Les options doivent \(^etre d\('eclar\('ees en utilisant la notation de liste et chaque \('el\('ement de la liste est pass\('e comme un seul argument \(`a
-\fBdpkg\fR(8)\&.
+Il s\*(Aqagit d\*(Aqune liste d\*(Aqoptions à passer à
+\fBdpkg\fR(1)\&. Les options doivent être déclarées en utilisant la notation de liste et chaque élément de la liste est passé comme un seul paramètre à
+\fBdpkg\fR(1)\&.
 .RE
 .PP
 Pre\-Invoke, Post\-Invoke
 .RS 4
-Il s\'agit d\'une liste de commandes shell \(`a ex\('ecuter avant ou apr\(`es l\'appel de
-\fBdpkg\fR(8)\&. Tout comme pour
-Options, on doit utiliser la notation de liste\&. Les commandes sont appel\('ees dans l\'ordre, en utilisant
-/bin/sh\ \&: APT s\'arr\(^ete d\(`es que l\'une d\'elles \('echoue\&.
+Il s\*(Aqagit d\*(Aqune liste de commandes shell à exécuter avant ou après l\*(Aqappel de
+\fBdpkg\fR(1)\&. Tout comme pour
+Options, on doit utiliser la notation de liste\&. Les commandes sont appelées dans l\*(Aqordre, en utilisant
+/bin/sh\ \&: APT s\*(Aqarrête dès que l\*(Aqune d\*(Aqelles échoue\&.
 .RE
 .PP
 Pre\-Install\-Pkgs
 .RS 4
-Il s\'agit d\'une liste de commandes shell \(`a ex\('ecuter avant d\'appeler
-\fBdpkg\fR(8)\&. Tout comme pour
-Options, on doit utiliser la notation de liste\&. Les commandes sont appel\('ees dans l\'ordre, en utilisant
-/bin/sh\ \&: APT s\'arr\(^ete d\(`es que l\'une d\'elles \('echoue\&. Sur l\'entr\('ee standard, APT transmet aux commandes les noms de tous les fichiers \&.deb qu\'il va installer, \(`a raison d\'un par ligne\&.
+Il s\*(Aqagit d\*(Aqune liste de commandes shell à exécuter avant d\*(Aqappeler
+\fBdpkg\fR(1)\&. Tout comme pour
+Options, on doit utiliser la notation de liste\&. Les commandes sont appelées dans l\*(Aqordre, en utilisant
+/bin/sh\ \&: APT s\*(Aqarrête dès que l\*(Aqune d\*(Aqelles échoue\&. Sur l\*(Aqentrée standard, APT transmet aux commandes les noms de tous les fichiers \&.deb qu\*(Aqil va installer, à raison d\*(Aqun par ligne\&.
 .sp
-La deuxi\(`eme version de ce protocole donne plus de renseignements\ \&: on obtient la version du protocole, la configuration de APT et les paquets, fichiers ou versions qui ont chang\('e\&. On autorise cette version en positionnant
+La deuxième version de ce protocole donne plus de renseignements\ \&: on obtient la version du protocole, la configuration de APT et les paquets, fichiers ou versions qui ont changé\&. On autorise cette version en positionnant
 DPkg::Tools::Options::cmd::Version
-\(`a 2\&.
+à 2\&.
 cmd
-est une commande pass\('ee \(`a
+est une commande passée à
 Pre\-Install\-Pkgs\&.
 .RE
 .PP
 Run\-Directory
 .RS 4
-APT se place dans ce r\('epertoire avant d\'appeler
-\fBdpkg\fR(8)\ \&; par d\('efaut c\'est le r\('epertoire
+APT se place dans ce répertoire avant d\*(Aqappeler
+\fBdpkg\fR(1)\ \&; par défaut, c\*(Aqest le répertoire
 /\&.
 .RE
 .PP
-Build\-Options
+Build\-options
 .RS 4
-Ces options sont pass\('ees \(`a
+Ces options sont passées à
 \fBdpkg-buildpackage\fR(1)
-lors de la compilation des paquets\ \&; par d\('efaut la signature est d\('esactiv\('ee et tous les binaires sont cr\('e\('es\&.
+lors de la compilation des paquets\ \&; par défaut la signature est désactivée et tous les binaires sont créés\&.
+.RE
+.SS "utilisation des actions différées (\(Fo\ \&triggers\ \&\(Fc) de dpkg (et options associées)"
+.PP
+APT peut lancer dpkg pour utiliser les actions différées de manière agressive entre les appels successifs à dpkg\&. Sans options supplémentaires, dpkg n\*(Aqutilisera les actions différées que dans le cadre de sa propre exécution\&. Si ces options sont utilisées, le temps d\*(Aqexécution peut diminuer fortement dans les actions d\*(Aqinstallation ou de mise à jour\&. Il est prévu de les activer par défaut dans le futur mais étant donné qu\*(Aqelles changent notablement la méthode qu\*(Aqutilise APT pour lancer dpkg, elles ont besoin d\*(Aqimportantes validations\&.
+\fICes options sont donc expérimentales et ne devraient pas être utilisées avec des environnements de production\&.\fR\&. Elles modifient également le suivi de progression et toutes les interfaces passeront la moitié du temps à un état terminé à 100% pendant la configuration des paquets\&.
+.PP
+Veuillez noter que rien ne garantit qu\*(AqAPT gérera encore ces options dans le futur ou qu\*(Aqelles ne provoqueront pas de nombreux dégâts\&. Si vous avez bien compris les implications de ce choix et êtes suffisamment motivé(e) pour essayer ces options, il vous est donc possible de créer un nouveau fichier de configuration et essayer une combinaison de ces options\&. Veuillez signaler tout bogue, problèmes ou suggestions d\*(Aqamélioration en prenant soin de mentionner les options utilisées\&. Utiliser l\*(Aqaide apportée par dpkg peut également être utile pour le débogage, par exemple
+\fBdpkg \-\-audit\fR\&. Une combinaison intéressante d\*(Aqoptions pourrait être
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+DPkg::NoTriggers "true";
+PackageManager::Configure "smart";
+DPkg::ConfigurePending "true";
+DPkg::TriggersPending "true";
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\&.
+.PP
+DPkg::NoTriggers
+.RS 4
+Ajoute l\*(Aqoption \(Fo\ \&no\-triggers\ \&\(Fc à tous les appels à dpkg (hormis l\*(Aqappel \(Fo\ \&ConfigurePending\ \&\(Fc)\&. Voir
+\fBdpkg\fR(1)
+pour plus d\*(Aqinformations sur la signification de cette option\&. En résumé, dpkg n\*(Aqeffectuera pas les actions différées (\(Fo\ \&triggers\ \&\(Fc) si cette option est utilisée sauf si cela est demandé explicitement dans une invocation supplémentaire\&. Cette option existe en fait déjà (mais n\*(Aqest pas documentée) dans de plus anciennes version d\*(AqAPT avec une signification légèrement différente\ \&: elle n\*(Aqajoutait l\*(Aqoption \(Fo\ \&\-\-no\-triggers\ \&\(Fc qu\*(Aqaux appels de dpkg avec \(Fo\ \&configure\ \&\(Fc alors que cela sera désormais utilisé également avec les appels à dpkg avec les options \(Fo\ \&unpack\ \&\(Fc et \(Fo\ \&remove\ \&\(Fc\&.
+.RE
+.PP
+PackageManager::Configure
+.RS 4
+Les valeurs possibles sont \(Fo\ \&all\ \&\(Fc, \(Fo\ \&smart\ \&\(Fc et \(Fo\ \&no\ \&\(Fc\&. La valeur par défaut est \(Fo\ \&all\ \&\(Fc où APT configure explicitement tous les paquets\&. La valeur \(Fo\ \&smart\ \&\(Fc permet de ne configurer que les paquets qui ont besoin de l\*(Aqêtre avant la décompaction d\*(Aqun autre paquet (à cause d\*(Aqune pré\-dépendance)\ \&; les autres configurations sont laissées pour un appel ultérieur à dpkg\&. L\*(Aqoption \(Fo\ \&no\ \&\(Fc ne provoquera aucune configuration et s\*(Aqen remettra totalement à dpkg pour ces opérations (ce qui échouera en cas de pré\-dépendances)\&. Si cette option est définie sur une valeur différente de \(Fo\ \&all\ \&\(Fc, l\*(Aqoption suivante sera activée par défaut pour éviter de placer le système dans un état non configuré et donc éventuellement non amorçable\&.
+.RE
+.PP
+DPkg::ConfigurePending
+.RS 4
+Si cette option est choisie, APT lancera
+\fBdpkg \-\-configure \-\-pending\fR
+pour laisser dpkg gérer les configurations de paquets et les actions différées\&. Cette option est automatiquement activée si l\*(Aqoption précédente a une valeur différente de \(Fo\ \&all\ \&\(Fc\&. Il peut par contre être utile de la désactiver pour lancer APT plusieurs fois successives, par exemple quand il est utilisé depuis un outil d\*(Aqinstallation\&. Dans ce cas, seul le dernier de tous les appels successifs peut conserver l\*(Aqoption active\&.
+.RE
+.PP
+DPkg::TriggersPending
+.RS 4
+Cette option est utile pour la configuration en mode \(Fo\ \&smart\ \&\(Fc\&. En effet, un paquet qui a des actions différées (\(Fo\ \&triggers\ \&\(Fc) en attente n\*(Aqest pas considéré comme installé (état \(Fo\ \&installed\ \&\(Fc) et dpkg le considère actuellement comme simplement décompacté (état \(Fo\ \&unpacked\ \&\(Fc) ce qui empêche une gestion correcte des pré\-dépendances (voir le bogue Debian #526774)\&. Veuillez noter que cette option provoquera la gestion de toutes les actions différées, pas seulement celles concernant le paquet en cours de traitement\&.
+.RE
+.PP
+PackageManager::UnpackAll
+.RS 4
+Cette option permet de ne trier les opérations de décompactage qu\*(Aqen fonction de leur criticité (c\*(Aqest à dire en ne considérant que les pré\-dépendances) dans le cas où la configuration des paquets est différée pour n\*(Aqêtre effectuée qu\*(Aqà la fin par dpkg\&. Cette option est active par défaut, ce qui revient à la méthode traditionnelle où les opérations ont lieu en plusieurs étapes, selon l\*(Aqensemble des critères de tri\&. Bien que les deux méthodes existent même dans les versions, la méthode \(Fo\ \&OrderCritical\ \&\(Fc n\*(Aqétait pas utilisée\&. Elle doit donc être considérée comme très expérimentale et a besoin de nombreuses améliorations avant de devenir réellement utile\&. (Note du traducteur\ \&:\ \&la version originale de cette partie des pages de manuel est très confuse\&. Il est donc conseillé de s\*(Aqy reporter en cas de doute car le contresens de traduction n\*(Aqest pas exclu\&.\&.\&.)\&.
+.RE
+.PP
+OrderList::Score::Immediate
+.RS 4
+Les paquets essentiels (et leurs dépendances) devraient être configurés après avoir été décompressés\&. Il est conseillé que cette opération ait lieu le plus tôt possible dans le processus de mise à jour car ces opérations de configuration nécessitent également
+DPkg::TriggersPending, ce qui peut conduire à l\*(Aqexécution de certains actions différées qui ne sont pas nécessairement utiles\&. Les paquets essentiels obtiennent par défaut un score élevé mais le marqueur \(Fo\ \&immédiat\ \&\(Fc implique un score assez bas (par exemple un paquet qui comporte des prédépendances obtient un score plus élevé)\&. Cette option et les options du même groupe permettent de modifier la façon d\*(Aqattribuer un score\&. L\*(Aqexemple ci\-dessous indique ces réglages avec leurs valeurs par défaut\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+OrderList::Score {
+	Delete 500;
+	Essential 200;
+	Immediate 10;
+	PreDepends 50;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.sp
 .RE
 .SH "OPTIONS \(Fo\ \&PERIODIC\ \&\(Fc ET \(Fo\ \&ARCHIVE\ \&\(Fc"
 .PP
-Les groupes d\'options
+Les groupes d\*(Aqoptions
 APT::Periodic
 et
 APT::Archive
-configurent les comportements p\('eriodiques r\('ealis\('es par le script
-/etc/cron\&.daily/apt, lanc\('e quotidiennement\&.
-.PP
-APT::Periodic
-.RS 4
-.PP
-Les options de cette section permettent de configurer la fr\('equence d\'ex\('ecution des t\(^aches APT lanc\('ees automatiquement\&. Ces param\(`etre prennent comme valeurs des p\('eriodicit\('es d\'ex\('ecution en nombre de jours\&.
-
-Update\-Package\-List\ \&: p\('eriodicit\('e de mise \(`a jour de la liste des paquets disponibles\&. (0 = d\('esactiv\('e)
-
-Download\-Upgradable\-Packages\ \&: p\('eriodicit\('e de t\('el\('echargement dans le cache des paquets pour lesquels une mise \(`a jour est disponible\&. (0 = d\('esactiv\('e)
-
-AutocleanInterval\ \&: p\('eriodicit\('e des \(Fo\ \&autoclean\ \&\(Fc, c\'est \(`a dire de la suppression du cache des paquets qui ne peuvent plus \(^etre t\('el\('echarg\('es\&. (0 = d\('esactiv\('e)
-
-Unattended\-Upgrade\ \&: p\('eriodicit\('e de mise \(`a jour automatique du syst\(`eme sans intervention humaine\&. Le paquet
-unattended\-upgrades
-doit \(^etre install\('e pour que cette t\(^ache s\'ex\('ecute\&. Le cas \('ech\('eant un fichier journal est \('ecrit dans
-/var/log/unattended\-upgrades\&. (0 = d\('esactiv\('e)
-.RE
-.PP
-APT::Archive
-.RS 4
-.PP
-Les options de la section APT::Archive permettent de contr\(^oler la taille du cache de paquets\&.
-
-MaxAge\ \&: anciennet\('e maximale d\'un paquet dans le cache, en nombre de jours\&. Les paquets plus anciens sont supprim\('es\&. (0 = d\('esactiv\('e)
-
-MaxSize\ \&: taille maximale du cache en Mo\&. (0 = d\('esactive) Si ce maximum est d\('epass\('e, des paquets sont supprim\('es jusqu\'\(`a ce que la taille du cache repasse sous la limite\&. Les paquets les plus volumineux sont supprim\('es en premier\&.
-
-MinAge\ \&: age minimum d\'un paquet du cache, en nombre de jours (0 = d\('esactiv\('e)\&. Un paquet plus r\('ecent ne sera pas supprim\('e\&. Cette option est utile pour garder \(`a disposition une version des paquets en cas de probl\(`eme grave\&.
-.RE
-.SH "LES OPTIONS DE D\('EBOGAGE"
+configurent les comportements périodiques réalisés par le script
+/etc/cron\&.daily/apt, lancé quotidiennement\&.
+.SH "LES OPTIONS DE DéBOGAGE"
 .PP
 Les options de la section
 Debug::
-servent soit \(`a provoquer l\'affichage d\'informations de d\('ebogage sur la sortie d\'erreur standard du programme qui utilise les librairies APT, soit \(`a activer des modes de fonctionnement sp\('eciaux qui sont principalement utiles pour d\('eboguer le comportement de
-APT\&. La plupart de ces options n\'ont pas d\'int\('er\(^et pour un utilisateur normal, mais certaines peuvent tout de m\(^eme \(^etre utiles\ \&:
+servent soit à provoquer l\*(Aqaffichage d\*(Aqinformations de débogage sur la sortie d\*(Aqerreur standard du programme qui utilise les librairies APT, soit à activer des modes de fonctionnement spéciaux qui sont principalement utiles pour déboguer le comportement de
+APT\&. La plupart de ces options n\*(Aqont pas d\*(Aqintérêt pour un utilisateur normal, mais certaines peuvent tout de même être utiles\ \&:
 .sp
 .RS 4
 .ie n \{\
@@ -532,7 +731,7 @@ APT\&. La plupart de ces options n\'ont pas d\'int\('er\(^et pour un utilisateur
 .\}
 
 Debug::pkgProblemResolver
-affiche d\'int\('eressantes informations sur les d\('ecisions prises par les commandes
+affiche d\*(Aqintéressantes informations sur les décisions prises par les commandes
 dist\-upgrade, upgrade, install, remove et purge\&.
 .RE
 .sp
@@ -546,8 +745,8 @@ dist\-upgrade, upgrade, install, remove et purge\&.
 .\}
 
 Debug::NoLocking
-d\('esactive le verrouillage de fichier de mani\(`ere \(`a ce que APT puisse effectuer quelques op\('erations (telles que
-apt\-get \-s install) sans \(^etre \(Fo\ \&root\ \&\(Fc\&.
+désactive le verrouillage de fichier de manière à ce qu\*(AqAPT puisse effectuer quelques opérations (telles que
+apt\-get \-s install) sans avoir les privilèges du superutilisateur\&.
 .RE
 .sp
 .RS 4
@@ -560,8 +759,8 @@ apt\-get \-s install) sans \(^etre \(Fo\ \&root\ \&\(Fc\&.
 .\}
 
 Debug::pkgDPkgPM
-affiche la ligne de commande \(`a chaque appel de
-\fBdpkg\fR(8)\&.
+affiche la ligne de commande à chaque appel de
+\fBdpkg\fR(1)\&.
 .RE
 .sp
 .RS 4
@@ -573,160 +772,205 @@ affiche la ligne de commande \(`a chaque appel de
 .IP \(bu 2.3
 .\}
 
+
 Debug::IdentCdrom
-d\('esactive l\'inclusion de donn\('ees de type statfs dans les ID de c\('ed\('erom\&.
+désactive l\*(Aqinclusion de données de type statfs dans les identifiants de CD\&.
 .RE
 .PP
-Voici une liste compl\(`ete des options de d\('ebogage de APT\&.
+Liste complète des options de débogage de APT\ \&:
 .PP
 Debug::Acquire::cdrom
 .RS 4
-Affiche les informations concernant les sources de type cdrom://
+Affiche les informations concernant les sources de type
+cdrom://
 .RE
 .PP
 Debug::Acquire::ftp
 .RS 4
-Affiche les informations concernant le t\('el\('echargement de paquets par FTP\&.
+Affiche les informations concernant le téléchargement de paquets par FTP\&.
 .RE
 .PP
 Debug::Acquire::http
 .RS 4
-Affiche les informations concernant le t\('el\('echargement de paquets par HTTP\&.
+Affiche les informations concernant le téléchargement de paquets par HTTP\&.
 .RE
 .PP
 Debug::Acquire::https
 .RS 4
-Affiche les informations concernant le t\('el\('echargement de paquets par HTTPS\&.
+Print information related to downloading packages using HTTPS\&.
 .RE
 .PP
 Debug::Acquire::gpgv
 .RS 4
-Affiche les informations relatives \(`a la v\('erification de signatures cryptographiques avec
+Affiche les informations relatives à la vérification de signatures cryptographiques avec
 gpg\&.
 .RE
 .PP
 Debug::aptcdrom
 .RS 4
-Affiche des informations concernant l\'acc\(`es aux collections de paquets stock\('ees sur c\('ed\('erom\&.
+Affiche des informations concernant l\*(Aqaccès aux collections de paquets stockées sur CD\&.
 .RE
 .PP
 Debug::BuildDeps
 .RS 4
-D\('ecrit le processus de r\('esolution des d\('ependances pour la construction de paquets source (\ \&\(Fo\ \&build\-dependencies\ \&\(Fc\ \&) par
+Décrit le processus de résolution des dépendances pour la construction de paquets source (\ \&\(Fo\ \&build\-dependencies\ \&\(Fc\ \&) par
 \fBapt-get\fR(8)\&.
 .RE
 .PP
 Debug::Hashes
 .RS 4
-Affiche toutes les clefs de hachage cryptographiques g\('en\('er\('ees par les librairies APT\&.
+Affiche toutes les clefs de hachage cryptographiques créées par les librairies d\*(Aqapt\&.
 .RE
 .PP
-Debug::IdentCdrom
+Debug::IdentCDROM
 .RS 4
-D\('esactive l\'inclusion des donn\('ees de type
+Désactive l\*(Aqinclusion des données de type
 statfs
-pour la g\('en\('eration des ID de c\('ed\('erom, \(`a savoir le nombre de blocs libres et utilis\('es sur le syst\(`eme de fichier du c\('ed\('erom\&.
+pour la génération des identifiants de CD, c\*(Aqest\-à\-dire le nombre de blocs libres et utilisés sur le système de fichier du CD\&.
 .RE
 .PP
 Debug::NoLocking
 .RS 4
-D\('esactive le verrouillage de fichiers\&. Cela permet par exemple de lancer deux instances de \(Fo\ \&apt\-get update\ \&\(Fc en m\(^eme temps\&.
+Désactive le verrouillage de fichiers\&. Cela permet par exemple de lancer deux instances de
+\(lqapt\-get update\(rq
+en même temps\&.
 .RE
 .PP
 Debug::pkgAcquire
 .RS 4
-Trace les ajouts et suppressions d\'\('el\('ements de la queue globale de t\('el\('echargement\&.
+Trace les ajouts et suppressions d\*(Aqéléments de la queue globale de téléchargement\&.
 .RE
 .PP
 Debug::pkgAcquire::Auth
 .RS 4
-Affiche les d\('etails de la v\('erification des sommes de contr\(^ole et des signatures cryptographiques des fichiers t\('el\('echarg\('es, ainsi que les erreurs \('eventuelles\&.
+Affiche les détails de la vérification des sommes de contrôle et des signatures cryptographiques des fichiers téléchargés, ainsi que les erreurs éventuelles\&.
 .RE
 .PP
 Debug::pkgAcquire::Diffs
 .RS 4
-Affiche les informations de t\('el\('echargement et de prise en compte des fichiers diff\('erentiels des indexes de paquets, ainsi que les erreurs \('eventuelles\&.
+Affiche les informations de téléchargement et de prise en compte des fichiers différentiels des indexes de paquets, ainsi que les erreurs éventuelles\&.
 .RE
 .PP
 Debug::pkgAcquire::RRed
 .RS 4
-Affiche les d\('etails de la v\('erification des sommes de contr\(^ole et des signatures cryptographiques des fichiers t\('el\('echarg\('es, ainsi que les erreurs \('eventuelles\&.
+Affiche les détails de l\*(Aqapplication des fichiers de différences aux listes de paquets d\*(AqAPT quand ces fichiers de différences sont téléchargés à la place des fichiers complets\&.
 .RE
 .PP
 Debug::pkgAcquire::Worker
 .RS 4
-Affiche toutes les interactions avec les processus enfants qui se chargent effectivement des t\('el\('echargements\&.
+Affiche toutes les interactions avec les processus enfants qui se chargent effectivement des téléchargements\&.
 .RE
 .PP
-Debug::pkgAcquire::pkgAutoRemove
+Debug::pkgAutoRemove
 .RS 4
-Affiche les changements concernant le marquage des paquets comme install\('es automatiquement, et la suppression des paquets inutiles\&.
+Affiche les changements concernant le marquage des paquets comme installés automatiquement, et la suppression des paquets inutiles\&.
 .RE
 .PP
 Debug::pkgDepCache::AutoInstall
 .RS 4
-G\('en\(`ere les informations de d\('ebogage d\('ecrivant quels paquets sont install\('es automatiquement pour satisfaire les d\('ependances\&. Cela concerne la passe initiale d\'installation automatique effectu\('ee par exemple par
+Crée les informations de débogage décrivant quels paquets sont installés automatiquement pour satisfaire les dépendances\&. Cela concerne la passe initiale d\*(Aqinstallation automatique effectuée par exemple par
 apt\-get install
-et pas le syst\(`eme de r\('esolution de d\('ependances complet de APT\ \&; voir
+et pas le système de résolution de dépendances complet de APT\ \&; voir
+Debug::pkgProblemResolver
+pour ce dernier\&.
+.RE
+.PP
+Debug::pkgDepCache::Marker
+.RS 4
+Crée les informations de débogage décrivant quels paquets sont gardés/installés/supprimés pendant le travail de l\*(Aqoutil de résolution de problèmes\&. Chaque ajout ou suppression peut impliquer des actions supplémentaires\ \&;\ \&elles sont alors indiquées avec une indentation de deux espaces de plus que l\*(Aqaction qui les a déclenchées\&. Le format de chaque ligne est
+MarkKeep,
+MarkDelete
+ou
+MarkInstall
+suivi de
+nom\-paquet <a\&.b\&.c \-> d\&.e\&.f | x\&.y\&.z> (section)
+où
+a\&.b\&.c
+est la version actuelle du paquet,
+d\&.e\&.f
+la version devant être installée et
+x\&.y\&.z
+une version plus récente qui n\*(Aqest pas prévue pour être installée (à cause d\*(Aqun score plus faible)\&. Ces deux derniers éléments peuvent ne pas être mentionnés s\*(Aqils ne sont pas pertinents où lorsque ils sont identiques à la version installée\&.
+section
+est le nom de la section où figure le paquet\&.automatiquement pour satisfaire les dépendances\&. Cela concerne la passe initiale d\*(Aqinstallation automatique effectuée par exemple par
+apt\-get install
+et pas le système de résolution de dépendances complet de APT\ \&; voir
 Debug::pkgProblemResolver
 pour ce dernier\&.
 .RE
 .PP
 Debug::pkgInitConfig
 .RS 4
-Au lancement, affiche l\'ensemble de la configuration sur la sortie d\'erreur standard\&.
+Affiche, au lancement, l\*(Aqensemble de la configuration sur la sortie d\*(Aqerreur standard\&.
 .RE
 .PP
 Debug::pkgDPkgPM
 .RS 4
-Affiche la commande exacte d\'invocation de
-\fBdpkg\fR(8)
-\(`a chaque appel\ \&; les arguments sont s\('epar\('es par des espaces\&.
+Affiche la commande exacte d\*(Aqinvocation de
+\fBdpkg\fR(1)
+à chaque appel\ \&; les paramètres sont séparés par des espaces\&.
 .RE
 .PP
 Debug::pkgDPkgProgressReporting
 .RS 4
-Affiche l\'ensemble des informations re\(,cues de
-\fBdpkg\fR(8)
-par l\'interm\('ediaire du descripteur de fichier d\'\('etat, et les \('eventuelles erreurs d\'analyse de ce fichier\&.
+Affiche l\*(Aqensemble des informations reçues de
+\fBdpkg\fR(1)
+par l\*(Aqintermédiaire du descripteur de fichier d\*(Aqétat, et les éventuelles erreurs d\*(Aqanalyse de ce fichier\&.
 .RE
 .PP
 Debug::pkgOrderList
 .RS 4
-Affiche les \('etapes de l\'algorithme utilis\('e pour choisir l\'ordre dans lequel APT passe les paquets \(`a
-\fBdpkg\fR(8)\&.
+Affiche les étapes de l\*(Aqalgorithme utilisé pour choisir l\*(Aqordre dans lequel
+apt
+passe les paquets à
+\fBdpkg\fR(1)\&.
 .RE
 .PP
 Debug::pkgPackageManager
 .RS 4
-Affiche le d\('etail des op\('erations li\('ees \(`a l\'invocation de
-\fBdpkg\fR(8)\&.
+Affiche le détail des opérations liées à l\*(Aqinvocation de
+\fBdpkg\fR(1)\&.
 .RE
 .PP
 Debug::pkgPolicy
 .RS 4
-Au lancement, affiche la priorit\('e de chaque liste de paquets\&.
+Affiche, au lancement, la priorité de chaque liste de paquets\&.
 .RE
 .PP
 Debug::pkgProblemResolver
 .RS 4
-Affiche la trace d\'ex\('ecution du syst\(`eme de r\('esolution de d\('ependances (ne concerne que les cas o\(`u un probl\(`eme de d\('ependances complexe se pr\('esente)\&.
+Affiche la trace d\*(Aqexécution du système de résolution de dépendances (ne concerne que les cas où un problème de dépendances complexe se présente)\&.
+.RE
+.PP
+Debug::pkgProblemResolver::ShowScores
+.RS 4
+Affiche la liste de tous les paquets installés avec leur score calculé par l\*(Aqoutil de résolution de problèmes\&. La description du paquet est celle qui est décrite dans
+Debug::pkgDepCache::Marker\&.
 .RE
 .PP
 Debug::sourceList
 .RS 4
-Affiche les fournisseurs d\('eclar\('es dans le fichier
+Affiche les fournisseurs déclarés dans le fichier
 /etc/apt/vendors\&.list\&.
 .RE
 .SH "EXEMPLES"
 .PP
 Le fichier
 /usr/share/doc/apt/examples/configure\-index\&.gz
-contient un mod\(`ele de fichier montrant des exemples pour toutes les options existantes\&.
+contient un modèle de fichier montrant des exemples pour toutes les options existantes\&.
 .SH "FICHIERS"
 .PP
-
 /etc/apt/apt\&.conf
+.RS 4
+Fichier de configuration d\*(AqAPT\&. Élément de configuration\ \&:
+Dir::Etc::Main\&.
+.RE
+.PP
+/etc/apt/apt\&.conf\&.D/
+.RS 4
+Fragments du fichier de configuration d\*(AqAPT\&. Élément de configuration\ \&:
+Dir::Etc::Parts\&.
+.RE
 .SH "VOIR AUSSI"
 .PP
 
@@ -735,29 +979,35 @@ contient un mod\(`ele de fichier montrant des exemples pour toutes les options e
 \fBapt_preferences\fR(5)\&.
 .SH "BOGUES"
 .PP
-Voyez la
-\m[blue]\fB page concernant les bogues d\'APT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous voulez signaler un bogue, consultez le texte
+\m[blue]\fBPage des bogues d\*(AqAPT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous souhaitez signaler un bogue à propos d\*(AqAPT, veuillez lire
 /usr/share/doc/debian/bug\-reporting\&.txt
-ou utilisez la commande
+ou utiliser la commande
 \fBreportbug\fR(1)\&.
-.SH "TRADUCTION"
+.SH "TRADUCTEURS"
 .PP
-J\('er\(^ome Marant\&. 2000\ \&; mise \(`a jour : Philippe Batailler\&. 2005\&.
-debian\-l10n\-french@lists\&.debian\&.org\&.
+Jérôme Marant, Philippe Batailler, Christian Perrier
+bubulle@debian\&.org
+(2000, 2005, 2009, 2010), Équipe de traduction francophone de Debian
+debian\-l10n\-french@lists\&.debian\&.org
+.PP
+Veuillez noter que cette traduction peut contenir des parties non traduites Cela est volontaire, pour éviter de perdre du contenu quand la traduction est légèrement en retard sur le contenu d\*(Aqorigine\&.
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
 .RS 4
-Auteur.
 .RE
 .PP
-\fBAPT team\fR
+\fBÉquipe de développement d\*(AqAPT\fR
 .RS 4
-Auteur.
+.RE
+.PP
+\fBDaniel Burrows\fR <\&dburrows@debian\&.org\&>
+.RS 4
+Initial documentation of Debug::*\&.
 .RE
 .SH "NOTES"
 .IP " 1." 4
-page concernant les bogues d'APT
+Page des bogues d'APT
 .RS 4
 \%http://bugs.debian.org/src:apt
 .RE

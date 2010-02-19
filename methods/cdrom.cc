@@ -18,6 +18,7 @@
 
 #include <sys/stat.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 #include <iostream>
 #include <apti18n.h>
@@ -34,8 +35,10 @@ class CDROMMethod : public pkgAcqMethod
    string CurrentID;
    string CDROM;
    bool MountedByApt;
+   pkgUdevCdromDevices UdevCdroms;
  
-   bool IsCorrectCD(URI want, string MountPath);
+   bool IsCorrectCD(URI want, string MountPath, string& NewID);
+   bool AutoDetectAndMount(const URI, string &NewID);
    virtual bool Fetch(FetchItem *Itm);
    string GetID(string Name);
    virtual void Exit();
@@ -54,6 +57,7 @@ CDROMMethod::CDROMMethod() : pkgAcqMethod("1.0",SingleInstance | LocalOnly |
                                           DatabaseLoaded(false), 
                                           MountedByApt(false)
 {
+   UdevCdroms.Dlopen();
 };
 									/*}}}*/
 // CDROMMethod::Exit - Unmount the disc if necessary			/*{{{*/
@@ -85,13 +89,64 @@ string CDROMMethod::GetID(string Name)
    return string();
 }
 									/*}}}*/
+// CDROMMethod::AutoDetectAndMount                                      /*{{{*/
+// ---------------------------------------------------------------------
+/* Modifies class varaiable CDROM to the mountpoint */
+bool CDROMMethod::AutoDetectAndMount(const URI Get, string &NewID)
+{
+   vector<struct CdromDevice> v = UdevCdroms.Scan();
+
+   // first check if its mounted somewhere already
+   for (unsigned int i=0; i < v.size(); i++)
+   {
+      if (v[i].Mounted)
+      {
+	 if (Debug)
+	    clog << "Checking mounted cdrom device " << v[i].DeviceName << endl;
+	 if (IsCorrectCD(Get, v[i].MountPath, NewID))
+	 {
+	    CDROM = v[i].MountPath;
+	    return true;
+	 }
+      }
+   }
+
+   // we are not supposed to mount, exit
+   if (_config->FindB("APT::CDROM::NoMount",false) == true)
+      return false;
+
+   // check if we have the mount point
+   string AptMountPoint = _config->FindDir("Dir::Media::MountPath");
+   if (!FileExists(AptMountPoint))
+      mkdir(AptMountPoint.c_str(), 0750);
+
+   // now try mounting
+   for (unsigned int i=0; i < v.size(); i++)
+   {
+      if (!v[i].Mounted)
+      {
+	 if(MountCdrom(AptMountPoint, v[i].DeviceName)) 
+	 {
+	    if (IsCorrectCD(Get, AptMountPoint, NewID))
+	    {
+	       MountedByApt = true;
+	       CDROM = AptMountPoint;
+	       return true;
+	    } else {
+	       UnmountCdrom(AptMountPoint);
+	    }
+	 }
+      }
+   }
+
+   return false;
+}
+									/*}}}*/
 // CDROMMethod::IsCorrectCD                                             /*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool CDROMMethod::IsCorrectCD(URI want, string MountPath)
+bool CDROMMethod::IsCorrectCD(URI want, string MountPath, string& NewID)
 {
-   string NewID;
-
    for (unsigned int Version = 2; Version != 0; Version--)
    {
       if (IdentCdrom(MountPath,NewID,Version) == false)
@@ -164,20 +219,24 @@ bool CDROMMethod::Fetch(FetchItem *Itm)
       return true;
    }
 
+   bool AutoDetect = _config->FindB("Acquire::cdrom::AutoDetect", true);
    CDROM = _config->FindDir("Acquire::cdrom::mount","/cdrom/");
    if (Debug)
       clog << "Looking for CDROM at " << CDROM << endl;
 
    if (CDROM[0] == '.')
       CDROM= SafeGetCWD() + '/' + CDROM;
-   string NewID;
 
+   string NewID;
    while (CurrentID.empty() == true)
    {
+      if (AutoDetect)
+	 AutoDetectAndMount(Get, NewID);
+
       if(!IsMounted(CDROM))
 	 MountedByApt = MountCdrom(CDROM);
       
-      if (IsCorrectCD(Get, CDROM))
+      if (IsCorrectCD(Get, CDROM, NewID))
 	 break;
 	 
       // I suppose this should prompt somehow?

@@ -1,13 +1,22 @@
 '\" t
 .\"     Title: apt-key
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
-.\"      Date: 14 December 2003
-.\"    Manual: [FIXME: manual]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 28 October 2008
+.\"    Manual: APT
 .\"    Source: Linux
 .\"  Language: English
 .\"
-.TH "APT\-KEY" "8" "14 December 2003" "Linux" "[FIXME: manual]"
+.TH "APT\-KEY" "8" "28 October 2008" "Linux" "APT"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -19,104 +28,143 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-apt-key \- APT ¥­¡¼´ÉÍı¥æ¡¼¥Æ¥£¥ê¥Æ¥£
+apt-key \- APT ã‚­ãƒ¼ç®¡ç†ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£
 .SH "SYNOPSIS"
 .HP \w'\fBapt\-key\fR\ 'u
-\fBapt\-key\fR [\fIcommand\fR/] [\fB\fIarguments\fR\fR...]
-.SH "ÀâÌÀ"
+\fBapt\-key\fR [\fB\-\-keyring\ \fR\fB\fIfilename\fR\fR] [\fIcommand\fR] [\fB\fIarguments\fR\fR...]
+.SH "èª¬æ˜"
 .PP
 
-
 \fBapt\-key\fR
-¤Ï¡¢ apt ¤¬ ¥Ñ¥Ã¥±¡¼¥¸¤òÇ§¾Ú¤¹¤ë¤Î¤Ë»ÈÍÑ¤¹¤ë¥­¡¼¤Î°ìÍ÷¤ò´ÉÍı¤¹¤ë¤Î¤Ë»ÈÍÑ¤·¤Ş¤¹¡£ ¤³¤Î¥­¡¼¤ÇÇ§¾Ú¤µ¤ì¤¿¥Ñ¥Ã¥±¡¼¥¸¤Ï¡¢¿®Íê¤¹¤ë¤ËÂ­¤ë¤È¸«¤Ê¤»¤ë¤Ç¤·¤ç¤¦¡£
-.SH "¥³¥Ş¥ó¥É"
+ã¯ã€apt ãŒ ãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã‚’èªè¨¼ã™ã‚‹ã®ã«ä½¿ç”¨ã™ã‚‹ã‚­ãƒ¼ã®ä¸€è¦§ã‚’ç®¡ç†ã™ã‚‹ã®ã«ä½¿ç”¨ã—ã¾ã™ã€‚ã“ã®ã‚­ãƒ¼ã§èªè¨¼ã•ã‚ŒãŸãƒ‘ãƒƒã‚±ãƒ¼ã‚¸ã¯ã€ä¿¡é ¼ã™ã‚‹ã«è¶³ã‚‹ã¨è¦‹ãªã›ã‚‹ã§ã—ã‚‡ã†ã€‚
+.SH "ã‚³ãƒãƒ³ãƒ‰"
 .PP
 add \fIfilename\fR
 .RS 4
-
-¿®Íê¥­¡¼°ìÍ÷¤Ë¿·¤·¤¤¥­¡¼¤òÄÉ²Ã¤·¤Ş¤¹¡£ ¤³¤Î¥­¡¼¤Ï
+ä¿¡é ¼ã‚­ãƒ¼ä¸€è¦§ã«æ–°ã—ã„ã‚­ãƒ¼ã‚’è¿½åŠ ã—ã¾ã™ã€‚ã“ã®ã‚­ãƒ¼ã¯
 \fIfilename\fR
-¤«¤éÆÉ¤ß¹ş¤ß¤Ş¤¹¤¬¡¢
-\fIfilename\fR
-¤ò
+ã‹ã‚‰èª­ã¿è¾¼ã¿ã¾ã™ãŒã€\fIfilename\fR
+ã‚’
 \-
-¤È¤¹¤ë¤È¡¢ É¸½àÆşÎÏ¤«¤éÆÉ¤ß¹ş¤ß¤Ş¤¹¡£
+ã¨ã™ã‚‹ã¨ã€æ¨™æº–å…¥åŠ›ã‹ã‚‰èª­ã¿è¾¼ã¿ã¾ã™ã€‚
 .RE
 .PP
 del \fIkeyid\fR
 .RS 4
-
-¿®Íê¥­¡¼°ìÍ÷¤«¤é¥­¡¼¤òºï½ü¤·¤Ş¤¹¡£
+ä¿¡é ¼ã‚­ãƒ¼ä¸€è¦§ã‹ã‚‰ã‚­ãƒ¼ã‚’å‰Šé™¤ã—ã¾ã™ã€‚
+.RE
+.PP
+export \fIkeyid\fR
+.RS 4
+ã‚­ãƒ¼
+\fIkeyid\fR
+ã‚’æ¨™æº–å‡ºåŠ›ã«å‡ºåŠ›ã—ã¾ã™ã€‚
+.RE
+.PP
+exportall
+.RS 4
+ä¿¡é ¼ã™ã‚‹ã‚­ãƒ¼ã‚’ã™ã¹ã¦æ¨™æº–å‡ºåŠ›ã«å‡ºåŠ›ã—ã¾ã™ã€‚
 .RE
 .PP
 list
 .RS 4
-
-¿®Íê¥­¡¼¤ò°ìÍ÷É½¼¨¤·¤Ş¤¹¡£
+ä¿¡é ¼ã‚­ãƒ¼ã‚’ä¸€è¦§è¡¨ç¤ºã—ã¾ã™ã€‚
+.RE
+.PP
+finger
+.RS 4
+ä¿¡é ¼ã‚­ãƒ¼ã®ãƒ•ã‚£ãƒ³ã‚¬ãƒ¼ãƒ—ãƒªãƒ³ãƒˆã‚’ä¸€è¦§è¡¨ç¤ºã—ã¾ã™ã€‚
+.RE
+.PP
+adv
+.RS 4
+gpg ã«ä¸Šç´šã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’æ¸¡ã—ã¾ã™ã€‚adv \-\-recv\-key ã¨ã™ã‚‹ã¨ã€å…¬é–‹éµã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã§ãã¾ã™ã€‚
 .RE
 .PP
 update
 .RS 4
-
-Debian ¥¢¡¼¥«¥¤¥Ö¥­¡¼¤Ç¡¢¥í¡¼¥«¥ë¥­¡¼¥ê¥ó¥°¤ò¹¹¿·¤·¡¢ ¤â¤¦Í­¸ú¤Ç¤Ê¤¤¥­¡¼¤ò¥­¡¼¥ê¥ó¥°¤«¤éºï½ü¤·¤Ş¤¹¡£
+Debian ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã‚­ãƒ¼ã§ã€ãƒ­ãƒ¼ã‚«ãƒ«ã‚­ãƒ¼ãƒªãƒ³ã‚°ã‚’æ›´æ–°ã—ã€ã‚‚ã†æœ‰åŠ¹ã§ãªã„ã‚­ãƒ¼ã‚’ã‚­ãƒ¼ãƒªãƒ³ã‚°ã‹ã‚‰å‰Šé™¤ã—ã¾ã™ã€‚
 .RE
-.SH "¥Õ¥¡¥¤¥ë"
+.SH "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
+.PP
+Note that options need to be defined before the commands described in the previous section\&.
+.PP
+\-\-keyring \fIfilename\fR
+.RS 4
+With this option it is possible to specify a specific keyring file the command should operate on\&. The default is that a command is executed on the
+trusted\&.gpg
+file as well as on all parts in the
+trusted\&.gpg\&.d
+directory, through
+trusted\&.gpg
+is the primary keyring which means that e\&.g\&. new keys are added to this one\&.
+.RE
+.SH "ãƒ•ã‚¡ã‚¤ãƒ«"
 .PP
 /etc/apt/trusted\&.gpg
 .RS 4
-¥í¡¼¥«¥ë¿®Íê¥­¡¼¤Î¥­¡¼¥ê¥ó¥°¡£ ¿·¤·¤¤¥­¡¼¤Ï¤³¤³¤ËÄÉ²Ã¤µ¤ì¤Ş¤¹¡£
+Keyring of local trusted keys, new keys will be added here\&. Configuration Item:
+Dir::Etc::Trusted\&.
+.RE
+.PP
+/etc/apt/trusted\&.gpg\&.d/
+.RS 4
+File fragments for the trusted keys, additional keyrings can be stored here (by other packages or the administrator)\&. Configuration Item
+Dir::Etc::TrustedParts\&.
 .RE
 .PP
 /etc/apt/trustdb\&.gpg
 .RS 4
-¥¢¡¼¥«¥¤¥Ö¥­¡¼¤Î¥í¡¼¥«¥ë¿®Íê¥Ç¡¼¥¿¥Ù¡¼¥¹
+ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã‚­ãƒ¼ã®ãƒ­ãƒ¼ã‚«ãƒ«ä¿¡é ¼ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã§ã™ã€‚
 .RE
 .PP
 /usr/share/keyrings/debian\-archive\-keyring\&.gpg
 .RS 4
-Debian ¥¢¡¼¥«¥¤¥Ö¿®Íê¥­¡¼¤Î¥­¡¼¥ê¥ó¥°
+Debian ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ä¿¡é ¼ã‚­ãƒ¼ã®ã‚­ãƒ¼ãƒªãƒ³ã‚°ã§ã™ã€‚
 .RE
 .PP
 /usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg
 .RS 4
-ºï½ü¤µ¤ì¤¿ Debian ¥¢¡¼¥«¥¤¥Ö¿®Íê¥­¡¼¤Î¥­¡¼¥ê¥ó¥°
+å‰Šé™¤ã•ã‚ŒãŸ Debian ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ä¿¡é ¼ã‚­ãƒ¼ã®ã‚­ãƒ¼ãƒªãƒ³ã‚°ã§ã™ã€‚
 .RE
-.SH "´ØÏ¢¹àÌÜ"
+.SH "é–¢é€£é …ç›®"
 .PP
 
 \fBapt-get\fR(8),
 \fBapt-secure\fR(8)
-.SH "¥Ğ¥°"
+.SH "ãƒã‚°"
 .PP
-\m[blue]\fBAPT ¥Ğ¥°¥Ú¡¼¥¸\fR\m[]\&\s-2\u[1]\d\s+2¤ò ¤´Í÷¤¯¤À¤µ¤¤¡£ APT ¤Î¥Ğ¥°¤òÊó¹ğ¤¹¤ë¾ì¹ç¤Ï¡¢
+\m[blue]\fBAPT ãƒã‚°ãƒšãƒ¼ã‚¸\fR\m[]\&\s-2\u[1]\d\s+2
+ã‚’ã”è¦§ãã ã•ã„ã€‚ APT ã®ãƒã‚°ã‚’å ±å‘Šã™ã‚‹å ´åˆã¯ã€
 /usr/share/doc/debian/bug\-reporting\&.txt
-¤ä
+ã‚„
 \fBreportbug\fR(1)
-¥³¥Ş¥ó¥É¤ò¤´Í÷¤¯¤À¤µ¤¤¡£
-.SH "Ãø¼Ô"
+ã‚³ãƒãƒ³ãƒ‰ã‚’ã”è¦§ãã ã•ã„ã€‚
+.SH "è‘—è€…"
 .PP
-APT ¤Ï the APT team
+APT ã¯ APT team
 apt@packages\&.debian\&.org
-¤Ë¤è¤Ã¤Æ ½ñ¤«¤ì¤Ş¤·¤¿¡£
-.SH "Ìõ¼Ô"
+ã«ã‚ˆã£ã¦æ›¸ã‹ã‚Œã¾ã—ãŸã€‚
+.SH "è¨³è€…"
 .PP
-ÁÒß· Ë¾
+å€‰æ¾¤ æœ›
 nabetaro@debian\&.or\&.jp
-(2003\-2006), Debian JP Documentation ML
+(2003\-2006,2009), Debian JP Documentation ML
 debian\-doc@debian\&.or\&.jp
+.PP
+Note that this translated document may contain untranslated parts\&. This is done on purpose, to avoid losing content when the translation is lagging behind the original content\&.
 .SH "AUTHOR"
 .PP
 \fBJason Gunthorpe\fR
 .RS 4
-Author.
 .RE
 .SH "COPYRIGHT"
 .br
-CopyrightCopyright \(co 1998-2001 Jason Gunthorpe
+Copyright \(co 1998-2001 Jason Gunthorpe
 .br
 .SH "NOTES"
 .IP " 1." 4
-APT ¥Ğ¥°¥Ú¡¼¥¸
+APT ãƒã‚°ãƒšãƒ¼ã‚¸
 .RS 4
 \%http://bugs.debian.org/src:apt
 .RE

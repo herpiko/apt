@@ -127,17 +127,6 @@ int debVersioningSystem::CmpFragment(const char *A,const char *AEnd,
 int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
 				      const char *B,const char *BEnd)
 {
-   // BlankOn Flavour of APT:
-   // Version that contains '+blankon' will always win.
-   // If both have, then do a fair comparison as usual
-   if (!getenv ("BLANKON_UBUNTU_MODE"))
-   {
-      if (strstr (A, "+blankon") && strstr (B, "+blankon") == 0)
-         return 1;
-      if (strstr (B, "+blankon") && strstr (A, "+blankon") == 0)
-         return -1;
-   }
-
    // Strip off the epoch and compare it 
    const char *lhs = A;
    const char *rhs = B;
@@ -201,6 +190,13 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
       dlhs++;
    if (drhs != rhs)
       drhs++;
+   if (getenv ("BLANKON_UBUNTU_MODE"))
+     return CmpFragment(dlhs,AEnd,drhs,BEnd);
+
+   if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
+     return 1;
+   if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
+     return -1;		
    
    return CmpFragment(dlhs,AEnd,drhs,BEnd);
 }

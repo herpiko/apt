@@ -18,8 +18,7 @@ AC_CONFIG_AUX_DIR(buildlib)
 AC_CONFIG_HEADER(include/config.h:buildlib/config.h.in include/apti18n.h:buildlib/apti18n.h.in)
 
 dnl -- SET THIS TO THE RELEASE VERSION --
-
-AC_DEFINE_UNQUOTED(VERSION,"0.7.23.1ubuntu2+blankon1")
+AC_DEFINE_UNQUOTED(VERSION,"0.7.25.3ubuntu1")
 PACKAGE="apt"
 AC_DEFINE_UNQUOTED(PACKAGE,"$PACKAGE")
 AC_SUBST(PACKAGE)
@@ -97,10 +96,10 @@ AC_MSG_RESULT($archset)
 AC_DEFINE_UNQUOTED(COMMON_ARCH,"$archset")
 
 dnl We use C99 types if at all possible
-AC_CACHE_CHECK([for C99 integer types],c9x_ints,[
+AC_CACHE_CHECK([for C99 integer types],apt_cv_c9x_ints,[
     AC_TRY_COMPILE([#include <inttypes.h>],
                    [uint8_t Foo1;uint16_t Foo2;uint32_t Foo3;],
-		   c9x_ints=yes,c9x_ints=no)])
+		   apt_cv_c9x_ints=yes,apt_cv_c9x_ints=no)])
 
 dnl Single Unix Spec statvfs
 AC_CHECK_FUNC(statvfs,[HAVE_STATVFS=yes])
@@ -151,7 +150,7 @@ AC_C_BIGENDIAN
    
 dnl We do not need this if we have inttypes!
 HAVE_C9X=yes
-if test x"$c9x_ints" = x"no"; then
+if test x"$apt_cv_c9x_ints" = x"no"; then
    AC_CHECK_SIZEOF(char,$size_char)
    AC_CHECK_SIZEOF(int,$size_int)
    AC_CHECK_SIZEOF(short,$size_short)
@@ -185,11 +184,11 @@ AC_PATH_PROG(DEBIANDOC_TEXT,debiandoc2text)
 dnl Check for doxygen
 AC_PATH_PROG(DOXYGEN, doxygen)
 
-dnl Check for the SGML tools needed to build man pages
-AC_PATH_PROG(DOCBOOK2MAN,docbook2man)
+dnl Check for the XSLTProc tool needed to build man pages together with po4a
+AC_PATH_PROG(XSLTPROC,xsltproc)
 
-dnl Check for the XML tools needed to build man pages
-AC_PATH_PROG(XMLTO,xmlto)
+dnl Check for the po4a tool needed to build man pages
+AC_PATH_PROG(PO4A,po4a)
 
 dnl Check for graphviz
 AC_CHECK_PROG([HAVE_DOT], [dot], [YES], [NO])
@@ -197,12 +196,7 @@ AC_PATH_PROG([DOT], [dot], [])
 DOTDIR=$(dirname $DOT)
 AC_SUBST(DOTDIR)
 
-dnl Check for YODL
-dnl AC_CHECK_PROG(YODL_MAN,yodl2man,"yes","")
-
 ah_NUM_PROCS
-rc_GLIBC_VER
-rc_LIBSTDCPP_VER
 ah_GCC3DEP
 
 dnl It used to be that the user could select translations and that could get

@@ -1,13 +1,22 @@
 '\" t
 .\"     Title: apt-key
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
-.\"      Date: 14 d\('ecembre 2003
-.\"    Manual: [FIXME: manual]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 28 Octobre 2008
+.\"    Manual: APT
 .\"    Source: Linux
-.\"  Language: French
+.\"  Language: English
 .\"
-.TH "APT\-KEY" "8" "14 d\('ecembre 2003" "Linux" "[FIXME: manual]"
+.TH "APT\-KEY" "8" "28 Octobre 2008" "Linux" "APT"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -18,61 +27,104 @@
 .\" -----------------------------------------------------------------
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
-.SH "NOM"
-apt-key \- Utilitaire de gestion des cl\('es
+.SH "NAME"
+apt-key \- Utilitaire de gestion des clés d\*(AqAPT
 .SH "SYNOPSIS"
 .HP \w'\fBapt\-key\fR\ 'u
-\fBapt\-key\fR [\fIcommand\fR/] [\fB\fIarguments\fR\fR...]
+\fBapt\-key\fR [\fB\-\-keyring\ \fR\fB\fIfilename\fR\fR] [\fIcommand\fR] [\fB\fIarguments\fR\fR...]
 .SH "DESCRIPTION"
 .PP
 
 \fBapt\-key\fR
-g\(`ere les cl\('es dont se sert apt pour authentifier les paquets\&. Les paquets authentifi\('es par ces cl\('es seront r\('eput\('es fiables\&.
+gère les clés dont se sert apt pour authentifier les paquets\&. Les paquets authentifiés par ces clés seront réputés fiables\&.
 .SH "COMMANDES"
 .PP
 add \fIfichier\fR
 .RS 4
-Ajouter une cl\('e \(`a la liste des cl\('es fiables\&. La cl\('e est lue dans
-\fIfichier\fR, ou sur l\'entr\('ee standard si
+Ajouter une clé à la liste des clés fiables\&. La clé est lue dans
+\fIfichier\fR, ou sur l\*(Aqentrée standard si
 \fIfichier\fR
 est
 \-\&.
 .RE
 .PP
-del \fIkeyid\fR
+del \fIclé\fR
 .RS 4
-Supprimer une cl\('e de la liste des cl\('es fiables\&.
+Supprimer une clé de la liste des clés fiables\&.
+.RE
+.PP
+export \fIclé\fR
+.RS 4
+Afficher la clé
+\fIclé\fR
+sur la sortie standard\&.
+.RE
+.PP
+exportall
+.RS 4
+Afficher toutes les clés fiables sur la sortie standard\&.
 .RE
 .PP
 list
 .RS 4
-Afficher la liste des cl\('es fiables\&.
+Afficher la liste des clés fiables\&.
+.RE
+.PP
+finger
+.RS 4
+Afficher les empreintes des clés fiables\&.
+.RE
+.PP
+adv
+.RS 4
+Passer des options avancées à gpg\&. Avec la commande adv \-\-recv\-key, il est possible de télécharger une clé publique\&.
 .RE
 .PP
 update
 .RS 4
-Mettre \(`a jour le trousseau de cl\('es local avec le trousseau de cl\('es de l\'archive Debian et supprimer les cl\('es qui sont p\('erim\('ees\&.
+Mettre à jour le trousseau de clés local avec le trousseau de clés de l\*(Aqarchive Debian et supprimer les clés qui y sont périmées\&.
+.RE
+.SH "OPTIONS"
+.PP
+Note that options need to be defined before the commands described in the previous section\&.
+.PP
+\-\-keyring \fIfilename\fR
+.RS 4
+With this option it is possible to specify a specific keyring file the command should operate on\&. The default is that a command is executed on the
+trusted\&.gpg
+file as well as on all parts in the
+trusted\&.gpg\&.d
+directory, through
+trusted\&.gpg
+is the primary keyring which means that e\&.g\&. new keys are added to this one\&.
 .RE
 .SH "FICHIERS"
 .PP
 /etc/apt/trusted\&.gpg
 .RS 4
-Trousseau de cl\('es locales fiables, les nouvelles cl\('es sont ajout\('ees ici\&.
+Porte\-clés des clés de confiance locales\&. Les nouvelles clés y seront ajoutées\&. Élément de configuration:
+Dir::Etc::Trusted\&.
+.RE
+.PP
+/etc/apt/trusted\&.gpg\&.d/
+.RS 4
+File fragments for the trusted keys, additional keyrings can be stored here (by other packages or the administrator)\&. Configuration Item
+Dir::Etc::TrustedParts\&.
 .RE
 .PP
 /etc/apt/trustdb\&.gpg
 .RS 4
-Base de donn\('ees locale fiable des cl\('es de l\'archive\&.
+Base de données locale de fiabilité des clés de l\*(Aqarchive\&.
 .RE
 .PP
 /usr/share/keyrings/debian\-archive\-keyring\&.gpg
 .RS 4
-Trousseau des cl\('es fiables de l\'archive Debian\&.
+Trousseau des clés fiables de l\*(Aqarchive Debian\&.
 .RE
 .PP
 /usr/share/keyrings/debian\-archive\-removed\-keys\&.gpg
 .RS 4
-Trousseau des cl\('es fiables supprim\('ees de l\'archive Debian\&.
+Trousseau des clés fiables supprimées de l\*(Aqarchive Debian\&.
 .RE
 .SH "VOIR AUSSI"
 .PP
@@ -81,32 +133,34 @@ Trousseau des cl\('es fiables supprim\('ees de l\'archive Debian\&.
 \fBapt-secure\fR(8)
 .SH "BOGUES"
 .PP
-Voyez la
-\m[blue]\fB page concernant les bogues d\'APT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous voulez signaler un bogue, consultez le texte
+\m[blue]\fBPage des bogues d\*(AqAPT\fR\m[]\&\s-2\u[1]\d\s+2\&. Si vous souhaitez signaler un bogue à propos d\*(AqAPT, veuillez lire
 /usr/share/doc/debian/bug\-reporting\&.txt
-ou utilisez la commande
+ou utiliser la commande
 \fBreportbug\fR(1)\&.
-.SH "AUTEUR"
+.SH "AUTHOR"
 .PP
-APT a \('et\('e \('ecrit par l\'\('equipe APT
+APT a été écrit par l\*(Aqéquipe de développement APT
 apt@packages\&.debian\&.org\&.
-.SH "TRADUCTION"
+.SH "TRADUCTEURS"
 .PP
-Philippe Batailler\&.
-debian\-l10n\-french@lists\&.debian\&.org\&. 2005\&.
-.SH "AUTEUR"
+Jérôme Marant, Philippe Batailler, Christian Perrier
+bubulle@debian\&.org
+(2000, 2005, 2009, 2010), Équipe de traduction francophone de Debian
+debian\-l10n\-french@lists\&.debian\&.org
+.PP
+Veuillez noter que cette traduction peut contenir des parties non traduites Cela est volontaire, pour éviter de perdre du contenu quand la traduction est légèrement en retard sur le contenu d\*(Aqorigine\&.
+.SH "AUTHOR"
 .PP
 \fBJason Gunthorpe\fR
 .RS 4
-Auteur.
 .RE
 .SH "COPYRIGHT"
 .br
-CopyrightCopyright \(co 1998-2001 Jason Gunthorpe
+Copyright \(co 1998-2001 Jason Gunthorpe
 .br
 .SH "NOTES"
 .IP " 1." 4
-page concernant les bogues d'APT
+Page des bogues d'APT
 .RS 4
 \%http://bugs.debian.org/src:apt
 .RE

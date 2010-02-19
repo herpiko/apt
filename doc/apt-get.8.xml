@@ -21,6 +21,7 @@
  <refmeta>
    <refentrytitle>apt-get</refentrytitle>
    <manvolnum>8</manvolnum>
+   <refmiscinfo class="manual">APT</refmiscinfo>
  </refmeta>
  
  <!-- Man page title -->
@@ -252,7 +253,7 @@
      fetch. It will then find and download into the current directory the 
      newest available version of that source package while respect the
      default release, set with the option <literal>APT::Default-Release</literal>,
-     the <option>-t</option> option or per package with with the
+     the <option>-t</option> option or per package with the
      <literal>pkg/release</literal> syntax, if possible.</para>
 
      <para>Source packages are tracked separately
@@ -262,7 +263,7 @@
      you will properly get another (newer, older or none) source version than
      the one you have installed or could install.</para>
 
-     <para>If the <option>--compile</option> options is specified
+     <para>If the <option>--compile</option> option is specified
      then the package will be compiled to a binary .deb using
      <command>dpkg-buildpackage</command>, if <option>--download-only</option>
      is specified then the source package will not be unpacked.</para>
@@ -332,8 +333,8 @@
      <varlistentry><term><option>-f</option></term><term><option>--fix-broken</option></term>
      <listitem><para>Fix; attempt to correct a system with broken dependencies in            
      place. This option, when used with install/remove, can omit any packages
-     to permit APT to deduce a likely solution. Any Package that are specified
-     must completely correct the problem. The option is sometimes necessary when 
+     to permit APT to deduce a likely solution. If packages are specified,
+     these have to completely correct the problem. The option is sometimes necessary when 
      running APT for the first time; APT itself does not allow broken package 
      dependencies to exist on a system. It is possible that a system's 
      dependency structure can be so corrupt as to require manual intervention 
@@ -383,14 +384,14 @@
      Configuration Item: <literal>APT::Get::Simulate</literal>.</para>
 
      <para>Simulation run as user will deactivate locking (<literal>Debug::NoLocking</literal>)
-     automatical. Also a notice will be displayed indicating that this is only a simulation,
-     if the option <literal>APT::Get::Show-User-Simulation-Note</literal> is set (Default: true)
-     Neigther NoLocking nor the notice will be triggered if run as root (root should know what
+     automatic. Also a notice will be displayed indicating that this is only a simulation,
+     if the option <literal>APT::Get::Show-User-Simulation-Note</literal> is set (Default: true).
+     Neither NoLocking nor the notice will be triggered if run as root (root should know what
      he is doing without further warnings by <literal>apt-get</literal>).</para>
 
      <para>Simulate prints out
      a series of lines each one representing a dpkg operation, Configure (Conf),
-     Remove (Remv), Unpack (Inst). Square brackets indicate broken packages with
+     Remove (Remv), Unpack (Inst). Square brackets indicate broken packages
      and empty set of square brackets meaning breaks that are of no consequence
      (rare).</para></listitem>
      </varlistentry>
@@ -465,7 +466,7 @@
      <varlistentry><term><option>--purge</option></term>
      <listitem><para>Use purge instead of remove for anything that would be removed.
      An asterisk ("*") will be displayed next to packages which are
-	 scheduled to be purged. <option>remove --purge</option> is equivalent for
+	 scheduled to be purged. <option>remove --purge</option> is equivalent to the
 	 <option>purge</option> command.
      Configuration Item: <literal>APT::Get::Purge</literal>.</para></listitem>
      </varlistentry>
@@ -557,50 +558,11 @@
 
  <refsect1><title>Files</title>
    <variablelist>
-     <varlistentry><term><filename>/etc/apt/sources.list</filename></term>
-     <listitem><para>Locations to fetch packages from.
-     Configuration Item: <literal>Dir::Etc::SourceList</literal>.</para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>/etc/apt/apt.conf</filename></term>
-     <listitem><para>APT configuration file.
-     Configuration Item: <literal>Dir::Etc::Main</literal>.</para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>/etc/apt/apt.conf.d/</filename></term>
-     <listitem><para>APT configuration file fragments.
-     Configuration Item: <literal>Dir::Etc::Parts</literal>.</para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>/etc/apt/preferences</filename></term>
-     <listitem><para>Version preferences file.
-     This is where you would specify "pinning",
-     i.e. a preference to get certain packages
-     from a separate source
-     or from a different version of a distribution.
-     Configuration Item: <literal>Dir::Etc::Preferences</literal>.</para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>&cachedir;/archives/</filename></term>
-     <listitem><para>Storage area for retrieved package files.
-     Configuration Item: <literal>Dir::Cache::Archives</literal>.</para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>&cachedir;/archives/partial/</filename></term>
-     <listitem><para>Storage area for package files in transit.
-     Configuration Item: <literal>Dir::Cache::Archives</literal> (implicit partial). </para></listitem>
-     </varlistentry>
-     
-     <varlistentry><term><filename>&statedir;/lists/</filename></term>
-     <listitem><para>Storage area for state information for each package resource specified in
-     &sources-list;
-     Configuration Item: <literal>Dir::State::Lists</literal>.</para></listitem>
-     </varlistentry>
-  
-     <varlistentry><term><filename>&statedir;/lists/partial/</filename></term>
-     <listitem><para> Storage area for state information in transit.
-     Configuration Item: <literal>Dir::State::Lists</literal> (implicit partial).</para></listitem>
-     </varlistentry>     
+     &file-sourceslist;
+     &file-aptconf;
+     &file-preferences;
+     &file-cachearchives;
+     &file-statelists;
    </variablelist>
  </refsect1>
 

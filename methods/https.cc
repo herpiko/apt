@@ -1,4 +1,4 @@
-// -*- mode: cpp; mode: fold -*-
+//-*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
 // $Id: http.cc,v 1.59 2004/05/08 19:42:35 mdz Exp $
 /* ######################################################################
@@ -14,6 +14,7 @@
 #include <apt-pkg/acquire-method.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/netrc.h>
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -56,47 +57,41 @@ HttpsMethod::progress_callback(void *clientp, double dltotal, double dlnow,
    return 0;
 }
 
-void HttpsMethod::SetupProxy()
+void HttpsMethod::SetupProxy()  					/*{{{*/
 {
    URI ServerName = Queue->Uri;
 
-   // Determine the proxy setting
-   if (getenv("http_proxy") == 0)
+   // Determine the proxy setting - try https first, fallback to http and use env at last
+   string UseProxy = _config->Find("Acquire::https::Proxy::" + ServerName.Host,
+				   _config->Find("Acquire::http::Proxy::" + ServerName.Host).c_str());
+
+   if (UseProxy.empty() == true)
+      UseProxy = _config->Find("Acquire::https::Proxy", _config->Find("Acquire::http::Proxy").c_str());
+
+   // User want to use NO proxy, so nothing to setup
+   if (UseProxy == "DIRECT")
+      return;
+
+   if (UseProxy.empty() == false) 
    {
-      string DefProxy = _config->Find("Acquire::http::Proxy");
-      string SpecificProxy = _config->Find("Acquire::http::Proxy::" + ServerName.Host);
-      if (SpecificProxy.empty() == false)
-      {
-	 if (SpecificProxy == "DIRECT")
-	    Proxy = "";
-	 else
-	    Proxy = SpecificProxy;
-      }   
-      else
-	 Proxy = DefProxy;
+      // Parse no_proxy, a comma (,) separated list of domains we don't want to use
+      // a proxy for so we stop right here if it is in the list
+      if (getenv("no_proxy") != 0 && CheckDomainList(ServerName.Host,getenv("no_proxy")) == true)
+	 return;
+   } else {
+      const char* result = getenv("http_proxy");
+      UseProxy = result == NULL ? "" : result;
    }
-   
-   // Parse no_proxy, a , separated list of domains
-   if (getenv("no_proxy") != 0)
-   {
-      if (CheckDomainList(ServerName.Host,getenv("no_proxy")) == true)
-	 Proxy = "";
-   }
-   
+
    // Determine what host and port to use based on the proxy settings
-   string Host;   
-   if (Proxy.empty() == true || Proxy.Host.empty() == true)
+   if (UseProxy.empty() == false) 
    {
-   }
-   else
-   {
-      if (Proxy.Port != 0)
+      Proxy = UseProxy;
+      if (Proxy.Port != 1)
 	 curl_easy_setopt(curl, CURLOPT_PROXYPORT, Proxy.Port);
       curl_easy_setopt(curl, CURLOPT_PROXY, Proxy.Host.c_str());
    }
-}
-
-
+}									/*}}}*/
 // HttpsMethod::Fetch - Fetch an item					/*{{{*/
 // ---------------------------------------------------------------------
 /* This adds an item to the pipeline. We keep the pipeline at a fixed
@@ -119,8 +114,10 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    curl_easy_reset(curl);
    SetupProxy();
 
+   maybe_add_auth (Uri, _config->FindFile("Dir::Etc::netrc"));
+
    // callbacks
-   curl_easy_setopt(curl, CURLOPT_URL, Itm->Uri.c_str());
+   curl_easy_setopt(curl, CURLOPT_URL, static_cast<string>(Uri).c_str());
    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
@@ -136,7 +133,7 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    string cainfo = _config->Find("Acquire::https::CaInfo","");
    string knob = "Acquire::https::"+remotehost+"::CaInfo";
    cainfo = _config->Find(knob.c_str(),cainfo.c_str());
-   if(cainfo != "")
+   if(cainfo.empty() == false)
       curl_easy_setopt(curl, CURLOPT_CAINFO,cainfo.c_str());
 
    // Check server certificate against previous CA list ...
@@ -154,18 +151,25 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
       default_verify = 0;
    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, verify);
 
+   // Also enforce issuer of server certificate using its cert
+   string issuercert = _config->Find("Acquire::https::IssuerCert","");
+   knob = "Acquire::https::"+remotehost+"::IssuerCert";
+   issuercert = _config->Find(knob.c_str(),issuercert.c_str());
+   if(issuercert.empty() == false)
+      curl_easy_setopt(curl, CURLOPT_ISSUERCERT,issuercert.c_str());
+
    // For client authentication, certificate file ...
    string pem = _config->Find("Acquire::https::SslCert","");
    knob = "Acquire::https::"+remotehost+"::SslCert";
    pem = _config->Find(knob.c_str(),pem.c_str());
-   if(pem != "")
+   if(pem.empty() == false)
       curl_easy_setopt(curl, CURLOPT_SSLCERT, pem.c_str());
 
    // ... and associated key.
    string key = _config->Find("Acquire::https::SslKey","");
    knob = "Acquire::https::"+remotehost+"::SslKey";
    key = _config->Find(knob.c_str(),key.c_str());
-   if(key != "")
+   if(key.empty() == false)
       curl_easy_setopt(curl, CURLOPT_SSLKEY, key.c_str());
 
    // Allow forcing SSL version to SSLv3 or TLSv1 (SSLv2 is not
@@ -180,13 +184,23 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
      final_version = CURL_SSLVERSION_SSLv3;
    curl_easy_setopt(curl, CURLOPT_SSLVERSION, final_version);
 
+   // CRL file
+   string crlfile = _config->Find("Acquire::https::CrlFile","");
+   knob = "Acquire::https::"+remotehost+"::CrlFile";
+   crlfile = _config->Find(knob.c_str(),crlfile.c_str());
+   if(crlfile.empty() == false)
+      curl_easy_setopt(curl, CURLOPT_CRLFILE, crlfile.c_str());
+
    // cache-control
-   if(_config->FindB("Acquire::http::No-Cache",false) == false)
+   if(_config->FindB("Acquire::https::No-Cache",
+	_config->FindB("Acquire::http::No-Cache",false)) == false)
    {
       // cache enabled
-      if (_config->FindB("Acquire::http::No-Store",false) == true)
+      if (_config->FindB("Acquire::https::No-Store",
+		_config->FindB("Acquire::http::No-Store",false)) == true)
 	 headers = curl_slist_append(headers,"Cache-Control: no-store");
-      ioprintf(ss, "Cache-Control: max-age=%u", _config->FindI("Acquire::http::Max-Age",0));
+      ioprintf(ss, "Cache-Control: max-age=%u", _config->FindI("Acquire::https::Max-Age",
+		_config->FindI("Acquire::http::Max-Age",0)));
       headers = curl_slist_append(headers, ss.str().c_str());
    } else {
       // cache disabled by user
@@ -196,20 +210,28 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
    // speed limit
-   int dlLimit = _config->FindI("Acquire::http::Dl-Limit",0)*1024;
+   int const dlLimit = _config->FindI("Acquire::https::Dl-Limit",
+		_config->FindI("Acquire::http::Dl-Limit",0))*1024;
    if (dlLimit > 0)
       curl_easy_setopt(curl, CURLOPT_MAX_RECV_SPEED_LARGE, dlLimit);
 
    // set header
-   curl_easy_setopt(curl, CURLOPT_USERAGENT,"Debian APT-CURL/1.0 ("VERSION")");
+   curl_easy_setopt(curl, CURLOPT_USERAGENT,
+	_config->Find("Acquire::https::User-Agent",
+		_config->Find("Acquire::http::User-Agent",
+			"Debian APT-CURL/1.0 ("VERSION")").c_str()).c_str());
 
    // set timeout
-   int timeout = _config->FindI("Acquire::http::Timeout",120);
-   curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+   int const timeout = _config->FindI("Acquire::https::Timeout",
+		_config->FindI("Acquire::http::Timeout",120));
    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout);
+   //set really low lowspeed timeout (see #497983)
+   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, DL_MIN_SPEED);
+   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, timeout);
 
    // set redirect options and default to 10 redirects
-   bool AllowRedirect = _config->FindI("Acquire::https::AllowRedirect", true);
+   bool const AllowRedirect = _config->FindB("Acquire::https::AllowRedirect",
+	_config->FindB("Acquire::http::AllowRedirect",true));
    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, AllowRedirect);
    curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 10);
 

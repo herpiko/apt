@@ -1,13 +1,23 @@
 '\" t
 .\"     Title: apt-cache
 .\"    Author: Jason Gunthorpe
-.\" Generator: DocBook XSL Stylesheets v1.75.1 <http://docbook.sf.net/>
-.\"      Date: 29 February 2004
-.\"    Manual: [FIXME: manual]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: 29
+February 2004
+.\"    Manual: APT
 .\"    Source: Linux
 .\"  Language: English
 .\"
-.TH "APT\-CACHE" "8" "29 February 2004" "Linux" "[FIXME: manual]"
+.TH "APT\-CACHE" "8" "29 February 2004" "Linux" "APT"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -19,45 +29,43 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-apt-cache \- APT �ѥå��������桼�ƥ���ƥ� \-\- ����å������
+apt-cache \- APT パッケージ操作ユーティリティ \-\- キャッシュ操作ツール
 .SH "SYNOPSIS"
 .HP \w'\fBapt\-cache\fR\ 'u
-\fBapt\-cache\fR [\fB\-hvsn\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[add\ \fIfile\fR...] | [gencaches] | [showpkg\ \fIpkg\fR...] | [showsrc\ \fIpkg\fR...] | [stats] | [dump] | [dumpavail] | [unmet] | [search\ \fIregex\fR] | [show\ \fIpkg\fR...] | [depends\ \fIpkg\fR...] | [rdepends\ \fIpkg\fR...] | [pkgnames\ \fIprefix\fR] | [dotty\ \fIpkg\fR...] | [policy\ \fIpkgs\fR...] | [madison\ \fIpkgs\fR...]}
-.SH "����"
+\fBapt\-cache\fR [\fB\-hvsn\fR] [\fB\-o=\fR\fB\fIconfig\ string\fR\fR] [\fB\-c=\fR\fB\fIfile\fR\fR] {[add\ \fIfile\fR...] | [gencaches] | [showpkg\ \fIpkg\fR...] | [showsrc\ \fIpkg\fR...] | [stats] | [dump] | [dumpavail] | [unmet] | [search\ \fIregex\fR] | [show\ \fIpkg\fR...] | [depends\ \fIpkg\fR...] | [rdepends\ \fIpkg\fR...] | [pkgnames\ \fIprefix\fR] | [dotty\ \fIpkg\fR...] | [xvcg\ \fIpkg\fR...] | [policy\ \fIpkgs\fR...] | [madison\ \fIpkgs\fR...]}
+.SH "説明"
 .PP
 \fBapt\-cache\fR
-�� APT �Υѥå���������å�����Ф��ơ� ���ޤ��ޤ�����Ԥ��ޤ���
-\fBapt\-cache\fR
-�ϡ������ƥ���֤����ϹԤ��ޤ��󤬡� �ѥå������Υ᥿�ǡ�����긡�������ꡢ ��̣�������Ϥ���������Ȥ��ä������󶡤��ޤ���
+は APT のパッケージキャッシュに対して、さまざまな操作を行います。\fBapt\-cache\fR
+は、システム状態の操作は行いませんが、パッケージのメタデータより検索したり、興味深い出力を生成するといった操作を提供します。
 .PP
 \fB\-h\fR
-���ץ�����
+オプションや
 \fB\-\-help\fR
-���ץ���������� �ʲ��˵󤲤륳�ޥ�ɤ�ɬ�פǤ���
+オプションを除き、以下に挙げるコマンドが必要です。
 .PP
 add \fIfile(s)\fR
 .RS 4
 add
-�ϡ� �ѥå���������å���˻��ꤷ���ѥå���������ǥå����ե�������ɲä��ޤ��� �ǥХå����ѤǤ���
+は、パッケージキャッシュに指定したパッケージインデックスファイルを追加します。デバッグ専用です。
 .RE
 .PP
 gencaches
 .RS 4
 gencaches
-�ϡ�
-\fBapt\-get check\fR
-��Ʊ��ư����󶡤��ޤ��� �����
+は、\fBapt\-get check\fR
+と同じ動作を提供します。これは
 \fBsources.list\fR(5)
-��μ�������
-/var/lib/dpkg/status���顢 �������ȥѥå������Υ���å�����ۤ��ޤ���
+内の取得元と
+/var/lib/dpkg/statusから、ソースとパッケージのキャッシュを構築します。
 .RE
 .PP
 showpkg \fIpkg(s)\fR
 .RS 4
 showpkg
-�ϡ� ���ޥ�ɥ饤������󤷤��ѥå������ξ����ɽ�����ޤ��� ���³�������ϥѥå�����̾�Ȥʤ�ޤ��� �ƥѥå������ˤĤ��ơ�ͭ���ʥС����������¸�ط�����󤷡� ����ˤ��γƥС������ˤĤ��ư�¸�ط���ɽ�����ޤ��� (�̾��) ��¸�ط��Ȥϡ��оݤΥѥå���������¸���Ƥ���ѥå�������ؤ��ޤ��� �ޤ������¸�ط��Ȥϡ��оݤΥѥå������˰�¸���Ƥ���ѥå�������ؤ��ޤ��� ���äơ��ѥå������ΰ�¸�ط����������ʤ���Фʤ�ޤ��󤬡� ���¸�ط���������ɬ�פϤ���ޤ��� ����Ȥ��ơ��ʲ���
+は、コマンドライン上に列挙したパッケージの情報を表示します。後に続く引数はパッケージ名となります。各パッケージについて、有効なバージョンと被依存関係を列挙し、さらにその各バージョンについて依存関係を表示します。(通常の) 依存関係とは、対象のパッケージが依存しているパッケージを指します。また、被依存関係とは、対象のパッケージに依存しているパッケージを指します。従って、パッケージの依存関係は満たさなければなりませんが、被依存関係は満たす必要はありません。実例として、以下に
 \fBapt\-cache showpkg libreadline2\fR
-�� ���Ϥ�Ǥ��ޤ���
+の出力を掲げます。
 .sp
 .if n \{\
 .RS 4
@@ -77,13 +85,13 @@ Reverse Provides:
 .if n \{\
 .RE
 .\}
-�Ĥޤꡢlibreadline2 �� version 2\&.1\-12 �ϡ� libc5 �� ncurses3\&.0 �˰�¸���Ƥ��ơ�libreadline2 ��ư���ˤϡ� �����򥤥󥹥ȡ��뤹��ɬ�פ�����Ȥ������Ȥ�Ƚ��ޤ��� ������libreadlineg2 �� libreadline2\-altdev �� libreadline2 �˰�¸���Ƥ��ޤ��� libreadline2 �򥤥󥹥ȡ��뤹�뤿��ˤϡ�libc5, ncurses3\&.0, ldso �� ���٤ƥ��󥹥ȡ��뤷�ʤ���Фʤ�ޤ��󤬡�libreadlineg2 �� libreadline2\-altdev �ϥ��󥹥ȡ��뤹��ɬ�פϤ���ޤ��� ���ϤλĤ����ʬ�ΰ�̣�ˤĤ��Ƥϡ� apt �Υ����������ɤ�Ĵ�٤�Τ����ɤǤ��礦��
+つまり、libreadline2 の version 2\&.1\-12 は、libc5 と ncurses3\&.0 に依存していて、libreadline2 が動作するには、これらをインストールする必要があるということが判ります。一方、libreadlineg2 と libreadline2\-altdev は libreadline2 に依存しています。libreadline2 をインストールするためには、libc5, ncurses3\&.0, ldso をすべてインストールしなければなりませんが、libreadlineg2 と libreadline2\-altdev はインストールする必要はありません。出力の残りの部分の意味については、apt のソースコードを調べるのが最良でしょう。
 .RE
 .PP
 stats
 .RS 4
 stats
-�ϥ���å���ˤĤ��Ƥ����׾����ɽ�����ޤ��� ����ʾ塢������ɬ�פ���ޤ��󡣰ʲ������׾����ɽ�����ޤ���
+はキャッシュについての統計情報を表示します。それ以上、引数は必要ありません。以下の統計情報を表示します。
 .sp
 .RS 4
 .ie n \{\
@@ -93,7 +101,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-�ѥå�����̾�����ϡ� ����å����¸�ߤ���ѥå���������ɽ���ޤ���
+パッケージ名総数は、キャッシュに存在するパッケージ数を表します。
 .RE
 .sp
 .RS 4
@@ -104,7 +112,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-�̾�ѥå������ϡ� ���������̤Υѥå���������ɽ���ޤ��� ����ϡ�¾�Υѥå������ΰ�¸�ط��ǻ��Ѥ��줿̾�Τǡ����줬���а���б� ����ѥå������Ǥ��� ��¿���Υѥå������Ϥ��Υ��ƥ��������ޤ���
+通常パッケージは、公式の普通のパッケージ数を表します。これは、他のパッケージの依存関係で使用された名称で、それが一対一に対応するパッケージです。大多数のパッケージはこのカテゴリに入ります。
 .RE
 .sp
 .RS 4
@@ -115,7 +123,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-��貾�ۥѥå������ϡ� ���ۥѥå�����̾�Ȥ��ƤΤ�¸�ߤ���ѥå����� (���ۥѥå�����̾�Τߤ���󶡡פ��� �ºݤˤϤ����ʤ�ѥå������⤽��̾�Τ�����ʤ�) �ο���ɽ���ޤ��� �㤨�С�Debian GNU/Linux �����ƥ�Ǥ� "mail\-transport\-agent" �Ͻ�貾�ۥѥå������Ǥ��� "mail\-transport\-agent" ���󶡤���ѥå������Ϥ����Ĥ⤢��ޤ����� "mail\-transport\-agent" �Ȥ���̾�ΤΥѥå������Ϥ���ޤ���
+純粋仮想パッケージは、仮想パッケージ名としてのみ存在するパッケージ (仮想パッケージ名のみを「提供」し、実際にはいかなるパッケージもその名称を持たない) の数を表します。例えば、Debian GNU/Linux システムでは "mail\-transport\-agent" は純粋仮想パッケージです。"mail\-transport\-agent" を提供するパッケージはいくつもありますが、"mail\-transport\-agent" という名称のパッケージはありません。
 .RE
 .sp
 .RS 4
@@ -126,7 +134,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-ñ�첾�ۥѥå������ϡ� ����β��ۥѥå�����̾���󶡤���ѥå��������� ������Ĥξ��ο���ɽ���ޤ��� �㤨�С�Debian GNU/Linux �����ƥ�Ǥϡ�"X11\-text\-viewer" �ϲ��ۥѥå������Ǥ�����"X11\-text\-viewer" ���󶡤���ѥå������ϡ� xless �ѥå������ΤߤȤ������ȤǤ���
+単一仮想パッケージは、特定の仮想パッケージ名を提供するパッケージが、ただ一つの場合の数を表します。例えば、Debian GNU/Linux システムでは、"X11\-text\-viewer" は仮想パッケージですが、"X11\-text\-viewer" を提供するパッケージは、xless パッケージのみということです。
 .RE
 .sp
 .RS 4
@@ -137,7 +145,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-ʣ�精�ۥѥå������ϡ� ���β��ۥѥå�����̾���󶡤���ѥå�������ʣ�����뤫�� �ޤ��ѥå�����̾��Ʊ�����ۥѥå�����̾����ĥѥå���������ɽ���ޤ��� �㤨�С�Debian GNU/Linux �����ƥ�Ǥϡ� debconf �ϼºݤΥѥå�����̾�Ǥ⤢��ޤ����� debconf\-tiny �ˤ�ä��󶡤⤵��Ƥ��ޤ���
+複合仮想パッケージは、その仮想パッケージ名を提供するパッケージが複数あるか、またパッケージ名と同じ仮想パッケージ名を持つパッケージ数を表します。例えば、Debian GNU/Linux システムでは、debconf は実際のパッケージ名でもありますが、debconf\-tiny によって提供もされています。
 .RE
 .sp
 .RS 4
@@ -148,7 +156,8 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-����ϡ���¸�ط���ˤ�¸�ߤ���Τˡ� �ɤΥѥå������ˤ��󶡤���Ƥ��ʤ��ѥå�����̾�ο���ɽ���ޤ��� ���Υѥå�����������Ȥ������Ȥϡ� ���ǥ����ȥ�ӥ塼�����˥��������Ǥ��Ƥ��ʤ����� (�¤ʤ�������) �ѥå��������ǥ����ȥ�ӥ塼����󤫤�Ϥ�����Ƥ��ޤä���ǽ���⤢��ޤ��� �̾�Ǥϡ���ʸ��̷�⤹��Ȥ��Τ褦�ˤʤ�ޤ���
+Missing
+is the number of package names that were referenced in a dependency but were not provided by any package\&. Missing packages may be an evidence if a full distribution is not accessed, or if a package (real or virtual) has been dropped from the distribution\&. Usually they are referenced from Conflicts or Breaks statements\&.
 .RE
 .sp
 .RS 4
@@ -159,7 +168,7 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-���̥С�����������ϡ� ����å����¸�ߤ���ѥå������ΥС������ο���ɽ���ޤ��� ���Τ��ᡢ�����ͤϺǾ��Ǥ�ѥå�����̾�����Ȱ��פ��ޤ��� �⤷ʣ���Υǥ����ȥ�ӥ塼����� (�� "stable" �� "unstable" ��ξ��) �����Ѥ�����硢 �����ͤϥѥå�����̾�������⤫�ʤ��礭�����ˤʤ�ޤ���
+個別バージョン総数は、キャッシュに存在するパッケージのバージョンの数を表します。そのため、この値は最小でもパッケージ名総数と一致します。もし複数のディストリビューション (例 "stable" と "unstable" の両方) を利用した場合、この値はパッケージ名総数よりもかなり大きい数になります。
 .RE
 .sp
 .RS 4
@@ -170,189 +179,191 @@ stats
 .sp -1
 .IP \(bu 2.3
 .\}
-��¸�ط������ϡ� ����å���ˤ��뤹�٤ƤΥѥå��������׵ᤵ�줿��¸�ط��ο��Ǥ���
+依存関係総数は、キャッシュにあるすべてのパッケージで要求された依存関係の数です。
 .RE
-.RS 4
+.sp
 .RE
 .PP
 showsrc \fIpkg(s)\fR
 .RS 4
 showsrc
-�ϡ� ���ꤷ���ѥå�����̾�˰��פ��륽�����ѥå������򡢤��٤�ɽ�����ޤ��� �Х��ʥ�ˤʤ�Ȥ���̾�Τ���������쥳���ɤ�Ʊ�ͤˡ� ���٤ƤΥС������ˤĤ���ɽ�����ޤ���
+は、指定したパッケージ名に一致するソースパッケージを、すべて表示します。バイナリになるときの名称を宣言したレコードと同様に、すべてのバージョンについて表示します。
 .RE
 .PP
 dump
 .RS 4
 dump
-�ϡ� ����å�����Υѥå��������줾��ˤĤ��ơ�û��������ɽ�����ޤ��� ��˥ǥХå��ѤǤ���
+は、キャッシュ内のパッケージそれぞれについて、短い一覧を表示します。主にデバッグ用です。
 .RE
 .PP
 dumpavail
 .RS 4
 dumpavail
-�ϡ� ɸ����Ϥ����Ѳ�ǽ�ʤ�Τΰ�������Ϥ��ޤ���
-\fBdpkg\fR(8)
-�ȶ��˻��Ѥ���������Ǥ�����
-\fBdselect\fR(8)
-�Ǥ���Ѥ���ޤ���
+は、標準出力に利用可能なものの一覧を出力します。
+\fBdpkg\fR(1)
+と共に使用すると便利ですし、\fBdselect\fR(1)
+でも使用されます。
 .RE
 .PP
 unmet
 .RS 4
 unmet
-�ϡ� �ѥå���������å�����ˤ��롢 ��Ŭ���ʰ�¸�ط��γ��פ�ɽ�����ޤ���
+は、パッケージキャッシュ内にある、不適当な依存関係の概要を表示します。
 .RE
 .PP
 show \fIpkg(s)\fR
 .RS 4
 show
-�ϡ�
-\fBdpkg \-\-print\-avail\fR
-��Ʊ�ͤε�ǽ��¹Ԥ��ޤ��� ����ϡ����ꤷ���ѥå������Υѥå������쥳���ɤ�ɽ���Ǥ���
+は、\fBdpkg \-\-print\-avail\fR
+と同様の機能を実行します。これは、指定したパッケージのパッケージレコードの表示です。
 .RE
 .PP
 search \fIregex [ regex \&.\&.\&. ]\fR
 .RS 4
 search
-�ϡ�Ϳ����줿����ɽ���ˤ�äơ� ���٤Ƥ����Ѳ�ǽ�ʥѥå��������Ф�����ʸ������Ԥ��ޤ��� �ѥå�����̾���������Ф��Ƹ�����Ԥ��� �ѥå�����̾��û������ʸ��ɽ�����ޤ���
-\fB\-\-full\fR
-��Ϳ����줿��硢�ޥå������ѥå��������Ф�
+は、与えられた POSIX の正規表現 (\fBregex\fR(7)
+参照) により、すべての利用可能なパッケージに対して全文検索を行います。パッケージ名と説明に対して正規表現で検索を行い、パッケージ名 (仮想パッケージ名を含む) と短い説明文を表示します。\fB\-\-full\fR
+が与えられた場合、マッチしたパッケージに対し
 show
-��Ʊ���������Ϥ��ޤ���
-\fB\-\-names\-only\fR
-��Ϳ����줿���ϡ� ����ʸ���Ф��Ƹ�����Ԥ鷺���ѥå�����̾���Ф��ƤΤ��оݤȤ��ޤ���
+と同じ情報を出力します。\fB\-\-names\-only\fR
+が与えられた場合は、説明文に対して検索を行わず、パッケージ名に対してのみ対象とします。
 .sp
-
-����Ƕ��ڤä������ǡ� ʣ���θ����ѥ������ and ��Ȥ뤳�Ȥ��Ǥ��ޤ���
+空白で区切った引数で、複数の検索パターンの and をとることができます。
 .RE
 .PP
 depends \fIpkg(s)\fR
 .RS 4
 depends
-�ϡ� �ѥå����������äƤ����¸�ط��ȡ� ���ΰ�¸�ط���������¾�Υѥå������ΰ�����ɽ�����ޤ���
+は、パッケージが持っている依存関係と、その依存関係を満たす他のパッケージの一覧を表示します。
 .RE
 .PP
 rdepends \fIpkg(s)\fR
 .RS 4
 rdepends
-�ϡ� �ѥå��������������¸�ط������ɽ�����ޤ���
+は、パッケージが持つ被依存関係を一覧表示します。
 .RE
 .PP
 pkgnames \fI[ prefix ]\fR
 .RS 4
-���Υ��ޥ�ɤϡ� �����ƥ�Ǥγƥѥå�������̾�Τ�ɽ�����ޤ��� ���ץ����ΰ����ˤ�ꡢ����������������Ƭ���פ���Ф��뤳�Ȥ��Ǥ��ޤ��� ���ν��Ϥϥ�����Υ��֤ˤ���䴰��ǽ�˻Ȥ��䤹���� �ޤ�����®����������ޤ��� ���Υ��ޥ�ɤ�
+This command prints the name of each package APT knows\&. The optional argument is a prefix match to filter the name list\&. The output is suitable for use in a shell tab complete function and the output is generated extremely quickly\&. This command is best used with the
 \fB\-\-generate\fR
-���ץ����ȶ��˻��Ѥ���ȡ� ���������Ǥ���
+option\&.
+.sp
+Note that a package which APT knows of is not necessarily available to download, installable or installed, e\&.g\&. virtual packages are also listed in the generated list\&.
 .RE
 .PP
 dotty \fIpkg(s)\fR
 .RS 4
 dotty
-�ϡ� ���ޥ�ɥ饤���Υѥå�����̾���顢
-\m[blue]\fBGraphViz\fR\m[]\&\s-2\u[1]\d\s+2
-�ѥå������� dotty ���ޥ�ɤ����Ѥ���Τ������ʽ��Ϥ��������ޤ��� ��̤ϥѥå������δط���ɽ�魯���Ρ��ɡ����å��Υ��åȤ�ɽ������ޤ��� �ǥե���ȤǤϡ����٤Ƥΰ�¸�ѥå�������ȥ졼������Τǡ� �����礭���ޤ������ޤ��� ����ϡ�APT::Cache::GivenOnly
-���ץ��������ꤷ�Ʋ���Ǥ��ޤ���
+は、コマンドライン上のパッケージ名から、\m[blue]\fBGraphViz\fR\m[]\&\s-2\u[1]\d\s+2
+パッケージの dotty コマンドで利用するのに便利な出力を生成します。結果はパッケージの関係を表わす、ノード・エッジのセットで表現されます。デフォルトでは、すべての依存パッケージをトレースするので、非常に大きい図が得られます。これは、APT::Cache::GivenOnly
+オプションを設定して解除できます。
 .sp
-��̤ΥΡ��ɤϿ���η�����Ȥ�ޤ��� �̾�ѥå������ϻͳѡ���貾�ۥѥå������ϻ��ѡ�ʣ�精�ۥѥå�������ɩ���� ϻ�ѷ��Ϸ���ѥå������򤽤줾��ɽ���ޤ��� ����󥸤λͳѤϺƵ�����λ�����֥꡼�եѥå������ס��Ĥ�������԰�¸�� �Ф����϶����ɽ���ޤ���
+結果のノードは数種の形状をとります。通常パッケージは四角、純粋仮想パッケージは三角、複合仮想パッケージは菱形、六角形は欠落パッケージをそれぞれ表します。オレンジの四角は再帰が終了した「リーフパッケージ」、青い線は先行依存、緑の線は競合を表します。
 .sp
-����) dotty �ϡ� �ѥå������Τ���礭�ʥ��åȤΥ���դ������ޤ���
+注意) dotty は、パッケージのより大きなセットのグラフは描けません。
+.RE
+.PP
+xvcg \fIpkg(s)\fR
+.RS 4
+dotty
+と同様ですが、\m[blue]\fBVCG tool\fR\m[]\&\s-2\u[2]\d\s+2
+の xvcg 専用です。
 .RE
 .PP
 policy \fI[ pkg(s) ]\fR
 .RS 4
 policy
-�ϡ� ����ե�����ط�������ˤĤ��ơ��ǥХå���ٱ礷�ޤ��� ��������ꤷ�ʤ��ä���硢���������Ȥ�ͥ���̤�ɽ�����ޤ��� �������ѥå�����̾����ꤷ����硢 ͥ���ξܺپ����ɽ�����ޤ���
+は、設定ファイル関係の問題について、デバッグを支援します。引数を指定しなかった場合、取得元ごとの優先順位を表示します。一方、パッケージ名を指定した場合、優先順の詳細情報を表示します。
 .RE
 .PP
 madison \fI/[ pkg(s) ]\fR
 .RS 4
 apt\-cache
-��
+の
 madison
-���ޥ�ɤϡ�Debian ���������ִ����ġ���
+コマンドは、Debian アーカイブ管理ツール
 madison
-�ε�ǽ�Υ��֥��åȤǡ����ϥե����ޥåȤ򿿻��褦�Ȥ��ޤ��� �ѥå����������Ѳ�ǽ�С�������ɽ������ɽ�����ޤ��� ���ꥸ�ʥ��
+の機能のサブセットで、出力フォーマットを真似ようとします。パッケージの利用可能バージョンを表形式で表示します。オリジナルの
 madison
-�Ȱ㤤�� APT ���ѥå����������򸡺������������ƥ����� (APT::Architecture) �ξ����ɽ����������Ǥ���
+と違い、APT がパッケージ一覧を検索したアーキテクチャ (APT::Architecture) の情報を表示するだけです。
 .RE
-.SH "���ץ����"
+.SH "オプション"
 .PP
-���������Ǽ��������ץ����ϡ� ���٤�����ե��������Ѥ�������Ǥ��ޤ��� ����ե�����˽񤤤������ͤ�Ȥ륪�ץ�����
+ここで設定オプションとして説明したコマンドラインオプションは、 すべて設定ファイルを使用して設定できます。 設定ファイルに書いた真偽値をとるオプションは
 \fB\-f\-\fR,\fB\-\-no\-f\fR,
 \fB\-f=no\fR
-�ʤɤΤ褦�ˤ��ƾ�񤭤Ǥ��ޤ���
+などのようにして上書きできます。
 .PP
 \fB\-p\fR, \fB\-\-pkg\-cache\fR
 .RS 4
-�ѥå���������å�����Ǽ����ե���������򤷤ޤ��� �ѥå���������å���ϡ����٤Ƥ����ǻ��Ѥ����켡����å���Ǥ��� ������� \-
+パッケージキャッシュを格納するファイルを選択します。パッケージキャッシュは、すべての操作で使用される一次キャッシュです。設定項目 \-
 Dir::Cache::pkgcache
 .RE
 .PP
 \fB\-s\fR, \fB\-\-src\-cache\fR
 .RS 4
-����������å�����Ǽ����ե���������򤷤ޤ��� ���Υ���������å����
+ソースキャッシュを格納するファイルを選択します。このソースキャッシュは
 gencaches
-�ǤΤ߻��Ѥ��졢 �����˲��Ϥ��줿�������Υѥå��������󤬳�Ǽ����Ƥ��ޤ��� �ѥå���������å�����ۤ���ݤˡ�����������å���ϡ� ���ѥå������ե������Ʋ��Ϥ��򤱤��������Ǥ���
-������� \-
+でのみ使用され、ここに解析された取得元のパッケージ情報が格納されています。パッケージキャッシュを構築する際に、ソースキャッシュは、全パッケージファイルを再解析を避ける上で便利です。設定項目 \-
 Dir::Cache::srcpkgcache
 .RE
 .PP
 \fB\-q\fR, \fB\-\-quiet\fR
 .RS 4
-�Ž� \- ��Ľɽ�����ά���� ������Ȥ�Τ������ʽ��Ϥ�Ԥ��ޤ��� ���� 2 �Ĥޤ� q ��Ťͤ뤳�ȤǤ�����ŽͤˤǤ��ޤ��� �ޤ���\fB\-q=#\fR
-�Τ褦���Žͥ�٥����ꤷ�ơ� ����ե�������񤭤��뤳�Ȥ�Ǥ��ޤ��� ������� \-
+静粛 \- 進捗表示を省略し、ログをとるのに便利な出力を行います。最大 2 つまで q を重ねることでさらに静粛にできます。また、\fB\-q=#\fR
+のように静粛レベルを指定して、設定ファイルを上書きすることもできます。設定項目 \-
 quiet
 .RE
 .PP
 \fB\-i\fR, \fB\-\-important\fR
 .RS 4
-�ֽ��סװ�¸�ط��Τ�ɽ�� \- unmet �ȶ��˻��Ѥ��ޤ��� ����ϡְ�¸�״ط��ȡ���԰�¸�״ط��Τߤ�ɽ�����뤿��Ǥ��� ������� \-
+「重要」依存関係のみ表示 \- unmet や depends と共に使用します。これは「依存」関係と「先行依存」関係のみを表示するためです。設定項目 \-
 APT::Cache::Important
 .RE
 .PP
 \fB\-f\fR, \fB\-\-full\fR
 .RS 4
-search �������ѥå������쥳���ɤ�ɽ�����ޤ��� ������� \-
+search 時に全パッケージレコードを表示します。設定項目 \-
 APT::Cache::ShowFull
 .RE
 .PP
 \fB\-a\fR, \fB\-\-all\-versions\fR
 .RS 4
-�����Ѳ�ǽ�С������Υ쥳�������Τ�ɽ�����ޤ��� ����ϥǥե���Ȥ�ư��ǡ� ̵���ˤ���ˤ�
+全利用可能バージョンのレコード全体を表示します。これはデフォルトの動作で、無効にするには
 \fB\-\-no\-all\-versions\fR
-����Ѥ��Ƥ���������
-\fB\-\-no\-all\-versions\fR
-����ꤹ��ȡ� ����С������ (���󥹥ȡ���κݤ����򤵤����) ����ɽ�����ޤ��� ���Υ��ץ����ϡ�show ���ޥ�ɤǤΤ�Ŭ�ѤǤ��ޤ��� ������� \-
+を使用してください。\fB\-\-no\-all\-versions\fR
+を指定すると、候補バージョン (インストールの際に選択されるもの) だけ表示します。このオプションは、show コマンドでのみ適用できます。設定項目 \-
 APT::Cache::AllVersions
 .RE
 .PP
 \fB\-g\fR, \fB\-\-generate\fR
 .RS 4
-���Τޤޥ���å������Ѥ���ΤǤϤʤ��� ��ưŪ�˥ѥå���������å������������ޤ�������ϥǥե���Ȥ�ư��ǡ� ̵���ˤ���ˤ�
+そのままキャッシュを使用するのではなく、自動的にパッケージキャッシュを再生成します。これはデフォルトの動作で、無効にするには
 \fB\-\-no\-generate\fR
-����Ѥ��Ƥ��������� ������� \-
+を使用してください。設定項目 \-
 APT::Cache::Generate
 .RE
 .PP
 \fB\-\-names\-only\fR, \fB\-n\fR
 .RS 4
-����ʸ�ǤϤʤ����ѥå�����̾����Τ߸������ޤ��� ������� \-
+説明文ではなく、パッケージ名からのみ検索します。設定項目 \-
 APT::Cache::NamesOnly
 .RE
 .PP
 \fB\-\-all\-names\fR
 .RS 4
 pkgnames
-�ǡ� ���ۥѥå�����������¸�ط���ޤ᤿��̾�Τ�ɽ�����ޤ��� ������� \-
+で、仮想パッケージや欠落依存関係を含めた全名称を表示します。設定項目 \-
 APT::Cache::AllNames
 .RE
 .PP
 \fB\-\-recurse\fR
 .RS 4
 depends
-��
+や
 rdepends
-�ǡ����ꤷ�����ѥå�������Ƶ�Ū�˰��٤�ɽ�����ޤ��� ������� \-
+で、指定した全パッケージを再帰的に一度に表示します。設定項目 \-
 APT::Cache::RecurseDepends
 .RE
 .PP
@@ -360,88 +371,99 @@ APT::Cache::RecurseDepends
 .RS 4
 
 depends
-��
+や
 rdepends
-�ν��Ϥ� ���ߥ��󥹥ȡ��뤵��Ƥ���ѥå������˸��ꤷ�ޤ��� ������� \-
+の出力を、現在インストールされているパッケージに限定します。設定項目 \-
 APT::Cache::Installed
 .RE
 .PP
 \fB\-h\fR, \fB\-\-help\fR
 .RS 4
-�Ȥ�����û�������ɽ�����ޤ���
+使い方の短い要約を表示します。
 .RE
 .PP
 \fB\-v\fR, \fB\-\-version\fR
 .RS 4
-�ץ������ΥС�������ɽ�����ޤ���
+プログラムのバージョンを表示します。
 .RE
 .PP
 \fB\-c\fR, \fB\-\-config\-file\fR
 .RS 4
-����ե����롣 ���Ѥ�������ե��������ꤷ�ޤ��� ��������ե����뤬�ɤ�ʤ����ϥǥե���Ȥ�����ե�������ɤ߹��ߤޤ��� ʸˡ�ˤĤ��Ƥ�
+設定ファイル。 使用する設定ファイルを指定します。 この設定ファイルが読めない場合はデフォルトの設定ファイルを読み込みます。 文法については
 \fBapt.conf\fR(5)
-�򻲾Ȥ��Ƥ���������
+を参照してください。
 .RE
 .PP
 \fB\-o\fR, \fB\-\-option\fR
 .RS 4
-���ꥪ�ץ����Υ��åȡ�Ǥ�դ����ꥪ�ץ����򥻥åȤ��ޤ��� ʸˡ��
+設定オプションのセット。任意の設定オプションをセットします。 文法は
 \fB\-o Foo::Bar=bar\fR
-�Ȥʤ�ޤ���
+となります。 異なるオプションを設定するため、\fB\-o\fR
+と
+\fB\-\-option\fR
+は、 複数回使用できます。
 .RE
-.SH "�ե�����"
+.SH "ファイル"
 .PP
 /etc/apt/sources\&.list
 .RS 4
-�ѥå������μ������� ������� \-
-Dir::Etc::SourceList
+Locations to fetch packages from\&. Configuration Item:
+Dir::Etc::SourceList\&.
+.RE
+.PP
+/etc/apt/sources\&.list\&.d/
+.RS 4
+File fragments for locations to fetch packages from\&. Configuration Item:
+Dir::Etc::SourceParts\&.
 .RE
 .PP
 /var/lib/apt/lists/
 .RS 4
+Storage area for state information for each package resource specified in
 \fBsources.list\fR(5)
-�˻��ꤷ���� �ѥå������꥽�������Ȥξ��־����Ǽ���ꥢ�� ������� \-
-Dir::State::Lists
+Configuration Item:
+Dir::State::Lists\&.
 .RE
 .PP
 /var/lib/apt/lists/partial/
 .RS 4
-��������־����Ǽ���ꥢ�� ������� \-
+Storage area for state information in transit\&. Configuration Item:
 Dir::State::Lists
-(ɬ��Ū���Դ���)
+(implicit partial)\&.
 .RE
-.SH "��Ϣ����"
+.SH "関連項目"
 .PP
 \fBapt.conf\fR(5),
 \fBsources.list\fR(5),
 \fBapt-get\fR(8)
-.SH "���ǥ�å�����"
+.SH "診断メッセージ"
 .PP
 \fBapt\-cache\fR
-�����ｪλ���� 0 ���֤��ޤ��� ���顼���ˤϽ��ʤ� 100 ���֤��ޤ���
-.SH "�Х�"
+は正常終了時に 0 を返します。エラー時には十進の 100 を返します。
+.SH "バグ"
 .PP
-\m[blue]\fBAPT �Х��ڡ���\fR\m[]\&\s-2\u[2]\d\s+2�� �������������� APT �ΥХ�����𤹤���ϡ�
+\m[blue]\fBAPT バグページ\fR\m[]\&\s-2\u[3]\d\s+2
+をご覧ください。 APT のバグを報告する場合は、
 /usr/share/doc/debian/bug\-reporting\&.txt
-��
+や
 \fBreportbug\fR(1)
-���ޥ�ɤ�������������
-.SH "����"
+コマンドをご覧ください。
+.SH "訳者"
 .PP
-��߷ ˾
+倉澤 望
 nabetaro@debian\&.or\&.jp
-(2003\-2006), Debian JP Documentation ML
+(2003\-2006,2009), Debian JP Documentation ML
 debian\-doc@debian\&.or\&.jp
+.PP
+Note that this translated document may contain untranslated parts\&. This is done on purpose, to avoid losing content when the translation is lagging behind the original content\&.
 .SH "AUTHORS"
 .PP
 \fBJason Gunthorpe\fR
 .RS 4
-Author.
 .RE
 .PP
 \fBAPT team\fR
 .RS 4
-Author.
 .RE
 .SH "NOTES"
 .IP " 1." 4
@@ -450,7 +472,12 @@ GraphViz
 \%http://www.research.att.com/sw/tools/graphviz/
 .RE
 .IP " 2." 4
-APT �Х��ڡ���
+VCG tool
+.RS 4
+\%http://rw4.cs.uni-sb.de/users/sander/html/gsvcg1.html
+.RE
+.IP " 3." 4
+APT バグページ
 .RS 4
 \%http://bugs.debian.org/src:apt
 .RE

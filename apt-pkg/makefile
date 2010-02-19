@@ -9,23 +9,23 @@ HEADER_TARGETDIRS = apt-pkg
 # Bring in the default rules
 include ../buildlib/defaults.mak
 
-# The library name, don't forget to update init.h and the copy in 
-# methods/makefile - FIXME
+# The library name and version (indirectly used from init.h)
+include ../buildlib/libversion.mak
 LIBRARY=apt-pkg
-LIBEXT=$(GLIBC_VER)$(LIBSTDCPP_VER)
-MAJOR=4.8
-MINOR=1
+MAJOR=$(LIBAPTPKG_MAJOR)
+MINOR=$(LIBAPTPKG_RELEASE)
 SLIBS=$(PTHREADLIB) $(INTLLIBS) -lutil -ldl
-APT_DOMAIN:=libapt-pkg$(MAJOR)
+APT_DOMAIN:=libapt-pkg$(LIBAPTPKG_MAJOR)
 
 # Source code for the contributed non-core things
 SOURCE = contrib/mmap.cc contrib/error.cc contrib/strutl.cc \
          contrib/configuration.cc contrib/progress.cc contrib/cmndline.cc \
 	 contrib/md5.cc contrib/sha1.cc contrib/sha256.cc contrib/hashes.cc \
-	 contrib/cdromutl.cc contrib/crc-16.cc \
+	 contrib/cdromutl.cc contrib/crc-16.cc contrib/netrc.cc \
 	 contrib/fileutl.cc 
-HEADERS = mmap.h error.h configuration.h fileutl.h  cmndline.h \
-	  md5.h crc-16.h cdromutl.h strutl.h sptr.h sha1.h sha256.h hashes.h
+HEADERS = mmap.h error.h configuration.h fileutl.h  cmndline.h netrc.h\
+	  md5.h crc-16.h cdromutl.h strutl.h sptr.h sha1.h sha256.h hashes.h \
+	  macros.h
 
 # Source code for the core main library
 SOURCE+= pkgcache.cc version.cc depcache.cc \
@@ -53,8 +53,5 @@ HEADERS+= debversion.h debsrcrecords.h dpkgpm.h debrecords.h \
 	  deblistparser.h debsystem.h debindexfile.h debmetaindex.h
 
 HEADERS := $(addprefix apt-pkg/,$(HEADERS))
-
-# Private header files
-HEADERS+= system.h
 
 include $(LIBRARY_H)

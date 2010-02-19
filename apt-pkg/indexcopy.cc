@@ -275,7 +275,7 @@ bool IndexCopy::CopyPackages(string CDROM,string Name,vector<string> &List,
       _error->Warning("No valid records were found.");
 
    if (NotFound + WrongSize > 10)
-      _error->Warning("Alot of entries were discarded, something may be wrong.\n");
+      _error->Warning("A lot of entries were discarded, something may be wrong.\n");
    
 
    return true;
@@ -527,19 +527,19 @@ bool SigVerify::Verify(string prefix, string file, indexRecords *MetaIndex)
    // (non-existing files are not considered a error)
    if(!FileExists(prefix+file))
    {
-      _error->Warning("Skipping non-exisiting file %s", string(prefix+file).c_str());
+      _error->Warning(_("Skipping nonexistent file %s"), string(prefix+file).c_str());
       return true;
    }
 
    if (!Record) 
    {
-      _error->Warning("Can't find authentication record for: %s",file.c_str());
+      _error->Warning(_("Can't find authentication record for: %s"), file.c_str());
       return false;
    }
 
    if (!Record->Hash.VerifyFile(prefix+file))
    {
-      _error->Warning("Hash mismatch for: %s",file.c_str());
+      _error->Warning(_("Hash mismatch for: %s"),file.c_str());
       return false;
    }
 
@@ -847,7 +847,7 @@ bool TranslationsCopy::CopyTranslations(string CDROM,string Name,	/*{{{*/
       _error->Warning("No valid records were found.");
 
    if (NotFound + WrongSize > 10)
-      _error->Warning("Alot of entries were discarded, something may be wrong.\n");
+      _error->Warning("A lot of entries were discarded, something may be wrong.\n");
    
 
    return true;

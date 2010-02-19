@@ -1,3 +1,420 @@
+apt (0.7.25.3ubuntu1) lucid; urgency=low
+
+  [ Michael Vogt ]
+  * merged with the debian-sid branch
+  
+  [ Ivan Masár ]
+  * Slovak translation update. Closes: #568294
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Wed, 17 Feb 2010 23:33:32 +0100
+
+apt (0.7.25.3) unstable; urgency=low
+
+  [ Christian Perrier ]
+  * Italian translation update. Closes: #567532
+
+  [ David Kalnischkies ]
+  * apt-pkg/contrib/macros.h:
+    - install the header system.h with a new name to be able to use 
+      it in other headers (Closes: #567662)
+  * cmdline/acqprogress.cc:
+    - Set Mode to Medium so that the correct prefix is used.
+      Thanks Stefan Haller for the patch! (Closes: #567304 LP: #275243)
+  * ftparchive/writer.cc:
+    - generate sha1 and sha256 checksums for dsc (Closes: #567343)
+  * cmdline/apt-get.cc:
+    - don't mark as manually if in download only (Closes: #468180)
+  
+ -- Michael Vogt <mvo@debian.org>  Mon, 01 Feb 2010 18:41:15 +0100
+
+apt (0.7.25.2) unstable; urgency=low
+
+  [ Michael Vogt ]
+  * apt-pkg/contrib/cdromutl.cc:
+    - fix UnmountCdrom() fails, give it a bit more time and try
+      the umount again
+  * apt-pkg/cdrom.cc:
+    - fix crash in pkgUdevCdromDevices
+  * methods/cdrom.cc:
+    - fixes in multi cdrom setup code (closes: #549312)
+    - add new "Acquire::cdrom::AutoDetect" config that enables/disables
+      the dlopen of libudev for automatic cdrom detection. Off by default
+      currently, feedback/testing welcome
+  * cmdline/apt-cdrom.cc:
+    - add new --auto-detect option that uses libudev to figure out
+      the cdrom/mount-point
+  * cmdline/apt-mark:
+    - merge fix from Gene Cash that supports markauto for
+      packages that are not in the extended_states file yet
+      (closes: #534920)
+  * ftparchive/writer.{cc,h}:
+    - merge crash fix for apt-ftparchive on hurd, thanks to 
+      Samuel Thibault for the patch (closes: #566664)
+
+  [ David Kalnischkies ]
+  * apt-pkg/contrib/fileutl.cc:
+    - Fix the newly introduced method GetListOfFilesInDir to not
+      accept every file if no extension is enforced
+      (= restore old behaviour). (Closes: #565213)
+  * apt-pkg/policy.cc:
+    - accept also partfiles with "pref" file extension as valid
+  * apt-pkg/contrib/configuration.cc:
+    - accept also partfiles with "conf" file extension as valid
+  * doc/apt.conf.5.xml:
+    - reorder description and split out syntax
+    - add partfile name convention (Closes: #558348)
+  * doc/apt_preferences.conf.5.xml:
+    - describe partfile name convention also here
+  * apt-pkg/deb/dpkgpm.cc:
+    - don't segfault if term.log file can't be opened.
+      Thanks Sam Brightman for the patch! (Closes: #475770)
+  * doc/*:
+    - replace the per language addendum with a global addendum
+    - add a explanation why translations include (maybe) english
+      parts to the new global addendum (Closes: #561636)
+  * apt-pkg/contrib/strutl.cc:
+    - fix malloc asseration fail with ja_JP.eucJP locale in
+      apt-cache search. Thanks Kusanagi Kouichi! (Closes: #548884)
+
+  [ Christian Perrier ]
+  * French translation update
+
+ -- Michael Vogt <mvo@debian.org>  Wed, 27 Jan 2010 16:16:10 +0100
+
+apt (0.7.25.1) unstable; urgency=low
+
+  [ Christian Perrier ]
+  * French manpage translation update
+  * Russian translation update by Yuri Kozlov
+    Closes: #564171
+  
+  [Chris Leick]
+  * spot & fix various typos in all manpages
+  * German manpage translation update
+
+  [ David Kalnischkies ]
+  * cmdline/apt-cache.cc:
+    - remove translatable marker from the "%4i %s\n" string
+  * buildlib/po4a_manpage.mak:
+    - instruct debiandoc to build files with utf-8 encoding
+  * buildlib/tools.m4:
+    - fix some warning from the buildtools
+  * apt-pkg/acquire-item.cc:
+    - add configuration PDiffs::Limit-options to not download
+      too many or too big patches (Closes: #554349)
+  * debian/control:
+    - let all packages depend on ${misc:Depends}
+  * share/*-archive.gpg:
+    - remove the horrible outdated files. We already depend on
+      the keyring so we don't need to ship our own version
+  * cmdline/apt-key:
+    - errors out if wget is not installed (Closes: #545754)
+    - add --keyring option as we have now possibly many
+  * methods/gpgv.cc:
+    - pass all keyrings (TrustedParts) to gpgv instead of
+      using only one trusted.gpg keyring (Closes: #304846)
+  * methods/https.cc:
+    - finally merge the rest of the patchset from Arnaud Ebalard
+      with the CRL and Issuers options, thanks! (Closes: #485963)
+  * apt-pkg/deb/debindexfile.cc, apt-pkg/pkgcachegen.cc:
+    - add debug option Debug::pkgCacheGen
+
+  [ Michael Vogt ]
+  * cmdline/apt-get.cc:
+    - merge fix for apt-get source pkg=version regression
+      (closes: #561971)
+  * po/ru.po:
+    - merged updated ru.po, thanks to Yuri Kozlov (closes: #564171)
+
+ -- Michael Vogt <mvo@debian.org>  Sat, 09 Jan 2010 21:52:36 +0100
+
+apt (0.7.25ubuntu4) lucid; urgency=low
+
+  * cmdline/apt-cdrom.cc:
+    - make Acquire::cdrom::AutoDetect default, this can be
+      turned off with "--no-auto-detect"
+  * methods/http.cc:
+    - add cache-control headers even if no cache is given to allow
+      adding options for intercepting proxies
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 02 Feb 2010 16:58:59 -0800
+
+apt (0.7.25ubuntu3) lucid; urgency=low
+
+  * cmdline/apt-get.cc:
+    - don't mark as manually if in download only (Closes: #468180)
+
+ -- Michael Vogt <mvo@debian.org>  Mon, 01 Feb 2010 18:41:15 +0100
+
+apt (0.7.25.2) unstable; urgency=low
+
+  [ Michael Vogt ]
+  * apt-pkg/contrib/cdromutl.cc:
+    - fix UnmountCdrom() fails, give it a bit more time and try
+      the umount again
+  * apt-pkg/cdrom.cc:
+    - fix crash in pkgUdevCdromDevices
+  * methods/cdrom.cc:
+    - fixes in multi cdrom setup code (closes: #549312)
+    - add new "Acquire::cdrom::AutoDetect" config that enables/disables
+      the dlopen of libudev for automatic cdrom detection. Off by default
+      currently, feedback/testing welcome
+  * cmdline/apt-cdrom.cc:
+    - add new --auto-detect option that uses libudev to figure out
+      the cdrom/mount-point
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Wed, 27 Jan 2010 16:11:32 +0100
+
+apt (0.7.25ubuntu2) lucid; urgency=low
+
+  * Change history branch so that it does not break the 
+    apt ABI for the pkgPackageManager interface
+    (can be reverted on the next ABI break)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Wed, 23 Dec 2009 10:14:16 +0100
+
+apt (0.7.25ubuntu1) lucid; urgency=low
+
+  * Merged from the mvo branch
+  * merged from the lp:~mvo/apt/history branch
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 22 Dec 2009 09:44:08 +0100
+
+apt (0.7.25) unstable; urgency=low
+
+  [ Christian Perrier ]
+  * Fix apt-ftparchive(1) wrt description of the "-o" option.
+    Thanks to Dann Frazier for the patch. Closes: #273100
+  * po/LINGUAS. Re-disable Hebrew. Closes: #534992
+  * po/LINGUAS. Enable Asturian and Lithuanian
+  * Fix typo in apt-cache.8.xml: nessasarily
+  * Fix "with with" in apt-get.8.xml
+  * Fix some of the typos mentioned by the german team
+    Closes: #479997
+  * Polish translation update by Wiktor Wandachowicz
+    Closes: #548571
+  * German translation update by Holger Wansing
+    Closes: #551534
+  * Italian translation update by Milo Casagrande
+    Closes: #555797
+  * Simplified Chinese translation update by Aron Xu 
+    Closes: #558737
+  * Slovak translation update by Ivan Masár
+    Closes: #559277
+  
+  [ Michael Vogt ]
+  * apt-pkg/packagemanager.cc:
+    - add output about pre-depends configuring when debug::pkgPackageManager
+      is used
+  * methods/https.cc:
+    - fix incorrect use of CURLOPT_TIMEOUT, closes: #497983, LP: #354972
+      thanks to Brian Thomason for the patch
+  * merge lp:~mvo/apt/netrc branch, this adds support for a
+    /etc/apt/auth.conf that can be used to store username/passwords
+    in a "netrc" style file (with the extension that it supports "/"
+    in a machine definition). Based on the maemo git branch (Closes: #518473)
+    (thanks also to Jussi Hakala and Julian Andres Klode)
+  * apt-pkg/deb/dpkgpm.cc:
+    - add "purge" to list of known actions
+  * apt-pkg/init.h:
+    - add compatibility with old ABI name until the next ABI break
+  * merge segfault fix from Mario Sanchez Prada, many thanks
+    (closes: #561109)
+
+  [ Brian Murray ]
+  * apt-pkg/depcache.cc, apt-pkg/indexcopy.cc:
+    - typo fix (LP: #462328)
+  
+  [ Loïc Minier ]
+  * cmdline/apt-key:
+    - Emit a warning if removed keys keyring is missing and skip associated
+      checks (LP: #218971)
+
+  [ David Kalnischkies ]
+  * apt-pkg/packagemanager.cc:
+    - better debug output for ImmediateAdd with depth and why
+    - improve the message shown for failing immediate configuration
+  * doc/guide.it.sgml: moved to doc/it/guide.it.sgml
+  * doc/po4a.conf: activate translation of guide.sgml and offline.sgml
+  * doc/apt.conf.5.xml:
+    - provide a few more details about APT::Immediate-Configure
+    - briefly document the behaviour of the new https options
+  * doc/sources.list.5.xml:
+    - add note about additional apt-transport-methods
+  * doc/apt-mark.8.xml:
+    - correct showauto synopsis, thanks Andrew Schulman (Closes: #551440)
+  * cmdline/apt-get.cc:
+    - source should display his final pkg pick (Closes: #249383, #550952)
+    - source doesn't need the complete version for match (Closes: #245250)
+    - source ignores versions/releases if not available (Closes: #377424)
+    - only warn if (free) space overflows (Closes: #522238)
+    - add --debian-only as alias for --diff-only
+  * methods/connect.cc:
+    - display also strerror of "wicked" getaddrinfo errors
+    - add AI_ADDRCONFIG to ai_flags as suggested by Aurelien Jarno
+      in response to Bernhard R. Link, thanks! (Closes: #505020)
+  * buildlib/configure.mak, buildlib/config.{sub,guess}:
+    - remove (outdated) config.{sub,guess} and use the ones provided
+      by the new added build-dependency autotools-dev instead
+  * configure.in, buildlib/{xml,yodl,sgml}_manpage.mak:
+    - remove the now obsolete manpage buildsystems
+  * doc/{pl,pt_BR,es,it}/*.{sgml,xml}:
+    - convert all remaining translation to the po4a system
+  * debian/control:
+    - drop build-dependency on docbook-utils and xmlto
+    - add build-dependency on autotools-dev
+    - bump policy to 3.8.3 as we have no outdated manpages anymore
+  * debian/NEWS:
+    - fix a typo in 0.7.24: Allready -> Already (Closes: #557674)
+  * ftparchive/writer.{cc,h}:
+    - add APT::FTPArchive::LongDescription to be able to disable them
+  * apt-pkg/deb/debsrcrecords.cc:
+    - use "diff" filetype for .debian.tar.* files (Closes: #554898)
+  * methods/rred.cc:
+    - rewrite to be able to handle even big patch files
+    - adopt optional mmap+iovec patch from Morten Hustveit
+      (Closes: #463354) which should speed up a bit. Thanks!
+  * methods/http{,s}.cc
+    - add config setting for User-Agent to the Acquire group,
+      thanks Timothy J. Miller! (Closes: #355782)
+    - add https options which default to http ones (Closes: #557085)
+  * debian/apt.cron.daily:
+    - check cache size even if we do nothing else otherwise, thanks
+      Francesco Poli for patch(s) and patience! (Closes: #459344)
+  * ftparchive/*:
+    - fix a few typos in strings, comments and manpage,
+      thanks Karl Goetz! (Closes: #558757)
+
+  [ Carl Chenet ]
+  * cmdline/apt-mark:
+    - print an error if a new state file can't be created
+      (Closes: #521289) and
+    - exit nicely if python-apt is not installed (Closes: #521284)
+
+  [ Chris Leick ]
+  * doc/de: German translation of manpages (Closes: #552606)
+  * doc/ various manpages:
+    - correct various errors, typos and oddities (Closes: #552535)
+  * doc/apt-secure.8.xml:
+    - replace literal with emphasis tags in Archive configuration
+  * doc/apt-ftparchive.1.xml:
+    - remove informalexample tag which hides the programlisting
+  * doc/apt-get.8.xml:
+    - change equivalent "for" to "to the" (purge command)
+    - clarify --fix-broken sentence about specifying packages
+
+  [ Eugene V. Lyubimkin ]
+  * apt-pkg/contib/strutl.h
+    - Avoid extra inner copy in APT_MKSTRCMP and APT_MKSTRCMP2.
+  * build infrastructure:
+    - Bumped libapt version, excluded eglibc from SONAME. (Closes: #448249)
+
+  [ Julian Andres Klode ]
+  * doc/apt.conf.5.xml:
+    - Deprecate unquoted values, string concatenation and explain what should
+      not be written inside a value (quotes,backslash).
+    - Restrict option names to alphanumerical characters and "/-:._+".
+    - Deprecate #include, we have apt.conf.d nowadays which should be
+      sufficient.
+  * ftparchive/apt-ftparchive.cc:
+    - Call setlocale() so translations are actually used.
+  * debian/apt.conf.autoremove:
+    - Add kfreebsd-image-* to the list (Closes: #558803)
+
+ -- Michael Vogt <mvo@debian.org>  Tue, 15 Dec 2009 09:21:55 +0100
+
+apt (0.7.24ubuntu1) lucid; urgency=low
+
+  [ Michael Vogt ]
+  * apt-pkg/deb/dpkgpm.cc:
+    - include df -l output in the apport log as well (thanks to
+      tjaalton)
+  * apt-pkg/packagemanager.cc:
+    - add output about pre-depends configuring when debug::pkgPackageManager
+      is used
+  * methods/https.cc:
+    - fix incorrect use of CURLOPT_TIMEOUT, closes: #497983, LP: #354972
+      thanks to Brian Thomason for the patch
+  * merge lp:~mvo/apt/netrc branch, this adds support for a
+    /etc/apt/auth.conf that can be used to store username/passwords
+    in a "netrc" style file (with the extension that it supports "/"
+    in a machine definition). Based on the maemo git branch.
+
+  [ Brian Murray ]
+  * apt-pkg/depcache.cc, apt-pkg/indexcopy.cc:
+    - typo fix (LP: #462328)
+  
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 14 Dec 2009 09:27:26 +0100
+
+apt (0.7.24) unstable; urgency=low
+
+  [ Nicolas François ]
+  * Cleaned up the first patch draft from KURASAWA Nozomu to finally
+    get po4a support for translating the man pages.
+    Many thanks to both for this excellent work! (Closes: #441608)
+  * doc/ja/*, doc/po/ja.po:
+    - remove the old ja man page translation and replace it with
+      the new po4a-powered translation by KURASAWA Nozomu.
+  * doc/*.?.xml (manpages):
+    - add contrib to author tags and also add refmiscinfo to fix warnings
+  * doc/style.txt, buildlib/defaults.mak, buildlib/manpage.mak:
+    - fix a few typos in the comments of this files
+
+  [ Michael Vogt ]
+  * apt-pkg/deb/dpkgpm.cc:
+    - when tcgetattr() returns non-zero skip all pty magic 
+      (thanks to Simon Richter, closes: #509866)
+  * apt-inst/contrib/arfile.cc:
+    - show propper error message for Invalid archive members
+
+  [ David Kalnischkies ]
+  * doc/Doxyfile.in:
+    - update file with doxygen 1.6.1 (current unstable)
+    - activate DOT_MULTI_TARGETS, it is default on since doxygen 1.5.9
+  * buildlib/po4a_manpage.mak, doc/makefile, configure:
+    - simplify the makefiles needed for po4a manpages
+  * apt-pkg/contrib/configuration.cc:
+    - add a helper to easily get a vector of strings from the config
+  * apt-pkg/contrib/strutl.cc:
+    - replace unknown multibytes with ? in UTF8ToCharset (Closes: #545208)
+  * doc/apt-get.8.xml:
+    - fix two little typos in the --simulate description. (Closes: #545059)
+  * apt-pkg/aptconfiguration.cc, doc/apt.conf.5.xml:
+    - add an order subgroup to the compression types to simplify reordering
+      a bit and improve the documentation for this option group.
+  * doc/apt.conf.5.xml:
+    - document the Acquire::http::Dl-Limit option
+    - try to be crystal clear about the usage of :: and {} (Closes: #503481)
+  * doc/apt-cache.8.xml:
+    - clarify the note for the pkgnames command (Closes: #547599)
+  * doc/apt.ent, all man pages:
+    - move the description of files to globally usable entities
+  * doc/apt_preferences.5.xml:
+    - document the new preferences.d folder (Closes: #544017)
+  * methods/rred.cc:
+    - add at the top without failing (by Bernhard R. Link, Closes: #545694)
+  * buildlib/sizetable:
+    - add amd64 for cross building (by Mikhail Gusarov, Closes: #513058)
+  * debian/prerm:
+    - remove file as nobody will upgrade from 0.4.10 anymore
+  * debian/control:
+    - remove gnome-apt suggestion as it was removed from debian
+  * apt-pkg/deb/dpkgpm.cc, apt-pkg/packagemanager.cc, apt-pkg/orderlist.cc:
+    - add and document _experimental_ options to make (aggressive)
+      use of dpkg's trigger and configuration handling (Closes: #473461)
+  * cmdline/apt-get.cc:
+    - ignore versions that are not candidates when selecting a package
+      instead of a virtual one (by Marius Vollmer, Closes: #547788)
+
+  [ Christian Perrier ]
+  * doc/fr/*, doc/po/fr.po:
+    - remove the old fr man page translation and replace it with
+      the new po4a-powered translation
+  * doc/de: dropped (translation is too incomplete to be useful in
+      the transition to the po4a-powered translations)
+
+ -- Michael Vogt <mvo@debian.org>  Fri, 25 Sep 2009 19:57:25 +0200
+
 apt (0.7.23.1ubuntu2) karmic; urgency=low
 
   [ Michael Vogt ]
@@ -66,6 +483,14 @@ apt (0.7.23.1) unstable; urgency=low
 
 apt (0.7.23) unstable; urgency=low
 
+  [ Eugene V. Lyubimkin ]
+  * methods/{http,https,ftp}, doc/apt.conf.5.xml:
+    - Changed and unified the code that determines which proxy to use. Now
+      'Acquire::{http,ftp}::Proxy[::<host>]' options have the highest priority,
+      and '{http,ftp}_proxy' environment variables are used only if options
+      mentioned above are not specified.
+      (Closes: #445985, #157759, #320184, #365880, #479617)
+  
   [ David Kalnischkies ]
   * cmdline/apt-get.cc:
     - add APT::Get::HideAutoRemove=small to display only a short line
@@ -141,6 +566,7 @@ apt (0.7.22.1) unstable; urgency=low
  -- Julian Andres Klode <jak@debian.org>  Mon, 03 Aug 2009 12:48:31 +0200
 
 apt (0.7.22) unstable; urgency=low
+
 
   [ Christian Perrier ]
   * Documentation translations:
@@ -237,6 +663,9 @@ apt (0.7.22) unstable; urgency=low
   * doc/apt.conf.5.xml:
     - merged patch from Aurélien Couderc to improve the text
       (thanks!)
+  * [ABI] merged the libudev-dlopen branch, this allows to pass
+    "apt-udev-auto" to Acquire::Cdrom::mount and the cdrom method will  
+    dynamically find/mount the cdrom device (if libhal is available)
 
   [ Julian Andres Klode ]
   * apt-pkg/contrib/configuration.cc: Fix a small memory leak in
@@ -491,7 +920,7 @@ apt (0.7.20) unstable; urgency=low
   * buildlib/config.{sub,guess}:
     - Renewed. This fixes lintian errors.
   * doc/apt.conf.5.xml, debian/apt-transport-https:
-    - Documented briefly 'APT::https' group of options. (Closes: #507398)
+    - Documented briefly 'Acquire::https' group of options. (Closes: #507398)
     - Applied patch from Daniel Burrows to document 'Debug' group of options.
       (Closes: #457265)
     - Mentioned 'APT::Periodic' and 'APT::Archives' groups of options.

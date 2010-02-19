@@ -29,6 +29,7 @@
 #include <apt-pkg/acquire-method.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/netrc.h>
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -42,6 +43,7 @@
 #include <map>
 #include <apti18n.h>
 
+
 // Internet stuff
 #include <netdb.h>
 
@@ -49,7 +51,6 @@
 #include "connect.h"
 #include "rfc2553emu.h"
 #include "http.h"
-
 									/*}}}*/
 using namespace std;
 
@@ -311,22 +312,27 @@ bool ServerState::Open()
    Persistent = true;
    
    // Determine the proxy setting
-   if (getenv("http_proxy") == 0)
+   string SpecificProxy = _config->Find("Acquire::http::Proxy::" + ServerName.Host);
+   if (!SpecificProxy.empty())
    {
-      string DefProxy = _config->Find("Acquire::http::Proxy");
-      string SpecificProxy = _config->Find("Acquire::http::Proxy::" + ServerName.Host);
-      if (SpecificProxy.empty() == false)
-      {
-	 if (SpecificProxy == "DIRECT")
-	    Proxy = "";
-	 else
-	    Proxy = SpecificProxy;
-      }   
-      else
-	 Proxy = DefProxy;
+	   if (SpecificProxy == "DIRECT")
+		   Proxy = "";
+	   else
+		   Proxy = SpecificProxy;
    }
    else
-      Proxy = getenv("http_proxy");
+   {
+	   string DefProxy = _config->Find("Acquire::http::Proxy");
+	   if (!DefProxy.empty())
+	   {
+		   Proxy = DefProxy;
+	   }
+	   else
+	   {
+		   char* result = getenv("http_proxy");
+		   Proxy = result ? result : "";
+	   }
+   }
    
    // Parse no_proxy, a , separated list of domains
    if (getenv("no_proxy") != 0)
@@ -676,23 +682,25 @@ void HttpMethod::SendReq(FetchItem *Itm,CircleBuf &Out)
        	 and a no-store directive for archives. */
       sprintf(Buf,"GET %s HTTP/1.1\r\nHost: %s\r\n",
 	      Itm->Uri.c_str(),ProperHost.c_str());
-      // only generate a cache control header if we actually want to 
-      // use a cache
-      if (_config->FindB("Acquire::http::No-Cache",false) == false)
+   }
+   // generate a cache control header (if needed)
+   if (_config->FindB("Acquire::http::No-Cache",false) == true) 
+   {
+      strcat(Buf,"Cache-Control: no-cache\r\nPragma: no-cache\r\n");
+   }
+   else
+   {
+      if (Itm->IndexFile == true) 
       {
-	 if (Itm->IndexFile == true)
-	    sprintf(Buf+strlen(Buf),"Cache-Control: max-age=%u\r\n",
-		    _config->FindI("Acquire::http::Max-Age",0));
-	 else
-	 {
-	    if (_config->FindB("Acquire::http::No-Store",false) == true)
-	       strcat(Buf,"Cache-Control: no-store\r\n");
-	 }	 
+	 sprintf(Buf+strlen(Buf),"Cache-Control: max-age=%u\r\n",
+		 _config->FindI("Acquire::http::Max-Age",0));
+      }
+      else
+      {
+	 if (_config->FindB("Acquire::http::No-Store",false) == true)
+	    strcat(Buf,"Cache-Control: no-store\r\n");
       }
    }
-   // generate a no-cache header if needed
-   if (_config->FindB("Acquire::http::No-Cache",false) == true)
-      strcat(Buf,"Cache-Control: no-cache\r\nPragma: no-cache\r\n");
 
    
    string Req = Buf;
@@ -719,11 +727,14 @@ void HttpMethod::SendReq(FetchItem *Itm,CircleBuf &Out)
       Req += string("Proxy-Authorization: Basic ") + 
           Base64Encode(Proxy.User + ":" + Proxy.Password) + "\r\n";
 
+   maybe_add_auth (Uri, _config->FindFile("Dir::Etc::netrc"));
    if (Uri.User.empty() == false || Uri.Password.empty() == false)
+   {
       Req += string("Authorization: Basic ") + 
           Base64Encode(Uri.User + ":" + Uri.Password) + "\r\n";
-   
-   Req += "User-Agent: Ubuntu APT-HTTP/1.3 ("VERSION")\r\n\r\n";
+   }
+   Req += "User-Agent: " + _config->Find("Acquire::http::User-Agent",
+		"Ubuntu APT-HTTP/1.3 ("VERSION")") + "\r\n\r\n";
    
    if (Debug == true)
       cerr << Req << endl;
@@ -1065,7 +1076,11 @@ bool HttpMethod::Configuration(string Message)
    PipelineDepth = _config->FindI("Acquire::http::Pipeline-Depth",
 				  PipelineDepth);
    Debug = _config->FindB("Debug::Acquire::http",false);
-   
+   AutoDetectProxyCmd = _config->Find("Acquire::http::ProxyAutoDetect");
+
+   // Get the proxy to use
+   AutoDetectProxy();
+
    return true;
 }
 									/*}}}*/
@@ -1315,7 +1330,48 @@ int HttpMethod::Loop()
    return 0;
 }
 									/*}}}*/
+// HttpMethod::AutoDetectProxy - auto detect proxy			/*{{{*/
+// ---------------------------------------------------------------------
+/* */
+bool HttpMethod::AutoDetectProxy()
+{
+   if (AutoDetectProxyCmd.empty())
+      return true;
 
+   if (Debug)
+      clog << "Using auto proxy detect command: " << AutoDetectProxyCmd << endl;
 
+   int Pipes[2] = {-1,-1};
+   if (pipe(Pipes) != 0)
+      return _error->Errno("pipe", "Failed to create Pipe");
+
+   pid_t Process = ExecFork();
+   if (Process == 0)
+   {
+      dup2(Pipes[1],STDOUT_FILENO);
+      SetCloseExec(STDOUT_FILENO,false);
+      
+      const char *Args[2];
+      Args[0] = AutoDetectProxyCmd.c_str();
+      Args[1] = 0;
+      execv(Args[0],(char **)Args);
+      cerr << "Failed to exec method " << Args[0] << endl;
+      _exit(100);
+   }
+   char buf[512];
+   int InFd = Pipes[0];
+   if (read(InFd, buf, sizeof(buf)) < 0)
+      return _error->Errno("read", "Failed to read");
+   ExecWait(Process, "ProxyAutoDetect");
+   
+   if (Debug)
+      clog << "auto detect command returned: '" << buf << "'" << endl;
+
+   if (strstr(buf, "http://") == buf)
+      _config->Set("Acquire::http::proxy", _strstrip(buf));
+
+   return true;
+}
+									/*}}}*/
 
 
