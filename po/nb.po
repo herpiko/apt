@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 09:55+0100\n"
+"POT-Creation-Date: 2010-03-26 17:54+0100\n"
 "PO-Revision-Date: 2009-02-01 18:26+0100\n"
 "Last-Translator: Hans Fredrik Nordhaug <hans@nordhaug.priv.no>\n"
 "Language-Team: Norwegian Bokmal <i18n-nb@lister.ping.ui.no>\n"
@@ -154,7 +154,7 @@ msgstr "  Versjonstabell:"
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2705 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s for %s kompilert på %s %s\n"
@@ -824,7 +824,7 @@ msgstr "Intern feil, sortering fullførte ikke"
 msgid "Unable to lock the download directory"
 msgstr "Klarer ikke å låse nedlastingsmappa"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2446
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "Kan ikke lese kildlista."
@@ -894,7 +894,7 @@ msgstr "Avbryter."
 msgid "Do you want to continue [Y/n]? "
 msgstr "Vil du fortsette [Y/n]? "
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2343 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Klarte ikke å skaffe %s  %s\n"
@@ -903,7 +903,7 @@ msgstr "Klarte ikke å skaffe %s  %s\n"
 msgid "Some files failed to download"
 msgstr "Noen av filene kunne ikke lastes ned"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2352
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
 msgid "Download complete and in download only mode"
 msgstr "Nedlasting fullført med innstillinga «bare nedlasting»"
 
@@ -1154,7 +1154,7 @@ msgstr "Intern feil, problemløser ødela noe"
 msgid "Must specify at least one package to fetch source for"
 msgstr "Du må angi minst en pakke du vil ha kildekoden til"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2464
+#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Klarer ikke å finne en kildekodepakke for %s"
@@ -1199,56 +1199,56 @@ msgstr "Trenger å skaffe %sB fra kildekodearkivet.\n"
 msgid "Fetch source %s\n"
 msgstr "Skaffer kildekode %s\n"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2350
 msgid "Failed to fetch some archives."
 msgstr "Klarte ikke å skaffe alle arkivene."
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2379
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Omgår utpakking av allerede utpakket kilde i %s\n"
 
-#: cmdline/apt-get.cc:2388
+#: cmdline/apt-get.cc:2391
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Utpakkingskommandoen «%s» mislyktes.\n"
 
-#: cmdline/apt-get.cc:2389
+#: cmdline/apt-get.cc:2392
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Sjekk om pakken «dpkg-dev» er installert.\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2409
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Byggekommandoen «%s» mislyktes.\n"
 
-#: cmdline/apt-get.cc:2425
+#: cmdline/apt-get.cc:2429
 msgid "Child process failed"
 msgstr "Barneprosessen mislyktes"
 
-#: cmdline/apt-get.cc:2441
+#: cmdline/apt-get.cc:2445
 msgid "Must specify at least one package to check builddeps for"
 msgstr "Du må angi minst en pakke du vil sjekke «builddeps» for"
 
-#: cmdline/apt-get.cc:2469
+#: cmdline/apt-get.cc:2473
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Klarer ikke å skaffe informasjon om bygge-avhengighetene for %s"
 
-#: cmdline/apt-get.cc:2489
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s har ingen avhengigheter.\n"
 
-#: cmdline/apt-get.cc:2541
+#: cmdline/apt-get.cc:2545
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "Kravet %s for %s kan ikke oppfylles fordi pakken %s ikke finnes"
 
-#: cmdline/apt-get.cc:2594
+#: cmdline/apt-get.cc:2598
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1257,32 +1257,32 @@ msgstr ""
 "Kravet %s for %s kan ikke oppfylles fordi det ikke finnes noen tilgjengelige "
 "versjoner av pakken %s som oppfyller versjonskravene"
 
-#: cmdline/apt-get.cc:2630
+#: cmdline/apt-get.cc:2634
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Klarte ikke å tilfredsstille %s avhengighet for %s: den installerte pakken %"
 "s er for ny"
 
-#: cmdline/apt-get.cc:2657
+#: cmdline/apt-get.cc:2661
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Klarte ikke å tilfredsstille %s avhengighet for %s: %s"
 
-#: cmdline/apt-get.cc:2673
+#: cmdline/apt-get.cc:2677
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Klarte ikke å tilfredstille bygg-avhengighetene for %s."
 
-#: cmdline/apt-get.cc:2678
+#: cmdline/apt-get.cc:2682
 msgid "Failed to process build dependencies"
 msgstr "Klarte ikke å behandle forutsetningene for bygging"
 
-#: cmdline/apt-get.cc:2710
+#: cmdline/apt-get.cc:2714
 msgid "Supported modules:"
 msgstr "Støttede moduler:"
 
-#: cmdline/apt-get.cc:2751
+#: cmdline/apt-get.cc:2755
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1367,7 +1367,7 @@ msgstr ""
 "for mer informasjon og flere innstillinger\n"
 "                       Denne APT har kraften til en Superku.\n"
 
-#: cmdline/apt-get.cc:2918
+#: cmdline/apt-get.cc:2922
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -2522,7 +2522,7 @@ msgstr "Feil på %lu i kildelista %s (dist fortolking)"
 msgid "Opening %s"
 msgstr "Åpner %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:445
+#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "Linje %u i kildelista %s er for lang"
@@ -2849,7 +2849,7 @@ msgstr ""
 msgid "Vendor block %s contains no fingerprint"
 msgstr "Utgivers blokk %s inneholder ikke no fingeravtrykk"
 
-#: apt-pkg/cdrom.cc:525
+#: apt-pkg/cdrom.cc:526
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
@@ -2858,42 +2858,42 @@ msgstr ""
 "Bruker CD-ROM monteringspunkt %s\n"
 "Monterer CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:534 apt-pkg/cdrom.cc:622
+#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
 msgid "Identifying.. "
 msgstr "Indentifiserer.."
 
-#: apt-pkg/cdrom.cc:559
+#: apt-pkg/cdrom.cc:560
 #, c-format
 msgid "Stored label: %s\n"
 msgstr "Lagret merkelapp: %s \n"
 
-#: apt-pkg/cdrom.cc:566 apt-pkg/cdrom.cc:834
+#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
 msgid "Unmounting CD-ROM...\n"
 msgstr "Avmonterer CD-ROM ...\n"
 
-#: apt-pkg/cdrom.cc:585
+#: apt-pkg/cdrom.cc:586
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "Bruker CD-ROM monteringspunkt %s\n"
 
-#: apt-pkg/cdrom.cc:603
+#: apt-pkg/cdrom.cc:604
 msgid "Unmounting CD-ROM\n"
 msgstr "Avmonterer CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:607
+#: apt-pkg/cdrom.cc:608
 msgid "Waiting for disc...\n"
 msgstr "Venter på CD-en...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:615
+#: apt-pkg/cdrom.cc:616
 msgid "Mounting CD-ROM...\n"
 msgstr "Monterer CD-ROM...\n"
 
-#: apt-pkg/cdrom.cc:633
+#: apt-pkg/cdrom.cc:634
 msgid "Scanning disc for index files..\n"
 msgstr "Leter gjennom CD for indeksfiler..\n"
 
-#: apt-pkg/cdrom.cc:673
+#: apt-pkg/cdrom.cc:674
 #, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
@@ -2902,22 +2902,22 @@ msgstr ""
 "Fant %zu pakkeindekser, %zu kildeindekser, %zu oversettelsesindekser og %zu "
 "signaturer\n"
 
-#: apt-pkg/cdrom.cc:684
+#: apt-pkg/cdrom.cc:685
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:710
+#: apt-pkg/cdrom.cc:711
 #, c-format
 msgid "Found label '%s'\n"
 msgstr "Fant merkelapp «%s»\n"
 
-#: apt-pkg/cdrom.cc:739
+#: apt-pkg/cdrom.cc:740
 msgid "That is not a valid name, try again.\n"
 msgstr "Det er ikke et gyldig navn, prøv igjen.\n"
 
-#: apt-pkg/cdrom.cc:755
+#: apt-pkg/cdrom.cc:756
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2926,15 +2926,15 @@ msgstr ""
 "CD-en er kalt: \n"
 "«%s»\n"
 
-#: apt-pkg/cdrom.cc:759
+#: apt-pkg/cdrom.cc:760
 msgid "Copying package lists..."
 msgstr "Kopierer pakkelister..."
 
-#: apt-pkg/cdrom.cc:785
+#: apt-pkg/cdrom.cc:786
 msgid "Writing new source list\n"
 msgstr "Skriver ny kildeliste\n"
 
-#: apt-pkg/cdrom.cc:794
+#: apt-pkg/cdrom.cc:795
 msgid "Source list entries for this disc are:\n"
 msgstr "Kildelisteoppføringer for denne CD-en er:\n"
 
@@ -2978,12 +2978,12 @@ msgstr "Hashsummen stemmer ikke"
 msgid "Installing %s"
 msgstr "Installerer %s"
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:732
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
 #, c-format
 msgid "Configuring %s"
 msgstr "Setter opp %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:739
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
 #, c-format
 msgid "Removing %s"
 msgstr "Fjerner %s"
@@ -3003,87 +3003,87 @@ msgstr "Kjører etter-installasjonsutløser %s"
 msgid "Directory '%s' missing"
 msgstr "Mappa «%s» mangler"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "Kunne ikke åpne fila %s"
 
-#: apt-pkg/deb/dpkgpm.cc:725
+#: apt-pkg/deb/dpkgpm.cc:727
 #, c-format
 msgid "Preparing %s"
 msgstr "Forbereder %s"
 
-#: apt-pkg/deb/dpkgpm.cc:726
+#: apt-pkg/deb/dpkgpm.cc:728
 #, c-format
 msgid "Unpacking %s"
 msgstr "Pakker ut %s"
 
-#: apt-pkg/deb/dpkgpm.cc:731
+#: apt-pkg/deb/dpkgpm.cc:733
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Forbereder oppsett av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:735
 #, c-format
 msgid "Installed %s"
 msgstr "Installerte %s"
 
-#: apt-pkg/deb/dpkgpm.cc:738
+#: apt-pkg/deb/dpkgpm.cc:740
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Forbereder fjerning av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:742
 #, c-format
 msgid "Removed %s"
 msgstr "Fjernet %s"
 
-#: apt-pkg/deb/dpkgpm.cc:745
+#: apt-pkg/deb/dpkgpm.cc:747
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Forbereder å fullstendig slette %s"
 
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:748
 #, c-format
 msgid "Completely removed %s"
 msgstr "Fjernet %s fullstendig"
 
-#: apt-pkg/deb/dpkgpm.cc:950
+#: apt-pkg/deb/dpkgpm.cc:952
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr "Klarte ikke skrive logg, openpty() feilet (/dev/pts ikke montert?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:981
+#: apt-pkg/deb/dpkgpm.cc:983
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1194
+#: apt-pkg/deb/dpkgpm.cc:1196
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1199
+#: apt-pkg/deb/dpkgpm.cc:1201
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1203
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1207
+#: apt-pkg/deb/dpkgpm.cc:1209
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1213
+#: apt-pkg/deb/dpkgpm.cc:1215
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1220
+#: apt-pkg/deb/dpkgpm.cc:1222
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

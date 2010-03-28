@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 09:55+0100\n"
+"POT-Creation-Date: 2010-03-26 17:54+0100\n"
 "PO-Revision-Date: 2008-11-13 09:26+0900\n"
 "Last-Translator: Kenshi Muto <kmuto@debian.org>\n"
 "Language-Team: Debian Japanese List <debian-japanese@lists.debian.org>\n"
@@ -147,7 +147,7 @@ msgstr "  バージョンテーブル:"
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2705 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s for %s コンパイル日時: %s %s\n"
@@ -819,7 +819,7 @@ msgstr "内部エラー、調整が終わっていません"
 msgid "Unable to lock the download directory"
 msgstr "ダウンロードディレクトリをロックできません"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2446
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "ソースのリストを読むことができません。"
@@ -887,7 +887,7 @@ msgstr "中断しました。"
 msgid "Do you want to continue [Y/n]? "
 msgstr "続行しますか [Y/n]? "
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2343 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "%s の取得に失敗しました  %s\n"
@@ -896,7 +896,7 @@ msgstr "%s の取得に失敗しました  %s\n"
 msgid "Some files failed to download"
 msgstr "いくつかのファイルの取得に失敗しました"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2352
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
 msgid "Download complete and in download only mode"
 msgstr "ダウンロードオンリーモードでパッケージのダウンロードが完了しました"
 
@@ -1154,7 +1154,7 @@ msgid "Must specify at least one package to fetch source for"
 msgstr ""
 "ソースを取得するには少なくともひとつのパッケージ名を指定する必要があります"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2464
+#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "%s のソースパッケージが見つかりません"
@@ -1199,51 +1199,51 @@ msgstr "%sB のソースアーカイブを取得する必要があります。\n
 msgid "Fetch source %s\n"
 msgstr "ソース %s を取得\n"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2350
 msgid "Failed to fetch some archives."
 msgstr "いくつかのアーカイブの取得に失敗しました。"
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2379
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "すでに %s に展開されたソースがあるため、展開をスキップします\n"
 
-#: cmdline/apt-get.cc:2388
+#: cmdline/apt-get.cc:2391
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "展開コマンド '%s' が失敗しました。\n"
 
-#: cmdline/apt-get.cc:2389
+#: cmdline/apt-get.cc:2392
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 "'dpkg-dev' パッケージがインストールされていることを確認してください。\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2409
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "ビルドコマンド '%s' が失敗しました。\n"
 
-#: cmdline/apt-get.cc:2425
+#: cmdline/apt-get.cc:2429
 msgid "Child process failed"
 msgstr "子プロセスが失敗しました"
 
-#: cmdline/apt-get.cc:2441
+#: cmdline/apt-get.cc:2445
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "ビルド依存関係をチェックするパッケージを少なくとも 1 つ指定する必要があります"
 
-#: cmdline/apt-get.cc:2469
+#: cmdline/apt-get.cc:2473
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "%s のビルド依存情報を取得できません"
 
-#: cmdline/apt-get.cc:2489
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s にはビルド依存情報が指定されていません。\n"
 
-#: cmdline/apt-get.cc:2541
+#: cmdline/apt-get.cc:2545
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -1252,7 +1252,7 @@ msgstr ""
 "パッケージ %3$s が見つからないため、%2$s に対する %1$s の依存関係を満たすこと"
 "ができません"
 
-#: cmdline/apt-get.cc:2594
+#: cmdline/apt-get.cc:2598
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1261,32 +1261,32 @@ msgstr ""
 "入手可能な %3$s はいずれもバージョンについての要求を満たせないため、%2$s に対"
 "する %1$s の依存関係を満たすことができません"
 
-#: cmdline/apt-get.cc:2630
+#: cmdline/apt-get.cc:2634
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "%2$s の依存関係 %1$s を満たすことができません: インストールされた %3$s パッ"
 "ケージは新しすぎます"
 
-#: cmdline/apt-get.cc:2657
+#: cmdline/apt-get.cc:2661
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%2$s の依存関係 %1$s を満たすことができません: %3$s"
 
-#: cmdline/apt-get.cc:2673
+#: cmdline/apt-get.cc:2677
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "%s のビルド依存関係を満たすことができませんでした。"
 
-#: cmdline/apt-get.cc:2678
+#: cmdline/apt-get.cc:2682
 msgid "Failed to process build dependencies"
 msgstr "ビルド依存関係の処理に失敗しました"
 
-#: cmdline/apt-get.cc:2710
+#: cmdline/apt-get.cc:2714
 msgid "Supported modules:"
 msgstr "サポートされているモジュール:"
 
-#: cmdline/apt-get.cc:2751
+#: cmdline/apt-get.cc:2755
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1375,7 +1375,7 @@ msgstr ""
 "apt.conf(5) を参照してください。\n"
 "                        この APT は Super Cow Powers 化されています。\n"
 
-#: cmdline/apt-get.cc:2918
+#: cmdline/apt-get.cc:2922
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -2523,7 +2523,7 @@ msgstr "ソースリスト %2$s の %1$lu 行目が不正です (dist parse)"
 msgid "Opening %s"
 msgstr "%s をオープンしています"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:445
+#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "ソースリスト %2$s の %1$u 行目が長すぎます。"
@@ -2858,7 +2858,7 @@ msgstr ""
 msgid "Vendor block %s contains no fingerprint"
 msgstr "ベンダブロック %s は鍵指紋を含んでいません"
 
-#: apt-pkg/cdrom.cc:525
+#: apt-pkg/cdrom.cc:526
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
@@ -2867,42 +2867,42 @@ msgstr ""
 "CD-ROM マウントポイント %s を使用します\n"
 "CD-ROM をマウントしています\n"
 
-#: apt-pkg/cdrom.cc:534 apt-pkg/cdrom.cc:622
+#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
 msgid "Identifying.. "
 msgstr "確認しています.. "
 
-#: apt-pkg/cdrom.cc:559
+#: apt-pkg/cdrom.cc:560
 #, c-format
 msgid "Stored label: %s\n"
 msgstr "格納されたラベル: %s \n"
 
-#: apt-pkg/cdrom.cc:566 apt-pkg/cdrom.cc:834
+#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
 msgid "Unmounting CD-ROM...\n"
 msgstr "CD-ROM をアンマウントしています ...\n"
 
-#: apt-pkg/cdrom.cc:585
+#: apt-pkg/cdrom.cc:586
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "CD-ROM マウントポイント %s を使用します\n"
 
-#: apt-pkg/cdrom.cc:603
+#: apt-pkg/cdrom.cc:604
 msgid "Unmounting CD-ROM\n"
 msgstr "CD-ROM をアンマウントしています\n"
 
-#: apt-pkg/cdrom.cc:607
+#: apt-pkg/cdrom.cc:608
 msgid "Waiting for disc...\n"
 msgstr "ディスクを待っています ...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:615
+#: apt-pkg/cdrom.cc:616
 msgid "Mounting CD-ROM...\n"
 msgstr "CD-ROM をマウントしています ...\n"
 
-#: apt-pkg/cdrom.cc:633
+#: apt-pkg/cdrom.cc:634
 msgid "Scanning disc for index files..\n"
 msgstr "ディスクのインデックスファイルを走査しています ..\n"
 
-#: apt-pkg/cdrom.cc:673
+#: apt-pkg/cdrom.cc:674
 #, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
@@ -2911,22 +2911,22 @@ msgstr ""
 "%zu のパッケージインデックス、%zu のソースインデックス、%zu の翻訳インデック"
 "ス、%zu の署名を見つけました\n"
 
-#: apt-pkg/cdrom.cc:684
+#: apt-pkg/cdrom.cc:685
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:710
+#: apt-pkg/cdrom.cc:711
 #, c-format
 msgid "Found label '%s'\n"
 msgstr "ラベル '%s' を見つけました\n"
 
-#: apt-pkg/cdrom.cc:739
+#: apt-pkg/cdrom.cc:740
 msgid "That is not a valid name, try again.\n"
 msgstr "これは有効な名前ではありません。再試行してください。\n"
 
-#: apt-pkg/cdrom.cc:755
+#: apt-pkg/cdrom.cc:756
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2935,15 +2935,15 @@ msgstr ""
 "このディスクは以下のように呼ばれます: \n"
 "'%s'\n"
 
-#: apt-pkg/cdrom.cc:759
+#: apt-pkg/cdrom.cc:760
 msgid "Copying package lists..."
 msgstr "パッケージリストをコピーしています ..."
 
-#: apt-pkg/cdrom.cc:785
+#: apt-pkg/cdrom.cc:786
 msgid "Writing new source list\n"
 msgstr "新しいソースリストを書き込んでいます\n"
 
-#: apt-pkg/cdrom.cc:794
+#: apt-pkg/cdrom.cc:795
 msgid "Source list entries for this disc are:\n"
 msgstr "このディスクのソースリストのエントリ:\n"
 
@@ -2989,12 +2989,12 @@ msgstr "ハッシュサムが適合しません"
 msgid "Installing %s"
 msgstr "%s をインストールしています"
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:732
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
 #, c-format
 msgid "Configuring %s"
 msgstr "%s を設定しています"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:739
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
 #, c-format
 msgid "Removing %s"
 msgstr "%s を削除しています"
@@ -3014,89 +3014,89 @@ msgstr "インストール後トリガ %s を実行しています"
 msgid "Directory '%s' missing"
 msgstr "ディレクトリ '%s' が見つかりません"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "ファイル %s をオープンできませんでした"
 
-#: apt-pkg/deb/dpkgpm.cc:725
+#: apt-pkg/deb/dpkgpm.cc:727
 #, c-format
 msgid "Preparing %s"
 msgstr "%s を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:726
+#: apt-pkg/deb/dpkgpm.cc:728
 #, c-format
 msgid "Unpacking %s"
 msgstr "%s を展開しています"
 
-#: apt-pkg/deb/dpkgpm.cc:731
+#: apt-pkg/deb/dpkgpm.cc:733
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s の設定を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:735
 #, c-format
 msgid "Installed %s"
 msgstr "%s をインストールしました"
 
-#: apt-pkg/deb/dpkgpm.cc:738
+#: apt-pkg/deb/dpkgpm.cc:740
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s の削除を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:742
 #, c-format
 msgid "Removed %s"
 msgstr "%s を削除しました"
 
-#: apt-pkg/deb/dpkgpm.cc:745
+#: apt-pkg/deb/dpkgpm.cc:747
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s を完全に削除する準備をしています"
 
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:748
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s を完全に削除しました"
 
-#: apt-pkg/deb/dpkgpm.cc:950
+#: apt-pkg/deb/dpkgpm.cc:952
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 "ログに書き込めません。openpty() に失敗しました (/dev/pts がマウントされていな"
 "い?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:981
+#: apt-pkg/deb/dpkgpm.cc:983
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1194
+#: apt-pkg/deb/dpkgpm.cc:1196
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1199
+#: apt-pkg/deb/dpkgpm.cc:1201
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1203
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1207
+#: apt-pkg/deb/dpkgpm.cc:1209
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1213
+#: apt-pkg/deb/dpkgpm.cc:1215
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1220
+#: apt-pkg/deb/dpkgpm.cc:1222
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

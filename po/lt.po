@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 09:55+0100\n"
+"POT-Creation-Date: 2010-03-26 17:54+0100\n"
 "PO-Revision-Date: 2008-08-02 01:47-0400\n"
 "Last-Translator: Gintautas Miliauskas <gintas@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
@@ -150,7 +150,7 @@ msgstr "  Versijų lentelė:"
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2705 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr ""
@@ -789,7 +789,7 @@ msgstr ""
 msgid "Unable to lock the download directory"
 msgstr "Nepavyko užrakinti parsiuntimų aplanko"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2446
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "Nepavyko perskaityti šaltinių sąrašo."
@@ -856,7 +856,7 @@ msgstr "Nutraukti."
 msgid "Do you want to continue [Y/n]? "
 msgstr "Ar norite tęsti [T/n]? "
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2343 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Nepavyko parsiųsti %s  %s\n"
@@ -865,7 +865,7 @@ msgstr "Nepavyko parsiųsti %s  %s\n"
 msgid "Some files failed to download"
 msgstr "Nepavyko parsiųsti kai kurių failų"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2352
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
 msgid "Download complete and in download only mode"
 msgstr "Pavyko parsiųsti tik parsiuntimo režime"
 
@@ -1114,7 +1114,7 @@ msgstr "Vidinė klaida, problemos sprendimas kažką sugadino"
 msgid "Must specify at least one package to fetch source for"
 msgstr "Būtina nurodyti bent vieną paketą, kad parsiųsti jo išeities tekstą"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2464
+#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Nepavyko surasti išeities teksto paketo, skirto %s"
@@ -1159,49 +1159,49 @@ msgstr "Reikia parsiųsti %sB išeities archyvų.\n"
 msgid "Fetch source %s\n"
 msgstr "Parsiunčiamas archyvas %s\n"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2350
 msgid "Failed to fetch some archives."
 msgstr "Nepavyko gauti kai kurių arhcyvų."
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2379
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Jau išpakuotas archyvas %s praleidžiama\n"
 
-#: cmdline/apt-get.cc:2388
+#: cmdline/apt-get.cc:2391
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Nepavyko įvykdyti išpakavimo komandos „%s“\n"
 
-#: cmdline/apt-get.cc:2389
+#: cmdline/apt-get.cc:2392
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Patikrinkite, ar įdiegtas „dpkg-dev“ paketas.\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2409
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Nepavyko įvykdyti paketo kompiliavimo komandos „%s“\n"
 
-#: cmdline/apt-get.cc:2425
+#: cmdline/apt-get.cc:2429
 msgid "Child process failed"
 msgstr "Klaida procese-palikuonyje"
 
-#: cmdline/apt-get.cc:2441
+#: cmdline/apt-get.cc:2445
 msgid "Must specify at least one package to check builddeps for"
 msgstr "Būtina nurodyti bent vieną paketą, kuriam norite įvykdyti builddeps"
 
-#: cmdline/apt-get.cc:2469
+#: cmdline/apt-get.cc:2473
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Nepavyko gauti kūrimo-priklausomybių informacijos paketui %s"
 
-#: cmdline/apt-get.cc:2489
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2541
+#: cmdline/apt-get.cc:2545
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -1209,7 +1209,7 @@ msgid ""
 msgstr ""
 "%s priklausomybė %s paketui negali būti patenkinama, nes paketas %s nerastas"
 
-#: cmdline/apt-get.cc:2594
+#: cmdline/apt-get.cc:2598
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1218,32 +1218,32 @@ msgstr ""
 "%s priklausomybė %s paketui negali būti patenkinama, nes nėra tinkamos "
 "versijos %s paketo"
 
-#: cmdline/apt-get.cc:2630
+#: cmdline/apt-get.cc:2634
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Nepavyko patenkinti %s priklausomybės %s paketui: Įdiegtas paketas %s yra "
 "per naujas"
 
-#: cmdline/apt-get.cc:2657
+#: cmdline/apt-get.cc:2661
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Nepavyko patenkinti %s priklausomybės %s: %s"
 
-#: cmdline/apt-get.cc:2673
+#: cmdline/apt-get.cc:2677
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr ""
 
-#: cmdline/apt-get.cc:2678
+#: cmdline/apt-get.cc:2682
 msgid "Failed to process build dependencies"
 msgstr ""
 
-#: cmdline/apt-get.cc:2710
+#: cmdline/apt-get.cc:2714
 msgid "Supported modules:"
 msgstr "Palaikomi moduliai:"
 
-#: cmdline/apt-get.cc:2751
+#: cmdline/apt-get.cc:2755
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1287,7 +1287,7 @@ msgid ""
 "                       This APT has Super Cow Powers.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2918
+#: cmdline/apt-get.cc:2922
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -2428,7 +2428,7 @@ msgstr ""
 msgid "Opening %s"
 msgstr "Atveriama %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:445
+#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr ""
@@ -2744,71 +2744,71 @@ msgstr ""
 msgid "Vendor block %s contains no fingerprint"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:525
+#: apt-pkg/cdrom.cc:526
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
 "Mounting CD-ROM\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:534 apt-pkg/cdrom.cc:622
+#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
 msgid "Identifying.. "
 msgstr "Identifikuojama.. "
 
-#: apt-pkg/cdrom.cc:559
+#: apt-pkg/cdrom.cc:560
 #, c-format
 msgid "Stored label: %s\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:566 apt-pkg/cdrom.cc:834
+#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
 msgid "Unmounting CD-ROM...\n"
 msgstr "Atjungiamas CD-ROM...\n"
 
-#: apt-pkg/cdrom.cc:585
+#: apt-pkg/cdrom.cc:586
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "Naudojama CD-ROM prijungimo vieta %s\n"
 
-#: apt-pkg/cdrom.cc:603
+#: apt-pkg/cdrom.cc:604
 msgid "Unmounting CD-ROM\n"
 msgstr "Atjungiamas CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:607
+#: apt-pkg/cdrom.cc:608
 msgid "Waiting for disc...\n"
 msgstr "Laukiama disko...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:615
+#: apt-pkg/cdrom.cc:616
 msgid "Mounting CD-ROM...\n"
 msgstr "Prijungiamas CD-ROM...\n"
 
-#: apt-pkg/cdrom.cc:633
+#: apt-pkg/cdrom.cc:634
 msgid "Scanning disc for index files..\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:673
+#: apt-pkg/cdrom.cc:674
 #, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
 "zu signatures\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:684
+#: apt-pkg/cdrom.cc:685
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:710
+#: apt-pkg/cdrom.cc:711
 #, c-format
 msgid "Found label '%s'\n"
 msgstr "Rasta žymė „%s“\n"
 
-#: apt-pkg/cdrom.cc:739
+#: apt-pkg/cdrom.cc:740
 msgid "That is not a valid name, try again.\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:755
+#: apt-pkg/cdrom.cc:756
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2817,15 +2817,15 @@ msgstr ""
 "Šio disko pavadinimas: \n"
 "„%s“\n"
 
-#: apt-pkg/cdrom.cc:759
+#: apt-pkg/cdrom.cc:760
 msgid "Copying package lists..."
 msgstr "Kopijuojami paketų sąrašai..."
 
-#: apt-pkg/cdrom.cc:785
+#: apt-pkg/cdrom.cc:786
 msgid "Writing new source list\n"
 msgstr "Rašomas naujas šaltinių sąrašas\n"
 
-#: apt-pkg/cdrom.cc:794
+#: apt-pkg/cdrom.cc:795
 msgid "Source list entries for this disc are:\n"
 msgstr ""
 
@@ -2869,12 +2869,12 @@ msgstr "Maišos sumos nesutapimas"
 msgid "Installing %s"
 msgstr "Įdiegta %s"
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:732
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
 #, c-format
 msgid "Configuring %s"
 msgstr "Konfigūruojamas %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:739
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
 #, c-format
 msgid "Removing %s"
 msgstr "Šalinamas %s"
@@ -2894,87 +2894,87 @@ msgstr ""
 msgid "Directory '%s' missing"
 msgstr "Trūksta aplanko „%s“"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "Nepavyko atverti failo %s"
 
-#: apt-pkg/deb/dpkgpm.cc:725
+#: apt-pkg/deb/dpkgpm.cc:727
 #, c-format
 msgid "Preparing %s"
 msgstr "Ruošiamas %s"
 
-#: apt-pkg/deb/dpkgpm.cc:726
+#: apt-pkg/deb/dpkgpm.cc:728
 #, c-format
 msgid "Unpacking %s"
 msgstr "Išpakuojamas %s"
 
-#: apt-pkg/deb/dpkgpm.cc:731
+#: apt-pkg/deb/dpkgpm.cc:733
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Ruošiamasi konfigūruoti %s"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:735
 #, c-format
 msgid "Installed %s"
 msgstr "Įdiegta %s"
 
-#: apt-pkg/deb/dpkgpm.cc:738
+#: apt-pkg/deb/dpkgpm.cc:740
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Ruošiamasi %s pašalinimui"
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:742
 #, c-format
 msgid "Removed %s"
 msgstr "Pašalintas %s"
 
-#: apt-pkg/deb/dpkgpm.cc:745
+#: apt-pkg/deb/dpkgpm.cc:747
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Ruošiamasi visiškai pašalinti %s"
 
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:748
 #, c-format
 msgid "Completely removed %s"
 msgstr "Visiškai pašalintas %s"
 
-#: apt-pkg/deb/dpkgpm.cc:950
+#: apt-pkg/deb/dpkgpm.cc:952
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:981
+#: apt-pkg/deb/dpkgpm.cc:983
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1194
+#: apt-pkg/deb/dpkgpm.cc:1196
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1199
+#: apt-pkg/deb/dpkgpm.cc:1201
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1203
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1207
+#: apt-pkg/deb/dpkgpm.cc:1209
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1213
+#: apt-pkg/deb/dpkgpm.cc:1215
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1220
+#: apt-pkg/deb/dpkgpm.cc:1222
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

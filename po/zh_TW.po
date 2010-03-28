@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.5.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 09:55+0100\n"
+"POT-Creation-Date: 2010-03-26 17:54+0100\n"
 "PO-Revision-Date: 2009-01-28 10:41+0800\n"
 "Last-Translator: Tetralet <tetralet@gmail.com>\n"
 "Language-Team: Debian-user in Chinese [Big5] <debian-chinese-big5@lists."
@@ -148,7 +148,7 @@ msgstr "  版本列表："
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2705 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s 是用於 %s 並在 %s %s 上編譯的\n"
@@ -812,7 +812,7 @@ msgstr "內部錯誤，排序未能完成"
 msgid "Unable to lock the download directory"
 msgstr "無法鎖定下載目錄"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2446
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "無法讀取來源列表。"
@@ -879,7 +879,7 @@ msgstr "放棄執行。"
 msgid "Do you want to continue [Y/n]? "
 msgstr "是否繼續進行 [Y/n]？"
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2343 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "無法取得 %s，%s\n"
@@ -888,7 +888,7 @@ msgstr "無法取得 %s，%s\n"
 msgid "Some files failed to download"
 msgstr "有部份檔案無法下載"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2352
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
 msgid "Download complete and in download only mode"
 msgstr "下載完成，且這是『僅下載』模式"
 
@@ -1135,7 +1135,7 @@ msgstr "內部錯誤，問題排除器造成了損壞"
 msgid "Must specify at least one package to fetch source for"
 msgstr "在取得原始碼時必須至少指定一個套件"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2464
+#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "無法找到 %s 的原始碼套件"
@@ -1180,56 +1180,56 @@ msgstr "需要下載 %sB 的原始套件檔。\n"
 msgid "Fetch source %s\n"
 msgstr "取得原始碼 %s\n"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2350
 msgid "Failed to fetch some archives."
 msgstr "無法取得某些套件檔。"
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2379
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "不解開，因原始碼已解開至 %s\n"
 
-#: cmdline/apt-get.cc:2388
+#: cmdline/apt-get.cc:2391
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "解開指令 '%s' 失敗。\n"
 
-#: cmdline/apt-get.cc:2389
+#: cmdline/apt-get.cc:2392
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "請檢查是否已安裝了 'dpkg-dev' 套件。\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2409
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "編譯指令 '%s' 失敗。\n"
 
-#: cmdline/apt-get.cc:2425
+#: cmdline/apt-get.cc:2429
 msgid "Child process failed"
 msgstr "子程序失敗"
 
-#: cmdline/apt-get.cc:2441
+#: cmdline/apt-get.cc:2445
 msgid "Must specify at least one package to check builddeps for"
 msgstr "在檢查編譯相依關係時必須至少指定一個套件"
 
-#: cmdline/apt-get.cc:2469
+#: cmdline/apt-get.cc:2473
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "無法取得 %s 的編譯相依關係資訊"
 
-#: cmdline/apt-get.cc:2489
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s 沒有編譯相依關係。\n"
 
-#: cmdline/apt-get.cc:2541
+#: cmdline/apt-get.cc:2545
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "無法滿足 %2$s 所要求的 %1$s 相依關係，因為找不到套件 %3$s"
 
-#: cmdline/apt-get.cc:2594
+#: cmdline/apt-get.cc:2598
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1237,30 +1237,30 @@ msgid ""
 msgstr ""
 "無法滿足 %2$s 所要求的 %1$s 相依關係，因為套件 %3$s 沒有版本符合其版本需求"
 
-#: cmdline/apt-get.cc:2630
+#: cmdline/apt-get.cc:2634
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr "無法滿足 %2$s 的相依關係 %1$s：已安裝的套件 %3$s 太新了"
 
-#: cmdline/apt-get.cc:2657
+#: cmdline/apt-get.cc:2661
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "無法滿足 %2$s 的相依關係 %1$s：%3$s"
 
-#: cmdline/apt-get.cc:2673
+#: cmdline/apt-get.cc:2677
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "無法滿足套件 %s 的編譯相依關係。"
 
-#: cmdline/apt-get.cc:2678
+#: cmdline/apt-get.cc:2682
 msgid "Failed to process build dependencies"
 msgstr "無法處理編譯相依關係"
 
-#: cmdline/apt-get.cc:2710
+#: cmdline/apt-get.cc:2714
 msgid "Supported modules:"
 msgstr "已支援模組："
 
-#: cmdline/apt-get.cc:2751
+#: cmdline/apt-get.cc:2755
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1344,7 +1344,7 @@ msgstr ""
 "以取得更多資訊和選項。\n"
 "                        該 APT 有著超級牛力。\n"
 
-#: cmdline/apt-get.cc:2918
+#: cmdline/apt-get.cc:2922
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -2484,7 +2484,7 @@ msgstr "來源列表 %2$s 中的 %1$lu 行的格式錯誤（發行版分析）"
 msgid "Opening %s"
 msgstr "正在開啟 %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:445
+#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "來源列表 %2$s 中的第 %1$u 行太長。"
@@ -2802,7 +2802,7 @@ msgstr "在 Release 檔 %s 裡沒有 Hash 項目"
 msgid "Vendor block %s contains no fingerprint"
 msgstr "提供者區塊 %s 沒有包含指紋碼"
 
-#: apt-pkg/cdrom.cc:525
+#: apt-pkg/cdrom.cc:526
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
@@ -2811,64 +2811,64 @@ msgstr ""
 "使用光碟機掛載點 %s\n"
 "正在掛載光碟機\n"
 
-#: apt-pkg/cdrom.cc:534 apt-pkg/cdrom.cc:622
+#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
 msgid "Identifying.. "
 msgstr "正在識別.."
 
-#: apt-pkg/cdrom.cc:559
+#: apt-pkg/cdrom.cc:560
 #, c-format
 msgid "Stored label: %s\n"
 msgstr "保存標籤：%s\n"
 
-#: apt-pkg/cdrom.cc:566 apt-pkg/cdrom.cc:834
+#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
 msgid "Unmounting CD-ROM...\n"
 msgstr "正在卸載光碟機...\n"
 
-#: apt-pkg/cdrom.cc:585
+#: apt-pkg/cdrom.cc:586
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "使用光碟機掛載點 %s\n"
 
-#: apt-pkg/cdrom.cc:603
+#: apt-pkg/cdrom.cc:604
 msgid "Unmounting CD-ROM\n"
 msgstr "正在卸載光碟機\n"
 
-#: apt-pkg/cdrom.cc:607
+#: apt-pkg/cdrom.cc:608
 msgid "Waiting for disc...\n"
 msgstr "正在等待碟片...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:615
+#: apt-pkg/cdrom.cc:616
 msgid "Mounting CD-ROM...\n"
 msgstr "正在掛載光碟機... \n"
 
-#: apt-pkg/cdrom.cc:633
+#: apt-pkg/cdrom.cc:634
 msgid "Scanning disc for index files..\n"
 msgstr "正在掃描碟片中的索引檔..\n"
 
-#: apt-pkg/cdrom.cc:673
+#: apt-pkg/cdrom.cc:674
 #, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
 "zu signatures\n"
 msgstr "找到了 %zu 個套件索引，%zu 個原始碼索引，%zu 個翻譯索引及 %zu 個簽章\n"
 
-#: apt-pkg/cdrom.cc:684
+#: apt-pkg/cdrom.cc:685
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:710
+#: apt-pkg/cdrom.cc:711
 #, c-format
 msgid "Found label '%s'\n"
 msgstr "找到標籤 '%s'\n"
 
-#: apt-pkg/cdrom.cc:739
+#: apt-pkg/cdrom.cc:740
 msgid "That is not a valid name, try again.\n"
 msgstr "這並不是正確的名稱，請重試。\n"
 
-#: apt-pkg/cdrom.cc:755
+#: apt-pkg/cdrom.cc:756
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2877,15 +2877,15 @@ msgstr ""
 "這個碟片名為：\n"
 "'%s'\n"
 
-#: apt-pkg/cdrom.cc:759
+#: apt-pkg/cdrom.cc:760
 msgid "Copying package lists..."
 msgstr "正在複製套件清單..."
 
-#: apt-pkg/cdrom.cc:785
+#: apt-pkg/cdrom.cc:786
 msgid "Writing new source list\n"
 msgstr "正在寫入新的來源列表\n"
 
-#: apt-pkg/cdrom.cc:794
+#: apt-pkg/cdrom.cc:795
 msgid "Source list entries for this disc are:\n"
 msgstr "該碟片的來源列表項目為：\n"
 
@@ -2929,12 +2929,12 @@ msgstr "Hash Sum 不符"
 msgid "Installing %s"
 msgstr "正在安裝 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:732
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
 #, c-format
 msgid "Configuring %s"
 msgstr "正在設定 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:739
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
 #, c-format
 msgid "Removing %s"
 msgstr "正在移除 %s"
@@ -2954,87 +2954,87 @@ msgstr "正在執行安裝後套件後續處理程式 %s"
 msgid "Directory '%s' missing"
 msgstr "找不到 '%s' 目錄"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "無法開啟檔案 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:725
+#: apt-pkg/deb/dpkgpm.cc:727
 #, c-format
 msgid "Preparing %s"
 msgstr "正在準備 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:726
+#: apt-pkg/deb/dpkgpm.cc:728
 #, c-format
 msgid "Unpacking %s"
 msgstr "正在解開 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:731
+#: apt-pkg/deb/dpkgpm.cc:733
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "正在準備設定 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:735
 #, c-format
 msgid "Installed %s"
 msgstr "已安裝 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:738
+#: apt-pkg/deb/dpkgpm.cc:740
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "正在準備移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:742
 #, c-format
 msgid "Removed %s"
 msgstr "已移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:745
+#: apt-pkg/deb/dpkgpm.cc:747
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "正在準備完整移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:748
 #, c-format
 msgid "Completely removed %s"
 msgstr "已完整移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:950
+#: apt-pkg/deb/dpkgpm.cc:952
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr "無法寫入記錄檔，openpty() 失敗（/dev/pts 未掛載？）\n"
 
-#: apt-pkg/deb/dpkgpm.cc:981
+#: apt-pkg/deb/dpkgpm.cc:983
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1194
+#: apt-pkg/deb/dpkgpm.cc:1196
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1199
+#: apt-pkg/deb/dpkgpm.cc:1201
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1203
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1207
+#: apt-pkg/deb/dpkgpm.cc:1209
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1213
+#: apt-pkg/deb/dpkgpm.cc:1215
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1220
+#: apt-pkg/deb/dpkgpm.cc:1222
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

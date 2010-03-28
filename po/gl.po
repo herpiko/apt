@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po_gl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-15 09:55+0100\n"
+"POT-Creation-Date: 2010-03-26 17:54+0100\n"
 "PO-Revision-Date: 2008-12-17 22:44+0100\n"
 "Last-Translator: mvillarino <mvillarino@users.sourceforge.net>\n"
 "Language-Team: galician <proxecto@trasno.net>\n"
@@ -151,7 +151,7 @@ msgstr "  Táboa de versións:"
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2705 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s para %s compilado o %s %s\n"
@@ -828,7 +828,7 @@ msgstr "Erro interno, a ordeación non rematou"
 msgid "Unable to lock the download directory"
 msgstr "Non se puido bloquear o directorio de descargas"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2446
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "Non se puido ler a lista de orixes."
@@ -896,7 +896,7 @@ msgstr "Abortar."
 msgid "Do you want to continue [Y/n]? "
 msgstr "¿Quere continuar [S/n]? "
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2343 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Non se puido obter %s  %s\n"
@@ -905,7 +905,7 @@ msgstr "Non se puido obter %s  %s\n"
 msgid "Some files failed to download"
 msgstr "Non se puido descargar algúns ficheiros"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2352
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
 msgid "Download complete and in download only mode"
 msgstr "Completouse a descarga no modo de só descargas"
 
@@ -1161,7 +1161,7 @@ msgid "Must specify at least one package to fetch source for"
 msgstr ""
 "Ten que especificar alomenos un paquete para lle descargar o código fonte"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2464
+#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Non se puido atopar un paquete fonte para %s"
@@ -1206,51 +1206,51 @@ msgstr "Hai que recibir %sB de arquivos de fonte.\n"
 msgid "Fetch source %s\n"
 msgstr "Obter fonte %s\n"
 
-#: cmdline/apt-get.cc:2348
+#: cmdline/apt-get.cc:2350
 msgid "Failed to fetch some archives."
 msgstr "Non se puido recibir algúns arquivos."
 
-#: cmdline/apt-get.cc:2376
+#: cmdline/apt-get.cc:2379
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Omítese o desempaquetamento do código fonte xa desempaquetado en %s\n"
 
-#: cmdline/apt-get.cc:2388
+#: cmdline/apt-get.cc:2391
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Fallou a orde de desempaquetamento \"%s\".\n"
 
-#: cmdline/apt-get.cc:2389
+#: cmdline/apt-get.cc:2392
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Comprobe que o paquete \"dpkg-dev\" estea instalado.\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2409
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Fallou a codificación de %s.\n"
 
-#: cmdline/apt-get.cc:2425
+#: cmdline/apt-get.cc:2429
 msgid "Child process failed"
 msgstr "O proceso fillo fallou"
 
-#: cmdline/apt-get.cc:2441
+#: cmdline/apt-get.cc:2445
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Ten que especificar alomenos un paquete para lle comprobar as dependencias "
 "de compilación"
 
-#: cmdline/apt-get.cc:2469
+#: cmdline/apt-get.cc:2473
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Non se puido obter a información de dependencias de compilación de %s"
 
-#: cmdline/apt-get.cc:2489
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s non ten dependencias de compilación.\n"
 
-#: cmdline/apt-get.cc:2541
+#: cmdline/apt-get.cc:2545
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -1259,7 +1259,7 @@ msgstr ""
 "A dependencia \"%s\" de %s non se pode satisfacer porque non se pode atopar "
 "o paquete %s"
 
-#: cmdline/apt-get.cc:2594
+#: cmdline/apt-get.cc:2598
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1268,32 +1268,32 @@ msgstr ""
 "A dependencia \"%s\" de %s non se pode satisfacer porque ningunha versión "
 "dispoñible do paquete %s satisfai os requirimentos de versión"
 
-#: cmdline/apt-get.cc:2630
+#: cmdline/apt-get.cc:2634
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Non se puido satisfacer a dependencia \"%s\" de %s: O paquete instalado %s é "
 "novo de máis"
 
-#: cmdline/apt-get.cc:2657
+#: cmdline/apt-get.cc:2661
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Non se puido satisfacer a dependencia \"%s\" de %s: %s"
 
-#: cmdline/apt-get.cc:2673
+#: cmdline/apt-get.cc:2677
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Non se puideron satisfacer as dependencias de compilación de %s."
 
-#: cmdline/apt-get.cc:2678
+#: cmdline/apt-get.cc:2682
 msgid "Failed to process build dependencies"
 msgstr "Non se puido procesar as dependencias de compilación"
 
-#: cmdline/apt-get.cc:2710
+#: cmdline/apt-get.cc:2714
 msgid "Supported modules:"
 msgstr "Módulos soportados:"
 
-#: cmdline/apt-get.cc:2751
+#: cmdline/apt-get.cc:2755
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1381,7 +1381,7 @@ msgstr ""
 "máis información e opcións.\n"
 "                  Este APT ten Poderes de Supervaca.\n"
 
-#: cmdline/apt-get.cc:2918
+#: cmdline/apt-get.cc:2922
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -2535,7 +2535,7 @@ msgstr "Liña %lu mal formada na lista de fontes %s (análise de dist)"
 msgid "Opening %s"
 msgstr "A abrir %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:445
+#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "Liña %u longa de máis na lista de fontes %s."
@@ -2866,7 +2866,7 @@ msgstr ""
 msgid "Vendor block %s contains no fingerprint"
 msgstr "O bloque de provedor %s non contén unha pegada dixital"
 
-#: apt-pkg/cdrom.cc:525
+#: apt-pkg/cdrom.cc:526
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
@@ -2875,42 +2875,42 @@ msgstr ""
 "A empregar o punto de montaxe de CD-ROMs %s\n"
 "A montar o CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:534 apt-pkg/cdrom.cc:622
+#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
 msgid "Identifying.. "
 msgstr "A identificar.. "
 
-#: apt-pkg/cdrom.cc:559
+#: apt-pkg/cdrom.cc:560
 #, c-format
 msgid "Stored label: %s\n"
 msgstr "Etiqueta armacenada: %s \n"
 
-#: apt-pkg/cdrom.cc:566 apt-pkg/cdrom.cc:834
+#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
 msgid "Unmounting CD-ROM...\n"
 msgstr "A desmontar o CD-ROM...\n"
 
-#: apt-pkg/cdrom.cc:585
+#: apt-pkg/cdrom.cc:586
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr "A empregar o punto de montaxe de CD-ROMs %s\n"
 
-#: apt-pkg/cdrom.cc:603
+#: apt-pkg/cdrom.cc:604
 msgid "Unmounting CD-ROM\n"
 msgstr "A desmontar o CD-ROM\n"
 
-#: apt-pkg/cdrom.cc:607
+#: apt-pkg/cdrom.cc:608
 msgid "Waiting for disc...\n"
 msgstr "A agardar polo disco...\n"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:615
+#: apt-pkg/cdrom.cc:616
 msgid "Mounting CD-ROM...\n"
 msgstr "A montar o CD-ROM...\n"
 
-#: apt-pkg/cdrom.cc:633
+#: apt-pkg/cdrom.cc:634
 msgid "Scanning disc for index files..\n"
 msgstr "A buscar os ficheiros de índices no disco..\n"
 
-#: apt-pkg/cdrom.cc:673
+#: apt-pkg/cdrom.cc:674
 #, c-format
 msgid ""
 "Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
@@ -2919,22 +2919,22 @@ msgstr ""
 "Atopáronse %zu índices de paquetes, %zu índices de fontes, %zu índices de "
 "traducións e %zu sinaturas\n"
 
-#: apt-pkg/cdrom.cc:684
+#: apt-pkg/cdrom.cc:685
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:710
+#: apt-pkg/cdrom.cc:711
 #, c-format
 msgid "Found label '%s'\n"
 msgstr "Atopouse a etiqueta \"%s\"\n"
 
-#: apt-pkg/cdrom.cc:739
+#: apt-pkg/cdrom.cc:740
 msgid "That is not a valid name, try again.\n"
 msgstr "Ese non é un nome válido, volva tentalo.\n"
 
-#: apt-pkg/cdrom.cc:755
+#: apt-pkg/cdrom.cc:756
 #, c-format
 msgid ""
 "This disc is called: \n"
@@ -2943,15 +2943,15 @@ msgstr ""
 "Este disco chámase: \n"
 "\"%s\"\n"
 
-#: apt-pkg/cdrom.cc:759
+#: apt-pkg/cdrom.cc:760
 msgid "Copying package lists..."
 msgstr "A copiar as listas de paquetes..."
 
-#: apt-pkg/cdrom.cc:785
+#: apt-pkg/cdrom.cc:786
 msgid "Writing new source list\n"
 msgstr "A gravar a nova lista de fontes\n"
 
-#: apt-pkg/cdrom.cc:794
+#: apt-pkg/cdrom.cc:795
 msgid "Source list entries for this disc are:\n"
 msgstr "As entradas da lista de fontes deste disco son:\n"
 
@@ -2997,12 +2997,12 @@ msgstr "Os \"hashes\" non coinciden"
 msgid "Installing %s"
 msgstr "A instalar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:732
+#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
 #, c-format
 msgid "Configuring %s"
 msgstr "A configurar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:739
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
 #, c-format
 msgid "Removing %s"
 msgstr "A eliminar %s"
@@ -3022,89 +3022,89 @@ msgstr "A executar o disparador de post-instalación %s"
 msgid "Directory '%s' missing"
 msgstr "O directorio \"%s\" falla"
 
-#: apt-pkg/deb/dpkgpm.cc:595
+#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "Non se puido abrir o ficheiro %s"
 
-#: apt-pkg/deb/dpkgpm.cc:725
+#: apt-pkg/deb/dpkgpm.cc:727
 #, c-format
 msgid "Preparing %s"
 msgstr "A preparar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:726
+#: apt-pkg/deb/dpkgpm.cc:728
 #, c-format
 msgid "Unpacking %s"
 msgstr "A desempaquetar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:731
+#: apt-pkg/deb/dpkgpm.cc:733
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "A se preparar para configurar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:735
 #, c-format
 msgid "Installed %s"
 msgstr "Instalouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:738
+#: apt-pkg/deb/dpkgpm.cc:740
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "A se preparar para a eliminación de %s"
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:742
 #, c-format
 msgid "Removed %s"
 msgstr "Eliminouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:745
+#: apt-pkg/deb/dpkgpm.cc:747
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "A se preparar para eliminar %s completamente"
 
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:748
 #, c-format
 msgid "Completely removed %s"
 msgstr "Eliminouse %s completamente"
 
-#: apt-pkg/deb/dpkgpm.cc:950
+#: apt-pkg/deb/dpkgpm.cc:952
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 "Non se puido escribir no rexistro, a chamada a openpty() fallou (¿/dev/pts "
 "non estaba montado?)\n"
 
-#: apt-pkg/deb/dpkgpm.cc:981
+#: apt-pkg/deb/dpkgpm.cc:983
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1194
+#: apt-pkg/deb/dpkgpm.cc:1196
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1199
+#: apt-pkg/deb/dpkgpm.cc:1201
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1203
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1207
+#: apt-pkg/deb/dpkgpm.cc:1209
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1213
+#: apt-pkg/deb/dpkgpm.cc:1215
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1220
+#: apt-pkg/deb/dpkgpm.cc:1222
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

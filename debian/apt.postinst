@@ -34,9 +34,8 @@ set_apt_proxy_from_gconf() {
 case "$1" in
     configure)
         if ! test -f /etc/apt/trusted.gpg; then
-                
-	    apt-key add /usr/share/apt/blankon-archive.gpg
-	    apt-key add /usr/share/apt/ubuntu-archive.gpg
+                apt-key add /usr/share/apt/blankon-archive.gpg
+                apt-key add /usr/share/apt/ubuntu-archive.gpg
         fi
 
 	# mvo: get gconf defaults once and write to a file, reason is

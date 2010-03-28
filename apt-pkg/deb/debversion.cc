@@ -191,7 +191,7 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    if (drhs != rhs)
       drhs++;
 
-   if (getenv ("BLANKON_UBUNTU_MODE"))
+  if (getenv ("BLANKON_UBUNTU_MODE"))
       return CmpFragment(dlhs,AEnd,drhs,BEnd);
 
    if (strstr (dlhs, "blankon") && strstr (drhs, "blankon") == 0)
@@ -199,8 +199,21 @@ int debVersioningSystem::DoCmpVersion(const char *A,const char *AEnd,
    if (strstr (drhs, "blankon") && strstr (dlhs, "blankon") == 0)
       return -1;
 
-
-   return CmpFragment(dlhs,AEnd,drhs,BEnd);
+   // no debian revision need to be treated like -0
+   if (*(dlhs-1) == '-' && *(drhs-1) == '-')
+      return CmpFragment(dlhs,AEnd,drhs,BEnd);
+   else if (*(dlhs-1) == '-')
+   {
+      const char* null = "0";
+      return CmpFragment(dlhs,AEnd,null, null+1);
+   }
+   else if (*(drhs-1) == '-')
+   {
+      const char* null = "0";
+      return CmpFragment(null, null+1, drhs, BEnd);
+   }
+   else
+      return 0;
 }
 									/*}}}*/
 // debVS::CheckDep - Check a single dependency				/*{{{*/

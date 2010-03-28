@@ -1,3 +1,16 @@
+apt (0.7.25.3ubuntu4) lucid; urgency=low
+
+  [ David Kalnischkies ]
+  * apt-pkg/deb/debversion.cc:
+    - consider absent of debian revision equivalent to 0 (Closes: #573592)
+      LP: #540228
+  * cmdline/apt-get.cc, apt-pkg/cdrom.cc:
+   - fix memory leaks in error conditions in DoSource()
+  * apt-pkg/deb/dpkgpm.cc:
+   - fix error message construction in OpenLog()
+  
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Fri, 26 Mar 2010 16:57:49 +0100
+
 apt (0.7.25.3ubuntu3) lucid; urgency=low
 
   * apt-pkg/indexfile.cc:
