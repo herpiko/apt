@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-da\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-26 17:54+0100\n"
+"POT-Creation-Date: 2010-04-14 20:33+0200\n"
 "PO-Revision-Date: 2007-09-06 21:40+0200\n"
 "Last-Translator: Claus Hindsgaul <claus.hindsgaul@gmail.com>\n"
 "Language-Team: Danish\n"
@@ -152,7 +152,7 @@ msgstr "  Versionstabel:"
 
 #: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2709 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2723 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s for %s oversat %s %s\n"
@@ -656,7 +656,7 @@ msgstr "Kunne ikke omdøbe %s til %s"
 msgid "Y"
 msgstr "J"
 
-#: cmdline/apt-get.cc:149 cmdline/apt-get.cc:1742
+#: cmdline/apt-get.cc:149 cmdline/apt-get.cc:1756
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Fejl ved tolkning af regulært udtryk - %s"
@@ -817,11 +817,11 @@ msgstr "Pakker skal afinstalleres, men Remove er deaktiveret."
 msgid "Internal error, Ordering didn't finish"
 msgstr "Intern fejl. Sortering blev ikke fuldført"
 
-#: cmdline/apt-get.cc:811 cmdline/apt-get.cc:2085 cmdline/apt-get.cc:2118
+#: cmdline/apt-get.cc:811 cmdline/apt-get.cc:2099 cmdline/apt-get.cc:2132
 msgid "Unable to lock the download directory"
 msgstr "Kunne ikke låse nedhentningsmappen"
 
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2166 cmdline/apt-get.cc:2450
+#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2180 cmdline/apt-get.cc:2464
 #: apt-pkg/cachefile.cc:65
 msgid "The list of sources could not be read."
 msgstr "Listen med kilder kunne ikke læses."
@@ -850,8 +850,8 @@ msgstr "Efter udpakning vil %sB yderligere diskplads være brugt.\n"
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "Efter udpakning vil %sB diskplads blive frigjort.\n"
 
-#: cmdline/apt-get.cc:867 cmdline/apt-get.cc:870 cmdline/apt-get.cc:2289
-#: cmdline/apt-get.cc:2292
+#: cmdline/apt-get.cc:867 cmdline/apt-get.cc:870 cmdline/apt-get.cc:2303
+#: cmdline/apt-get.cc:2306
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Kunne ikke bestemme ledig plads i %s"
@@ -888,7 +888,7 @@ msgstr "Afbryder."
 msgid "Do you want to continue [Y/n]? "
 msgstr "Vil du fortsætte [J/n]? "
 
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2345 apt-pkg/algorithms.cc:1388
+#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2359 apt-pkg/algorithms.cc:1388
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Kunne ikke hente %s %s\n"
@@ -897,7 +897,7 @@ msgstr "Kunne ikke hente %s %s\n"
 msgid "Some files failed to download"
 msgstr "Nedhentningen af filer mislykkedes"
 
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2354
+#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2368
 msgid "Download complete and in download only mode"
 msgstr "Nedhentning afsluttet i 'hent-kun'-tilstand"
 
@@ -996,52 +996,52 @@ msgstr "Versionen '%s' for '%s' blev ikke fundet"
 msgid "Selected version %s (%s) for %s\n"
 msgstr "Valgte version %s (%s) af %s\n"
 
-#: cmdline/apt-get.cc:1322
+#: cmdline/apt-get.cc:1335
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:1354
+#: cmdline/apt-get.cc:1367
 #, fuzzy, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Kunne ikke finde kildepakkelisten %s"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:1391
+#: cmdline/apt-get.cc:1405
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:1407
+#: cmdline/apt-get.cc:1421
 msgid "The update command takes no arguments"
 msgstr "'update'-kommandoen benytter ingen parametre"
 
-#: cmdline/apt-get.cc:1420
+#: cmdline/apt-get.cc:1434
 msgid "Unable to lock the list directory"
 msgstr "Kunne ikke låse listemappen"
 
-#: cmdline/apt-get.cc:1476
+#: cmdline/apt-get.cc:1490
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr ""
 "Det er ikke meningen, at vi skal slette ting og sager, kan ikke starte "
 "AutoRemover"
 
-#: cmdline/apt-get.cc:1525
+#: cmdline/apt-get.cc:1539
 msgid ""
 "The following packages were automatically installed and are no longer "
 "required:"
 msgstr "Følgende pakker blev installeret automatisk, og behøves ikke længere:"
 
-#: cmdline/apt-get.cc:1527
+#: cmdline/apt-get.cc:1541
 #, fuzzy, c-format
 msgid "%lu packages were automatically installed and are no longer required.\n"
 msgstr "Følgende pakker blev installeret automatisk, og behøves ikke længere:"
 
-#: cmdline/apt-get.cc:1528
+#: cmdline/apt-get.cc:1542
 msgid "Use 'apt-get autoremove' to remove them."
 msgstr "Brug 'apt-get autoremove' til at fjerne dem."
 
-#: cmdline/apt-get.cc:1533
+#: cmdline/apt-get.cc:1547
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1059,43 +1059,43 @@ msgstr ""
 #. "that package should be filed.") << endl;
 #. }
 #.
-#: cmdline/apt-get.cc:1536 cmdline/apt-get.cc:1827
+#: cmdline/apt-get.cc:1550 cmdline/apt-get.cc:1841
 msgid "The following information may help to resolve the situation:"
 msgstr "Følgende oplysninger kan hjælpe dig med at klare situationen:"
 
-#: cmdline/apt-get.cc:1540
+#: cmdline/apt-get.cc:1554
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Intern fejl. AutoRemover ødelagde noget"
 
-#: cmdline/apt-get.cc:1559
+#: cmdline/apt-get.cc:1573
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Intern fejl, AllUpgrade ødelagde noget"
 
-#: cmdline/apt-get.cc:1614
+#: cmdline/apt-get.cc:1628
 #, c-format
 msgid "Couldn't find task %s"
 msgstr "Kunne ikke finde opgaven %s"
 
-#: cmdline/apt-get.cc:1729 cmdline/apt-get.cc:1765
+#: cmdline/apt-get.cc:1743 cmdline/apt-get.cc:1779
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Kunne ikke finde pakken %s"
 
-#: cmdline/apt-get.cc:1752
+#: cmdline/apt-get.cc:1766
 #, c-format
 msgid "Note, selecting %s for regex '%s'\n"
 msgstr "Bemærk, vælger %s som regulært udtryk '%s'\n"
 
-#: cmdline/apt-get.cc:1784
+#: cmdline/apt-get.cc:1798
 #, fuzzy, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s sat til manuelt installeret.\n"
 
-#: cmdline/apt-get.cc:1797
+#: cmdline/apt-get.cc:1811
 msgid "You might want to run `apt-get -f install' to correct these:"
 msgstr "Du kan muligvis rette det ved at køre 'apt-get -f install':"
 
-#: cmdline/apt-get.cc:1800
+#: cmdline/apt-get.cc:1814
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1103,7 +1103,7 @@ msgstr ""
 "Uopfyldte afhængigheder. Prøv 'apt-get -f install' uden pakker (eller angiv "
 "en løsning)."
 
-#: cmdline/apt-get.cc:1812
+#: cmdline/apt-get.cc:1826
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1114,55 +1114,55 @@ msgstr ""
 "en umulig situation eller bruger den ustabile distribution, hvor enkelte\n"
 "pakker endnu ikke er lavet eller gjort tilgængelige."
 
-#: cmdline/apt-get.cc:1830
+#: cmdline/apt-get.cc:1844
 msgid "Broken packages"
 msgstr "Ødelagte pakker"
 
-#: cmdline/apt-get.cc:1859
+#: cmdline/apt-get.cc:1873
 msgid "The following extra packages will be installed:"
 msgstr "Følgende yderligere pakker vil blive installeret:"
 
-#: cmdline/apt-get.cc:1948
+#: cmdline/apt-get.cc:1962
 msgid "Suggested packages:"
 msgstr "Foreslåede pakker:"
 
-#: cmdline/apt-get.cc:1949
+#: cmdline/apt-get.cc:1963
 msgid "Recommended packages:"
 msgstr "Anbefalede pakker:"
 
-#: cmdline/apt-get.cc:1978
+#: cmdline/apt-get.cc:1992
 msgid "Calculating upgrade... "
 msgstr "Beregner opgraderingen... "
 
-#: cmdline/apt-get.cc:1981 methods/ftp.cc:708 methods/connect.cc:111
+#: cmdline/apt-get.cc:1995 methods/ftp.cc:708 methods/connect.cc:111
 msgid "Failed"
 msgstr "Mislykkedes"
 
-#: cmdline/apt-get.cc:1986
+#: cmdline/apt-get.cc:2000
 msgid "Done"
 msgstr "Færdig"
 
-#: cmdline/apt-get.cc:2053 cmdline/apt-get.cc:2061
+#: cmdline/apt-get.cc:2067 cmdline/apt-get.cc:2075
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Intern fejl. Problemløseren ødelagde noget"
 
-#: cmdline/apt-get.cc:2161
+#: cmdline/apt-get.cc:2175
 msgid "Must specify at least one package to fetch source for"
 msgstr "Du skal angive mindst én pakke at hente kildeteksten til"
 
-#: cmdline/apt-get.cc:2191 cmdline/apt-get.cc:2468
+#: cmdline/apt-get.cc:2205 cmdline/apt-get.cc:2482
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Kunne ikke finde kildetekstpakken for %s"
 
-#: cmdline/apt-get.cc:2207
+#: cmdline/apt-get.cc:2221
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2212
+#: cmdline/apt-get.cc:2226
 #, c-format
 msgid ""
 "Please use:\n"
@@ -1170,74 +1170,74 @@ msgid ""
 "to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2267
+#: cmdline/apt-get.cc:2281
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Overspringer allerede hentet fil '%s'\n"
 
-#: cmdline/apt-get.cc:2302
+#: cmdline/apt-get.cc:2316
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Du har ikke nok ledig plads i %s"
 
-#: cmdline/apt-get.cc:2308
+#: cmdline/apt-get.cc:2322
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "%sB/%sB skal hentes fra kildetekst-arkiverne.\n"
 
-#: cmdline/apt-get.cc:2311
+#: cmdline/apt-get.cc:2325
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "%sB skal hentes fra kildetekst-arkiverne.\n"
 
-#: cmdline/apt-get.cc:2317
+#: cmdline/apt-get.cc:2331
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Henter kildetekst %s\n"
 
-#: cmdline/apt-get.cc:2350
+#: cmdline/apt-get.cc:2364
 msgid "Failed to fetch some archives."
 msgstr "Nogle arkiver kunne ikke hentes."
 
-#: cmdline/apt-get.cc:2379
+#: cmdline/apt-get.cc:2393
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Overspringer udpakning af allerede udpakket kildetekst i %s\n"
 
-#: cmdline/apt-get.cc:2391
+#: cmdline/apt-get.cc:2405
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Udpakningskommandoen '%s' fejlede.\n"
 
-#: cmdline/apt-get.cc:2392
+#: cmdline/apt-get.cc:2406
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Tjek om pakken 'dpkg-dev' er installeret.\n"
 
-#: cmdline/apt-get.cc:2409
+#: cmdline/apt-get.cc:2423
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Opbygningskommandoen '%s' fejlede.\n"
 
-#: cmdline/apt-get.cc:2429
+#: cmdline/apt-get.cc:2443
 msgid "Child process failed"
 msgstr "Barneprocessen fejlede"
 
-#: cmdline/apt-get.cc:2445
+#: cmdline/apt-get.cc:2459
 msgid "Must specify at least one package to check builddeps for"
 msgstr "Skal angive mindst én pakke at tjekke opbygningsafhængigheder for"
 
-#: cmdline/apt-get.cc:2473
+#: cmdline/apt-get.cc:2487
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Kunne ikke hente oplysninger om opbygningsafhængigheder for %s"
 
-#: cmdline/apt-get.cc:2493
+#: cmdline/apt-get.cc:2507
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s har ingen opbygningsafhængigheder.\n"
 
-#: cmdline/apt-get.cc:2545
+#: cmdline/apt-get.cc:2559
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -1245,7 +1245,7 @@ msgid ""
 msgstr ""
 "%s-afhængigheden for %s kan ikke opfyldes, da pakken %s ikke blev fundet"
 
-#: cmdline/apt-get.cc:2598
+#: cmdline/apt-get.cc:2612
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1254,32 +1254,32 @@ msgstr ""
 "%s-afhængigheden for %s kan ikke opfyldes, da ingen af de tilgængelige "
 "udgaver af pakken %s kan tilfredsstille versions-kravene"
 
-#: cmdline/apt-get.cc:2634
+#: cmdline/apt-get.cc:2648
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Kunne ikke opfylde %s-afhængigheden for %s: Den installerede pakke %s er for "
 "ny"
 
-#: cmdline/apt-get.cc:2661
+#: cmdline/apt-get.cc:2675
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Kunne ikke opfylde %s-afhængigheden for %s: %s"
 
-#: cmdline/apt-get.cc:2677
+#: cmdline/apt-get.cc:2691
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Opbygningsafhængigheden for %s kunne ikke opfyldes."
 
-#: cmdline/apt-get.cc:2682
+#: cmdline/apt-get.cc:2696
 msgid "Failed to process build dependencies"
 msgstr "Kunne ikke behandler opbygningsafhængighederne"
 
-#: cmdline/apt-get.cc:2714
+#: cmdline/apt-get.cc:2728
 msgid "Supported modules:"
 msgstr "Understøttede moduler:"
 
-#: cmdline/apt-get.cc:2755
+#: cmdline/apt-get.cc:2769
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1363,7 +1363,7 @@ msgstr ""
 "for flere oplysninger og tilvalg.\n"
 "                       Denne APT har \"Super Cow Powers\".\n"
 
-#: cmdline/apt-get.cc:2922
+#: cmdline/apt-get.cc:2936
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -1969,34 +1969,34 @@ msgstr "Kan ikke oprette forbindelse til %s:%s (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Kunne ikke forbinde til %s:%s (%s) grundet tidsudløb"
 
-#: methods/connect.cc:118
+#: methods/connect.cc:121
 #, c-format
 msgid "Could not connect to %s:%s (%s)."
 msgstr "Kunne ikke forbinde til %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:146 methods/rsh.cc:425
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "Forbinder til %s"
 
-#: methods/connect.cc:165 methods/connect.cc:184
+#: methods/connect.cc:168 methods/connect.cc:187
 #, c-format
 msgid "Could not resolve '%s'"
 msgstr "Kunne ikke omsætte navnet '%s'"
 
-#: methods/connect.cc:190
+#: methods/connect.cc:193
 #, c-format
 msgid "Temporary failure resolving '%s'"
 msgstr "Midlertidig fejl ved omsætning af navnet '%s'"
 
-#: methods/connect.cc:193
+#: methods/connect.cc:196
 #, fuzzy, c-format
 msgid "Something wicked happened resolving '%s:%s' (%i - %s)"
 msgstr "Der skete noget underligt under navneomsætning af '%s:%s' (%i)"
 
-#: methods/connect.cc:240
+#: methods/connect.cc:243
 #, fuzzy, c-format
 msgid "Unable to connect to %s:%s:"
 msgstr "Kunne ikke forbinde til %s %s:"
@@ -2153,30 +2153,30 @@ msgid ""
 msgstr ""
 
 #. d means days, h means hours, min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:363
+#: apt-pkg/contrib/strutl.cc:371
 #, c-format
 msgid "%lid %lih %limin %lis"
 msgstr ""
 
 #. h means hours, min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:370
+#: apt-pkg/contrib/strutl.cc:378
 #, c-format
 msgid "%lih %limin %lis"
 msgstr ""
 
 #. min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:377
+#: apt-pkg/contrib/strutl.cc:385
 #, c-format
 msgid "%limin %lis"
 msgstr ""
 
 #. s means seconds
-#: apt-pkg/contrib/strutl.cc:382
+#: apt-pkg/contrib/strutl.cc:390
 #, c-format
 msgid "%lis"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1057
+#: apt-pkg/contrib/strutl.cc:1065
 #, c-format
 msgid "Selection %s not found"
 msgstr "Det valgte %s blev ikke fundet"
@@ -2538,14 +2538,14 @@ msgstr "Typen '%s' er ukendt på linje %u i kildelisten %s"
 msgid "Malformed line %u in source list %s (vendor id)"
 msgstr "Ugyldig linje %u i kildelisten %s (producent-id)"
 
-#: apt-pkg/packagemanager.cc:324 apt-pkg/packagemanager.cc:586
+#: apt-pkg/packagemanager.cc:324 apt-pkg/packagemanager.cc:591
 #, c-format
 msgid ""
 "Could not perform immediate configuration on '%s'.Please see man 5 apt.conf "
 "under APT::Immediate-Configure for details. (%d)"
 msgstr ""
 
-#: apt-pkg/packagemanager.cc:440
+#: apt-pkg/packagemanager.cc:445
 #, c-format
 msgid ""
 "This installation run will require temporarily removing the essential "
@@ -2557,7 +2557,7 @@ msgstr ""
 "idé, men hvis du virkelig vil gøre det, kan du aktivere valget 'APT::Force-"
 "LoopBreak'."
 
-#: apt-pkg/packagemanager.cc:478
+#: apt-pkg/packagemanager.cc:483
 #, c-format
 msgid ""
 "Could not perform immediate configuration on already unpacked '%s'.Please "
