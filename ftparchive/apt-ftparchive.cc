@@ -16,6 +16,7 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/cmndline.h>
 #include <apt-pkg/strutl.h>
+#include <apt-pkg/init.h>
 #include <config.h>
 #include <apti18n.h>
 #include <algorithm>
@@ -62,6 +63,10 @@ struct PackageMap
    string SrcOverride;
    string SrcExtraOverride;
 
+   // Translation master file
+   bool LongDesc;
+   TranslationWriter *TransWriter;
+
    // Contents 
    string Contents;
    string ContentsHead;
@@ -100,8 +105,9 @@ struct PackageMap
 		    vector<PackageMap>::iterator End,
 		    unsigned long &Left);
    
-   PackageMap() : DeLinkLimit(0), Permissions(1), ContentsDone(false), 
-        PkgDone(false), SrcDone(false), ContentsMTime(0) {};
+   PackageMap() : LongDesc(true), TransWriter(NULL), DeLinkLimit(0), Permissions(1),
+		  ContentsDone(false), PkgDone(false), SrcDone(false),
+		  ContentsMTime(0) {};
 };
 									/*}}}*/
 
@@ -130,7 +136,7 @@ void PackageMap::GetGeneral(Configuration &Setup,Configuration &Block)
 		       Setup.Find("Default::Packages::Extensions",".deb").c_str());
    
    Permissions = Setup.FindI("Default::FileMode",0644);
-   
+
    if (FLFile.empty() == false)
       FLFile = flCombine(Setup.Find("Dir::FileListDir"),FLFile);
    
@@ -168,6 +174,9 @@ bool PackageMap::GenPackages(Configuration &Setup,struct CacheDB::Stats &Stats)
    Packages.PathPrefix = PathPrefix;
    Packages.DirStrip = ArchiveDir;
    Packages.InternalPrefix = flCombine(ArchiveDir,InternalPrefix);
+
+   Packages.TransWriter = TransWriter;
+   Packages.LongDescription = LongDesc;
 
    Packages.Stats.DeLinkBytes = Stats.DeLinkBytes;
    Packages.DeLinkLimit = DeLinkLimit;
@@ -333,7 +342,7 @@ bool PackageMap::GenContents(Configuration &Setup,
    gettimeofday(&StartTime,0);   
    
    // Create a package writer object.
-   ContentsWriter Contents("");
+   ContentsWriter Contents("", Arch);
    if (PkgExt.empty() == false && Contents.SetExts(PkgExt) == false)
       return _error->Error(_("Package extension list is too long"));
    if (_error->PendingError() == true)
@@ -436,6 +445,8 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
 			    "$(DIST)/$(SECTION)/source/");
    string DPkg = Setup.Find("TreeDefault::Packages",
 			    "$(DIST)/$(SECTION)/binary-$(ARCH)/Packages");
+   string DTrans = Setup.Find("TreeDefault::Translation",
+			    "$(DIST)/$(SECTION)/i18n/Translation-en");
    string DIPrfx = Setup.Find("TreeDefault::InternalPrefix",
 			    "$(DIST)/$(SECTION)/");
    string DContents = Setup.Find("TreeDefault::Contents",
@@ -447,6 +458,12 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
 				"$(DIST)/$(SECTION)/source/Sources");
    string DFLFile = Setup.Find("TreeDefault::FileList", "");
    string DSFLFile = Setup.Find("TreeDefault::SourceFileList", "");
+
+   mode_t const Permissions = Setup.FindI("Default::FileMode",0644);
+
+   bool const LongDescription = Setup.FindB("Default::LongDescription",
+					_config->FindB("APT::FTPArchive::LongDescription", true));
+   string const TranslationCompress = Setup.Find("Default::Translation::Compress",". gzip").c_str();
 
    // Process 'tree' type sections
    const Configuration::Item *Top = Setup.Tree("tree");
@@ -461,17 +478,30 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
       string Section;
       while (ParseQuoteWord(Sections,Section) == true)
       {
-	 string Tmp2 = Block.Find("Architectures");
 	 string Arch;
+	 struct SubstVar const Vars[] = {{"$(DIST)",&Dist},
+					 {"$(SECTION)",&Section},
+					 {"$(ARCH)",&Arch},
+					 {}};
+	 mode_t const Perms = Block.FindI("FileMode", Permissions);
+	 bool const LongDesc = Block.FindB("LongDescription", LongDescription);
+	 TranslationWriter *TransWriter;
+	 if (DTrans.empty() == false && LongDesc == false)
+	 {
+	    string const TranslationFile = flCombine(Setup.FindDir("Dir::ArchiveDir"),
+			SubstVar(Block.Find("Translation", DTrans.c_str()), Vars));
+	    string const TransCompress = Block.Find("Translation::Compress", TranslationCompress);
+	    TransWriter = new TranslationWriter(TranslationFile, TransCompress, Perms);
+	 }
+	 else
+	    TransWriter = NULL;
+
+	 string const Tmp2 = Block.Find("Architectures");
 	 const char *Archs = Tmp2.c_str();
 	 while (ParseQuoteWord(Archs,Arch) == true)
 	 {
-	    struct SubstVar Vars[] = {{"$(DIST)",&Dist},
-	                              {"$(SECTION)",&Section},
-	                              {"$(ARCH)",&Arch},
-	                              {}};
 	    PackageMap Itm;
-	    
+	    Itm.Permissions = Perms;
 	    Itm.BinOverride = SubstVar(Block.Find("BinOverride"),Vars);
 	    Itm.InternalPrefix = SubstVar(Block.Find("InternalPrefix",DIPrfx.c_str()),Vars);
 
@@ -491,6 +521,12 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
 	       Itm.PkgFile = SubstVar(Block.Find("Packages",DPkg.c_str()),Vars);
 	       Itm.Tag = SubstVar("$(DIST)/$(SECTION)/$(ARCH)",Vars);
 	       Itm.Arch = Arch;
+	       Itm.LongDesc = LongDesc;
+	       if (TransWriter != NULL)
+	       {
+		  TransWriter->IncreaseRefCounter();
+		  Itm.TransWriter = TransWriter;
+	       }
 	       Itm.Contents = SubstVar(Block.Find("Contents",DContents.c_str()),Vars);
 	       Itm.ContentsHead = SubstVar(Block.Find("Contents::Header",DContentsH.c_str()),Vars);
 	       Itm.FLFile = SubstVar(Block.Find("FileList",DFLFile.c_str()),Vars);
@@ -500,6 +536,9 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
  	    Itm.GetGeneral(Setup,Block);
 	    PkgList.push_back(Itm);
 	 }
+	 // we didn't use this TransWriter, so we can release it
+	 if (TransWriter != NULL && TransWriter->GetRefCounter() == 0)
+	    delete TransWriter;
       }
       
       Top = Top->Next;
@@ -511,6 +550,8 @@ void LoadTree(vector<PackageMap> &PkgList,Configuration &Setup)
 /* */
 void LoadBinDir(vector<PackageMap> &PkgList,Configuration &Setup)
 {
+   mode_t const Permissions = Setup.FindI("Default::FileMode",0644);
+
    // Process 'bindirectory' type sections
    const Configuration::Item *Top = Setup.Tree("bindirectory");
    for (Top = (Top == 0?0:Top->Child); Top != 0;)
@@ -530,6 +571,7 @@ void LoadBinDir(vector<PackageMap> &PkgList,Configuration &Setup)
       Itm.InternalPrefix = Block.Find("InternalPrefix",Top->Tag.c_str());
       Itm.Contents = Block.Find("Contents");
       Itm.ContentsHead = Block.Find("Contents::Header");
+      Itm.Permissions = Block.FindI("FileMode", Permissions);
       
       Itm.GetGeneral(Setup,Block);
       PkgList.push_back(Itm);
@@ -606,7 +648,7 @@ bool SimpleGenPackages(CommandLine &CmdL)
    
    // Create a package writer object.
    PackagesWriter Packages(_config->Find("APT::FTPArchive::DB"),
-			   Override, "");   
+			   Override, "", _config->Find("APT::FTPArchive::Architecture"));
    if (_error->PendingError() == true)
       return false;
    
@@ -629,7 +671,7 @@ bool SimpleGenContents(CommandLine &CmdL)
       return ShowHelp(CmdL);
    
    // Create a package writer object.
-   ContentsWriter Contents(_config->Find("APT::FTPArchive::DB"));
+   ContentsWriter Contents(_config->Find("APT::FTPArchive::DB"), _config->Find("APT::FTPArchive::Architecture"));
    if (_error->PendingError() == true)
       return false;
    
@@ -788,7 +830,12 @@ bool Generate(CommandLine &CmdL)
       
       delete [] List;
    }
-   
+
+   // close the Translation master files
+   for (vector<PackageMap>::iterator I = PkgList.begin(); I != PkgList.end(); I++)
+      if (I->TransWriter != NULL && I->TransWriter->DecreaseRefCounter() == 0)
+	 delete I->TransWriter;
+
    if (_config->FindB("APT::FTPArchive::Contents",true) == false)
       return true;
    
@@ -910,6 +957,7 @@ int main(int argc, const char *argv[])
       {0,"delink","APT::FTPArchive::DeLinkAct",0},
       {0,"readonly","APT::FTPArchive::ReadOnlyDB",0},
       {0,"contents","APT::FTPArchive::Contents",0},
+      {'a',"arch","APT::FTPArchive::Architecture",CommandLine::HasArg},
       {'c',"config-file",0,CommandLine::ConfigFile},
       {'o',"option",0,CommandLine::ArbItem},
       {0,0,0,0}};
@@ -924,7 +972,7 @@ int main(int argc, const char *argv[])
 
    // Parse the command line and initialize the package library
    CommandLine CmdL(Args,_config);
-   if (CmdL.Parse(argc,argv) == false)
+   if (pkgInitConfig(*_config) == false || CmdL.Parse(argc,argv) == false)
    {
       _error->DumpErrors();
       return 100;

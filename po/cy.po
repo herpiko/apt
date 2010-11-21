@@ -6,170 +6,174 @@ msgid ""
 msgstr ""
 "Project-Id-Version: APT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 09:45+0200\n"
+"POT-Creation-Date: 2010-11-09 11:35+0100\n"
 "PO-Revision-Date: 2005-06-06 13:46+0100\n"
 "Last-Translator: Dafydd Harries <daf@muse.19inch.net>\n"
 "Language-Team: Welsh <cy@pengwyn.linux.org.uk>\n"
+"Language: cy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cmdline/apt-cache.cc:141
+#: cmdline/apt-cache.cc:156
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
 msgstr "Mae gan y pecyn %s fersiwn %s ddibyniaeth heb ei gwrdd:\n"
 
-#: cmdline/apt-cache.cc:181 cmdline/apt-cache.cc:550 cmdline/apt-cache.cc:644
-#: cmdline/apt-cache.cc:797 cmdline/apt-cache.cc:1021
-#: cmdline/apt-cache.cc:1425 cmdline/apt-cache.cc:1577
-#, c-format
-msgid "Unable to locate package %s"
-msgstr "Ni ellir lleoli'r pecyn %s"
-
-#: cmdline/apt-cache.cc:245
+#: cmdline/apt-cache.cc:284
 #, fuzzy
 msgid "Total package names: "
 msgstr "Cyfanswm Enwau Pecynnau : "
 
-#: cmdline/apt-cache.cc:285
+#: cmdline/apt-cache.cc:286
+#, fuzzy
+msgid "Total package structures: "
+msgstr "Cyfanswm Enwau Pecynnau : "
+
+#: cmdline/apt-cache.cc:326
 #, fuzzy
 msgid "  Normal packages: "
 msgstr "  Pecynnau Normal: "
 
-#: cmdline/apt-cache.cc:286
+#: cmdline/apt-cache.cc:327
 #, fuzzy
 msgid "  Pure virtual packages: "
 msgstr "  Pecynnau Cwbl Rhithwir: "
 
-#: cmdline/apt-cache.cc:287
+#: cmdline/apt-cache.cc:328
 #, fuzzy
 msgid "  Single virtual packages: "
 msgstr "  Pecynnau Rhithwir Sengl: "
 
-#: cmdline/apt-cache.cc:288
+#: cmdline/apt-cache.cc:329
 #, fuzzy
 msgid "  Mixed virtual packages: "
 msgstr "  Pecynnau Rhithwir Cymysg: "
 
-#: cmdline/apt-cache.cc:289
+#: cmdline/apt-cache.cc:330
 msgid "  Missing: "
 msgstr "  Ar Goll: "
 
-#: cmdline/apt-cache.cc:291
+#: cmdline/apt-cache.cc:332
 #, fuzzy
 msgid "Total distinct versions: "
 msgstr "Cyfanswm Fersiynau Gwahanol: "
 
-#: cmdline/apt-cache.cc:293
+#: cmdline/apt-cache.cc:334
 #, fuzzy
 msgid "Total distinct descriptions: "
 msgstr "Cyfanswm Fersiynau Gwahanol: "
 
-#: cmdline/apt-cache.cc:295
+#: cmdline/apt-cache.cc:336
 #, fuzzy
 msgid "Total dependencies: "
 msgstr "Cyfanswm Dibyniaethau: "
 
-#: cmdline/apt-cache.cc:298
+#: cmdline/apt-cache.cc:339
 #, fuzzy
 msgid "Total ver/file relations: "
 msgstr "Cyfanswm perthyniadau fersiwn/ffeil: "
 
-#: cmdline/apt-cache.cc:300
+#: cmdline/apt-cache.cc:341
 #, fuzzy
 msgid "Total Desc/File relations: "
 msgstr "Cyfanswm perthyniadau fersiwn/ffeil: "
 
-#: cmdline/apt-cache.cc:302
+#: cmdline/apt-cache.cc:343
 #, fuzzy
 msgid "Total Provides mappings: "
 msgstr "Cyfanswm Mapiau Darpariath: "
 
-#: cmdline/apt-cache.cc:314
+#: cmdline/apt-cache.cc:355
 #, fuzzy
 msgid "Total globbed strings: "
 msgstr "Cyfanswm Llinynau Glob: "
 
-#: cmdline/apt-cache.cc:328
+#: cmdline/apt-cache.cc:369
 #, fuzzy
 msgid "Total dependency version space: "
 msgstr "Cyfanswm gofod Fersiwn Dibyniaeth: "
 
-#: cmdline/apt-cache.cc:333
+#: cmdline/apt-cache.cc:374
 #, fuzzy
 msgid "Total slack space: "
 msgstr "Cyfanswm gofod Slac: "
 
-#: cmdline/apt-cache.cc:341
+#: cmdline/apt-cache.cc:382
 #, fuzzy
 msgid "Total space accounted for: "
 msgstr "Cyfanswm Gofod Cyfrifwyd: "
 
-#: cmdline/apt-cache.cc:469 cmdline/apt-cache.cc:1221
+#: cmdline/apt-cache.cc:513 cmdline/apt-cache.cc:1194
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Nid yw'r ffeil pecyn %s yn gydamseredig."
 
-#: cmdline/apt-cache.cc:1299
-msgid "You must give exactly one pattern"
+#: cmdline/apt-cache.cc:1273
+#, fuzzy
+msgid "You must give at least one search pattern"
 msgstr "Rhaid i chi ddarparu un patrwm yn union"
 
-#: cmdline/apt-cache.cc:1453
+#: cmdline/apt-cache.cc:1429 cmdline/apt-cache.cc:1431
+#: cmdline/apt-cache.cc:1508
 msgid "No packages found"
 msgstr "Canfuwyd dim pecyn"
 
-#: cmdline/apt-cache.cc:1530
+#: cmdline/apt-cache.cc:1503 apt-pkg/cacheset.cc:440
+#, c-format
+msgid "Unable to locate package %s"
+msgstr "Ni ellir lleoli'r pecyn %s"
+
+#: cmdline/apt-cache.cc:1533
 #, fuzzy
 msgid "Package files:"
 msgstr "Ffeiliau Pecynnau:"
 
-#: cmdline/apt-cache.cc:1537 cmdline/apt-cache.cc:1624
+#: cmdline/apt-cache.cc:1540 cmdline/apt-cache.cc:1638
 msgid "Cache is out of sync, can't x-ref a package file"
 msgstr "Nid yw'r storfa yn gydamserol, ni ellir croesgyfeirio ffeil pecym"
 
 #. Show any packages have explicit pins
-#: cmdline/apt-cache.cc:1551
+#: cmdline/apt-cache.cc:1554
 #, fuzzy
 msgid "Pinned packages:"
 msgstr "Pecynnau wedi eu Pinio:"
 
-#: cmdline/apt-cache.cc:1563 cmdline/apt-cache.cc:1604
+#: cmdline/apt-cache.cc:1566 cmdline/apt-cache.cc:1618
 msgid "(not found)"
 msgstr "(heb ganfod)"
 
-#. Installed version
-#: cmdline/apt-cache.cc:1584
+#: cmdline/apt-cache.cc:1575
 msgid "  Installed: "
 msgstr "  Wedi Sefydlu: "
 
-#: cmdline/apt-cache.cc:1586 cmdline/apt-cache.cc:1594
-msgid "(none)"
-msgstr "(dim)"
-
-#. Candidate Version
-#: cmdline/apt-cache.cc:1591
+#: cmdline/apt-cache.cc:1576
 msgid "  Candidate: "
 msgstr "  Ymgeisydd: "
 
-#: cmdline/apt-cache.cc:1601
+#: cmdline/apt-cache.cc:1600 cmdline/apt-cache.cc:1608
+msgid "(none)"
+msgstr "(dim)"
+
+#: cmdline/apt-cache.cc:1615
 #, fuzzy
 msgid "  Package pin: "
 msgstr "  Pin Pecyn: "
 
 #. Show the priority tables
-#: cmdline/apt-cache.cc:1610
+#: cmdline/apt-cache.cc:1624
 #, fuzzy
 msgid "  Version table:"
 msgstr "  Tabl Fersiynnau:"
 
-#: cmdline/apt-cache.cc:1720 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
-#: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:547
-#: cmdline/apt-get.cc:2723 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-cache.cc:1738 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
+#: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:589
+#: cmdline/apt-get.cc:2758 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s ar gyfer %s %s wedi ei grynhow ar %s %s\n"
 
-#: cmdline/apt-cache.cc:1727
+#: cmdline/apt-cache.cc:1745
 #, fuzzy
 msgid ""
 "Usage: apt-cache [options] command\n"
@@ -191,6 +195,7 @@ msgid ""
 "   unmet - Show unmet dependencies\n"
 "   search - Search the package list for a regex pattern\n"
 "   show - Show a readable record for the package\n"
+"   showauto - Display a list of automatically installed packages\n"
 "   depends - Show raw dependency information for a package\n"
 "   rdepends - Show reverse dependency information for a package\n"
 "   pkgnames - List the names of all packages in the system\n"
@@ -329,41 +334,41 @@ msgstr ""
 "  -c=? Darllen y ffeil cyfluniad hwn\n"
 "  -o=? Gosod opsiwn cyfluniad mympwyol e.e. -o dir::cache=/tmp\n"
 
-#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:863
+#: cmdline/apt-extracttemplates.cc:267 apt-pkg/pkgcachegen.cc:1171
 #, c-format
 msgid "Unable to write to %s"
 msgstr "Ni ellir ysgrifennu i %s"
 
-#: cmdline/apt-extracttemplates.cc:310
+#: cmdline/apt-extracttemplates.cc:309
 msgid "Cannot get debconf version. Is debconf installed?"
 msgstr "Ni ellir cael fersiwn debconf. Ydi debconf wedi ei sefydlu?"
 
-#: ftparchive/apt-ftparchive.cc:164 ftparchive/apt-ftparchive.cc:338
+#: ftparchive/apt-ftparchive.cc:170 ftparchive/apt-ftparchive.cc:347
 msgid "Package extension list is too long"
 msgstr "Mae'r rhestr estyniad pecyn yn rhy hir."
 
-#: ftparchive/apt-ftparchive.cc:166 ftparchive/apt-ftparchive.cc:180
-#: ftparchive/apt-ftparchive.cc:203 ftparchive/apt-ftparchive.cc:253
-#: ftparchive/apt-ftparchive.cc:267 ftparchive/apt-ftparchive.cc:289
+#: ftparchive/apt-ftparchive.cc:172 ftparchive/apt-ftparchive.cc:189
+#: ftparchive/apt-ftparchive.cc:212 ftparchive/apt-ftparchive.cc:262
+#: ftparchive/apt-ftparchive.cc:276 ftparchive/apt-ftparchive.cc:298
 #, fuzzy, c-format
 msgid "Error processing directory %s"
 msgstr "Gwall wrth brosesu'r cyfeiriadur %s"
 
-#: ftparchive/apt-ftparchive.cc:251
+#: ftparchive/apt-ftparchive.cc:260
 msgid "Source extension list is too long"
 msgstr "Mae'r rhestr estyniad ffynhonell yn rhy hir"
 
-#: ftparchive/apt-ftparchive.cc:368
+#: ftparchive/apt-ftparchive.cc:377
 msgid "Error writing header to contents file"
 msgstr "Gwall wrth ysgrifennu pennawd i'r ffeil cynnwys"
 
-#: ftparchive/apt-ftparchive.cc:398
+#: ftparchive/apt-ftparchive.cc:407
 #, fuzzy, c-format
 msgid "Error processing contents %s"
 msgstr "Gwall wrth Brosesu Cynnwys %s"
 
 # FIXME: full stops
-#: ftparchive/apt-ftparchive.cc:553
+#: ftparchive/apt-ftparchive.cc:595
 #, fuzzy
 msgid ""
 "Usage: apt-ftparchive [options] command\n"
@@ -445,11 +450,11 @@ msgstr ""
 "  -c=?        Darllen y ffeil cyfluniad hwn\n"
 "  -o=?        Gosod opsiwn cyfluniad mympwyol"
 
-#: ftparchive/apt-ftparchive.cc:759
+#: ftparchive/apt-ftparchive.cc:801
 msgid "No selections matched"
 msgstr "Dim dewisiadau'n cyfateb"
 
-#: ftparchive/apt-ftparchive.cc:832
+#: ftparchive/apt-ftparchive.cc:879
 #, c-format
 msgid "Some files are missing in the package file group `%s'"
 msgstr "Mae rhai ffeiliau ar goll yn y grŵp ffeiliau pecyn  `%s'"
@@ -481,72 +486,72 @@ msgstr "Ni ellir agor y ffeil DB2 %s: %s"
 msgid "Failed to stat %s"
 msgstr "Methodd stat() o %s"
 
-#: ftparchive/cachedb.cc:238
+#: ftparchive/cachedb.cc:242
 msgid "Archive has no control record"
 msgstr "Does dim cofnod rheoli gan yr archif"
 
-#: ftparchive/cachedb.cc:444
+#: ftparchive/cachedb.cc:448
 msgid "Unable to get a cursor"
 msgstr "Ni ellir cael cyrchydd"
 
-#: ftparchive/writer.cc:72
+#: ftparchive/writer.cc:73
 #, c-format
 msgid "W: Unable to read directory %s\n"
 msgstr "Rh: Ni ellir darllen y cyfeiriadur %s\n"
 
-#: ftparchive/writer.cc:77
+#: ftparchive/writer.cc:78
 #, c-format
 msgid "W: Unable to stat %s\n"
 msgstr "Rh: Ni ellir gwneud stat() o %s\n"
 
-#: ftparchive/writer.cc:133
+#: ftparchive/writer.cc:134
 msgid "E: "
 msgstr "G: "
 
-#: ftparchive/writer.cc:135
+#: ftparchive/writer.cc:136
 msgid "W: "
 msgstr "Rh: "
 
-#: ftparchive/writer.cc:142
+#: ftparchive/writer.cc:143
 msgid "E: Errors apply to file "
 msgstr "G: Mae gwallau yn cymhwyso i'r ffeil "
 
-#: ftparchive/writer.cc:160 ftparchive/writer.cc:192
+#: ftparchive/writer.cc:161 ftparchive/writer.cc:193
 #, c-format
 msgid "Failed to resolve %s"
 msgstr "Methwyd datrys %s"
 
-#: ftparchive/writer.cc:173
+#: ftparchive/writer.cc:174
 msgid "Tree walking failed"
 msgstr "Methwyd cerdded y goeden"
 
-#: ftparchive/writer.cc:200
+#: ftparchive/writer.cc:201
 #, c-format
 msgid "Failed to open %s"
 msgstr "Methwyd agor %s"
 
 # FIXME
-#: ftparchive/writer.cc:259
+#: ftparchive/writer.cc:260
 #, c-format
 msgid " DeLink %s [%s]\n"
 msgstr " DatGysylltu %s [%s]\n"
 
-#: ftparchive/writer.cc:267
+#: ftparchive/writer.cc:268
 #, c-format
 msgid "Failed to readlink %s"
 msgstr "Methwyd darllen y cyswllt %s"
 
-#: ftparchive/writer.cc:271
+#: ftparchive/writer.cc:272
 #, c-format
 msgid "Failed to unlink %s"
 msgstr "Methwyd datgysylltu %s"
 
-#: ftparchive/writer.cc:278
+#: ftparchive/writer.cc:279
 #, c-format
 msgid "*** Failed to link %s to %s"
 msgstr "*** Methwyd cysylltu %s at %s"
 
-#: ftparchive/writer.cc:288
+#: ftparchive/writer.cc:289
 #, c-format
 msgid " DeLink limit of %sB hit.\n"
 msgstr "  Tarwyd y terfyn cyswllt %sB.\n"
@@ -555,22 +560,22 @@ msgstr "  Tarwyd y terfyn cyswllt %sB.\n"
 msgid "Archive had no package field"
 msgstr "Doedd dim maes pecyn gan yr archif"
 
-#: ftparchive/writer.cc:401 ftparchive/writer.cc:637
+#: ftparchive/writer.cc:401 ftparchive/writer.cc:688
 #, c-format
 msgid "  %s has no override entry\n"
 msgstr "  Does dim cofnod gwrthwneud gan %s\n"
 
-#: ftparchive/writer.cc:462 ftparchive/writer.cc:742
+#: ftparchive/writer.cc:464 ftparchive/writer.cc:793
 #, c-format
 msgid "  %s maintainer is %s not %s\n"
 msgstr "  Cynaliwr %s yw %s nid %s\n"
 
-#: ftparchive/writer.cc:647
+#: ftparchive/writer.cc:698
 #, fuzzy, c-format
 msgid "  %s has no source override entry\n"
 msgstr "  Does dim cofnod gwrthwneud gan %s\n"
 
-#: ftparchive/writer.cc:651
+#: ftparchive/writer.cc:702
 #, fuzzy, c-format
 msgid "  %s has no binary override entry either\n"
 msgstr "  Does dim cofnod gwrthwneud gan %s\n"
@@ -671,82 +676,82 @@ msgstr "Gwall wrth datgysylltu %s"
 msgid "Failed to rename %s to %s"
 msgstr "Methwyd ailenwi %s at %s"
 
-#: cmdline/apt-get.cc:127
+#: cmdline/apt-get.cc:135
 msgid "Y"
 msgstr "I"
 
-#: cmdline/apt-get.cc:149 cmdline/apt-get.cc:1756
+#: cmdline/apt-get.cc:157 apt-pkg/cachefilter.cc:29
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Gwall crynhoi patrwm - %s"
 
-#: cmdline/apt-get.cc:244
+#: cmdline/apt-get.cc:252
 msgid "The following packages have unmet dependencies:"
 msgstr "Mae gan y pecynnau canlynol ddibyniaethau heb eu bodloni:"
 
-#: cmdline/apt-get.cc:334
+#: cmdline/apt-get.cc:342
 #, c-format
 msgid "but %s is installed"
 msgstr "ond mae %s wedi ei sefydlu"
 
-#: cmdline/apt-get.cc:336
+#: cmdline/apt-get.cc:344
 #, c-format
 msgid "but %s is to be installed"
 msgstr "ond mae %s yn mynd i gael ei sefydlu"
 
-#: cmdline/apt-get.cc:343
+#: cmdline/apt-get.cc:351
 msgid "but it is not installable"
 msgstr "ond ni ellir ei sefydlu"
 
-#: cmdline/apt-get.cc:345
+#: cmdline/apt-get.cc:353
 msgid "but it is a virtual package"
 msgstr "ond mae'n becyn rhithwir"
 
-#: cmdline/apt-get.cc:348
+#: cmdline/apt-get.cc:356
 msgid "but it is not installed"
 msgstr "ond nid yw wedi ei sefydlu"
 
-#: cmdline/apt-get.cc:348
+#: cmdline/apt-get.cc:356
 msgid "but it is not going to be installed"
 msgstr "ond nid yw'n mynd i gael ei sefydlu"
 
-#: cmdline/apt-get.cc:353
+#: cmdline/apt-get.cc:361
 msgid " or"
 msgstr " neu"
 
-#: cmdline/apt-get.cc:382
+#: cmdline/apt-get.cc:392
 msgid "The following NEW packages will be installed:"
 msgstr "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
 
-#: cmdline/apt-get.cc:408
+#: cmdline/apt-get.cc:420
 msgid "The following packages will be REMOVED:"
 msgstr "Caiff y pecynnau canlynol eu TYNNU:"
 
-#: cmdline/apt-get.cc:430
+#: cmdline/apt-get.cc:442
 #, fuzzy
 msgid "The following packages have been kept back:"
 msgstr "Mae'r pecynnau canlynol wedi eu dal yn ôl"
 
-#: cmdline/apt-get.cc:451
+#: cmdline/apt-get.cc:465
 #, fuzzy
 msgid "The following packages will be upgraded:"
 msgstr "Caiff y pecynnau canlynol eu uwchraddio"
 
-#: cmdline/apt-get.cc:472
+#: cmdline/apt-get.cc:488
 #, fuzzy
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Caiff y pecynnau canlynol eu ISRADDIO"
 
-#: cmdline/apt-get.cc:492
+#: cmdline/apt-get.cc:508
 msgid "The following held packages will be changed:"
 msgstr "Caiff y pecynnau wedi eu dal canlynol eu newid:"
 
-#: cmdline/apt-get.cc:545
+#: cmdline/apt-get.cc:561
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (oherwydd %s) "
 
-#: cmdline/apt-get.cc:553
+#: cmdline/apt-get.cc:569
 #, fuzzy
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
@@ -756,231 +761,66 @@ msgstr ""
 "NI DDYLIR gwneud hyn os nad ydych chi'n gwybod yn union beth rydych chi'n\n"
 "ei wneud!"
 
-#: cmdline/apt-get.cc:584
+#: cmdline/apt-get.cc:603
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu wedi uwchraddio, %lu newydd eu sefydlu, "
 
-#: cmdline/apt-get.cc:588
+#: cmdline/apt-get.cc:607
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu wedi ailsefydlu, "
 
-#: cmdline/apt-get.cc:590
+#: cmdline/apt-get.cc:609
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu wedi eu israddio, "
 
-#: cmdline/apt-get.cc:592
+#: cmdline/apt-get.cc:611
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu i'w tynnu a %lu heb eu uwchraddio.\n"
 
-#: cmdline/apt-get.cc:596
+#: cmdline/apt-get.cc:615
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu  heb eu sefydlu na tynnu'n gyflawn.\n"
 
-#: cmdline/apt-get.cc:669
-msgid "Correcting dependencies..."
-msgstr "Yn cywiro dibyniaethau..."
-
-#: cmdline/apt-get.cc:672
-msgid " failed."
-msgstr " wedi methu."
-
-#: cmdline/apt-get.cc:675
-msgid "Unable to correct dependencies"
-msgstr "Ni ellir cywiro dibyniaethau"
-
-#: cmdline/apt-get.cc:678
-msgid "Unable to minimize the upgrade set"
-msgstr "Ni ellir bychanu y set uwchraddio"
-
-#: cmdline/apt-get.cc:680
-msgid " Done"
-msgstr " Wedi Gorffen"
-
-#: cmdline/apt-get.cc:684
-msgid "You might want to run `apt-get -f install' to correct these."
-msgstr "Efallai hoffech rhedeg `apt-get -f install' er mwyn cywiro'r rhain."
-
-#: cmdline/apt-get.cc:687
-msgid "Unmet dependencies. Try using -f."
-msgstr "Dibyniaethau heb eu bodloni. Ceisiwch ddefnyddio -f."
-
-#: cmdline/apt-get.cc:712
-#, fuzzy
-msgid "WARNING: The following packages cannot be authenticated!"
-msgstr "RHYBUDD: Ni ellir dilysu'r pecynnau canlynol yn ddiogel!"
-
-#: cmdline/apt-get.cc:716
-msgid "Authentication warning overridden.\n"
-msgstr ""
-
-#: cmdline/apt-get.cc:723
-msgid "Install these packages without verification [y/N]? "
-msgstr ""
-
-#: cmdline/apt-get.cc:725
-#, fuzzy
-msgid "Some packages could not be authenticated"
-msgstr "RHYBUDD: Ni ellir dilysu'r pecynnau canlynol yn ddiogel!"
-
-#: cmdline/apt-get.cc:734 cmdline/apt-get.cc:890
-msgid "There are problems and -y was used without --force-yes"
-msgstr "Mae problemau a defnyddwyd -y heb --force-yes"
-
-#: cmdline/apt-get.cc:775
-msgid "Internal error, InstallPackages was called with broken packages!"
-msgstr ""
-
-#: cmdline/apt-get.cc:784
-#, fuzzy
-msgid "Packages need to be removed but remove is disabled."
-msgstr "Rhaid tynnu pecynnau on mae Tynnu wedi ei analluogi."
-
-#: cmdline/apt-get.cc:795
-#, fuzzy
-msgid "Internal error, Ordering didn't finish"
-msgstr "Gwall Mewnol wrth ychwanegu dargyfeiriad"
-
-#: cmdline/apt-get.cc:811 cmdline/apt-get.cc:2099 cmdline/apt-get.cc:2132
-msgid "Unable to lock the download directory"
-msgstr "Ni ellir cloi'r cyfeiriadur lawrlwytho"
-
-#: cmdline/apt-get.cc:821 cmdline/apt-get.cc:2180 cmdline/apt-get.cc:2464
-#: apt-pkg/cachefile.cc:65
-msgid "The list of sources could not be read."
-msgstr "Methwyd darllen y rhestr ffynhonellau."
-
-#: cmdline/apt-get.cc:836
-msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
-msgstr ""
-
-#: cmdline/apt-get.cc:841
-#, c-format
-msgid "Need to get %sB/%sB of archives.\n"
-msgstr "Mae angeyn cyrchu %sB/%sB o archifau.\n"
-
-#: cmdline/apt-get.cc:844
-#, c-format
-msgid "Need to get %sB of archives.\n"
-msgstr "Mae angen cyrchu %sB o archifau.\n"
-
-#: cmdline/apt-get.cc:849
+#: cmdline/apt-get.cc:635
 #, fuzzy, c-format
-msgid "After this operation, %sB of additional disk space will be used.\n"
-msgstr "Ar ôl dadbacio defnyddir %sB o ofod disg ychwanegol.\n"
+msgid "Note, selecting '%s' for task '%s'\n"
+msgstr "Sylwer, yn dewis %s ar gyfer y patrwm '%s'\n"
 
-#: cmdline/apt-get.cc:852
+#: cmdline/apt-get.cc:641
 #, fuzzy, c-format
-msgid "After this operation, %sB disk space will be freed.\n"
-msgstr "Ar ôl dadbactio caiff %sB o ofod disg ei rhyddhau.\n"
+msgid "Note, selecting '%s' for regex '%s'\n"
+msgstr "Sylwer, yn dewis %s ar gyfer y patrwm '%s'\n"
 
-#: cmdline/apt-get.cc:867 cmdline/apt-get.cc:870 cmdline/apt-get.cc:2303
-#: cmdline/apt-get.cc:2306
+#: cmdline/apt-get.cc:648
 #, fuzzy, c-format
-msgid "Couldn't determine free space in %s"
-msgstr "Does dim digon o le rhydd yn %s gennych"
+msgid "Selected version '%s' (%s) for '%s'\n"
+msgstr "Dewiswyd fersiwn %s (%s) ar gyfer %s\n"
 
-#: cmdline/apt-get.cc:880
-#, c-format
-msgid "You don't have enough free space in %s."
-msgstr "Does dim digon o le rhydd gennych yn %s."
-
-#: cmdline/apt-get.cc:896 cmdline/apt-get.cc:916
-msgid "Trivial Only specified but this is not a trivial operation."
-msgstr "Penodwyd Syml Yn Unig ond nid yw hyn yn weithred syml."
-
-#: cmdline/apt-get.cc:898
-msgid "Yes, do as I say!"
-msgstr "Ie, gwna fel rydw i'n dweud!"
-
-#: cmdline/apt-get.cc:900
-#, fuzzy, c-format
-msgid ""
-"You are about to do something potentially harmful.\n"
-"To continue type in the phrase '%s'\n"
-" ?] "
-msgstr ""
-"Rydych ar fin gwneud rhywbeth a all fod yn niweidiol\n"
-"Er mwyn mynd ymlaen, teipiwch y frawddeg '%s'\n"
-" ?]"
-
-#: cmdline/apt-get.cc:906 cmdline/apt-get.cc:925
-msgid "Abort."
-msgstr "Erthylu."
-
-#: cmdline/apt-get.cc:921
-#, fuzzy
-msgid "Do you want to continue [Y/n]? "
-msgstr "Ydych chi eisiau mynd ymlaen? [Y/n] "
-
-#: cmdline/apt-get.cc:993 cmdline/apt-get.cc:2359 apt-pkg/algorithms.cc:1388
-#, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Methwyd cyrchu %s  %s\n"
-
-#: cmdline/apt-get.cc:1011
-msgid "Some files failed to download"
-msgstr "Methodd rhai ffeiliau lawrlwytho"
-
-#: cmdline/apt-get.cc:1012 cmdline/apt-get.cc:2368
-msgid "Download complete and in download only mode"
-msgstr "Lawrlwytho yn gyflawn ac yn y modd lawrlwytho'n unig"
-
-#: cmdline/apt-get.cc:1018
-msgid ""
-"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
-"missing?"
-msgstr ""
-"Ni ellir cyrchu rhai archifau, efallai dylwch rhedeg apt-get update, neu "
-"geidio defnyddio --fix-missing?"
-
-#: cmdline/apt-get.cc:1022
-msgid "--fix-missing and media swapping is not currently supported"
-msgstr "Ni chynhelir cyfnewid cyfrwng efo --fix-missing ar hyn o bryd"
-
-#: cmdline/apt-get.cc:1027
-msgid "Unable to correct missing packages."
-msgstr "Ni ellir cywiro pecynnau ar goll."
-
-#: cmdline/apt-get.cc:1028
-#, fuzzy
-msgid "Aborting install."
-msgstr "Yn Erthylu'r Sefydliad."
-
-#: cmdline/apt-get.cc:1086
-#, c-format
-msgid "Note, selecting %s instead of %s\n"
-msgstr "Sylwer, yn dewis %s yn hytrach na %s\n"
-
-#: cmdline/apt-get.cc:1097
-#, c-format
-msgid "Skipping %s, it is already installed and upgrade is not set.\n"
-msgstr "Yn hepgor %s, mae wedi ei sefydlu a nid yw uwchraddio wedi ei osod.\n"
-
-#: cmdline/apt-get.cc:1115
-#, c-format
-msgid "Package %s is not installed, so not removed\n"
-msgstr "Nid yw'r pecyn %s wedi ei sefydlu, felly ni chaif ei dynnu\n"
-
-#: cmdline/apt-get.cc:1126
+#: cmdline/apt-get.cc:658
 #, c-format
 msgid "Package %s is a virtual package provided by:\n"
 msgstr "Mae'r pecyn %s yn becyn rhithwir a ddarparir gan:\n"
 
-#: cmdline/apt-get.cc:1138
+#: cmdline/apt-get.cc:669
 msgid " [Installed]"
 msgstr " [Sefydliwyd]"
 
-#: cmdline/apt-get.cc:1143
+#: cmdline/apt-get.cc:678
+#, fuzzy
+msgid " [Not candidate version]"
+msgstr "Fersiynau Posib"
+
+#: cmdline/apt-get.cc:680
 msgid "You should explicitly select one to install."
 msgstr "Dylech ddewis un yn benodol i'w sefydlu."
 
 # FIXME: punctuation
-#: cmdline/apt-get.cc:1148
+#: cmdline/apt-get.cc:683
 #, fuzzy, c-format
 msgid ""
 "Package %s is not available, but is referred to by another package.\n"
@@ -992,85 +832,285 @@ msgstr ""
 "gael ei uwchlwytho, cafodd ei ddarfod neu nid yw ar gael drwy gynnwys y\n"
 "ffeil sources.list.\n"
 
-#: cmdline/apt-get.cc:1167
+#: cmdline/apt-get.cc:701
 msgid "However the following packages replace it:"
 msgstr "Fodd bynnag, mae'r pecynnau canlynol yn cymryd ei le:"
 
-#: cmdline/apt-get.cc:1170
-#, c-format
-msgid "Package %s has no installation candidate"
+#: cmdline/apt-get.cc:713
+#, fuzzy, c-format
+msgid "Package '%s' has no installation candidate"
 msgstr "Does dim ymgeisydd sefydlu gan y pecyn %s"
 
-#: cmdline/apt-get.cc:1190
+#: cmdline/apt-get.cc:724
+#, c-format
+msgid "Virtual packages like '%s' can't be removed\n"
+msgstr ""
+
+#: cmdline/apt-get.cc:755
+#, fuzzy, c-format
+msgid "Note, selecting '%s' instead of '%s'\n"
+msgstr "Sylwer, yn dewis %s yn hytrach na %s\n"
+
+#: cmdline/apt-get.cc:785
+#, c-format
+msgid "Skipping %s, it is already installed and upgrade is not set.\n"
+msgstr "Yn hepgor %s, mae wedi ei sefydlu a nid yw uwchraddio wedi ei osod.\n"
+
+#: cmdline/apt-get.cc:789
+#, fuzzy, c-format
+msgid "Skipping %s, it is not installed and only upgrades are requested.\n"
+msgstr "Yn hepgor %s, mae wedi ei sefydlu a nid yw uwchraddio wedi ei osod.\n"
+
+#: cmdline/apt-get.cc:799
 #, c-format
 msgid "Reinstallation of %s is not possible, it cannot be downloaded.\n"
 msgstr "Nid yw ailsefydlu %s yn bosib, gan ni ellir ei lawrlwytho.\n"
 
-#: cmdline/apt-get.cc:1198
+#: cmdline/apt-get.cc:804
 #, c-format
 msgid "%s is already the newest version.\n"
 msgstr "Mae %s y fersiwn mwyaf newydd eisioes.\n"
 
-#: cmdline/apt-get.cc:1227
-#, c-format
-msgid "Release '%s' for '%s' was not found"
-msgstr "Ni chanfuwyd y rhyddhad '%s' o '%s'"
+#: cmdline/apt-get.cc:823 cmdline/apt-get.cc:1992
+#, fuzzy, c-format
+msgid "%s set to manually installed.\n"
+msgstr "ond mae %s yn mynd i gael ei sefydlu"
 
-#: cmdline/apt-get.cc:1229
+#: cmdline/apt-get.cc:863
 #, c-format
-msgid "Version '%s' for '%s' was not found"
-msgstr "Ni chanfuwyd y fersiwn '%s' o '%s' "
+msgid "Package %s is not installed, so not removed\n"
+msgstr "Nid yw'r pecyn %s wedi ei sefydlu, felly ni chaif ei dynnu\n"
 
-#: cmdline/apt-get.cc:1235
+#: cmdline/apt-get.cc:938
+msgid "Correcting dependencies..."
+msgstr "Yn cywiro dibyniaethau..."
+
+#: cmdline/apt-get.cc:941
+msgid " failed."
+msgstr " wedi methu."
+
+#: cmdline/apt-get.cc:944
+msgid "Unable to correct dependencies"
+msgstr "Ni ellir cywiro dibyniaethau"
+
+#: cmdline/apt-get.cc:947
+msgid "Unable to minimize the upgrade set"
+msgstr "Ni ellir bychanu y set uwchraddio"
+
+#: cmdline/apt-get.cc:949
+msgid " Done"
+msgstr " Wedi Gorffen"
+
+#: cmdline/apt-get.cc:953
+msgid "You might want to run 'apt-get -f install' to correct these."
+msgstr "Efallai hoffech rhedeg 'apt-get -f install' er mwyn cywiro'r rhain."
+
+#: cmdline/apt-get.cc:956
+msgid "Unmet dependencies. Try using -f."
+msgstr "Dibyniaethau heb eu bodloni. Ceisiwch ddefnyddio -f."
+
+#: cmdline/apt-get.cc:981
+#, fuzzy
+msgid "WARNING: The following packages cannot be authenticated!"
+msgstr "RHYBUDD: Ni ellir dilysu'r pecynnau canlynol yn ddiogel!"
+
+#: cmdline/apt-get.cc:985
+msgid "Authentication warning overridden.\n"
+msgstr ""
+
+#: cmdline/apt-get.cc:992
+msgid "Install these packages without verification [y/N]? "
+msgstr ""
+
+#: cmdline/apt-get.cc:994
+#, fuzzy
+msgid "Some packages could not be authenticated"
+msgstr "RHYBUDD: Ni ellir dilysu'r pecynnau canlynol yn ddiogel!"
+
+#: cmdline/apt-get.cc:1003 cmdline/apt-get.cc:1166
+msgid "There are problems and -y was used without --force-yes"
+msgstr "Mae problemau a defnyddwyd -y heb --force-yes"
+
+#: cmdline/apt-get.cc:1044
+msgid "Internal error, InstallPackages was called with broken packages!"
+msgstr ""
+
+#: cmdline/apt-get.cc:1053
+#, fuzzy
+msgid "Packages need to be removed but remove is disabled."
+msgstr "Rhaid tynnu pecynnau on mae Tynnu wedi ei analluogi."
+
+#: cmdline/apt-get.cc:1064
+#, fuzzy
+msgid "Internal error, Ordering didn't finish"
+msgstr "Gwall Mewnol wrth ychwanegu dargyfeiriad"
+
+#: cmdline/apt-get.cc:1104
+msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:1111
 #, c-format
-msgid "Selected version %s (%s) for %s\n"
-msgstr "Dewiswyd fersiwn %s (%s) ar gyfer %s\n"
+msgid "Need to get %sB/%sB of archives.\n"
+msgstr "Mae angeyn cyrchu %sB/%sB o archifau.\n"
 
-#: cmdline/apt-get.cc:1335
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:1116
+#, c-format
+msgid "Need to get %sB of archives.\n"
+msgstr "Mae angen cyrchu %sB o archifau.\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:1123
+#, fuzzy, c-format
+msgid "After this operation, %sB of additional disk space will be used.\n"
+msgstr "Ar ôl dadbacio defnyddir %sB o ofod disg ychwanegol.\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:1128
+#, fuzzy, c-format
+msgid "After this operation, %sB disk space will be freed.\n"
+msgstr "Ar ôl dadbactio caiff %sB o ofod disg ei rhyddhau.\n"
+
+#: cmdline/apt-get.cc:1143 cmdline/apt-get.cc:1146 cmdline/apt-get.cc:2332
+#: cmdline/apt-get.cc:2335
+#, fuzzy, c-format
+msgid "Couldn't determine free space in %s"
+msgstr "Does dim digon o le rhydd yn %s gennych"
+
+#: cmdline/apt-get.cc:1156
+#, c-format
+msgid "You don't have enough free space in %s."
+msgstr "Does dim digon o le rhydd gennych yn %s."
+
+#: cmdline/apt-get.cc:1172 cmdline/apt-get.cc:1192
+msgid "Trivial Only specified but this is not a trivial operation."
+msgstr "Penodwyd Syml Yn Unig ond nid yw hyn yn weithred syml."
+
+#: cmdline/apt-get.cc:1174
+msgid "Yes, do as I say!"
+msgstr "Ie, gwna fel rydw i'n dweud!"
+
+#: cmdline/apt-get.cc:1176
+#, fuzzy, c-format
+msgid ""
+"You are about to do something potentially harmful.\n"
+"To continue type in the phrase '%s'\n"
+" ?] "
+msgstr ""
+"Rydych ar fin gwneud rhywbeth a all fod yn niweidiol\n"
+"Er mwyn mynd ymlaen, teipiwch y frawddeg '%s'\n"
+" ?]"
+
+#: cmdline/apt-get.cc:1182 cmdline/apt-get.cc:1201
+msgid "Abort."
+msgstr "Erthylu."
+
+#: cmdline/apt-get.cc:1197
+#, fuzzy
+msgid "Do you want to continue [Y/n]? "
+msgstr "Ydych chi eisiau mynd ymlaen? [Y/n] "
+
+#: cmdline/apt-get.cc:1269 cmdline/apt-get.cc:2392 apt-pkg/algorithms.cc:1462
+#, c-format
+msgid "Failed to fetch %s  %s\n"
+msgstr "Methwyd cyrchu %s  %s\n"
+
+#: cmdline/apt-get.cc:1287
+msgid "Some files failed to download"
+msgstr "Methodd rhai ffeiliau lawrlwytho"
+
+#: cmdline/apt-get.cc:1288 cmdline/apt-get.cc:2401
+msgid "Download complete and in download only mode"
+msgstr "Lawrlwytho yn gyflawn ac yn y modd lawrlwytho'n unig"
+
+#: cmdline/apt-get.cc:1294
+msgid ""
+"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
+"missing?"
+msgstr ""
+"Ni ellir cyrchu rhai archifau, efallai dylwch rhedeg apt-get update, neu "
+"geidio defnyddio --fix-missing?"
+
+#: cmdline/apt-get.cc:1298
+msgid "--fix-missing and media swapping is not currently supported"
+msgstr "Ni chynhelir cyfnewid cyfrwng efo --fix-missing ar hyn o bryd"
+
+#: cmdline/apt-get.cc:1303
+msgid "Unable to correct missing packages."
+msgstr "Ni ellir cywiro pecynnau ar goll."
+
+#: cmdline/apt-get.cc:1304
+#, fuzzy
+msgid "Aborting install."
+msgstr "Yn Erthylu'r Sefydliad."
+
+#: cmdline/apt-get.cc:1332
+msgid ""
+"The following package disappeared from your system as\n"
+"all files have been overwritten by other packages:"
+msgid_plural ""
+"The following packages disappeared from your system as\n"
+"all files have been overwritten by other packages:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cmdline/apt-get.cc:1336
+msgid "Note: This is done automatic and on purpose by dpkg."
+msgstr ""
+
+#: cmdline/apt-get.cc:1466
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:1367
+#: cmdline/apt-get.cc:1498
 #, fuzzy, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Methwyd stat() o'r rhestr pecyn ffynhonell %s"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:1405
+#: cmdline/apt-get.cc:1536
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:1421
+#: cmdline/apt-get.cc:1552
 msgid "The update command takes no arguments"
 msgstr "Nid yw'r gorchymyn diweddaru yn derbyn ymresymiadau"
 
-#: cmdline/apt-get.cc:1434
-msgid "Unable to lock the list directory"
-msgstr "Ni ellir cloi'r cyfeiriadur rhestr"
-
-#: cmdline/apt-get.cc:1490
+#: cmdline/apt-get.cc:1618
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr ""
 
-#: cmdline/apt-get.cc:1539
+#: cmdline/apt-get.cc:1666
 #, fuzzy
 msgid ""
+"The following package was automatically installed and is no longer required:"
+msgid_plural ""
 "The following packages were automatically installed and are no longer "
 "required:"
-msgstr "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
+msgstr[0] "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
+msgstr[1] "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
 
-#: cmdline/apt-get.cc:1541
+#: cmdline/apt-get.cc:1670
 #, fuzzy, c-format
-msgid "%lu packages were automatically installed and are no longer required.\n"
-msgstr "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
+msgid "%lu package was automatically installed and is no longer required.\n"
+msgid_plural ""
+"%lu packages were automatically installed and are no longer required.\n"
+msgstr[0] "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
+msgstr[1] "Caiff y pecynnau NEWYDD canlynol eu sefydlu:"
 
-#: cmdline/apt-get.cc:1542
+#: cmdline/apt-get.cc:1672
 msgid "Use 'apt-get autoremove' to remove them."
 msgstr ""
 
-#: cmdline/apt-get.cc:1547
+#: cmdline/apt-get.cc:1677
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1086,46 +1126,26 @@ msgstr ""
 #. "that package should be filed.") << endl;
 #. }
 #.
-#: cmdline/apt-get.cc:1550 cmdline/apt-get.cc:1841
+#: cmdline/apt-get.cc:1680 cmdline/apt-get.cc:1822
 msgid "The following information may help to resolve the situation:"
 msgstr "Gall y wybodaeth canlynol gynorthwyo'n datrys y sefyllfa:"
 
-#: cmdline/apt-get.cc:1554
+#: cmdline/apt-get.cc:1684
 #, fuzzy
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Gwall Mewnol, torrodd AllUpgrade bethau"
 
-#: cmdline/apt-get.cc:1573
+#: cmdline/apt-get.cc:1703
 #, fuzzy
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Gwall Mewnol, torrodd AllUpgrade bethau"
 
-#: cmdline/apt-get.cc:1628
-#, fuzzy, c-format
-msgid "Couldn't find task %s"
-msgstr "Methwyd canfod pecyn %s"
-
-#: cmdline/apt-get.cc:1743 cmdline/apt-get.cc:1779
-#, c-format
-msgid "Couldn't find package %s"
-msgstr "Methwyd canfod pecyn %s"
-
-#: cmdline/apt-get.cc:1766
-#, c-format
-msgid "Note, selecting %s for regex '%s'\n"
-msgstr "Sylwer, yn dewis %s ar gyfer y patrwm '%s'\n"
-
-#: cmdline/apt-get.cc:1798
-#, fuzzy, c-format
-msgid "%s set to manually installed.\n"
-msgstr "ond mae %s yn mynd i gael ei sefydlu"
-
-#: cmdline/apt-get.cc:1811
-msgid "You might want to run `apt-get -f install' to correct these:"
-msgstr "Efallai hoffech rhedeg `apt-get -f install' er mwyn cywiro'r rhain:"
+#: cmdline/apt-get.cc:1792
+msgid "You might want to run 'apt-get -f install' to correct these:"
+msgstr "Efallai hoffech rhedeg 'apt-get -f install' er mwyn cywiro'r rhain:"
 
 # FIXME
-#: cmdline/apt-get.cc:1814
+#: cmdline/apt-get.cc:1795
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1134,7 +1154,7 @@ msgstr ""
 "pecyn (neu penodwch ddatrys)"
 
 # FIXME: needs commas
-#: cmdline/apt-get.cc:1826
+#: cmdline/apt-get.cc:1807
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1146,57 +1166,71 @@ msgstr ""
 "ansefydlog, fod rhai pecynnau angenrheidiol heb gael eu creu eto neu\n"
 "heb gael eu symud allan o Incoming."
 
-#: cmdline/apt-get.cc:1844
+#: cmdline/apt-get.cc:1825
 msgid "Broken packages"
 msgstr "Pecynnau wedi torri"
 
-#: cmdline/apt-get.cc:1873
+#: cmdline/apt-get.cc:1854
 msgid "The following extra packages will be installed:"
 msgstr "Caiff y pecynnau canlynol ychwanegol eu sefydlu:"
 
-#: cmdline/apt-get.cc:1962
+#: cmdline/apt-get.cc:1944
 msgid "Suggested packages:"
 msgstr "Pecynnau a awgrymmir:"
 
-#: cmdline/apt-get.cc:1963
+#: cmdline/apt-get.cc:1945
 msgid "Recommended packages:"
 msgstr "Pecynnau a argymhellir:"
 
-#: cmdline/apt-get.cc:1992
+#: cmdline/apt-get.cc:1987
+#, c-format
+msgid "Couldn't find package %s"
+msgstr "Methwyd canfod pecyn %s"
+
+#: cmdline/apt-get.cc:1994
+#, fuzzy, c-format
+msgid "%s set to automatically installed.\n"
+msgstr "ond mae %s yn mynd i gael ei sefydlu"
+
+#: cmdline/apt-get.cc:2015
 #, fuzzy
 msgid "Calculating upgrade... "
 msgstr "Yn Cyfrifo'r Uwchraddiad... "
 
-#: cmdline/apt-get.cc:1995 methods/ftp.cc:708 methods/connect.cc:111
+#: cmdline/apt-get.cc:2018 methods/ftp.cc:707 methods/connect.cc:111
 msgid "Failed"
 msgstr "Methwyd"
 
-#: cmdline/apt-get.cc:2000
+#: cmdline/apt-get.cc:2023
 msgid "Done"
 msgstr "Wedi Gorffen"
 
-#: cmdline/apt-get.cc:2067 cmdline/apt-get.cc:2075
+#: cmdline/apt-get.cc:2090 cmdline/apt-get.cc:2098
 #, fuzzy
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Gwall Mewnol, torrodd AllUpgrade bethau"
 
-#: cmdline/apt-get.cc:2175
+#: cmdline/apt-get.cc:2122 cmdline/apt-get.cc:2155
+msgid "Unable to lock the download directory"
+msgstr "Ni ellir cloi'r cyfeiriadur lawrlwytho"
+
+#: cmdline/apt-get.cc:2198
 msgid "Must specify at least one package to fetch source for"
 msgstr "Rhaid penodi o leiaf un pecyn i gyrchi ffynhonell ar ei gyfer"
 
-#: cmdline/apt-get.cc:2205 cmdline/apt-get.cc:2482
+#: cmdline/apt-get.cc:2238 cmdline/apt-get.cc:2519
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Ni ellir canfod pecyn ffynhonell ar gyfer %s"
 
-#: cmdline/apt-get.cc:2221
+#: cmdline/apt-get.cc:2254
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2226
+#: cmdline/apt-get.cc:2259
 #, c-format
 msgid ""
 "Please use:\n"
@@ -1204,84 +1238,88 @@ msgid ""
 "to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2281
+#: cmdline/apt-get.cc:2310
 #, fuzzy, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Yn hepgor dadbacio y ffynhonell wedi ei dadbacio eisioes yn %s\n"
 
-#: cmdline/apt-get.cc:2316
+#: cmdline/apt-get.cc:2345
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Does dim digon o le rhydd yn %s gennych"
 
-#: cmdline/apt-get.cc:2322
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:2353
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Rhaid cyrchu %sB/%sB o archifau ffynhonell.\n"
 
-#: cmdline/apt-get.cc:2325
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: cmdline/apt-get.cc:2358
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Rhaid cyrchu %sB o archifau ffynhonell.\n"
 
-#: cmdline/apt-get.cc:2331
+#: cmdline/apt-get.cc:2364
 #, fuzzy, c-format
 msgid "Fetch source %s\n"
 msgstr "Cyrchu Ffynhonell %s\n"
 
-#: cmdline/apt-get.cc:2364
+#: cmdline/apt-get.cc:2397
 msgid "Failed to fetch some archives."
 msgstr "Methwyd cyrchu rhai archifau."
 
-#: cmdline/apt-get.cc:2393
+#: cmdline/apt-get.cc:2427
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Yn hepgor dadbacio y ffynhonell wedi ei dadbacio eisioes yn %s\n"
 
-#: cmdline/apt-get.cc:2405
+#: cmdline/apt-get.cc:2439
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Methodd y gorchymyn dadbacio '%s'.\n"
 
-#: cmdline/apt-get.cc:2406
+#: cmdline/apt-get.cc:2440
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2423
+#: cmdline/apt-get.cc:2457
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Methodd y gorchymyn adeiladu '%s'.\n"
 
-#: cmdline/apt-get.cc:2443
+#: cmdline/apt-get.cc:2477
 msgid "Child process failed"
 msgstr "Methodd proses plentyn"
 
-#: cmdline/apt-get.cc:2459
+#: cmdline/apt-get.cc:2493
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Rhaid penodi o leiaf un pecyn i wirio dibyniaethau adeiladu ar eu cyfer"
 
-#: cmdline/apt-get.cc:2487
+#: cmdline/apt-get.cc:2524
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Ni ellir cyrchu manylion dibyniaeth adeiladu ar gyfer %s"
 
-#: cmdline/apt-get.cc:2507
+#: cmdline/apt-get.cc:2544
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "Nid oes dibyniaethau adeiladu gan %s.\n"
 
-#: cmdline/apt-get.cc:2559
+#: cmdline/apt-get.cc:2595
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr ""
-"Ni ellir bodloni dibyniaeth %s ar gyfer %s oherwydd ni ellir canfod y pecyn %"
-"s"
+"Ni ellir bodloni dibyniaeth %s ar gyfer %s oherwydd ni ellir canfod y pecyn "
+"%s"
 
-#: cmdline/apt-get.cc:2612
+#: cmdline/apt-get.cc:2648
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
@@ -1290,34 +1328,34 @@ msgstr ""
 "Ni ellir bodloni'r dibyniaeth %s ar gyfer %s oherwydd does dim fersiwn sydd "
 "ar gael o'r pecyn %s yn gallu bodloni'r gofynion ferswin"
 
-#: cmdline/apt-get.cc:2648
+#: cmdline/apt-get.cc:2684
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Methwyd bodloni dibynniaeth %s am %s: Mae'r pecyn sefydliedig %s yn rhy "
 "newydd"
 
-#: cmdline/apt-get.cc:2675
+#: cmdline/apt-get.cc:2711
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Methwyd bodloni dibyniaeth %s am %s: %s"
 
-#: cmdline/apt-get.cc:2691
+#: cmdline/apt-get.cc:2727
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Methwyd bodloni'r dibyniaethau adeiladu ar gyfer %s."
 
-#: cmdline/apt-get.cc:2696
+#: cmdline/apt-get.cc:2732
 msgid "Failed to process build dependencies"
 msgstr "Methwyd prosesu dibyniaethau adeiladu"
 
-#: cmdline/apt-get.cc:2728
+#: cmdline/apt-get.cc:2763
 #, fuzzy
 msgid "Supported modules:"
 msgstr "Modylau a Gynhelir:"
 
 # FIXME: split
-#: cmdline/apt-get.cc:2769
+#: cmdline/apt-get.cc:2804
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1342,6 +1380,8 @@ msgid ""
 "   clean - Erase downloaded archive files\n"
 "   autoclean - Erase old downloaded archive files\n"
 "   check - Verify that there are no broken dependencies\n"
+"   markauto - Mark the given packages as automatically installed\n"
+"   unmarkauto - Mark the given packages as manually installed\n"
 "\n"
 "Options:\n"
 "  -h  This help text.\n"
@@ -1402,7 +1442,7 @@ msgstr ""
 "\n"
 "                   Mae gan yr APT hwn bŵerau buwch hudol.\n"
 
-#: cmdline/apt-get.cc:2936
+#: cmdline/apt-get.cc:2960
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -1656,11 +1696,11 @@ msgstr "Mae'r ffeil %s/%s yn trosysgrifo'r un yn y pecyn %s"
 
 #. Only warn if there are no sources.list.d.
 #. Only warn if there is no sources.list file.
-#: apt-inst/extract.cc:464 apt-pkg/contrib/cdromutl.cc:166
-#: apt-pkg/contrib/fileutl.cc:240 apt-pkg/sourcelist.cc:159
-#: apt-pkg/sourcelist.cc:165 apt-pkg/acquire.cc:419 apt-pkg/init.cc:93
-#: apt-pkg/init.cc:101 apt-pkg/clean.cc:33 apt-pkg/policy.cc:279
-#: methods/mirror.cc:85
+#: apt-inst/extract.cc:464 apt-pkg/contrib/cdromutl.cc:179
+#: apt-pkg/contrib/fileutl.cc:311 apt-pkg/sourcelist.cc:204
+#: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:103
+#: apt-pkg/init.cc:111 apt-pkg/clean.cc:33 apt-pkg/policy.cc:307
+#: methods/mirror.cc:87
 #, c-format
 msgid "Unable to read %s"
 msgstr "Ni ellir darllen %s"
@@ -1689,10 +1729,9 @@ msgstr "Methwyd stat() ar %sinfo"
 msgid "The info and temp directories need to be on the same filesystem"
 msgstr "Rhaid i'r cyfeiriaduron 'info' a 'temp' for ar yr un system ffeiliau"
 
-#. Build the status cache
-#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:793
-#: apt-pkg/pkgcachegen.cc:865 apt-pkg/pkgcachegen.cc:870
-#: apt-pkg/pkgcachegen.cc:1008
+#: apt-inst/deb/dpkgdb.cc:135 apt-pkg/pkgcachegen.cc:1070
+#: apt-pkg/pkgcachegen.cc:1174 apt-pkg/pkgcachegen.cc:1180
+#: apt-pkg/pkgcachegen.cc:1326
 #, fuzzy
 msgid "Reading package lists"
 msgstr "Yn Darllen Rhestrau Pecynnau"
@@ -1805,6 +1844,27 @@ msgstr "Methwyd lleoli ffeil rheoli dilys"
 msgid "Unparsable control file"
 msgstr "Ffeil rheoli ni ellir ei ramadegu"
 
+#: methods/bzip2.cc:65
+#, c-format
+msgid "Couldn't open pipe for %s"
+msgstr "Methwyd agor pibell ar gyfer %s"
+
+#: methods/bzip2.cc:109
+#, c-format
+msgid "Read error from %s process"
+msgstr "Gwall darllen o broses %s"
+
+#: methods/bzip2.cc:141 methods/bzip2.cc:150 methods/copy.cc:43
+#: methods/gzip.cc:93 methods/gzip.cc:102 methods/rred.cc:486
+#: methods/rred.cc:495
+msgid "Failed to stat"
+msgstr "Methwyd stat()"
+
+#: methods/bzip2.cc:147 methods/copy.cc:80 methods/gzip.cc:99
+#: methods/rred.cc:492
+msgid "Failed to set modification time"
+msgstr "Methwyd gosod amser newid"
+
 #: methods/cdrom.cc:199
 #, c-format
 msgid "Unable to read the cdrom database %s"
@@ -1838,15 +1898,6 @@ msgstr "Ffeil heb ei ganfod"
 #: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
 msgid "File not found"
 msgstr "Ffeil heb ei ganfod"
-
-#: methods/copy.cc:43 methods/gzip.cc:141 methods/gzip.cc:150
-#: methods/rred.cc:483 methods/rred.cc:492
-msgid "Failed to stat"
-msgstr "Methwyd stat()"
-
-#: methods/copy.cc:80 methods/gzip.cc:147 methods/rred.cc:489
-msgid "Failed to set modification time"
-msgstr "Methwyd gosod amser newid"
 
 #: methods/file.cc:44
 msgid "Invalid URI, local URIS must not start with //"
@@ -1907,7 +1958,7 @@ msgstr "Goramser cysylltu"
 msgid "Server closed the connection"
 msgstr "Caeodd y gweinydd y cysylltiad"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:667 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:784 methods/rsh.cc:190
 msgid "Read error"
 msgstr "Gwall darllen"
 
@@ -1919,87 +1970,87 @@ msgstr "Gorlifodd ateb y byffer."
 msgid "Protocol corruption"
 msgstr "Llygr protocol"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:706 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:826 methods/rsh.cc:232
 msgid "Write error"
 msgstr "Gwall ysgrifennu"
 
-#: methods/ftp.cc:693 methods/ftp.cc:699 methods/ftp.cc:735
+#: methods/ftp.cc:692 methods/ftp.cc:698 methods/ftp.cc:734
 msgid "Could not create a socket"
 msgstr "Methwyd creu soced"
 
-#: methods/ftp.cc:704
+#: methods/ftp.cc:703
 msgid "Could not connect data socket, connection timed out"
 msgstr "Methwyd cysylltu soced data, goramserodd y cyslltiad"
 
-#: methods/ftp.cc:710
+#: methods/ftp.cc:709
 #, fuzzy
 msgid "Could not connect passive socket."
 msgstr "Methwyd cysylltu soced goddefol"
 
 # FIXME
-#: methods/ftp.cc:728
+#: methods/ftp.cc:727
 msgid "getaddrinfo was unable to get a listening socket"
 msgstr "Methodd getaddrinfo gael soced gwrando"
 
-#: methods/ftp.cc:742
+#: methods/ftp.cc:741
 msgid "Could not bind a socket"
 msgstr "Methwyd rhwymo soced"
 
-#: methods/ftp.cc:746
+#: methods/ftp.cc:745
 msgid "Could not listen on the socket"
 msgstr "Methwyd gwrando ar y soced"
 
-#: methods/ftp.cc:753
+#: methods/ftp.cc:752
 msgid "Could not determine the socket's name"
 msgstr "Methwyd canfod enw'r soced"
 
-#: methods/ftp.cc:785
+#: methods/ftp.cc:784
 msgid "Unable to send PORT command"
 msgstr "Methwyd danfod gorchymyn PORT"
 
-#: methods/ftp.cc:795
+#: methods/ftp.cc:794
 #, c-format
 msgid "Unknown address family %u (AF_*)"
 msgstr "Teulu cyfeiriad anhysbys %u (AF_*)"
 
-#: methods/ftp.cc:804
+#: methods/ftp.cc:803
 #, c-format
 msgid "EPRT failed, server said: %s"
 msgstr "Methodd gorchymyn EPRT; meddai'r gweinydd: %s"
 
-#: methods/ftp.cc:824
+#: methods/ftp.cc:823
 msgid "Data socket connect timed out"
 msgstr "Goramserodd cysylltiad y soced data"
 
-#: methods/ftp.cc:831
+#: methods/ftp.cc:830
 msgid "Unable to accept connection"
 msgstr "Methwyd derbyn cysylltiad"
 
-#: methods/ftp.cc:870 methods/http.cc:1005 methods/rsh.cc:303
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
 msgid "Problem hashing file"
 msgstr "Problem wrth stwnshio ffeil"
 
-#: methods/ftp.cc:883
+#: methods/ftp.cc:882
 #, c-format
 msgid "Unable to fetch file, server said '%s'"
 msgstr "Methwyd cyrchu ffeil; meddai'r gweinydd '%s'"
 
-#: methods/ftp.cc:898 methods/rsh.cc:322
+#: methods/ftp.cc:897 methods/rsh.cc:321
 msgid "Data socket timed out"
 msgstr "Goramserodd soced data"
 
-#: methods/ftp.cc:928
+#: methods/ftp.cc:927
 #, c-format
 msgid "Data transfer failed, server said '%s'"
 msgstr "Methodd trosgludiad data; meddai'r gweinydd '%s'"
 
 #. Get the files information
-#: methods/ftp.cc:1005
+#: methods/ftp.cc:1004
 msgid "Query"
 msgstr "Ymholiad"
 
 # FIXME
-#: methods/ftp.cc:1117
+#: methods/ftp.cc:1116
 msgid "Unable to invoke "
 msgstr "Methwyd gweithredu "
 
@@ -2035,7 +2086,7 @@ msgstr "Methwyd cysylltu i %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:425
+#: methods/connect.cc:149 methods/rsh.cc:424
 #, c-format
 msgid "Connecting to %s"
 msgstr "Yn cysylltu i %s"
@@ -2061,57 +2112,38 @@ msgid "Unable to connect to %s:%s:"
 msgstr "Methwyd cysylltu i %s %s:"
 
 #. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:78
+#: methods/gpgv.cc:71
 #, fuzzy, c-format
 msgid "No keyring installed in %s."
 msgstr "Yn Erthylu'r Sefydliad."
 
-#: methods/gpgv.cc:104
-msgid "E: Too many keyrings should be passed to gpgv. Exiting."
-msgstr ""
-
-#: methods/gpgv.cc:121
-msgid "E: Argument list from Acquire::gpgv::Options too long. Exiting."
-msgstr ""
-
-#: methods/gpgv.cc:237
+#: methods/gpgv.cc:163
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 
-#: methods/gpgv.cc:242
+#: methods/gpgv.cc:168
 msgid "At least one invalid signature was encountered."
 msgstr ""
 
-#: methods/gpgv.cc:246
-#, c-format
-msgid "Could not execute '%s' to verify signature (is gpgv installed?)"
+#: methods/gpgv.cc:172
+msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 
-#: methods/gpgv.cc:251
+#: methods/gpgv.cc:177
 msgid "Unknown error executing gpgv"
 msgstr ""
 
-#: methods/gpgv.cc:285 methods/gpgv.cc:292
+#: methods/gpgv.cc:211 methods/gpgv.cc:218
 #, fuzzy
 msgid "The following signatures were invalid:\n"
 msgstr "Caiff y pecynnau canlynol ychwanegol eu sefydlu:"
 
-#: methods/gpgv.cc:299
+#: methods/gpgv.cc:225
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
 msgstr ""
-
-#: methods/gzip.cc:64
-#, c-format
-msgid "Couldn't open pipe for %s"
-msgstr "Methwyd agor pibell ar gyfer %s"
-
-#: methods/gzip.cc:109
-#, c-format
-msgid "Read error from %s process"
-msgstr "Gwall darllen o broses %s"
 
 #: methods/http.cc:385
 msgid "Waiting for headers"
@@ -2126,91 +2158,119 @@ msgstr "Derbynnwyd llinell pennaws sengl dros %u nod"
 msgid "Bad header line"
 msgstr "Llinell pennawd gwael"
 
-#: methods/http.cc:558 methods/http.cc:565
+#: methods/http.cc:564 methods/http.cc:571
 #, fuzzy
 msgid "The HTTP server sent an invalid reply header"
 msgstr "Danfonodd y gweinydd HTTP bennawd ateb annilys"
 
-#: methods/http.cc:594
+#: methods/http.cc:600
 #, fuzzy
 msgid "The HTTP server sent an invalid Content-Length header"
 msgstr "Danfonodd y gweinydd HTTP bennawd Content-Length annilys"
 
-#: methods/http.cc:609
+#: methods/http.cc:615
 #, fuzzy
 msgid "The HTTP server sent an invalid Content-Range header"
 msgstr "Danfonodd y gweinydd HTTP bennawd Content-Range annilys"
 
-#: methods/http.cc:611
+#: methods/http.cc:617
 #, fuzzy
 msgid "This HTTP server has broken range support"
 msgstr "Mae cynaliaeth amrediad y gweinydd hwn wedi torri"
 
-#: methods/http.cc:635
+#: methods/http.cc:641
 msgid "Unknown date format"
 msgstr "Fformat dyddiad anhysbys"
 
-#: methods/http.cc:793
+#: methods/http.cc:799
 msgid "Select failed"
 msgstr "Methwyd dewis"
 
-#: methods/http.cc:798
+#: methods/http.cc:804
 msgid "Connection timed out"
 msgstr "Goramserodd y cysylltiad"
 
-#: methods/http.cc:821
+#: methods/http.cc:827
 msgid "Error writing to output file"
 msgstr "Gwall wrth ysgrifennu i ffeil allbwn"
 
-#: methods/http.cc:852
+#: methods/http.cc:858
 msgid "Error writing to file"
 msgstr "Gwall wrth ysgrifennu at ffeil"
 
-#: methods/http.cc:880
+#: methods/http.cc:886
 msgid "Error writing to the file"
 msgstr "Gwall wrth ysgrifennu at y ffeil"
 
-#: methods/http.cc:894
+#: methods/http.cc:900
 #, fuzzy
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Gwall wrth ddarllen o'r gweinydd: caeodd yr ochr pell y cysylltiad"
 
-#: methods/http.cc:896
+#: methods/http.cc:902
 msgid "Error reading from server"
 msgstr "Gwall wrth ddarllen o'r gweinydd"
 
-#: methods/http.cc:990 apt-pkg/contrib/mmap.cc:215
+#: methods/http.cc:991 apt-pkg/contrib/mmap.cc:281
 #, fuzzy
 msgid "Failed to truncate file"
 msgstr "Methwyd ysgrifennu ffeil %s"
 
-#: methods/http.cc:1159
+#: methods/http.cc:1160
 #, fuzzy
 msgid "Bad header data"
 msgstr "Data pennawd gwael"
 
-#: methods/http.cc:1176 methods/http.cc:1231
+#: methods/http.cc:1177 methods/http.cc:1232
 msgid "Connection failed"
 msgstr "Methodd y cysylltiad"
 
-#: methods/http.cc:1323
+#: methods/http.cc:1324
 msgid "Internal error"
 msgstr "Gwall mewnol"
 
-#: apt-pkg/contrib/mmap.cc:76
+#: apt-pkg/contrib/mmap.cc:77
 msgid "Can't mmap an empty file"
 msgstr "Ni ellir defnyddio mmap() ar ffeil gwag"
 
-#: apt-pkg/contrib/mmap.cc:81 apt-pkg/contrib/mmap.cc:187
+#: apt-pkg/contrib/mmap.cc:89
+#, fuzzy, c-format
+msgid "Couldn't duplicate file descriptor %i"
+msgstr "Methwyd agor pibell ar gyfer %s"
+
+#: apt-pkg/contrib/mmap.cc:97 apt-pkg/contrib/mmap.cc:250
 #, c-format
 msgid "Couldn't make mmap of %lu bytes"
 msgstr "Methwyd gwneud mmap() efo %lu beit"
 
-#: apt-pkg/contrib/mmap.cc:234
+#: apt-pkg/contrib/mmap.cc:124
+#, fuzzy
+msgid "Unable to close mmap"
+msgstr "Ni ellir agor %s"
+
+# FIXME
+#: apt-pkg/contrib/mmap.cc:152 apt-pkg/contrib/mmap.cc:180
+#, fuzzy
+msgid "Unable to synchronize mmap"
+msgstr "Methwyd gweithredu "
+
+#: apt-pkg/contrib/mmap.cc:300
 #, c-format
 msgid ""
 "Dynamic MMap ran out of room. Please increase the size of APT::Cache-Limit. "
 "Current value: %lu. (man 5 apt.conf)"
+msgstr ""
+
+#: apt-pkg/contrib/mmap.cc:399
+#, c-format
+msgid ""
+"Unable to increase the size of the MMap as the limit of %lu bytes is already "
+"reached."
+msgstr ""
+
+#: apt-pkg/contrib/mmap.cc:402
+msgid ""
+"Unable to increase size of the MMap as automatic growing is disabled by user."
 msgstr ""
 
 #. d means days, h means hours, min means minutes, s means seconds
@@ -2237,7 +2297,7 @@ msgstr ""
 msgid "%lis"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1065
+#: apt-pkg/contrib/strutl.cc:1119
 #, c-format
 msgid "Selection %s not found"
 msgstr "Ni chanfuwyd y dewis %s"
@@ -2289,7 +2349,13 @@ msgstr "Gwall cystrawen %s:%u: Cynhwyswyd o fan hyn"
 msgid "Syntax error %s:%u: Unsupported directive '%s'"
 msgstr "Gwall cystrawen %s:%u: Cyfarwyddyd ni gynhelir '%s'"
 
-#: apt-pkg/contrib/configuration.cc:825
+#: apt-pkg/contrib/configuration.cc:777
+#, fuzzy, c-format
+msgid "Syntax error %s:%u: clear directive requires an option tree as argument"
+msgstr ""
+"Gwall cystrawen %s:%u: Ceir defnyddio cyfarwyddyd ar y lefel dop yn unig"
+
+#: apt-pkg/contrib/configuration.cc:827
 #, c-format
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "Gwall cystrawen %s:%u: Sbwriel ychwanegol ar ddiwedd y ffeil"
@@ -2321,33 +2387,33 @@ msgstr "Ni adnabyddir yr opsiwn llinell orchymyn %s"
 msgid "Command line option %s is not boolean"
 msgstr "Nid yw'r opsiwn llinell orchymyn %s yn fŵleaidd"
 
-#: apt-pkg/contrib/cmndline.cc:163 apt-pkg/contrib/cmndline.cc:184
+#: apt-pkg/contrib/cmndline.cc:165 apt-pkg/contrib/cmndline.cc:186
 #, c-format
 msgid "Option %s requires an argument."
 msgstr "Mae'r opsiwn %s yn mynnu ymresymiad."
 
-#: apt-pkg/contrib/cmndline.cc:198 apt-pkg/contrib/cmndline.cc:204
+#: apt-pkg/contrib/cmndline.cc:200 apt-pkg/contrib/cmndline.cc:206
 #, c-format
 msgid "Option %s: Configuration item specification must have an =<val>."
 msgstr "Opsiwn %s: Rhaid i benodiad eitem cyfluniad gael =<gwerth>."
 
-#: apt-pkg/contrib/cmndline.cc:234
+#: apt-pkg/contrib/cmndline.cc:236
 #, c-format
 msgid "Option %s requires an integer argument, not '%s'"
 msgstr "Mae'r opsiwn %s yn mynnu ymresymiad cyfanrif, nid '%s'"
 
-#: apt-pkg/contrib/cmndline.cc:265
+#: apt-pkg/contrib/cmndline.cc:267
 #, c-format
 msgid "Option '%s' is too long"
 msgstr "Opsiwn '%s' yn rhy hir"
 
 # FIXME: 'Sense'?
-#: apt-pkg/contrib/cmndline.cc:298
+#: apt-pkg/contrib/cmndline.cc:300
 #, c-format
 msgid "Sense %s is not understood, try true or false."
 msgstr "Ni ddeallir %s, ceiswich ddefnyddio 'true' neu 'false'."
 
-#: apt-pkg/contrib/cmndline.cc:348
+#: apt-pkg/contrib/cmndline.cc:350
 #, c-format
 msgid "Invalid operation %s"
 msgstr "Gweithred annilys %s"
@@ -2357,198 +2423,220 @@ msgstr "Gweithred annilys %s"
 msgid "Unable to stat the mount point %s"
 msgstr "Ni ellir gwneud stat() o'r pwynt clymu %s"
 
-#: apt-pkg/contrib/cdromutl.cc:162 apt-pkg/contrib/cdromutl.cc:196
-#: apt-pkg/acquire.cc:425 apt-pkg/acquire.cc:450 apt-pkg/clean.cc:39
-#: methods/mirror.cc:91
+#: apt-pkg/contrib/cdromutl.cc:175 apt-pkg/contrib/cdromutl.cc:209
+#: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
+#: methods/mirror.cc:93
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Ni ellir newid i %s"
 
-#: apt-pkg/contrib/cdromutl.cc:204
+#: apt-pkg/contrib/cdromutl.cc:217
 msgid "Failed to stat the cdrom"
 msgstr "Methwyd gwneud stat() o'r CD-ROM"
 
-#: apt-pkg/contrib/fileutl.cc:151
+#: apt-pkg/contrib/fileutl.cc:154
 #, c-format
 msgid "Not using locking for read only lock file %s"
 msgstr "Ddim yn cloi'r ffeil clo darllen-yn-unig %s"
 
-#: apt-pkg/contrib/fileutl.cc:156
+#: apt-pkg/contrib/fileutl.cc:159
 #, c-format
 msgid "Could not open lock file %s"
 msgstr "Methwyd agor y ffeil clo %s"
 
-#: apt-pkg/contrib/fileutl.cc:174
+#: apt-pkg/contrib/fileutl.cc:177
 #, c-format
 msgid "Not using locking for nfs mounted lock file %s"
 msgstr "Ddim yn cloi'r ffeil clo ar NFS %s"
 
-#: apt-pkg/contrib/fileutl.cc:178
+#: apt-pkg/contrib/fileutl.cc:181
 #, c-format
 msgid "Could not get lock %s"
 msgstr "Methwyd cael y clo %s"
 
-#: apt-pkg/contrib/fileutl.cc:568
+#: apt-pkg/contrib/fileutl.cc:643
 #, fuzzy, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Arhoswyd am %s ond nid oedd e yna"
 
-#: apt-pkg/contrib/fileutl.cc:580
+#: apt-pkg/contrib/fileutl.cc:655
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
 msgstr "Derbyniodd is-broses %s wall segmentu."
 
-#: apt-pkg/contrib/fileutl.cc:582
+#: apt-pkg/contrib/fileutl.cc:657
 #, fuzzy, c-format
 msgid "Sub-process %s received signal %u."
 msgstr "Derbyniodd is-broses %s wall segmentu."
 
-#: apt-pkg/contrib/fileutl.cc:586
+#: apt-pkg/contrib/fileutl.cc:661
 #, c-format
 msgid "Sub-process %s returned an error code (%u)"
 msgstr "Dychwelodd is-broses %s gôd gwall (%u)"
 
-#: apt-pkg/contrib/fileutl.cc:588
+#: apt-pkg/contrib/fileutl.cc:663
 #, c-format
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Gorffenodd is-broses %s yn annisgwyl"
 
-#: apt-pkg/contrib/fileutl.cc:632
+#: apt-pkg/contrib/fileutl.cc:728
 #, c-format
 msgid "Could not open file %s"
 msgstr "Methwyd agor ffeil %s"
 
+#: apt-pkg/contrib/fileutl.cc:745
+#, fuzzy, c-format
+msgid "Could not open file descriptor %d"
+msgstr "Methwyd agor pibell ar gyfer %s"
+
 # FIXME
-#: apt-pkg/contrib/fileutl.cc:688
+#: apt-pkg/contrib/fileutl.cc:805
 #, c-format
 msgid "read, still have %lu to read but none left"
 msgstr "o hyd %lu i ddarllen ond dim ar ôl"
 
 # FIXME
-#: apt-pkg/contrib/fileutl.cc:718
+#: apt-pkg/contrib/fileutl.cc:838
 #, c-format
 msgid "write, still have %lu to write but couldn't"
 msgstr "o hyd %lu i ysgrifennu ond methwyd"
 
-#: apt-pkg/contrib/fileutl.cc:793
-msgid "Problem closing the file"
+#: apt-pkg/contrib/fileutl.cc:967
+#, fuzzy, c-format
+msgid "Problem closing the gzip file %s"
 msgstr "Gwall wrth gau'r ffeil"
 
-#: apt-pkg/contrib/fileutl.cc:799
-msgid "Problem unlinking the file"
+#: apt-pkg/contrib/fileutl.cc:970
+#, fuzzy, c-format
+msgid "Problem closing the file %s"
+msgstr "Gwall wrth gau'r ffeil"
+
+#: apt-pkg/contrib/fileutl.cc:975
+#, fuzzy, c-format
+msgid "Problem renaming the file %s to %s"
+msgstr "Gwall wrth gyfamseru'r ffeil"
+
+#: apt-pkg/contrib/fileutl.cc:986
+#, fuzzy, c-format
+msgid "Problem unlinking the file %s"
 msgstr "Gwall wrth dadgysylltu'r ffeil"
 
-#: apt-pkg/contrib/fileutl.cc:810
+#: apt-pkg/contrib/fileutl.cc:999
 msgid "Problem syncing the file"
 msgstr "Gwall wrth gyfamseru'r ffeil"
 
-#: apt-pkg/pkgcache.cc:132
+#: apt-pkg/pkgcache.cc:145
 msgid "Empty package cache"
 msgstr "Storfa pecyn gwag"
 
-#: apt-pkg/pkgcache.cc:138
+#: apt-pkg/pkgcache.cc:151
 msgid "The package cache file is corrupted"
 msgstr "Mae'r ffeil storfa pecyn yn llygredig"
 
-#: apt-pkg/pkgcache.cc:143
+#: apt-pkg/pkgcache.cc:156
 msgid "The package cache file is an incompatible version"
 msgstr "Mae'r ffeil storfa pecyn yn fersiwn anghyflawn"
 
 # FIXME: capitalisation?
-#: apt-pkg/pkgcache.cc:148
+#: apt-pkg/pkgcache.cc:161
 #, fuzzy, c-format
 msgid "This APT does not support the versioning system '%s'"
 msgstr "Nid yw'r APT yma yn cefnogi'r system fersiwn '%s'"
 
-#: apt-pkg/pkgcache.cc:153
+#: apt-pkg/pkgcache.cc:166
 msgid "The package cache was built for a different architecture"
 msgstr "Adeiladwyd y storfa pecyn ar gyfer pernsaerniaeth gwahanol"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:293
 msgid "Depends"
 msgstr "Dibynnu"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:293
 msgid "PreDepends"
 msgstr "CynDdibynnu"
 
-#: apt-pkg/pkgcache.cc:224
+#: apt-pkg/pkgcache.cc:293
 msgid "Suggests"
 msgstr "Awgrymu"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:294
 msgid "Recommends"
 msgstr "Argymell"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:294
 msgid "Conflicts"
 msgstr "Gwrthdaro"
 
-#: apt-pkg/pkgcache.cc:225
+#: apt-pkg/pkgcache.cc:294
 msgid "Replaces"
 msgstr "Amnewid"
 
-#: apt-pkg/pkgcache.cc:226
+#: apt-pkg/pkgcache.cc:295
 msgid "Obsoletes"
 msgstr "Darfodi"
 
-#: apt-pkg/pkgcache.cc:226
+#: apt-pkg/pkgcache.cc:295
 msgid "Breaks"
 msgstr ""
 
-#: apt-pkg/pkgcache.cc:226
+#: apt-pkg/pkgcache.cc:295
 msgid "Enhances"
 msgstr ""
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:306
 msgid "important"
 msgstr "pwysig"
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:306
 msgid "required"
 msgstr "angenrheidiol"
 
-#: apt-pkg/pkgcache.cc:237
+#: apt-pkg/pkgcache.cc:306
 msgid "standard"
 msgstr "safonnol"
 
-#: apt-pkg/pkgcache.cc:238
+#: apt-pkg/pkgcache.cc:307
 msgid "optional"
 msgstr "opsiynnol"
 
-#: apt-pkg/pkgcache.cc:238
+#: apt-pkg/pkgcache.cc:307
 msgid "extra"
 msgstr "ychwanegol"
 
-#: apt-pkg/depcache.cc:123 apt-pkg/depcache.cc:152
+#: apt-pkg/depcache.cc:124 apt-pkg/depcache.cc:153
 #, fuzzy
 msgid "Building dependency tree"
 msgstr "Yn Aideladu Coeden Dibyniaeth"
 
-#: apt-pkg/depcache.cc:124
+#: apt-pkg/depcache.cc:125
 #, fuzzy
 msgid "Candidate versions"
 msgstr "Fersiynau Posib"
 
-#: apt-pkg/depcache.cc:153
+#: apt-pkg/depcache.cc:154
 #, fuzzy
 msgid "Dependency generation"
 msgstr "Cynhyrchaid Dibyniaeth"
 
-#: apt-pkg/depcache.cc:173 apt-pkg/depcache.cc:193 apt-pkg/depcache.cc:197
+#: apt-pkg/depcache.cc:174 apt-pkg/depcache.cc:207 apt-pkg/depcache.cc:211
 #, fuzzy
 msgid "Reading state information"
 msgstr "Yn cyfuno manylion Ar Gael"
 
-#: apt-pkg/depcache.cc:223
+#: apt-pkg/depcache.cc:236
 #, fuzzy, c-format
 msgid "Failed to open StateFile %s"
 msgstr "Methwyd agor %s"
 
-#: apt-pkg/depcache.cc:229
+#: apt-pkg/depcache.cc:242
 #, fuzzy, c-format
 msgid "Failed to write temporary StateFile %s"
 msgstr "Methwyd ysgrifennu ffeil %s"
+
+#: apt-pkg/depcache.cc:921
+#, c-format
+msgid "Internal error, group '%s' has no installable pseudo package"
+msgstr ""
 
 # FIXME: number?
 #: apt-pkg/tagfile.cc:102
@@ -2561,66 +2649,90 @@ msgstr "Ni ellir gramadegu ffeil becynnau %s (1)"
 msgid "Unable to parse package file %s (2)"
 msgstr "Ni ellir gramadegu ffeil becynnau %s (2)"
 
-#: apt-pkg/sourcelist.cc:83
+#: apt-pkg/sourcelist.cc:92
+#, fuzzy, c-format
+msgid "Malformed line %lu in source list %s ([option] unparseable)"
+msgstr ""
+"Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu dosranniad)"
+
+#: apt-pkg/sourcelist.cc:95
+#, fuzzy, c-format
+msgid "Malformed line %lu in source list %s ([option] too short)"
+msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (dosranniad)"
+
+#: apt-pkg/sourcelist.cc:106
+#, fuzzy, c-format
+msgid "Malformed line %lu in source list %s ([%s] is not an assignment)"
+msgstr ""
+"Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu dosranniad)"
+
+#: apt-pkg/sourcelist.cc:112
+#, fuzzy, c-format
+msgid "Malformed line %lu in source list %s ([%s] has no key)"
+msgstr ""
+"Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu dosranniad)"
+
+#: apt-pkg/sourcelist.cc:115
+#, fuzzy, c-format
+msgid "Malformed line %lu in source list %s ([%s] key %s has no value)"
+msgstr ""
+"Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu dosranniad)"
+
+#: apt-pkg/sourcelist.cc:128
 #, c-format
 msgid "Malformed line %lu in source list %s (URI)"
 msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (URI)"
 
-#: apt-pkg/sourcelist.cc:85
+#: apt-pkg/sourcelist.cc:130
 #, c-format
 msgid "Malformed line %lu in source list %s (dist)"
 msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (dosranniad)"
 
-#: apt-pkg/sourcelist.cc:88
+#: apt-pkg/sourcelist.cc:133
 #, c-format
 msgid "Malformed line %lu in source list %s (URI parse)"
 msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu URI)"
 
-#: apt-pkg/sourcelist.cc:94
+#: apt-pkg/sourcelist.cc:139
 #, fuzzy, c-format
 msgid "Malformed line %lu in source list %s (absolute dist)"
 msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (dosranniad llwyr)"
 
-#: apt-pkg/sourcelist.cc:101
+#: apt-pkg/sourcelist.cc:146
 #, c-format
 msgid "Malformed line %lu in source list %s (dist parse)"
 msgstr ""
 "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (gramadegu dosranniad)"
 
-#: apt-pkg/sourcelist.cc:199
+#: apt-pkg/sourcelist.cc:244
 #, c-format
 msgid "Opening %s"
 msgstr "Yn agor %s"
 
-#: apt-pkg/sourcelist.cc:216 apt-pkg/cdrom.cc:446
+#: apt-pkg/sourcelist.cc:261 apt-pkg/cdrom.cc:438
 #, c-format
 msgid "Line %u too long in source list %s."
 msgstr "Llinell %u yn rhy hir yn y rhestr ffynhonell %s."
 
-#: apt-pkg/sourcelist.cc:236
+#: apt-pkg/sourcelist.cc:281
 #, c-format
 msgid "Malformed line %u in source list %s (type)"
 msgstr "Llinell camffurfiol %u yn y rhestr ffynhonell %s (math)"
 
-#: apt-pkg/sourcelist.cc:240
+#: apt-pkg/sourcelist.cc:285
 #, fuzzy, c-format
 msgid "Type '%s' is not known on line %u in source list %s"
 msgstr "Mae'r math '%s' yn anhysbys ar linell %u yn y rhestr ffynhonell %s"
 
-#: apt-pkg/sourcelist.cc:248 apt-pkg/sourcelist.cc:251
-#, fuzzy, c-format
-msgid "Malformed line %u in source list %s (vendor id)"
-msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (dosranniad)"
-
-#: apt-pkg/packagemanager.cc:324 apt-pkg/packagemanager.cc:591
+#: apt-pkg/packagemanager.cc:331 apt-pkg/packagemanager.cc:616
 #, c-format
 msgid ""
-"Could not perform immediate configuration on '%s'.Please see man 5 apt.conf "
+"Could not perform immediate configuration on '%s'. Please see man 5 apt.conf "
 "under APT::Immediate-Configure for details. (%d)"
 msgstr ""
 
 # FIXME: %s may have an arbirrary length
-#: apt-pkg/packagemanager.cc:445
+#: apt-pkg/packagemanager.cc:452
 #, c-format
 msgid ""
 "This installation run will require temporarily removing the essential "
@@ -2631,10 +2743,10 @@ msgstr ""
 "oherwydd lŵp gwrthdaro/cynddibynu. Mae hyn yn aml yn wael, ond os ydych wir "
 "eisiau ei wneud ef, gweithredwch yr opsiwn APT::Force-LoopBreak."
 
-#: apt-pkg/packagemanager.cc:483
+#: apt-pkg/packagemanager.cc:495
 #, c-format
 msgid ""
-"Could not perform immediate configuration on already unpacked '%s'.Please "
+"Could not perform immediate configuration on already unpacked '%s'. Please "
 "see man 5 apt.conf under APT::Immediate-Configure for details."
 msgstr ""
 
@@ -2643,7 +2755,7 @@ msgstr ""
 msgid "Index file type '%s' is not supported"
 msgstr "Ni chynhelir y math ffeil mynegai '%s'"
 
-#: apt-pkg/algorithms.cc:248
+#: apt-pkg/algorithms.cc:292
 #, c-format
 msgid ""
 "The package %s needs to be reinstalled, but I can't find an archive for it."
@@ -2651,7 +2763,7 @@ msgstr ""
 "Mae angen ailsefydlu'r pecyn %s, ond dydw i ddim yn gallu canfod archif ar "
 "ei gyfer."
 
-#: apt-pkg/algorithms.cc:1138
+#: apt-pkg/algorithms.cc:1210
 msgid ""
 "Error, pkgProblemResolver::Resolve generated breaks, this may be caused by "
 "held packages."
@@ -2659,12 +2771,12 @@ msgstr ""
 "Gwall: Cynhyrchodd pkgProblemResolver::Resolve doriadau. Fe all hyn fod wedi "
 "ei achosi gan pecynnau wedi eu dal."
 
-#: apt-pkg/algorithms.cc:1140
+#: apt-pkg/algorithms.cc:1212
 msgid "Unable to correct problems, you have held broken packages."
 msgstr ""
 "Ni ellir cywiro'r problemau gan eich bod chi wedi dal pecynnau torredig."
 
-#: apt-pkg/algorithms.cc:1414 apt-pkg/algorithms.cc:1416
+#: apt-pkg/algorithms.cc:1488 apt-pkg/algorithms.cc:1490
 msgid ""
 "Some index files failed to download, they have been ignored, or old ones "
 "used instead."
@@ -2672,24 +2784,29 @@ msgstr ""
 "Methwodd rhai ffeiliau mynegai lawrlwytho: maent wedi eu anwybyddu, neu hen "
 "rai eu defnyddio yn lle."
 
-#: apt-pkg/acquire.cc:60
-#, c-format
-msgid "Lists directory %spartial is missing."
+#: apt-pkg/acquire.cc:79
+#, fuzzy, c-format
+msgid "List directory %spartial is missing."
 msgstr "Mae'r cyfeiriadur rhestrau %spartial ar goll."
 
-#: apt-pkg/acquire.cc:64
-#, c-format
-msgid "Archive directory %spartial is missing."
+#: apt-pkg/acquire.cc:83
+#, fuzzy, c-format
+msgid "Archives directory %spartial is missing."
 msgstr "Mae'r cyfeiriadur archif %spartial ar goll."
+
+#: apt-pkg/acquire.cc:91
+#, fuzzy, c-format
+msgid "Unable to lock directory %s"
+msgstr "Ni ellir cloi'r cyfeiriadur rhestr"
 
 #. only show the ETA if it makes sense
 #. two days
-#: apt-pkg/acquire.cc:826
+#: apt-pkg/acquire.cc:857
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
 msgstr ""
 
-#: apt-pkg/acquire.cc:828
+#: apt-pkg/acquire.cc:859
 #, fuzzy, c-format
 msgid "Retrieving file %li of %li"
 msgstr "Yn Darllen Rhestr Ffeiliau"
@@ -2712,12 +2829,12 @@ msgstr ""
 " '%s'\n"
 "yn y gyrriant '%s' a gwasgwch Enter\n"
 
-#: apt-pkg/init.cc:136
+#: apt-pkg/init.cc:146
 #, c-format
 msgid "Packaging system '%s' is not supported"
 msgstr "Ni chynhelir y system pecynnu '%s'"
 
-#: apt-pkg/init.cc:152
+#: apt-pkg/init.cc:162
 #, fuzzy
 msgid "Unable to determine a suitable packaging system type"
 msgstr "Ni ellir canfod math system addas"
@@ -2732,158 +2849,172 @@ msgstr "Ni ellir gwneud stat() o %s."
 msgid "You must put some 'source' URIs in your sources.list"
 msgstr "Rhaid i chi rhoi rhai URI 'source' yn eich ffeil sources.list"
 
-#: apt-pkg/cachefile.cc:71
+#: apt-pkg/cachefile.cc:84
 msgid "The package lists or status file could not be parsed or opened."
 msgstr "Methwyd agor neu ramadegu'r ffeil rhestrau neu statws."
 
-#: apt-pkg/cachefile.cc:75
+#: apt-pkg/cachefile.cc:88
 msgid "You may want to run apt-get update to correct these problems"
 msgstr "Efallai hoffech rhedege apt-get update er mwyn cywiro'r problemau hyn."
 
+#: apt-pkg/cachefile.cc:106
+msgid "The list of sources could not be read."
+msgstr "Methwyd darllen y rhestr ffynhonellau."
+
 # FIXME: literal
-#: apt-pkg/policy.cc:316
+#: apt-pkg/policy.cc:344
 #, fuzzy, c-format
 msgid "Invalid record in the preferences file %s, no Package header"
 msgstr "Cofnod annilys yn y ffeil hoffterau, dim pennawd 'Package'"
 
 # FIXME: tense
-#: apt-pkg/policy.cc:338
+#: apt-pkg/policy.cc:366
 #, c-format
 msgid "Did not understand pin type %s"
 msgstr "Methwyd daeall y math pin %s"
 
-#: apt-pkg/policy.cc:346
+#: apt-pkg/policy.cc:374
 msgid "No priority (or zero) specified for pin"
 msgstr "Dim blaenoriath (neu sero) wedi ei benodi ar gyfer pin"
 
-#: apt-pkg/pkgcachegen.cc:74
+#: apt-pkg/pkgcachegen.cc:80
 msgid "Cache has an incompatible versioning system"
 msgstr "Mae can y storfa system fersiwn anghyfaddas"
 
-#: apt-pkg/pkgcachegen.cc:117
+#: apt-pkg/pkgcachegen.cc:198
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewPackage)"
 msgstr "Digwyddod gwall wrth brosesu %s (NewPackage)"
 
-#: apt-pkg/pkgcachegen.cc:132
+#: apt-pkg/pkgcachegen.cc:215
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (UsePackage1)"
 msgstr "Digwyddod gwall wrth brosesu %s (UsePackage1)"
 
-#: apt-pkg/pkgcachegen.cc:166
+#: apt-pkg/pkgcachegen.cc:253
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc1)"
 msgstr "Digwyddod gwall wrth brosesu %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:191
+#: apt-pkg/pkgcachegen.cc:285
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (UsePackage2)"
 msgstr "Digwyddod gwall wrth brosesu %s (UsePackage2)"
 
-#: apt-pkg/pkgcachegen.cc:195
+#: apt-pkg/pkgcachegen.cc:289
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileVer1)"
 msgstr "Digwyddod gwall wrth brosesu %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:226
+#: apt-pkg/pkgcachegen.cc:306 apt-pkg/pkgcachegen.cc:316
+#: apt-pkg/pkgcachegen.cc:324
 #, fuzzy, c-format
-msgid "Error occurred while processing %s (NewVersion1)"
+msgid "Error occurred while processing %s (NewVersion%d)"
 msgstr "Digwyddod gwall wrth brosesu %s (NewVersion1)"
 
-#: apt-pkg/pkgcachegen.cc:230
+#: apt-pkg/pkgcachegen.cc:320
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (UsePackage3)"
 msgstr "Digwyddod gwall wrth brosesu %s (UsePackage3)"
 
-#: apt-pkg/pkgcachegen.cc:234
-#, fuzzy, c-format
-msgid "Error occurred while processing %s (NewVersion2)"
-msgstr "Digwyddod gwall wrth brosesu %s (NewVersion2)"
-
-#: apt-pkg/pkgcachegen.cc:258
+#: apt-pkg/pkgcachegen.cc:353
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (NewFileDesc2)"
 msgstr "Digwyddod gwall wrth brosesu %s (NewFileVer1)"
 
-#: apt-pkg/pkgcachegen.cc:264
+#: apt-pkg/pkgcachegen.cc:360
 msgid "Wow, you exceeded the number of package names this APT is capable of."
 msgstr ""
 "Jiw, rhagoroch chi'r nifer o enwau pecyn mae'r APT hwn yn gallu ei  drin."
 
-#: apt-pkg/pkgcachegen.cc:267
+#: apt-pkg/pkgcachegen.cc:363
 msgid "Wow, you exceeded the number of versions this APT is capable of."
 msgstr "Jiw, rhagoroch chi'r nifer o fersiynau mae'r APT hwn yn gallu ei drin."
 
-#: apt-pkg/pkgcachegen.cc:270
+#: apt-pkg/pkgcachegen.cc:366
 #, fuzzy
 msgid "Wow, you exceeded the number of descriptions this APT is capable of."
 msgstr "Jiw, rhagoroch chi'r nifer o fersiynau mae'r APT hwn yn gallu ei drin."
 
-#: apt-pkg/pkgcachegen.cc:273
+#: apt-pkg/pkgcachegen.cc:369
 msgid "Wow, you exceeded the number of dependencies this APT is capable of."
 msgstr ""
 "Jiw, rhagoroch chi'r nifer o ddibyniaethau mae'r APT hwn yn gallu ei drin."
 
-#: apt-pkg/pkgcachegen.cc:301
+#: apt-pkg/pkgcachegen.cc:398
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (FindPkg)"
 msgstr "Digwyddod gwall wrth brosesu %s (FindPkg)"
 
-#: apt-pkg/pkgcachegen.cc:314
+#: apt-pkg/pkgcachegen.cc:412
 #, fuzzy, c-format
 msgid "Error occurred while processing %s (CollectFileProvides)"
 msgstr "Digwyddod gwall wrth brosesu %s (CollectFileProvides)"
 
-#: apt-pkg/pkgcachegen.cc:320
+#: apt-pkg/pkgcachegen.cc:418
 #, c-format
 msgid "Package %s %s was not found while processing file dependencies"
 msgstr "Ni chanfuwyd pecyn %s %s wrth brosesu dibyniaethau ffeil"
 
-#: apt-pkg/pkgcachegen.cc:706
+#: apt-pkg/pkgcachegen.cc:982
 #, c-format
 msgid "Couldn't stat source package list %s"
 msgstr "Methwyd stat() o'r rhestr pecyn ffynhonell %s"
 
-#: apt-pkg/pkgcachegen.cc:808
+#: apt-pkg/pkgcachegen.cc:1087
 msgid "Collecting File Provides"
 msgstr "Yn Casglu Darpariaethau Ffeil"
 
-#: apt-pkg/pkgcachegen.cc:952 apt-pkg/pkgcachegen.cc:959
+#: apt-pkg/pkgcachegen.cc:1265 apt-pkg/pkgcachegen.cc:1272
 msgid "IO Error saving source cache"
 msgstr "Gwall M/A wrth gadw'r storfa ffynhonell"
 
-#: apt-pkg/acquire-item.cc:135
+#: apt-pkg/acquire-item.cc:136
 #, c-format
 msgid "rename failed, %s (%s -> %s)."
 msgstr "methwyd ailenwi, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:481
+#: apt-pkg/acquire-item.cc:484
 msgid "MD5Sum mismatch"
 msgstr "Camgyfatebiaeth swm MD5"
 
-#: apt-pkg/acquire-item.cc:734 apt-pkg/acquire-item.cc:1499
+#: apt-pkg/acquire-item.cc:746 apt-pkg/acquire-item.cc:1574
+#: apt-pkg/acquire-item.cc:1717
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "Camgyfatebiaeth swm MD5"
 
-#: apt-pkg/acquire-item.cc:1194
+#: apt-pkg/acquire-item.cc:1244
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1267
+#. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
+#. the time since then the file is invalid - formated in the same way as in
+#. the download progress display (e.g. 7d 3h 42min 1s)
+#: apt-pkg/acquire-item.cc:1281
+#, c-format
+msgid "Release file expired, ignoring %s (invalid since %s)"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc:1302
+#, c-format
+msgid "Conflicting distribution: %s (expected %s but got %s)"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc:1328
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
-"updated and the previous index files will be used.GPG error: %s: %s\n"
+"updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1276
+#: apt-pkg/acquire-item.cc:1337
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
 # FIXME: case
-#: apt-pkg/acquire-item.cc:1304
+#: apt-pkg/acquire-item.cc:1365
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2892,7 +3023,7 @@ msgstr ""
 "Methais i leoli ffeila r gyfer y pecyn %s. Fa all hyn olygu bod rhaid i chi "
 "drwsio'r pecyn hyn a law. (Oherwydd pensaerniaeth coll.)"
 
-#: apt-pkg/acquire-item.cc:1363
+#: apt-pkg/acquire-item.cc:1424
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2901,271 +3032,335 @@ msgstr ""
 "Methais i leoli ffeila r gyfer y pecyn %s. Fa all hyn olygu bod rhaid i chi "
 "drwsio'r pecyn hyn a law."
 
-#: apt-pkg/acquire-item.cc:1404
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "Mae'r ffeiliau mynegai pecyn yn llygr. Dim maes Filename: gan y pecyn %s."
 
-#: apt-pkg/acquire-item.cc:1491
+#: apt-pkg/acquire-item.cc:1566
 msgid "Size mismatch"
 msgstr "Camgyfatebiaeth maint"
 
 # FIXME: number?
-#: apt-pkg/indexrecords.cc:40
+#: apt-pkg/indexrecords.cc:53
 #, fuzzy, c-format
 msgid "Unable to parse Release file %s"
 msgstr "Ni ellir gramadegu ffeil becynnau %s (1)"
 
-#: apt-pkg/indexrecords.cc:47
+#: apt-pkg/indexrecords.cc:60
 #, fuzzy, c-format
 msgid "No sections in Release file %s"
 msgstr "Sylwer, yn dewis %s yn hytrach na %s\n"
 
-#: apt-pkg/indexrecords.cc:81
+#: apt-pkg/indexrecords.cc:94
 #, c-format
 msgid "No Hash entry in Release file %s"
 msgstr ""
+
+#: apt-pkg/indexrecords.cc:107
+#, fuzzy, c-format
+msgid "Invalid 'Valid-Until' entry in Release file %s"
+msgstr "Llinell annilys yn y ffeil dargyfeirio: %s"
+
+# FIXME: number?
+#: apt-pkg/indexrecords.cc:122
+#, fuzzy, c-format
+msgid "Invalid 'Date' entry in Release file %s"
+msgstr "Ni ellir gramadegu ffeil becynnau %s (1)"
 
 #: apt-pkg/vendorlist.cc:66
 #, c-format
 msgid "Vendor block %s contains no fingerprint"
 msgstr "Nid yw'r bloc darparwr %s yn cynnwys ôl bys"
 
-#: apt-pkg/cdrom.cc:526
+#: apt-pkg/cdrom.cc:518
 #, c-format
 msgid ""
 "Using CD-ROM mount point %s\n"
 "Mounting CD-ROM\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:535 apt-pkg/cdrom.cc:623
+#: apt-pkg/cdrom.cc:527 apt-pkg/cdrom.cc:615
 msgid "Identifying.. "
 msgstr ""
 
-#: apt-pkg/cdrom.cc:560
+#: apt-pkg/cdrom.cc:552
 #, c-format
 msgid "Stored label: %s\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:567 apt-pkg/cdrom.cc:835
+#: apt-pkg/cdrom.cc:559 apt-pkg/cdrom.cc:827
 #, fuzzy
 msgid "Unmounting CD-ROM...\n"
 msgstr "CD Anghywir"
 
-#: apt-pkg/cdrom.cc:586
+#: apt-pkg/cdrom.cc:578
 #, c-format
 msgid "Using CD-ROM mount point %s\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:604
+#: apt-pkg/cdrom.cc:596
 msgid "Unmounting CD-ROM\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:608
+#: apt-pkg/cdrom.cc:600
 #, fuzzy
 msgid "Waiting for disc...\n"
 msgstr "Yn aros am benawdau"
 
 #. Mount the new CDROM
-#: apt-pkg/cdrom.cc:616
+#: apt-pkg/cdrom.cc:608
 msgid "Mounting CD-ROM...\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:634
+#: apt-pkg/cdrom.cc:626
 msgid "Scanning disc for index files..\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:674
+#: apt-pkg/cdrom.cc:666
 #, c-format
 msgid ""
-"Found %zu package indexes, %zu source indexes, %zu translation indexes and %"
-"zu signatures\n"
+"Found %zu package indexes, %zu source indexes, %zu translation indexes and "
+"%zu signatures\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:685
+#: apt-pkg/cdrom.cc:677
 msgid ""
 "Unable to locate any package files, perhaps this is not a Debian Disc or the "
 "wrong architecture?"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:711
+#: apt-pkg/cdrom.cc:703
 #, c-format
 msgid "Found label '%s'\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:740
+#: apt-pkg/cdrom.cc:732
 msgid "That is not a valid name, try again.\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:756
+#: apt-pkg/cdrom.cc:748
 #, c-format
 msgid ""
 "This disc is called: \n"
 "'%s'\n"
 msgstr ""
 
-#: apt-pkg/cdrom.cc:760
+#: apt-pkg/cdrom.cc:752
 #, fuzzy
 msgid "Copying package lists..."
 msgstr "Yn Darllen Rhestrau Pecynnau"
 
-#: apt-pkg/cdrom.cc:786
+#: apt-pkg/cdrom.cc:778
 #, fuzzy
 msgid "Writing new source list\n"
 msgstr "Llinell %u yn rhy hir yn y rhestr ffynhonell %s."
 
-#: apt-pkg/cdrom.cc:795
+#: apt-pkg/cdrom.cc:787
 msgid "Source list entries for this disc are:\n"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:263 apt-pkg/indexcopy.cc:835
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:908
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:265 apt-pkg/indexcopy.cc:837
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:910
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:268 apt-pkg/indexcopy.cc:840
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:913
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:271 apt-pkg/indexcopy.cc:843
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:916
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:530
+#: apt-pkg/indexcopy.cc:537
 #, fuzzy, c-format
 msgid "Skipping nonexistent file %s"
 msgstr "Yn agor y ffeil cyfluniad %s"
 
-#: apt-pkg/indexcopy.cc:536
+#: apt-pkg/indexcopy.cc:543
 #, c-format
 msgid "Can't find authentication record for: %s"
 msgstr ""
 
-#: apt-pkg/indexcopy.cc:542
+#: apt-pkg/indexcopy.cc:549
 #, fuzzy, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Camgyfatebiaeth swm MD5"
 
-#: apt-pkg/deb/dpkgpm.cc:51
+#: apt-pkg/cacheset.cc:337
+#, c-format
+msgid "Release '%s' for '%s' was not found"
+msgstr "Ni chanfuwyd y rhyddhad '%s' o '%s'"
+
+#: apt-pkg/cacheset.cc:340
+#, c-format
+msgid "Version '%s' for '%s' was not found"
+msgstr "Ni chanfuwyd y fersiwn '%s' o '%s' "
+
+#: apt-pkg/cacheset.cc:447
+#, fuzzy, c-format
+msgid "Couldn't find task '%s'"
+msgstr "Methwyd canfod pecyn %s"
+
+#: apt-pkg/cacheset.cc:454
+#, fuzzy, c-format
+msgid "Couldn't find any package by regex '%s'"
+msgstr "Methwyd canfod pecyn %s"
+
+#: apt-pkg/cacheset.cc:467
+#, c-format
+msgid "Can't select versions from package '%s' as it purely virtual"
+msgstr ""
+
+#: apt-pkg/cacheset.cc:475 apt-pkg/cacheset.cc:483
+#, c-format
+msgid ""
+"Can't select installed nor candidate version from package '%s' as it has "
+"neither of them"
+msgstr ""
+
+#: apt-pkg/cacheset.cc:491
+#, c-format
+msgid "Can't select newest version from package '%s' as it is purely virtual"
+msgstr ""
+
+#: apt-pkg/cacheset.cc:499
+#, c-format
+msgid "Can't select candidate version from package %s as it has no candidate"
+msgstr ""
+
+#: apt-pkg/cacheset.cc:507
+#, c-format
+msgid "Can't select installed version from package %s as it is not installed"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:52
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "  Wedi Sefydlu: "
 
-#: apt-pkg/deb/dpkgpm.cc:52 apt-pkg/deb/dpkgpm.cc:734
+#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:823
 #, fuzzy, c-format
 msgid "Configuring %s"
 msgstr "Yn cysylltu i %s"
 
-#: apt-pkg/deb/dpkgpm.cc:53 apt-pkg/deb/dpkgpm.cc:741
+#: apt-pkg/deb/dpkgpm.cc:54 apt-pkg/deb/dpkgpm.cc:830
 #, fuzzy, c-format
 msgid "Removing %s"
 msgstr "Yn agor %s"
 
-#: apt-pkg/deb/dpkgpm.cc:54
+#: apt-pkg/deb/dpkgpm.cc:55
 #, fuzzy, c-format
 msgid "Completely removing %s"
 msgstr "Methwyd dileu %s"
 
-#: apt-pkg/deb/dpkgpm.cc:55
+#: apt-pkg/deb/dpkgpm.cc:56
+#, c-format
+msgid "Noting disappearance of %s"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:57
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:580
+#. FIXME: use a better string after freeze
+#: apt-pkg/deb/dpkgpm.cc:646
 #, fuzzy, c-format
 msgid "Directory '%s' missing"
 msgstr "Mae'r cyfeiriadur rhestrau %spartial ar goll."
 
-#: apt-pkg/deb/dpkgpm.cc:595 apt-pkg/deb/dpkgpm.cc:608
+#: apt-pkg/deb/dpkgpm.cc:661 apt-pkg/deb/dpkgpm.cc:675
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "Methwyd agor ffeil %s"
 
-#: apt-pkg/deb/dpkgpm.cc:727
+#: apt-pkg/deb/dpkgpm.cc:816
 #, fuzzy, c-format
 msgid "Preparing %s"
 msgstr "Yn agor %s"
 
-#: apt-pkg/deb/dpkgpm.cc:728
+#: apt-pkg/deb/dpkgpm.cc:817
 #, fuzzy, c-format
 msgid "Unpacking %s"
 msgstr "Yn agor %s"
 
-#: apt-pkg/deb/dpkgpm.cc:733
+#: apt-pkg/deb/dpkgpm.cc:822
 #, fuzzy, c-format
 msgid "Preparing to configure %s"
 msgstr "Yn agor y ffeil cyfluniad %s"
 
-#: apt-pkg/deb/dpkgpm.cc:735
+#: apt-pkg/deb/dpkgpm.cc:824
 #, fuzzy, c-format
 msgid "Installed %s"
 msgstr "  Wedi Sefydlu: "
 
-#: apt-pkg/deb/dpkgpm.cc:740
+#: apt-pkg/deb/dpkgpm.cc:829
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:742
+#: apt-pkg/deb/dpkgpm.cc:831
 #, fuzzy, c-format
 msgid "Removed %s"
 msgstr "Argymell"
 
-#: apt-pkg/deb/dpkgpm.cc:747
+#: apt-pkg/deb/dpkgpm.cc:836
 #, fuzzy, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Yn agor y ffeil cyfluniad %s"
 
-#: apt-pkg/deb/dpkgpm.cc:748
+#: apt-pkg/deb/dpkgpm.cc:837
 #, fuzzy, c-format
 msgid "Completely removed %s"
 msgstr "Methwyd dileu %s"
 
-#: apt-pkg/deb/dpkgpm.cc:952
+#: apt-pkg/deb/dpkgpm.cc:1043
 msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:983
+#: apt-pkg/deb/dpkgpm.cc:1074
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1196
+#: apt-pkg/deb/dpkgpm.cc:1277
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1201
+#: apt-pkg/deb/dpkgpm.cc:1282
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1203
+#: apt-pkg/deb/dpkgpm.cc:1284
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1209
+#: apt-pkg/deb/dpkgpm.cc:1290
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1215
+#: apt-pkg/deb/dpkgpm.cc:1296
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1222
+#: apt-pkg/deb/dpkgpm.cc:1303
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3182,21 +3377,28 @@ msgstr ""
 msgid "Unable to lock the administration directory (%s), are you root?"
 msgstr "Ni ellir cloi'r cyfeiriadur rhestr"
 
-#: apt-pkg/deb/debsystem.cc:81
+#. TRANSLATORS: the %s contains the recovery command, usually
+#. dpkg --configure -a
+#: apt-pkg/deb/debsystem.cc:88
+#, c-format
 msgid ""
-"dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to "
-"correct the problem. "
+"dpkg was interrupted, you must manually run '%s' to correct the problem. "
 msgstr ""
 
-#: apt-pkg/deb/debsystem.cc:99
+#: apt-pkg/deb/debsystem.cc:106
 msgid "Not locked"
 msgstr ""
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:172
+#: methods/mirror.cc:200
 #, c-format
 msgid "No mirror file '%s' found "
+msgstr ""
+
+#: methods/mirror.cc:343
+#, c-format
+msgid "[Mirror: %s]"
 msgstr ""
 
 #: methods/rred.cc:465
@@ -3213,9 +3415,17 @@ msgid ""
 "to be corrupt."
 msgstr ""
 
-#: methods/rsh.cc:330
+#: methods/rsh.cc:329
 msgid "Connection closed prematurely"
 msgstr "Caewyd y cysylltiad yn gynnar"
+
+#, fuzzy
+#~ msgid "Error occurred while processing %s (NewVersion2)"
+#~ msgstr "Digwyddod gwall wrth brosesu %s (NewVersion2)"
+
+#, fuzzy
+#~ msgid "Malformed line %u in source list %s (vendor id)"
+#~ msgstr "Llinell camffurfiol %lu yn y rhestr ffynhonell %s (dosranniad)"
 
 #, fuzzy
 #~ msgid "Couldn't access keyring: '%s'"

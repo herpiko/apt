@@ -11,7 +11,7 @@
 
 # generate a list of accepted man page translations
 SOURCE = $(patsubst %.xml,%,$(wildcard *.$(LC).?.xml))
-INCLUDES = apt.ent
+INCLUDES = apt.ent apt-verbatim.ent
 
 # Do not use XMLTO, build the manpages directly with XSLTPROC
 ifdef XSLTPROC
@@ -25,16 +25,19 @@ $(LOCAL)-LIST := $(SOURCE)
 doc: $($(LOCAL)-LIST)
 veryclean: veryclean/$(LOCAL)
 
+apt-verbatim.ent: ../apt-verbatim.ent
+	cp ../apt-verbatim.ent .
+
 $($(LOCAL)-LIST) :: % : %.xml $(INCLUDES)
 	echo Creating man page $@
-	$(XSLTPROC) -o $@ $(STYLESHEET) $< # why xsltproc doesn't respect the -o flag here???
+	$(XSLTPROC) -o $@ $(STYLESHEET) $< || exit 200 # why xsltproc doesn't respect the -o flag here???
 	test -f $(subst .$(LC),,$@) || echo FIXME: xsltproc respect the -o flag now, workaround can be removed
 	mv -f $(subst .$(LC),,$@) $@
 
 # Clean rule
 .PHONY: veryclean/$(LOCAL)
 veryclean/$(LOCAL):
-	-rm -rf $($(@F)-LIST) apt.ent apt.$(LC).8 \
+	-rm -rf $($(@F)-LIST) apt.ent apt-verbatim.ent apt.$(LC).8 \
 		$(addsuffix .xml,$($(@F)-LIST)) \
 		offline.$(LC).sgml guide.$(LC).sgml
 
