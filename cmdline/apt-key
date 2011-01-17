@@ -13,7 +13,7 @@ GPG="$GPG_CMD"
 MASTER_KEYRING=/usr/share/keyrings/ubuntu-master-keyring.gpg
 ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
 REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
-ARCHIVE_KEYRING_URI=http://archive.ubuntu.com/ubuntu/project/ubuntu-archive-keyring.gpg
+ARCHIVE_KEYRING_URI=http://arsip.blankonlinux.or.id/blankon/project/blankon-archive-keyring.gpg
 
 
 add_keys_with_verify_against_master_keyring() {
@@ -71,7 +71,7 @@ net_update() {
     if [ -e $keyring ]; then
 	old_mtime=$(stat -c %Y $keyring)
     fi
-    (cd  /var/lib/apt/keyrings; wget -q -N $ARCHIVE_KEYRING_URI)
+    (cd  /var/lib/apt/keyrings; wget --timeout=90 -q -N $ARCHIVE_KEYRING_URI)
     if [ ! -e $keyring ]; then
 	return
     fi

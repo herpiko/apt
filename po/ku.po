@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-ku\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-09 11:35+0100\n"
+"POT-Creation-Date: 2010-12-07 16:15+0100\n"
 "PO-Revision-Date: 2008-05-08 12:48+0200\n"
 "Last-Translator: Erdal Ronahi <erdal dot ronahi at gmail dot com>\n"
 "Language-Team: ku <ubuntu-l10n-kur@lists.ubuntu.com>\n"
@@ -100,15 +100,15 @@ msgstr "Cihê giştî yê veqetandî: "
 msgid "Package file %s is out of sync."
 msgstr "Pakêta dosya %s li derveyî demê ye."
 
+#: cmdline/apt-cache.cc:591 cmdline/apt-cache.cc:1429
+#: cmdline/apt-cache.cc:1431 cmdline/apt-cache.cc:1508
+msgid "No packages found"
+msgstr "Pakêt nayên dîtin"
+
 #: cmdline/apt-cache.cc:1273
 #, fuzzy
 msgid "You must give at least one search pattern"
 msgstr "Pêwist e tu mînakekê bidî"
-
-#: cmdline/apt-cache.cc:1429 cmdline/apt-cache.cc:1431
-#: cmdline/apt-cache.cc:1508
-msgid "No packages found"
-msgstr "Pakêt nayên dîtin"
 
 #: cmdline/apt-cache.cc:1503 apt-pkg/cacheset.cc:440
 #, c-format
@@ -155,7 +155,7 @@ msgstr "  Tabloya guhertoyan:"
 
 #: cmdline/apt-cache.cc:1738 cmdline/apt-cdrom.cc:197 cmdline/apt-config.cc:70
 #: cmdline/apt-extracttemplates.cc:225 ftparchive/apt-ftparchive.cc:589
-#: cmdline/apt-get.cc:2758 cmdline/apt-sortpkgs.cc:144
+#: cmdline/apt-get.cc:2977 cmdline/apt-sortpkgs.cc:144
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s ji bo %s %s komkirî di %s %s de\n"
@@ -853,8 +853,8 @@ msgstr ""
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:1143 cmdline/apt-get.cc:1146 cmdline/apt-get.cc:2332
-#: cmdline/apt-get.cc:2335
+#: cmdline/apt-get.cc:1143 cmdline/apt-get.cc:1146 cmdline/apt-get.cc:2385
+#: cmdline/apt-get.cc:2388
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Nikarî cihê vala li %s tesbît bike"
@@ -888,7 +888,7 @@ msgstr "Betal."
 msgid "Do you want to continue [Y/n]? "
 msgstr "Dixwazî bidomînî [E/n]?"
 
-#: cmdline/apt-get.cc:1269 cmdline/apt-get.cc:2392 apt-pkg/algorithms.cc:1462
+#: cmdline/apt-get.cc:1269 cmdline/apt-get.cc:2445 apt-pkg/algorithms.cc:1470
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Anîna %s %s biserneket\n"
@@ -897,7 +897,7 @@ msgstr "Anîna %s %s biserneket\n"
 msgid "Some files failed to download"
 msgstr "Daxistina çend pelan biserneket"
 
-#: cmdline/apt-get.cc:1288 cmdline/apt-get.cc:2401
+#: cmdline/apt-get.cc:1288 cmdline/apt-get.cc:2454
 msgid "Download complete and in download only mode"
 msgstr ""
 
@@ -1071,23 +1071,28 @@ msgstr ""
 msgid "Unable to lock the download directory"
 msgstr "Pelrêça daxistinê nayê quflekirin"
 
-#: cmdline/apt-get.cc:2198
+#: cmdline/apt-get.cc:2204
+#, c-format
+msgid "Downloading %s %s"
+msgstr ""
+
+#: cmdline/apt-get.cc:2251
 msgid "Must specify at least one package to fetch source for"
 msgstr ""
 
-#: cmdline/apt-get.cc:2238 cmdline/apt-get.cc:2519
+#: cmdline/apt-get.cc:2291 cmdline/apt-get.cc:2572
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr ""
 
-#: cmdline/apt-get.cc:2254
+#: cmdline/apt-get.cc:2307
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2259
+#: cmdline/apt-get.cc:2312
 #, c-format
 msgid ""
 "Please use:\n"
@@ -1095,115 +1100,120 @@ msgid ""
 "to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2310
+#: cmdline/apt-get.cc:2363
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2345
+#: cmdline/apt-get.cc:2398
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Cihê vala li %s têre nake"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:2353
+#: cmdline/apt-get.cc:2406
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr ""
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:2358
+#: cmdline/apt-get.cc:2411
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2364
+#: cmdline/apt-get.cc:2417
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Çavkanîna %s bîne\n"
 
-#: cmdline/apt-get.cc:2397
+#: cmdline/apt-get.cc:2450
 msgid "Failed to fetch some archives."
 msgstr "Anîna çend arşîvan biserneket."
 
-#: cmdline/apt-get.cc:2427
+#: cmdline/apt-get.cc:2480
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2439
+#: cmdline/apt-get.cc:2492
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2440
+#: cmdline/apt-get.cc:2493
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2457
+#: cmdline/apt-get.cc:2510
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2477
+#: cmdline/apt-get.cc:2530
 msgid "Child process failed"
 msgstr ""
 
-#: cmdline/apt-get.cc:2493
+#: cmdline/apt-get.cc:2546
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 
-#: cmdline/apt-get.cc:2524
+#: cmdline/apt-get.cc:2577
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr ""
 
-#: cmdline/apt-get.cc:2544
+#: cmdline/apt-get.cc:2597
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2595
+#: cmdline/apt-get.cc:2648
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr ""
 
-#: cmdline/apt-get.cc:2648
+#: cmdline/apt-get.cc:2701
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because no available versions of "
 "package %s can satisfy version requirements"
 msgstr ""
 
-#: cmdline/apt-get.cc:2684
+#: cmdline/apt-get.cc:2737
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 
-#: cmdline/apt-get.cc:2711
+#: cmdline/apt-get.cc:2764
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr ""
 
-#: cmdline/apt-get.cc:2727
+#: cmdline/apt-get.cc:2780
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr ""
 
-#: cmdline/apt-get.cc:2732
+#: cmdline/apt-get.cc:2785
 msgid "Failed to process build dependencies"
 msgstr ""
 
-#: cmdline/apt-get.cc:2763
+#: cmdline/apt-get.cc:2871 cmdline/apt-get.cc:2883
+#, fuzzy, c-format
+msgid "Changelog for %s (%s)"
+msgstr "Girêdan bi %s (%s) re pêk tê"
+
+#: cmdline/apt-get.cc:2982
 msgid "Supported modules:"
 msgstr ""
 
-#: cmdline/apt-get.cc:2804
+#: cmdline/apt-get.cc:3023
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1229,6 +1239,8 @@ msgid ""
 "   check - Verify that there are no broken dependencies\n"
 "   markauto - Mark the given packages as automatically installed\n"
 "   unmarkauto - Mark the given packages as manually installed\n"
+"   changelog - Download and display the changelog for the given package\n"
+"   download - Download the binary package into the current directory\n"
 "\n"
 "Options:\n"
 "  -h  This help text.\n"
@@ -1249,7 +1261,7 @@ msgid ""
 "                       This APT has Super Cow Powers.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:2960
+#: cmdline/apt-get.cc:3183
 msgid ""
 "NOTE: This is only a simulation!\n"
 "      apt-get needs root privileges for real execution.\n"
@@ -1257,33 +1269,33 @@ msgid ""
 "      so don't depend on the relevance to the real current situation!"
 msgstr ""
 
-#: cmdline/acqprogress.cc:55
+#: cmdline/acqprogress.cc:57
 msgid "Hit "
 msgstr ""
 
-#: cmdline/acqprogress.cc:79
+#: cmdline/acqprogress.cc:81
 msgid "Get:"
 msgstr "Anîn:"
 
-#: cmdline/acqprogress.cc:110
+#: cmdline/acqprogress.cc:112
 msgid "Ign "
 msgstr ""
 
-#: cmdline/acqprogress.cc:114
+#: cmdline/acqprogress.cc:116
 msgid "Err "
 msgstr "Çewt"
 
-#: cmdline/acqprogress.cc:135
+#: cmdline/acqprogress.cc:137
 #, fuzzy, c-format
 msgid "Fetched %sB in %s (%sB/s)\n"
 msgstr "%s hatine anîn..."
 
-#: cmdline/acqprogress.cc:225
+#: cmdline/acqprogress.cc:227
 #, c-format
 msgid " [Working]"
 msgstr " [Dixebite]"
 
-#: cmdline/acqprogress.cc:271
+#: cmdline/acqprogress.cc:283
 #, c-format
 msgid ""
 "Media change: please insert the disc labeled\n"
@@ -2496,17 +2508,17 @@ msgid ""
 "The package %s needs to be reinstalled, but I can't find an archive for it."
 msgstr ""
 
-#: apt-pkg/algorithms.cc:1210
+#: apt-pkg/algorithms.cc:1218
 msgid ""
 "Error, pkgProblemResolver::Resolve generated breaks, this may be caused by "
 "held packages."
 msgstr ""
 
-#: apt-pkg/algorithms.cc:1212
+#: apt-pkg/algorithms.cc:1220
 msgid "Unable to correct problems, you have held broken packages."
 msgstr ""
 
-#: apt-pkg/algorithms.cc:1488 apt-pkg/algorithms.cc:1490
+#: apt-pkg/algorithms.cc:1496 apt-pkg/algorithms.cc:1498
 msgid ""
 "Some index files failed to download, they have been ignored, or old ones "
 "used instead."

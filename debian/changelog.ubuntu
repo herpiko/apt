@@ -1,3 +1,128 @@
+apt (0.8.10ubuntu1) natty; urgency=low
+
+  [ Julian Andres Klode ]
+  * cmdline/apt-cache.cc: Create an error for apt-cache depends
+    if packages could not found (LP: #647045)
+  
+  [ Michael Vogt ]
+  * merged from debian-sid
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 07 Dec 2010 15:53:49 +0100
+
+apt (0.8.10) unstable; urgency=low
+
+  [ Programs translations ]
+  * Czech by Miroslav Kure. Closes: #605107
+
+  [ Martin Pitt ]
+  * test/integration/test-compressed-indexes, test/test-indexes.sh:
+    - Explicitly disable compressed indexes at the start. This ensures that we
+      will actually test uncompressed indexes regardless of the internal
+      default value of Acquire::GzipIndexes.
+
+  [ David Kalnischkies ]
+  * apt-pkg/algorithms.cc:
+    - mark all installed packages first without auto installation in
+      a dist-upgrade to prefer upgrading packages instead of installing
+      new packages in versioned or-groups (Closes: #605394)
+
+ -- Michael Vogt <mvo@debian.org>  Tue, 30 Nov 2010 10:42:17 +0100
+
+apt (0.8.9ubuntu4) natty; urgency=low
+
+  [ Michael Vogt ]
+  * cmdline/apt-key:
+    - set timeout of wget for net-update to 90 seconds (thanks to \sh)
+
+  [ Martin Pitt ]
+  * Revert r1819 and r1820 to disable compressed indexes by default again.
+    Testing has brought up a few places where this seriously degrades
+    performance, mostly in applications which iterate through all available
+    package records, like update-apt-xapian-index or synaptic. See
+    https://bugs.launchpad.net/ubuntu/+bugs?field.tag=apt-compressed-indexes
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 25 Nov 2010 08:50:37 +0100
+
+apt (0.8.9ubuntu3) natty; urgency=low
+
+  * methods/http.cc:
+    - do not hang if Acquire::http::ProxyAutoDetect can not be
+      executed or returns no data (LP: #654393)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 22 Nov 2010 10:42:50 +0100
+
+apt (0.8.9ubuntu2) natty; urgency=low
+
+  * drop apt-changelog, apt-get changelog implements all the 
+    features it provides
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 18 Nov 2010 15:22:40 +0100
+
+apt (0.8.9ubuntu1) natty; urgency=low
+
+  * re-merged from the debian-sid bzr branch
+  * merged lp:~mvo/apt/mvo, this brings two new commands:
+    - apt-get download binary-pkgname to download a deb
+    - apt-get changelog binary-pkgname to display the changelog
+  * cmdline/apt-get.cc:
+    - if the changelog download failed, do not show the generic error
+      but point to launchpad instead
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 18 Nov 2010 15:02:14 +0100
+
+apt (0.8.9) unstable; urgency=low
+
+  [ Christian Perrier ]
+  * Fix "typos" in French manpages translations. Thanks to
+    Cyril Brulebois for bashing me.
+  * Drop useless untranslatable sections from apt.8
+
+  [ Programs translations ]
+  * Slovenian update by Andrej Žnidaršič and Rosetta Slovenian team
+  * German update by Holger Wansing. Closes: #603619
+
+  [ David Kalnischkies ]
+  * apt-pkg/aptconfiguration.cc:
+    - evaluate Acquire::Languages= before LANG= (Closes: #602573)
+  * apt-pkg/orderlist.cc:
+    - try fixing before removing even if the fix is hidden in
+      a provides, hidden in the #590438 testcase
+  * apt-pkg/algorithms.cc:
+    - if the package was explicitly marked as ToRemove don't
+      consider it as a candidate for FixByInstall
+  * apt-pkg/depcache.cc:
+    - don't install previously not installed providers in a try
+      to statisfy a "Breaks: provides" dependency by upgrade
+  * cmdline/acqprogress.cc:
+    - don't ask the user for media change if quiet >= 2, stdout is not
+      a tty and assume-yes, force-yes or trivial-only option is set to
+      avoid cpu eating endless loops in unattended runs like apt.cron
+      (Closes: #602354, LP: #665580)
+
+ -- Michael Vogt <mvo@debian.org>  Thu, 18 Nov 2010 09:25:04 +0100
+
+apt (0.8.8ubuntu3) natty; urgency=low
+
+  * cmdline/apt-changelog: Filter out multiple results for a source package,
+    just take the latest one.
+  * cmdline/apt-changelog: Read server name from configuration
+    APT::Changelog::Server instead of hardcoding it. This allows local users
+    to point to a local changelog mirror, or make this script work for Debian.
+  * Add debian/apt.conf.changelog: Configuration for apt-changelog with the
+    server for Ubuntu (changelogs.ubuntu.com). Install it in debian/rules.
+  * doc/apt-changelog.1.xml: Document the new option.
+  * test/integration/test-compressed-indexes, test/test-indexes.sh:
+    - Explicitly disable compressed indexes at the start. This ensures that we
+      will actually test uncompressed indexes regardless of the internal
+      default value of Acquire::GzipIndexes.
+  * apt-pkg/acquire-item.cc: Set Acquire::GzipIndexes to "true" by default, to
+    store compressed indexes. This feature is now mature enough for general
+    consumption. Update doc/apt.conf.5.xml accordingly.
+  * apt-pkg/aptconfiguration.cc: Have Acquire::CompressionTypes::Order default
+    to preferring "gz", so that compressed indexes will actually work.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 15 Nov 2010 12:14:15 +0100
+
 apt (0.8.8ubuntu2) natty; urgency=low
 
   * Add cmdline/apt-changelog: Script to fetch package changelog from
