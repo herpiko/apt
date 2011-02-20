@@ -42,6 +42,11 @@
 #include <errno.h>
 #include <set>
 #include <algorithm>
+
+#include <config.h>
+#ifdef WORDS_BIGENDIAN
+#include <inttypes.h>
+#endif
 									/*}}}*/
 
 using namespace std;
@@ -191,13 +196,24 @@ int GetLock(string File,bool Errors)
 									/*}}}*/
 // FileExists - Check if a file exists					/*{{{*/
 // ---------------------------------------------------------------------
-/* */
+/* Beware: Directories are also files! */
 bool FileExists(string File)
 {
    struct stat Buf;
    if (stat(File.c_str(),&Buf) != 0)
       return false;
    return true;
+}
+									/*}}}*/
+// RealFileExists - Check if a file exists and if it is really a file	/*{{{*/
+// ---------------------------------------------------------------------
+/* */
+bool RealFileExists(string File)
+{
+   struct stat Buf;
+   if (stat(File.c_str(),&Buf) != 0)
+      return false;
+   return ((Buf.st_mode & S_IFREG) != 0);
 }
 									/*}}}*/
 // DirectoryExists - Check if a directory exists and is really one	/*{{{*/
@@ -304,6 +320,13 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
    }
 
    std::vector<string> List;
+
+   if (DirectoryExists(Dir.c_str()) == false)
+   {
+      _error->Error(_("List of files can't be created as '%s' is not a directory"), Dir.c_str());
+      return List;
+   }
+
    Configuration::MatchAgainstConfig SilentIgnore("Dir::Ignore-Files-Silently");
    DIR *D = opendir(Dir.c_str());
    if (D == 0) 
@@ -318,6 +341,20 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
       if (Ent->d_name[0] == '.')
 	 continue;
 
+      // Make sure it is a file and not something else
+      string const File = flCombine(Dir,Ent->d_name);
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (Ent->d_type != DT_REG)
+#endif
+      {
+	 if (RealFileExists(File.c_str()) == false)
+	 {
+	    if (SilentIgnore.Match(Ent->d_name) == false)
+	       _error->Notice(_("Ignoring '%s' in directory '%s' as it is not a regular file"), Ent->d_name, Dir.c_str());
+	    continue;
+	 }
+      }
+
       // check for accepted extension:
       // no extension given -> periods are bad as hell!
       // extensions given -> "" extension allows no extension
@@ -331,7 +368,7 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
 	       if (Debug == true)
 		  std::clog << "Bad file: " << Ent->d_name << " → no extension" << std::endl;
 	       if (SilentIgnore.Match(Ent->d_name) == false)
-		  _error->Notice("Ignoring file '%s' in directory '%s' as it has no filename extension", Ent->d_name, Dir.c_str());
+		  _error->Notice(_("Ignoring file '%s' in directory '%s' as it has no filename extension"), Ent->d_name, Dir.c_str());
 	       continue;
 	    }
 	 }
@@ -340,7 +377,7 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
 	    if (Debug == true)
 	       std::clog << "Bad file: " << Ent->d_name << " → bad extension »" << flExtension(Ent->d_name) << "«" << std::endl;
 	    if (SilentIgnore.Match(Ent->d_name) == false)
-	       _error->Notice("Ignoring file '%s' in directory '%s' as it has an invalid filename extension", Ent->d_name, Dir.c_str());
+	       _error->Notice(_("Ignoring file '%s' in directory '%s' as it has an invalid filename extension"), Ent->d_name, Dir.c_str());
 	    continue;
 	 }
       }
@@ -370,16 +407,6 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
       {
 	 if (Debug == true)
 	    std::clog << "Bad file: " << Ent->d_name << " → Period as last character" << std::endl;
-	 continue;
-      }
-
-      // Make sure it is a file and not something else
-      string const File = flCombine(Dir,Ent->d_name);
-      struct stat St;
-      if (stat(File.c_str(),&St) != 0 || S_ISREG(St.st_mode) == 0)
-      {
-	 if (Debug == true)
-	    std::clog << "Bad file: " << Ent->d_name << " → stat says not a good file" << std::endl;
 	 continue;
       }
 
@@ -940,9 +967,16 @@ unsigned long FileFd::Size()
        off_t orig_pos = lseek(iFd, 0, SEEK_CUR);
        if (lseek(iFd, -4, SEEK_END) < 0)
 	   return _error->Errno("lseek","Unable to seek to end of gzipped file");
+       size = 0L;
        if (read(iFd, &size, 4) != 4)
 	   return _error->Errno("read","Unable to read original size of gzipped file");
-       size &= 0xFFFFFFFF;
+
+#ifdef WORDS_BIGENDIAN
+       uint32_t tmp_size = size;
+       uint8_t const * const p = (uint8_t const * const) &tmp_size;
+       tmp_size = (p[3] << 24) | (p[2] << 16) | (p[1] << 8) | p[0];
+       size = tmp_size;
+#endif
 
        if (lseek(iFd, orig_pos, SEEK_SET) < 0)
 	   return _error->Errno("lseek","Unable to seek in gzipped file");

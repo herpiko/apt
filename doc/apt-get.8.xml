@@ -337,6 +337,11 @@
      Configuration Item: <literal>APT::Install-Recommends</literal>.</para></listitem>
      </varlistentry>
 
+     <varlistentry><term><option>--install-suggests</option></term>
+     <listitem><para>Consider suggested packages as a dependency for installing.
+     Configuration Item: <literal>APT::Install-Suggests</literal>.</para></listitem>
+     </varlistentry>
+
      <varlistentry><term><option>-d</option></term><term><option>--download-only</option></term>
      <listitem><para>Download only; package files are only retrieved, not unpacked or installed.
      Configuration Item: <literal>APT::Get::Download-Only</literal>.</para></listitem>
@@ -432,14 +437,6 @@
                    <term><option>--build</option></term>
      <listitem><para>Compile source packages after downloading them.
      Configuration Item: <literal>APT::Get::Compile</literal>.</para></listitem>
-     </varlistentry>
-
-     <varlistentry><term><option>--install-recommends</option></term>
-     <listitem><para>Also install recommended packages.</para></listitem>
-     </varlistentry>
-
-     <varlistentry><term><option>--no-install-recommends</option></term>
-     <listitem><para>Do not install recommended packages.</para></listitem>
      </varlistentry>
 
      <varlistentry><term><option>--ignore-hold</option></term>
