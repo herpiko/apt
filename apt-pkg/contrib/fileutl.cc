@@ -67,7 +67,7 @@ bool RunScripts(const char *Cnf)
    // This is the child
    if (Child == 0)
    {
-if (_config->FindDir("DPkg::Chroot-Directory","/") != "/") 
+      if (_config->FindDir("DPkg::Chroot-Directory","/") != "/") 
       {
          std::cerr << "Chrooting into " 
                    << _config->FindDir("DPkg::Chroot-Directory") 
@@ -76,8 +76,6 @@ if (_config->FindDir("DPkg::Chroot-Directory","/") != "/")
             _exit(100);
       }
 
-       if (chdir("/tmp/") != 0)
- 	 _exit(100);
       if (chdir("/tmp/") != 0)
 	 _exit(100);
 	 

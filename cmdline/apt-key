@@ -16,9 +16,9 @@ GPG="$GPG_CMD"
 
 # ubuntu keyrings
 MASTER_KEYRING=/usr/share/keyrings/ubuntu-master-keyring.gpg
-ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
-REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
-ARCHIVE_KEYRING_URI=http://arsip.blankonlinux.or.id/blankon/project/blankon-archive-keyring.gpg
+ARCHIVE_KEYRING=/usr/share/keyrings/ubuntu-archive-keyring.gpg
+REMOVED_KEYS=/usr/share/keyrings/ubuntu-archive-removed-keys.gpg
+ARCHIVE_KEYRING_URI=http://archive.ubuntu.com/ubuntu/project/ubuntu-archive-keyring.gpg
 
 
 add_keys_with_verify_against_master_keyring() {
@@ -90,7 +90,7 @@ net_update() {
 update() {
     if [ ! -f $ARCHIVE_KEYRING ]; then
 	echo >&2 "ERROR: Can't find the archive-keyring"
-	echo >&2 "Is the blankon-keyring package installed?"
+	echo >&2 "Is the ubuntu-keyring package installed?"
 	exit 1
     fi
 

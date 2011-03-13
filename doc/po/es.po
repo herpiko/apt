@@ -36,7 +36,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.7.25\n"
-"POT-Creation-Date: 2011-02-14 13:42+0100\n"
+"POT-Creation-Date: 2011-03-10 16:16+0100\n"
 "PO-Revision-Date: 2010-08-25 03:25+0200\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
@@ -1354,7 +1354,7 @@ msgstr ""
 "configuración: <literal>Dir::Cache::pkgcache</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-cache.8.xml:288 apt-ftparchive.1.xml:568 apt-get.8.xml:393
+#: apt-cache.8.xml:288 apt-ftparchive.1.xml:571 apt-get.8.xml:393
 #: apt-sortpkgs.1.xml:61
 msgid "<option>-s</option>"
 msgstr "<option>-s</option>"
@@ -1380,12 +1380,12 @@ msgstr ""
 "Opción de configuración: <literal>Dir::Cache::srcpkgcache</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-cache.8.xml:296 apt-ftparchive.1.xml:542 apt-get.8.xml:383
+#: apt-cache.8.xml:296 apt-ftparchive.1.xml:545 apt-get.8.xml:383
 msgid "<option>-q</option>"
 msgstr "<option>-q</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-cache.8.xml:296 apt-ftparchive.1.xml:542 apt-get.8.xml:383
+#: apt-cache.8.xml:296 apt-ftparchive.1.xml:545 apt-get.8.xml:383
 msgid "<option>--quiet</option>"
 msgstr "<option>--quiet</option>"
 
@@ -1500,7 +1500,7 @@ msgstr ""
 "Opción de configuración: <literal>APT::Cache::ShowFull</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-cache.8.xml:328 apt-cdrom.8.xml:134 apt-ftparchive.1.xml:580
+#: apt-cache.8.xml:328 apt-cdrom.8.xml:134 apt-ftparchive.1.xml:583
 msgid "<option>-a</option>"
 msgstr "<option>-a</option>"
 
@@ -1617,7 +1617,7 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist>
 #: apt-cache.8.xml:367 apt-cdrom.8.xml:153 apt-config.8.xml:101
-#: apt-extracttemplates.1.xml:70 apt-ftparchive.1.xml:608 apt-get.8.xml:570
+#: apt-extracttemplates.1.xml:70 apt-ftparchive.1.xml:611 apt-get.8.xml:570
 #: apt-sortpkgs.1.xml:67
 msgid "&apt-commonoptions;"
 msgstr "&apt-commonoptions;"
@@ -1635,7 +1635,7 @@ msgstr "&file-sourceslist; &file-statelists;"
 
 #. type: Content of: <refentry><refsect1><title>
 #: apt-cache.8.xml:379 apt-cdrom.8.xml:158 apt-config.8.xml:106
-#: apt-extracttemplates.1.xml:77 apt-ftparchive.1.xml:624 apt-get.8.xml:585
+#: apt-extracttemplates.1.xml:77 apt-ftparchive.1.xml:627 apt-get.8.xml:585
 #: apt-key.8.xml:177 apt-mark.8.xml:131 apt-secure.8.xml:185
 #: apt-sortpkgs.1.xml:72 apt.conf.5.xml:1099 apt_preferences.5.xml:656
 #: sources.list.5.xml:234
@@ -1649,7 +1649,7 @@ msgstr "&apt-conf;, &sources-list;, &apt-get;"
 
 #. type: Content of: <refentry><refsect1><title>
 #: apt-cache.8.xml:384 apt-cdrom.8.xml:163 apt-config.8.xml:111
-#: apt-extracttemplates.1.xml:81 apt-ftparchive.1.xml:628 apt-get.8.xml:591
+#: apt-extracttemplates.1.xml:81 apt-ftparchive.1.xml:631 apt-get.8.xml:591
 #: apt-mark.8.xml:135 apt-sortpkgs.1.xml:76
 msgid "Diagnostics"
 msgstr "Diagnósticos"
@@ -1784,7 +1784,7 @@ msgid "Options"
 msgstr "Opciones"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-cdrom.8.xml:98 apt-ftparchive.1.xml:536 apt-get.8.xml:345
+#: apt-cdrom.8.xml:98 apt-ftparchive.1.xml:539 apt-get.8.xml:345
 msgid "<option>-d</option>"
 msgstr "<option>-d</option>"
 
@@ -2041,7 +2041,7 @@ msgid "Just show the contents of the configuration space."
 msgstr "Sólo muestra el contenido del espacio de configuración."
 
 #. type: Content of: <refentry><refsect1><para>
-#: apt-config.8.xml:107 apt-extracttemplates.1.xml:78 apt-ftparchive.1.xml:625
+#: apt-config.8.xml:107 apt-extracttemplates.1.xml:78 apt-ftparchive.1.xml:628
 #: apt-sortpkgs.1.xml:73
 msgid "&apt-conf;"
 msgstr "&apt-conf;"
@@ -3192,28 +3192,49 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: apt-ftparchive.1.xml:529
-msgid "<option>--md5</option>"
-msgstr "<option>--md5</option>"
+msgid ""
+"<option>--md5</option>, <option>--sha1</option>, <option>--sha256</option>"
+msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-ftparchive.1.xml:531
+#, fuzzy
+#| msgid ""
+#| "Values for the additional metadata fields in the Release file are taken "
+#| "from the corresponding variables under <literal>APT::FTPArchive::Release</"
+#| "literal>, e.g. <literal>APT::FTPArchive::Release::Origin</literal>.  The "
+#| "supported fields are: <literal>Origin</literal>, <literal>Label</"
+#| "literal>, <literal>Suite</literal>, <literal>Version</literal>, "
+#| "<literal>Codename</literal>, <literal>Date</literal>, <literal>Valid-"
+#| "Until</literal>, <literal>Architectures</literal>, <literal>Components</"
+#| "literal>, <literal>Description</literal>."
 msgid ""
-"Generate MD5 sums. This defaults to on, when turned off the generated index "
-"files will not have MD5Sum fields where possible.  Configuration Item: "
-"<literal>APT::FTPArchive::MD5</literal>"
+"Generate the given checksum. These options default to on, when turned off "
+"the generated index files will not have the checksum fields where possible.  "
+"Configuration Items: <literal>APT::FTPArchive::<replaceable>Checksum</"
+"replaceable></literal> and <literal>APT::FTPArchive::<replaceable>Index</"
+"replaceable>::<replaceable>Checksum</replaceable></literal> where "
+"<literal>Index</literal> can be <literal>Packages</literal>, "
+"<literal>Sources</literal> or <literal>Release</literal> and "
+"<literal>Checksum</literal> can be <literal>MD5</literal>, <literal>SHA1</"
+"literal> or <literal>SHA256</literal>."
 msgstr ""
-"Genera una suma de control MD5. Está activado de forma predeterminada, "
-"cuando se desactiva los ficheros de índices generados no tendrán los campos "
-"MD5Sum cuando sea posible. Opción de configuración: <literal>APT::"
-"FTPArchive::MD5</literal>"
+"Los valores para los campos de metadatos adicionales en el fichero «Release» "
+"se toman de las variables correspondientes en <literal>APT::FTPArchive::"
+"Release</literal>, por ejemplo <literal>APT::FTPArchive::Release::Origin</"
+"literal>. Los campos permitidos son: <literal>Origin</literal>, "
+"<literal>Label</literal>, <literal>Suite</literal>, <literal>Version</"
+"literal>, <literal>Codename</literal>, <literal>Date</literal>, "
+"<literal>Valid-Until</literal>, <literal>Architectures</literal>, "
+"<literal>Components</literal> y <literal>Description</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:536
+#: apt-ftparchive.1.xml:539
 msgid "<option>--db</option>"
 msgstr "<option>--db</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:538
+#: apt-ftparchive.1.xml:541
 msgid ""
 "Use a binary caching DB. This has no effect on the generate command.  "
 "Configuration Item: <literal>APT::FTPArchive::DB</literal>."
@@ -3222,7 +3243,7 @@ msgstr ""
 "«generate». Opción de configuración: <literal>APT::FTPArchive::DB</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:544
+#: apt-ftparchive.1.xml:547
 msgid ""
 "Quiet; produces output suitable for logging, omitting progress indicators.  "
 "More q's will produce more quiet up to a maximum of 2. You can also use "
@@ -3236,12 +3257,12 @@ msgstr ""
 "configuración. Opción de configuración: <literal>quiet</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:550
+#: apt-ftparchive.1.xml:553
 msgid "<option>--delink</option>"
 msgstr "<option>--delink</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:552
+#: apt-ftparchive.1.xml:555
 msgid ""
 "Perform Delinking. If the <literal>External-Links</literal> setting is used "
 "then this option actually enables delinking of the files. It defaults to on "
@@ -3254,12 +3275,12 @@ msgstr ""
 "Opción de configuración: <literal>APT::FTPArchive::DeLinkAct</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:558
+#: apt-ftparchive.1.xml:561
 msgid "<option>--contents</option>"
 msgstr "<option>--contents</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:560
+#: apt-ftparchive.1.xml:563
 msgid ""
 "Perform contents generation. When this option is set and package indexes are "
 "being generated with a cache DB then the file listing will also be extracted "
@@ -3276,12 +3297,12 @@ msgstr ""
 "Contents</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:568
+#: apt-ftparchive.1.xml:571
 msgid "<option>--source-override</option>"
 msgstr "<option>--source-override</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:570
+#: apt-ftparchive.1.xml:573
 msgid ""
 "Select the source override file to use with the <literal>sources</literal> "
 "command.  Configuration Item: <literal>APT::FTPArchive::SourceOverride</"
@@ -3292,12 +3313,12 @@ msgstr ""
 "FTPArchive::SourceOverride</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:574
+#: apt-ftparchive.1.xml:577
 msgid "<option>--readonly</option>"
 msgstr "<option>--readonly</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:576
+#: apt-ftparchive.1.xml:579
 msgid ""
 "Make the caching databases read only.  Configuration Item: <literal>APT::"
 "FTPArchive::ReadOnlyDB</literal>."
@@ -3306,12 +3327,12 @@ msgstr ""
 "Opción de configuración: <literal>APT::FTPArchive::ReadOnlyDB</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:580
+#: apt-ftparchive.1.xml:583
 msgid "<option>--arch</option>"
 msgstr "<option>--arch</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:581
+#: apt-ftparchive.1.xml:584
 msgid ""
 "Accept in the <literal>packages</literal> and <literal>contents</literal> "
 "commands only package files matching <literal>*_arch.deb</literal> or "
@@ -3325,12 +3346,12 @@ msgstr ""
 "FTPArchive::Architecture</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:587
+#: apt-ftparchive.1.xml:590
 msgid "<option>APT::FTPArchive::AlwaysStat</option>"
 msgstr "<option>APT::FTPArchive::AlwaysStat</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:589
+#: apt-ftparchive.1.xml:592
 msgid ""
 "&apt-ftparchive; caches as much as possible of metadata in a cachedb. If "
 "packages are recompiled and/or republished with the same version again, this "
@@ -3354,12 +3375,12 @@ msgstr ""
 "comprobaciones adicionales son innecesarias."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-ftparchive.1.xml:599
+#: apt-ftparchive.1.xml:602
 msgid "<option>APT::FTPArchive::LongDescription</option>"
 msgstr "<option>APT::FTPArchive::LongDescription</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-ftparchive.1.xml:601
+#: apt-ftparchive.1.xml:604
 msgid ""
 "This configuration option defaults to \"<literal>true</literal>\" and should "
 "only be set to <literal>\"false\"</literal> if the Archive generated with "
@@ -3375,19 +3396,19 @@ msgstr ""
 "con la orden «generate»."
 
 #. type: Content of: <refentry><refsect1><title>
-#: apt-ftparchive.1.xml:613 apt.conf.5.xml:1087 apt_preferences.5.xml:496
+#: apt-ftparchive.1.xml:616 apt.conf.5.xml:1087 apt_preferences.5.xml:496
 #: sources.list.5.xml:198
 msgid "Examples"
 msgstr "Ejemplos"
 
 #. type: Content of: <refentry><refsect1><para><programlisting>
-#: apt-ftparchive.1.xml:619
+#: apt-ftparchive.1.xml:622
 #, no-wrap
 msgid "<command>apt-ftparchive</command> packages <replaceable>directory</replaceable> | <command>gzip</command> > <filename>Packages.gz</filename>\n"
 msgstr "<command>apt-ftparchive</command> packages <replaceable>directorio</replaceable> | <command>gzip</command> > <filename>Packages.gz</filename>\n"
 
 #. type: Content of: <refentry><refsect1><para>
-#: apt-ftparchive.1.xml:615
+#: apt-ftparchive.1.xml:618
 msgid ""
 "To create a compressed Packages file for a directory containing binary "
 "packages (.deb): <placeholder type=\"programlisting\" id=\"0\"/>"
@@ -3396,7 +3417,7 @@ msgstr ""
 "paquetes binarios («.deb»): <placeholder type=\"programlisting\" id=\"0\"/>"
 
 #. type: Content of: <refentry><refsect1><para>
-#: apt-ftparchive.1.xml:629
+#: apt-ftparchive.1.xml:632
 msgid ""
 "<command>apt-ftparchive</command> returns zero on normal operation, decimal "
 "100 on error."
@@ -11048,6 +11069,19 @@ msgstr "  # apt-get -o dir::cache::archives=\"/disc/\" dist-upgrade"
 msgid "Which will use the already fetched archives on the disc."
 msgstr "Ésto usará los archivos del disco previamente obtenidos."
 
+#~ msgid "<option>--md5</option>"
+#~ msgstr "<option>--md5</option>"
+
+#~ msgid ""
+#~ "Generate MD5 sums. This defaults to on, when turned off the generated "
+#~ "index files will not have MD5Sum fields where possible.  Configuration "
+#~ "Item: <literal>APT::FTPArchive::MD5</literal>"
+#~ msgstr ""
+#~ "Genera una suma de control MD5. Está activado de forma predeterminada, "
+#~ "cuando se desactiva los ficheros de índices generados no tendrán los "
+#~ "campos MD5Sum cuando sea posible. Opción de configuración: <literal>APT::"
+#~ "FTPArchive::MD5</literal>"
+
 #~ msgid "APT package handling utility -- cache manipulator"
 #~ msgstr ""
 #~ "Herramienta para la gestión de paquetes APT -- manipulador de la caché"
@@ -11107,8 +11141,12 @@ msgstr "Ésto usará los archivos del disco previamente obtenidos."
 #~ "Usa HTTP para acceder al archivo de Debian en «nonus.debian.org», bajo el "
 #~ "directorio debian-non-US."
 
-#~ msgid "deb http://nonus.debian.org/debian-non-US stable/non-US main contrib non-free"
-#~ msgstr "deb http://nonus.debian.org/debian-non-US stable/non-US main contrib non-free"
+#~ msgid ""
+#~ "deb http://nonus.debian.org/debian-non-US stable/non-US main contrib non-"
+#~ "free"
+#~ msgstr ""
+#~ "deb http://nonus.debian.org/debian-non-US stable/non-US main contrib non-"
+#~ "free"
 
 #~ msgid "OPTIONS"
 #~ msgstr "OPCIONES"
