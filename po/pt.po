@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2010-08-28 09:03+0100\n"
 "Last-Translator: Miguel Figueiredo <elmig@debianpt.org>\n"
 "Language-Team: Portuguese <traduz@debianpt.org>\n"
@@ -1693,7 +1693,7 @@ msgstr "O ficheiro %s/%s substitui o que está no pacote %s"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "Não foi possível ler %s"
@@ -1881,7 +1881,7 @@ msgstr "Impossível desmontar o CD-ROM em %s, pode ainda estar a ser utilizado."
 msgid "Disk not found."
 msgstr "Disco não encontrado."
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "Ficheiro não encontrado"
 
@@ -1935,7 +1935,7 @@ msgstr "O comando de script de login '%s' falhou, o servidor respondeu: %s"
 msgid "TYPE failed, server said: %s"
 msgstr "TYPE falhou, o servidor respondeu: %s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "Foi atingido o tempo limite de ligação"
 
@@ -1943,11 +1943,11 @@ msgstr "Foi atingido o tempo limite de ligação"
 msgid "Server closed the connection"
 msgstr "O servidor fechou a ligação"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "Erro de leitura"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "Uma resposta sobrecarregou o buffer."
 
@@ -1955,7 +1955,7 @@ msgstr "Uma resposta sobrecarregou o buffer."
 msgid "Protocol corruption"
 msgstr "Corrupção de protocolo"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "Erro de escrita"
 
@@ -2009,7 +2009,7 @@ msgstr "Ligação de socket de dados expirou"
 msgid "Unable to accept connection"
 msgstr "Impossível aceitar ligação"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problema ao calcular o hash do ficheiro"
 
@@ -2018,7 +2018,7 @@ msgstr "Problema ao calcular o hash do ficheiro"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "Não foi possível obter o ficheiro, o servidor respondeu '%s'"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "Expirou o tempo do socket de dados"
 
@@ -2068,7 +2068,7 @@ msgstr "Não foi possível ligar em %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "A ligar a %s"
@@ -2406,7 +2406,7 @@ msgstr "Impossível executar stat ao ponto de montagem %s"
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Impossível mudar para %s"
@@ -2817,7 +2817,7 @@ msgstr "O driver do método %s não pôde ser encontrado."
 msgid "Method %s did not start correctly"
 msgstr "Método %s não iniciou correctamente"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2974,24 +2974,24 @@ msgstr "falhou renomear, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum não coincide"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 msgid "Hash Sum mismatch"
 msgstr "Código de verificação hash não coincide"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Não foi possível fazer parse ao ficheiro Release %s"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Não existe qualquer chave pública disponível para as seguintes IDs de "
@@ -3000,17 +3000,17 @@ msgstr ""
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Ficheiro Release expirou, a ignorar %s (inválido desde %s)"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribuição em conflito: %s (esperado %s mas obtido %s)"
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -3020,12 +3020,12 @@ msgstr ""
 "actualizado e serão utilizados os ficheiros anteriores de índice. Erro do "
 "GPG: %s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Erro GPG: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3035,7 +3035,7 @@ msgstr ""
 "significar que você precisa corrigir manualmente este pacote. (devido a "
 "arquitectura em falta)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3044,7 +3044,7 @@ msgstr ""
 "Não foi possível localizar arquivo para o pacote %s. Isto pode significar "
 "que você precisa consertar manualmente este pacote."
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3052,7 +3052,7 @@ msgstr ""
 "Os arquivos de índice de pacotes estão corrompidos. Nenhum campo Filename: "
 "para o pacote %s."
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "Tamanho incorrecto"
 
@@ -3440,12 +3440,12 @@ msgstr "Sem acesso exclusivo"
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr "Não foi encontrado ficheiro de mirror '%s'"
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr "[Mirror: %s]"
@@ -3468,7 +3468,7 @@ msgstr ""
 "Não foi possível aplicar o patch %s com mmap (mas não é uma falha especifica "
 "do mmap) - o patch parece corrompido."
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "Ligação encerrada prematuramente"
 

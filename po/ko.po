@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2010-08-30 02:31+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <debian-l10n-korean@lists.debian.org>\n"
@@ -1668,7 +1668,7 @@ msgstr "%s/%s 파일은 %s 패키지에 있는 파일을 덮어 씁니다"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "%s을(를) 읽을 수 없습니다"
@@ -1854,7 +1854,7 @@ msgstr "%s 안의 CD-ROM을 마운트 해제할 수 없습니다. 사용 중일 
 msgid "Disk not found."
 msgstr "디스크가 없습니다."
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "파일이 없습니다"
 
@@ -1908,7 +1908,7 @@ msgstr "로그인 스크립트 명령 '%s' 실패, 서버에서는: %s"
 msgid "TYPE failed, server said: %s"
 msgstr "TYPE 실패, 서버에서는: %s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "연결 시간 초과"
 
@@ -1916,11 +1916,11 @@ msgstr "연결 시간 초과"
 msgid "Server closed the connection"
 msgstr "서버에서 연결을 닫았습니다"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "읽기 오류"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "응답이 버퍼 크기를 넘어갔습니다."
 
@@ -1928,7 +1928,7 @@ msgstr "응답이 버퍼 크기를 넘어갔습니다."
 msgid "Protocol corruption"
 msgstr "프로토콜이 틀렸습니다"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "쓰기 오류"
 
@@ -1982,7 +1982,7 @@ msgstr "데이터 소켓 연결 시간 초과"
 msgid "Unable to accept connection"
 msgstr "연결을 받을 수 없습니다"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "파일 해싱에 문제가 있습니다"
 
@@ -1991,7 +1991,7 @@ msgstr "파일 해싱에 문제가 있습니다"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "파일을 가져올 수 없습니다. 서버 왈, '%s'"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "데이터 소켓에 제한 시간이 초과했습니다"
 
@@ -2041,7 +2041,7 @@ msgstr "%s:%s에 연결할 수 없습니다 (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "%s에 연결하는 중입니다"
@@ -2368,7 +2368,7 @@ msgstr "마운트 위치 %s의 정보를 읽을 수 없습니다"
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "%s 디렉토리로 이동할 수 없습니다"
@@ -2770,7 +2770,7 @@ msgstr "설치 방법 드라이버 %s을(를) 찾을 수 없습니다."
 msgid "Method %s did not start correctly"
 msgstr "설치 방법 %s이(가) 올바르게 시작하지 않았습니다"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2918,41 +2918,41 @@ msgstr "이름 바꾸기가 실패했습니다. %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum이 맞지 않습니다"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 msgid "Hash Sum mismatch"
 msgstr "해시 합이 맞지 않습니다"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Release 파일 %s 파일을 파싱할 수 없습니다"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "다음 키 ID의 공개키가 없습니다:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Release 파일이 만료되었습니다. %s 무시. (%s 이후로 무효)"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "배포판 충돌: %s (예상값 %s, 실제값 %s)"
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -2961,12 +2961,12 @@ msgstr ""
 "디지털 서명 확인에 오류가 발생했습니다. 저장고를 업데이트하지 않고\n"
 "예전의 인덱스 파일을 사용합니다. GPG 오류: %s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG 오류: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2975,7 +2975,7 @@ msgstr ""
 "%s 패키지의 파일을 찾을 수 없습니다. 수동으로 이 패키지를 고쳐야 할 수도 있습"
 "니다. (아키텍쳐가 빠졌기 때문입니다)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2984,14 +2984,14 @@ msgstr ""
 "%s 패키지의 파일을 찾을 수 없습니다. 수동으로 이 패키지를 고쳐야 할 수도 있습"
 "니다."
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "패키지 인덱스 파일이 손상되었습니다. %s 패키지에 Filename: 필드가 없습니다."
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "크기가 맞지 않습니다"
 
@@ -3360,12 +3360,12 @@ msgstr "잠기지 않음"
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr "'%s' 미러 파일이 없습니다 "
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr "[미러 사이트: %s]"
@@ -3388,7 +3388,7 @@ msgstr ""
 "%s 패치를 mmap을 이용해 (mmap 관련 실패는 없음) 적용할 수 없습니다. 패치 파일"
 "이 손상된 것처럼 보입니다."
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "연결이 너무 빨리 끊어졌습니다"
 

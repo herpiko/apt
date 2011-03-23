@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-all\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2006-07-29 15:57+0300\n"
 "Last-Translator: Artem Bondarenko <artem.brz@gmail.com>\n"
 "Language-Team: Українська <uk@li.org>\n"
@@ -1694,7 +1694,7 @@ msgstr "Файл %s/%s перезаписує інший з пакету %s"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "Неможливо прочитати %s"
@@ -1884,7 +1884,7 @@ msgstr "Неможливо демонтувати CDROM в %s, можливо в
 msgid "Disk not found."
 msgstr "Диск не знайдено."
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "Файл не знайдено"
 
@@ -1938,7 +1938,7 @@ msgstr "Команда '%s'скрипту логіна не вдалася, се
 msgid "TYPE failed, server said: %s"
 msgstr "TYPE невдало, сервер мовив: %s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "Час з'єднання вичерпався"
 
@@ -1946,11 +1946,11 @@ msgstr "Час з'єднання вичерпався"
 msgid "Server closed the connection"
 msgstr "Сервер закрив з'єднання"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "Помилка читання"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "Відповідь переповнила буфер."
 
@@ -1958,7 +1958,7 @@ msgstr "Відповідь переповнила буфер."
 msgid "Protocol corruption"
 msgstr "Спотворений протокол"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "Помилка запису"
 
@@ -2014,7 +2014,7 @@ msgstr "Час з'єднання з сокетом даних вичерпавс
 msgid "Unable to accept connection"
 msgstr "Неможливо прийняти з'єднання"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Проблема хешування файла"
 
@@ -2023,7 +2023,7 @@ msgstr "Проблема хешування файла"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "Неможливо завантажити файл, сервер мовив: '%s'"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "Час з'єднання з сокетом (socket) з даними вичерпався"
 
@@ -2073,7 +2073,7 @@ msgstr "Не можливо під'єднатися до %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "З'єднання з %s"
@@ -2410,7 +2410,7 @@ msgstr "Неможливо прочитати атрибути точки мон
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Неможливо зробити зміни у %s"
@@ -2817,7 +2817,7 @@ msgstr "Драйвер для метода %s не знайдено."
 msgid "Method %s did not start correctly"
 msgstr "Метод %s не стартував коректно"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2967,25 +2967,25 @@ msgstr "Не вдалося перейменувати, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "Невідповідність MD5Sum"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "Невідповідність MD5Sum"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Неможливо обробити файл %s пакунку (1)"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 #, fuzzy
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Відсутній публічний ключ для заданих ID ключа:\n"
@@ -2993,29 +2993,29 @@ msgstr "Відсутній публічний ключ для заданих ID 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3024,7 +3024,7 @@ msgstr ""
 "Я не можу знайти файл для пакунку %s. Можливо, Ви захочете власноруч "
 "виправити цей пакунок. (due to missing arch)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3033,14 +3033,14 @@ msgstr ""
 "Я не можу знайти файл для пакунку %s. Можливо, Ви захочете власноруч "
 "виправити цей пакунок."
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "Індексні файли пакунків пошкоджені. Немає поля Filename для пакунку %s."
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "Невідповідність розміру"
 
@@ -3399,12 +3399,12 @@ msgstr ""
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr ""
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr ""
@@ -3423,7 +3423,7 @@ msgid ""
 "to be corrupt."
 msgstr ""
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "З'єднання завершено передчасно"
 

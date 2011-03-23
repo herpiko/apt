@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.8.0~pre1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2010-08-26 14:42+0800\n"
 "Last-Translator: Aron Xu <happyaron.xu@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -1649,7 +1649,7 @@ msgstr "文件 %s/%s 会覆盖属于软件包 %s 中的同名文件"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "无法读取 %s"
@@ -1835,7 +1835,7 @@ msgstr "无法卸载现在挂载于 %s 的 CD-ROM，它可能正在使用中。"
 msgid "Disk not found."
 msgstr "找不到盘片。"
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "无法找到该文件"
 
@@ -1888,7 +1888,7 @@ msgstr "登录脚本命令“%s”出错，服务器响应信息为：%s"
 msgid "TYPE failed, server said: %s"
 msgstr "TYPE 指令出错，服务器响应信息为：%s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "连接超时"
 
@@ -1896,11 +1896,11 @@ msgstr "连接超时"
 msgid "Server closed the connection"
 msgstr "服务器关闭了连接"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "读错误"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "回应超出了缓存区大小。"
 
@@ -1908,7 +1908,7 @@ msgstr "回应超出了缓存区大小。"
 msgid "Protocol corruption"
 msgstr "协议有误"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "写出错"
 
@@ -1962,7 +1962,7 @@ msgstr "数据套接字连接超时"
 msgid "Unable to accept connection"
 msgstr "无法接受连接"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "把文件加入哈希表时出错"
 
@@ -1971,7 +1971,7 @@ msgstr "把文件加入哈希表时出错"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "无法获取文件，服务器响应信息为“%s”"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "数据套接字超时"
 
@@ -2021,7 +2021,7 @@ msgstr "无法连接上 %s:%s (%s)。"
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "正在连接 %s"
@@ -2346,7 +2346,7 @@ msgstr "无法读取文件系统挂载点 %s 的状态"
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "无法切换工作目录到 %s"
@@ -2747,7 +2747,7 @@ msgstr "无法找到获取软件包的渠道 %s 所需的驱动程序。"
 msgid "Method %s did not start correctly"
 msgstr "获取软件包的渠道 %s 所需的驱动程序没有正常启动。"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "请把标有“%s”的盘片插入驱动器“%s”再按回车键。"
@@ -2894,41 +2894,41 @@ msgstr "无法重命名文件，%s (%s -> %s)。"
 msgid "MD5Sum mismatch"
 msgstr "MD5 校验和不符"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 msgid "Hash Sum mismatch"
 msgstr "Hash 校验和不符"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "无法解析软件包仓库 Release 文件 %s"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "以下 ID 的密钥没有可用的公钥：\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Release 文件已过期，忽略 %s (从 %s 起无效)"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "冲突的发行版：%s (期望 %s 但得到 %s)"
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -2936,12 +2936,12 @@ msgid ""
 msgstr ""
 "校验签名出错。此仓库未被更新，仍然使用以前的索引文件。GPG 错误：%s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG 错误：%s: %s"
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2950,7 +2950,7 @@ msgstr ""
 "我无法找到一个对应 %s 软件包的文件。在这种情况下可能需要您手动修正这个软件"
 "包。(缘于架构缺失)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2958,13 +2958,13 @@ msgid ""
 msgstr ""
 "我无法找到对应 %s 软件包的文件。在这种情况下您可能需要手动修正这个软件包。"
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "软件包的索引文件已损坏。找不到对应软件包 %s 的 Filename: 字段。"
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "大小不符"
 
@@ -3325,12 +3325,12 @@ msgstr "未锁定"
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr "没有找到镜像文件 %s"
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr "[镜像：%s]"
@@ -3349,7 +3349,7 @@ msgid ""
 "to be corrupt."
 msgstr "无法连同 mmap 为 %s 打补丁(但没有 mmap 的错误) - 补丁可能已损坏。"
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "连接被永久关闭"
 

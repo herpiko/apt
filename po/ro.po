@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2008-11-15 02:21+0200\n"
 "Last-Translator: Eddy Petrișor <eddy.petrisor@gmail.com>\n"
 "Language-Team: Romanian <debian-l10n-romanian@lists.debian.org>\n"
@@ -1694,7 +1694,7 @@ msgstr "Fișierul %s/%s îl suprascrie pe cel din pachetul %s"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "Nu s-a putut citi %s"
@@ -1886,7 +1886,7 @@ msgstr "Nu se poate demonta CD-ul din %s, poate este încă utilizat."
 msgid "Disk not found."
 msgstr "Disc negăsit."
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "Fișier negăsit"
 
@@ -1940,7 +1940,7 @@ msgstr "Scriptul „%s” cu comenzile de conectare a eșuat, serverul a spus: %
 msgid "TYPE failed, server said: %s"
 msgstr "„TYPE” a eșuat, serverul a spus: %s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "Timpul de conectare a expirat"
 
@@ -1948,11 +1948,11 @@ msgstr "Timpul de conectare a expirat"
 msgid "Server closed the connection"
 msgstr "Serverul a închis conexiunea"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "Eroare de citire"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "Un răspuns a depășit zona de tampon."
 
@@ -1960,7 +1960,7 @@ msgstr "Un răspuns a depășit zona de tampon."
 msgid "Protocol corruption"
 msgstr "Protocol corupt"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "Eroare de scriere"
 
@@ -2016,7 +2016,7 @@ msgstr "Timpul de conectare la socket-ul de date expirat"
 msgid "Unable to accept connection"
 msgstr "Nu s-a putut accepta conexiune"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Problemă la calcularea dispersiei pentru fișierul"
 
@@ -2025,7 +2025,7 @@ msgstr "Problemă la calcularea dispersiei pentru fișierul"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "Nu s-a putut aduce fișierul, serverul a spus „%s”"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "Timp expirat pentru socket-ul de date"
 
@@ -2076,7 +2076,7 @@ msgstr "Nu s-a putut realiza conexiunea cu %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "Conectare la %s"
@@ -2411,7 +2411,7 @@ msgstr "Nu pot determina starea punctului de montare %s"
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Nu pot schimba la %s"
@@ -2809,7 +2809,7 @@ msgstr "Metoda driver %s nu poate fi găsită."
 msgid "Method %s did not start correctly"
 msgstr "Metoda %s nu s-a lansat corect"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr ""
@@ -2966,24 +2966,24 @@ msgstr "redenumire eșuată, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "Nepotrivire MD5Sum"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 msgid "Hash Sum mismatch"
 msgstr "Nepotrivire la suma de căutare"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Nu s-a putut analiza fișierul pachet %s (1)"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Nu există nici o cheie publică disponibilă pentru următoarele "
@@ -2992,29 +2992,29 @@ msgstr ""
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3023,7 +3023,7 @@ msgstr ""
 "N-am putut localiza un fișier pentru pachetul %s. Aceasta ar putea însemna "
 "că aveți nevoie să reparați manual acest pachet (din pricina unui arch lipsă)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3032,7 +3032,7 @@ msgstr ""
 "N-am putut localiza un fișier pentru pachetul %s. Aceasta ar putea însemna "
 "că aveți nevoie să depanați manual acest pachet."
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3040,7 +3040,7 @@ msgstr ""
 "Fișierele index de pachete sunt deteriorate. Fără câmpul 'nume fișier:' la "
 "pachetul %s."
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "Nepotrivire dimensiune"
 
@@ -3402,12 +3402,12 @@ msgstr ""
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr ""
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr ""
@@ -3426,7 +3426,7 @@ msgid ""
 "to be corrupt."
 msgstr ""
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "Conexiune închisă prematur"
 

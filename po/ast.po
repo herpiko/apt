@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.7.18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 16:16+0100\n"
+"POT-Creation-Date: 2011-03-16 08:57+0100\n"
 "PO-Revision-Date: 2010-10-02 23:35+0100\n"
 "Last-Translator: Iñigo Varela <ivarela@softastur.org>\n"
 "Language-Team: Asturian (ast)\n"
@@ -1682,7 +1682,7 @@ msgstr "El ficheru %s/%s sobreescribe al que ta nel paquete %s"
 #: apt-pkg/contrib/fileutl.cc:343 apt-pkg/sourcelist.cc:204
 #: apt-pkg/sourcelist.cc:210 apt-pkg/acquire.cc:450 apt-pkg/init.cc:106
 #: apt-pkg/init.cc:114 apt-pkg/clean.cc:33 apt-pkg/policy.cc:302
-#: methods/mirror.cc:87
+#: methods/mirror.cc:91
 #, c-format
 msgid "Unable to read %s"
 msgstr "Nun ye a lleer %s"
@@ -1870,7 +1870,7 @@ msgstr "Nun se pudo desmontar el CD-ROM de %s; puede que se tea usando entá."
 msgid "Disk not found."
 msgstr "Nun s'atopa'l discu."
 
-#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:264
+#: methods/cdrom.cc:258 methods/file.cc:79 methods/rsh.cc:265
 msgid "File not found"
 msgstr "Nun s'atopa'l ficheru."
 
@@ -1924,7 +1924,7 @@ msgstr "Falló la orde '%s' del guión d'entrada; el sirvidor dixo: %s"
 msgid "TYPE failed, server said: %s"
 msgstr "La triba (TYPE) falló; el sirvidor dixo: %s"
 
-#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:183 methods/rsh.cc:226
+#: methods/ftp.cc:335 methods/ftp.cc:446 methods/rsh.cc:184 methods/rsh.cc:227
 msgid "Connection timeout"
 msgstr "Gandió'l tiempu de conexón"
 
@@ -1932,11 +1932,11 @@ msgstr "Gandió'l tiempu de conexón"
 msgid "Server closed the connection"
 msgstr "El sirvidor zarró la conexón"
 
-#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:190
+#: methods/ftp.cc:344 apt-pkg/contrib/fileutl.cc:820 methods/rsh.cc:191
 msgid "Read error"
 msgstr "Fallu de llectura"
 
-#: methods/ftp.cc:351 methods/rsh.cc:197
+#: methods/ftp.cc:351 methods/rsh.cc:198
 msgid "A response overflowed the buffer."
 msgstr "Una rempuesta revirtió'l buffer."
 
@@ -1944,7 +1944,7 @@ msgstr "Una rempuesta revirtió'l buffer."
 msgid "Protocol corruption"
 msgstr "Corrupción del protocolu"
 
-#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:232
+#: methods/ftp.cc:452 apt-pkg/contrib/fileutl.cc:862 methods/rsh.cc:233
 msgid "Write error"
 msgstr "Fallu d'escritura"
 
@@ -1998,7 +1998,7 @@ msgstr "Gandió'l tiempu de conexón col zócalu de datos"
 msgid "Unable to accept connection"
 msgstr "Nun se pudo aceptar la conexón"
 
-#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:302
+#: methods/ftp.cc:869 methods/http.cc:1006 methods/rsh.cc:303
 msgid "Problem hashing file"
 msgstr "Hebo un problema al xenerar el hash del ficheru"
 
@@ -2007,7 +2007,7 @@ msgstr "Hebo un problema al xenerar el hash del ficheru"
 msgid "Unable to fetch file, server said '%s'"
 msgstr "Nun se pudo descargar el ficheru; el sirvidor dixo '%s'"
 
-#: methods/ftp.cc:897 methods/rsh.cc:321
+#: methods/ftp.cc:897 methods/rsh.cc:322
 msgid "Data socket timed out"
 msgstr "Gandió'l tiempu del zócalu de datos"
 
@@ -2057,7 +2057,7 @@ msgstr "Nun se pudo coneutar a %s:%s (%s)."
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
-#: methods/connect.cc:149 methods/rsh.cc:424
+#: methods/connect.cc:149 methods/rsh.cc:425
 #, c-format
 msgid "Connecting to %s"
 msgstr "Coneutando a %s"
@@ -2391,7 +2391,7 @@ msgstr "Nun puede algamase información del puntu de montaxe %s"
 
 #: apt-pkg/contrib/cdromutl.cc:176 apt-pkg/contrib/cdromutl.cc:210
 #: apt-pkg/acquire.cc:456 apt-pkg/acquire.cc:481 apt-pkg/clean.cc:39
-#: methods/mirror.cc:93
+#: methods/mirror.cc:97
 #, c-format
 msgid "Unable to change to %s"
 msgstr "Nun se pudo cambiar a %s"
@@ -2795,7 +2795,7 @@ msgstr "Nun pudo alncontrase'l controlador de métodu %s."
 msgid "Method %s did not start correctly"
 msgstr "El métodu %s nun entamó correchamente"
 
-#: apt-pkg/acquire-worker.cc:413
+#: apt-pkg/acquire-worker.cc:424
 #, c-format
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Por favor, introduz el discu '%s' nel preséu '%s' y calca Intro."
@@ -2945,41 +2945,41 @@ msgstr "falló'l cambiu de nome, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "La suma MD5 nun concasa"
 
-#: apt-pkg/acquire-item.cc:887 apt-pkg/acquire-item.cc:1781
-#: apt-pkg/acquire-item.cc:1924
+#: apt-pkg/acquire-item.cc:893 apt-pkg/acquire-item.cc:1802
+#: apt-pkg/acquire-item.cc:1945
 msgid "Hash Sum mismatch"
 msgstr "La suma hash nun concasa"
 
-#: apt-pkg/acquire-item.cc:1341
+#: apt-pkg/acquire-item.cc:1347
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1356
+#: apt-pkg/acquire-item.cc:1362
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Nun se pudo parchear el ficheru release %s"
 
-#: apt-pkg/acquire-item.cc:1415
+#: apt-pkg/acquire-item.cc:1421
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Nun hai clave pública denguna disponible pa les IDs de clave darréu:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1452
+#: apt-pkg/acquire-item.cc:1458
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "El ficheru release espiró, inorando %s (nun válidu dende %s)"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1479
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Conflictu de distribución: %s (esperábase %s pero obtúvose %s)"
 
-#: apt-pkg/acquire-item.cc:1506
+#: apt-pkg/acquire-item.cc:1512
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -2988,12 +2988,12 @@ msgstr ""
 "Hebo un fallu durante la verificación de la robla. El repositoriu nun ta "
 "anováu y va usase un ficheru índiz. Fallu GPG: %s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1515
+#: apt-pkg/acquire-item.cc:1521
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Fallu GPG: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1572
+#: apt-pkg/acquire-item.cc:1593
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3002,7 +3002,7 @@ msgstr ""
 "Nun pudo alcontrase un ficheru pal paquete %s. Esto puede significar que "
 "necesites iguar manualmente esti paquete (por faltar una arquitectura)"
 
-#: apt-pkg/acquire-item.cc:1631
+#: apt-pkg/acquire-item.cc:1652
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3011,7 +3011,7 @@ msgstr ""
 "Nun pudo alcontrase un ficheru pal paquete %s. Esto puede significar que "
 "necesites iguar manualmente esti paquete"
 
-#: apt-pkg/acquire-item.cc:1686
+#: apt-pkg/acquire-item.cc:1707
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3019,7 +3019,7 @@ msgstr ""
 "Los ficheros d'indiz de paquetes tan corrompíos. Nun hai campu Filename: pal "
 "paquete %s."
 
-#: apt-pkg/acquire-item.cc:1773
+#: apt-pkg/acquire-item.cc:1794
 msgid "Size mismatch"
 msgstr "El tamañu nun concasa"
 
@@ -3404,12 +3404,12 @@ msgstr "Non bloquiáu"
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:200
+#: methods/mirror.cc:251
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr "Nun s'alcontró ficheru espeyu '%s'"
 
-#: methods/mirror.cc:343
+#: methods/mirror.cc:395
 #, c-format
 msgid "[Mirror: %s]"
 msgstr "[Espeyu: %s]"
@@ -3432,7 +3432,7 @@ msgstr ""
 "Nun pudo parchease %s con mmap (pero nun ye un fallu especificu de mmap) - "
 "el parche parez corruptu."
 
-#: methods/rsh.cc:329
+#: methods/rsh.cc:330
 msgid "Connection closed prematurely"
 msgstr "Conexón encaboxada prematuramente"
 
