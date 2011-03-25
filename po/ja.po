@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.8.0~pre1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-16 08:57+0100\n"
+"POT-Creation-Date: 2011-03-24 18:03+0100\n"
 "PO-Revision-Date: 2010-08-25 09:33+0900\n"
 "Last-Translator: Kenshi Muto <kmuto@debian.org>\n"
 "Language-Team: Debian Japanese List <debian-japanese@lists.debian.org>\n"
@@ -3423,12 +3423,19 @@ msgstr "ロックされていません"
 
 #. FIXME: fallback to a default mirror here instead
 #. and provide a config option to define that default
-#: methods/mirror.cc:251
+#: methods/mirror.cc:256
 #, c-format
 msgid "No mirror file '%s' found "
 msgstr "ミラーファイル '%s' が見つかりません "
 
-#: methods/mirror.cc:395
+#. FIXME: fallback to a default mirror here instead
+#. and provide a config option to define that default
+#: methods/mirror.cc:263
+#, fuzzy, c-format
+msgid "Can not read mirror file '%s'"
+msgstr "ミラーファイル '%s' が見つかりません "
+
+#: methods/mirror.cc:407
 #, c-format
 msgid "[Mirror: %s]"
 msgstr "[ミラー: %s]"

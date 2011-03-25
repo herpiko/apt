@@ -1,3 +1,14 @@
+apt (0.8.13ubuntu2) natty; urgency=low
+
+  * po/makefile:
+    - add hack to run MSGMERGE again if it segfaults. this is to help
+      powerpc to bootstrap
+  * mirror method:
+    - merge fix from Matt Zimmerman, many thanks (LP: #741098)
+    - do not crash if the mirror file fails to download
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 24 Mar 2011 18:01:38 +0100
+
 apt (0.8.13ubuntu1) natty; urgency=low
 
   * merged from debian/sid, this adds important fixes in the

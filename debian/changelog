@@ -1,3 +1,14 @@
+apt (0.8.13ubuntu2+blankon1) pattimura; urgency=low
+
+  * po/makefile:
+    - add hack to run MSGMERGE again if it segfaults. this is to help
+      powerpc to bootstrap
+  * mirror method:
+    - merge fix from Matt Zimmerman, many thanks (LP: #741098)
+    - do not crash if the mirror file fails to download
+  
+ -- aftian <aftian@di.blankon.in>  Fri, 25 Mar 2011 12:13:09 +0700
+
 apt (0.8.13ubuntu1+blankon1) pattimura; urgency=low
 
   * merged from debian/sid and ubuntu/natty, this adds important fixes in the

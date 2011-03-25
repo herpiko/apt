@@ -174,6 +174,7 @@ apt: build build-doc
 #
 	cp debian/apt.conf.autoremove debian/$@/etc/apt/apt.conf.d/01autoremove
 	cp debian/apt.conf.changelog debian/$@/etc/apt/apt.conf.d/20changelog
+	cp share/blankon-archive.gpg debian/$@/usr/share/$@	
 	cp share/ubuntu-archive.gpg debian/$@/usr/share/$@
 
 	# make rosetta happy and remove pot files in po/ (but leave stuff
