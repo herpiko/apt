@@ -215,6 +215,7 @@ class pkgCache								/*{{{*/
 private:
    bool MultiArchEnabled;
    PkgIterator SingleArchFindPkg(const string &Name);
+   inline char const * const NativeArch() const;
 };
 									/*}}}*/
 // Header structure							/*{{{*/
@@ -506,8 +507,8 @@ struct pkgCache::Version
        if it is built for another architecture as the requester.
        Same indicates that builds for different architectures can
        be co-installed on the system */
-   // FIXME: remove All on abi break
-   enum {None, All, Foreign, Same, Allowed} MultiArch;
+   /* FIXME: A bitflag would be better with the next abibreak… */
+   enum {None, All, Foreign, Same, Allowed, AllForeign, AllAllowed} MultiArch;
 
    /** \brief references all the PackageFile's that this version came from
 
@@ -649,6 +650,11 @@ struct pkgCache::StringItem
    map_ptrloc NextItem;      // StringItem
 };
 									/*}}}*/
+
+
+inline char const * const pkgCache::NativeArch() const
+	{ return StrP + HeaderP->Architecture; };
+
 #include <apt-pkg/cacheiterators.h>
 
 inline pkgCache::GrpIterator pkgCache::GrpBegin() 

@@ -1,3 +1,33 @@
+apt (0.8.13.2ubuntu2+blankon1) pattimura; urgency=low
+
+  * New upstream updates
+  [ Michael Vogt ]
+  * debian/apt.cron.daily:
+    - run unattended-upgrades even if there was a error during
+      the apt-get update (LP: #676295)
+  
+  [ Julian Andres Klode ]
+  * apt-pkg/indexcopy.cc:
+    - Use RealFileExists() instead of FileExists(), allows amongst other
+      things a directory named Sources to exist on a CD-ROM (LP: #750694).
+  
+  [ David Kalnischkies  ]
+  * apt-pkg/pkgcache.cc:
+    - use the native Architecture stored in the cache header instead of
+      loading it from configuration as suggested by Julian Andres Klode
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Fri, 08 Apr 2011 17:22:42 +0700
+
+apt (0.8.13.2ubuntu1+blankon1) pattimura; urgency=low
+
+  * merge whit ubuntu-natty
+  * merge fixes from debian-sid, most notable the handling of
+    arch=all architectures in python-apt (LP: #733741)
+  * apt-pkg/aptconfiguration.cc:
+    - fix comparing for a empty string
+  
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Wed, 06 Apr 2011 18:11:31 +0700
+
 apt (0.8.13ubuntu2+blankon1) pattimura; urgency=low
 
   * po/makefile:
