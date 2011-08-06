@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2008-11-06 15:54+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -2039,35 +2039,29 @@ msgstr "เกิดปัญหาร้ายแรงบางอย่าง
 msgid "Unable to connect to %s:%s:"
 msgstr "ไม่สามารถเชื่อมต่อไปยัง %s %s:"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, fuzzy, c-format
-msgid "No keyring installed in %s."
-msgstr "จะล้มเลิกการติดตั้ง"
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr "ข้อผิดพลาดภายใน: ลายเซ็นใช้การได้ แต่ไม่สามารถระบุลายนิ้วมือของกุญแจ?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "พบลายเซ็นที่ใช้การไม่ได้อย่างน้อยหนึ่งรายการ"
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 #, fuzzy
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr "ไม่สามารถเรียก '%s' เพื่อตรวจสอบลายเซ็น (ได้ติดตั้ง gpgv ไว้หรือไม่?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "เกิดข้อผิดพลาดไม่ทราบสาเหตุขณะเรียก gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "ลายเซ็นต่อไปนี้ใช้การไม่ได้:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2415,7 +2409,7 @@ msgstr "โพรเซสย่อย %s คืนค่าข้อผิด�
 msgid "Sub-process %s exited unexpectedly"
 msgstr "โพรเซสย่อย %s จบการทำงานกระทันหัน"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "ไม่สามารถเปิดแฟ้ม %s"
@@ -2878,77 +2872,78 @@ msgstr "เกิดข้อผิดพลาด IO ขณะบันทึ�
 msgid "rename failed, %s (%s -> %s)."
 msgstr "เปลี่ยนชื่อไม่สำเร็จ: %s (%s -> %s)"
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum ไม่ตรงกัน"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "ผลรวมแฮชไม่ตรงกัน"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "ไม่สามารถแจงแฟ้มแพกเกจ %s (1)"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "ไม่มีกุญแจสาธารณะสำหรับกุญแจหมายเลขต่อไปนี้:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
 "to manually fix this package. (due to missing arch)"
 msgstr "ไม่พบแฟ้มสำหรับแพกเกจ %s คุณอาจต้องแก้ปัญหาแพกเกจนี้เอง (ไม่มี arch)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
 "manually fix this package."
 msgstr "ไม่พบแฟ้มสำหรับแพกเกจ %s คุณอาจต้องแก้ปัญหาแพกเกจนี้เอง"
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "แฟ้มดัชนีแพกเกจเสียหาย ไม่มีข้อมูล Filename: (ชื่อแฟ้ม) สำหรับแพกเกจ %s"
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "ขนาดไม่ตรงกัน"
 
@@ -3071,22 +3066,22 @@ msgstr "กำลังเขียนรายชื่อแหล่งแพ
 msgid "Source list entries for this disc are:\n"
 msgstr "บรรทัดรายชื่อแหล่งแพกเกจสำหรับแผ่นนี้คือ:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "เขียนแล้ว %i ระเบียน\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "เขียนแล้ว %i ระเบียน โดยมีแฟ้มขาดหาย %i แฟ้ม\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "เขียนแล้ว %i ระเบียน โดยมีแฟ้มผิดขนาด %i แฟ้ม\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "เขียนแล้ว %i ระเบียน โดยมีแฟ้มขาดหาย %i แฟ้ม และแฟ้มผิดขนาด %i แฟ้ม\n"
@@ -3105,6 +3100,17 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Hash mismatch for: %s"
 msgstr "ผลรวมแฮชไม่ตรงกัน"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, fuzzy, c-format
+msgid "No keyring installed in %s."
+msgstr "จะล้มเลิกการติดตั้ง"
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

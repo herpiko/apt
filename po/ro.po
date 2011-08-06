@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2008-11-15 02:21+0200\n"
 "Last-Translator: Eddy Petrișor <eddy.petrisor@gmail.com>\n"
 "Language-Team: Romanian <debian-l10n-romanian@lists.debian.org>\n"
@@ -2101,38 +2101,32 @@ msgstr "S-a întâmplat ceva „necurat” la rezolvarea lui „%s:%s” (%i)"
 msgid "Unable to connect to %s:%s:"
 msgstr "Nu s-a putut realiza conexiunea cu %s %s:"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, fuzzy, c-format
-msgid "No keyring installed in %s."
-msgstr "Abandonez instalarea."
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 "Eroare internă: Semnătură corespunzătoare, dar nu s-a putut determina "
 "amprenta digitale a cheii?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "Cel puțin o semnătură nevalidă a fost întâlnită."
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 #, fuzzy
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 "Nu s-a putut executa „%s” pentru verificarea semnăturii (gpgv este instalat?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "Eroare necunoscută în timp ce se execută gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "Următoarele semnături nu au fost valide:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2486,7 +2480,7 @@ msgstr "Subprocesul %s a întors un cod de eroare (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Subprocesul %s s-a terminat brusc"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "Nu s-a putut deschide fișierul %s"
@@ -2962,28 +2956,28 @@ msgstr "Eroare IO în timpul salvării sursei cache"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "redenumire eșuată, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "Nepotrivire MD5Sum"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "Nepotrivire la suma de căutare"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Nu s-a putut analiza fișierul pachet %s (1)"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Nu există nici o cheie publică disponibilă pentru următoarele "
@@ -2992,29 +2986,30 @@ msgstr ""
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3023,7 +3018,7 @@ msgstr ""
 "N-am putut localiza un fișier pentru pachetul %s. Aceasta ar putea însemna "
 "că aveți nevoie să reparați manual acest pachet (din pricina unui arch lipsă)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3032,7 +3027,7 @@ msgstr ""
 "N-am putut localiza un fișier pentru pachetul %s. Aceasta ar putea însemna "
 "că aveți nevoie să depanați manual acest pachet."
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3040,7 +3035,7 @@ msgstr ""
 "Fișierele index de pachete sunt deteriorate. Fără câmpul 'nume fișier:' la "
 "pachetul %s."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "Nepotrivire dimensiune"
 
@@ -3164,22 +3159,22 @@ msgstr "Scriere noua listă sursă\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Intrările listei surselor pentru acest disc sunt:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "S-au scris %i înregistrări.\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "S-au scris %i înregistrări cu %i fișiere lipsă.\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "S-au scris %i înregistrări cu %i fișiere nepotrivite\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
@@ -3199,6 +3194,17 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Nepotrivire la suma de căutare"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, fuzzy, c-format
+msgid "No keyring installed in %s."
+msgstr "Abandonez instalarea."
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

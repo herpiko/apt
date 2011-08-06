@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2011-02-16 07:44+0100\n"
 "Last-Translator: Christian Perrier <bubulle@debian.org>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -2129,38 +2129,32 @@ msgstr ""
 msgid "Unable to connect to %s:%s:"
 msgstr "Impossible de se connecter à %s:%s :"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, c-format
-msgid "No keyring installed in %s."
-msgstr "Pas de porte-clés installé dans %s."
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 "Erreur interne : signature correcte, mais il est impossible de déterminer "
 "l'empreinte de la clé."
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "Au moins une signature non valable a été rencontrée."
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 "Impossible d'exécuter « gpgv » pour contrôler la signature (veuillez "
 "vérifier si gpgv est installé)."
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "Erreur inconnue à l'exécution de gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "Les signatures suivantes ne sont pas valables :\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2527,7 +2521,7 @@ msgstr "Le sous-processus %s a renvoyé un code d'erreur (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Le sous-processus %s s'est arrêté prématurément"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "Impossible d'ouvrir le fichier %s"
@@ -3030,16 +3024,16 @@ msgstr ""
 msgid "rename failed, %s (%s -> %s)."
 msgstr "impossible de changer le nom, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "Somme de contrôle MD5 incohérente"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "Somme de contrôle de hachage incohérente"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3048,13 +3042,13 @@ msgstr ""
 "Impossible de trouver l'entrée « %s » attendue dans le fichier « Release » : "
 " ligne non valable dans sources.list ou fichier corrompu"
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr ""
 "Impossible de trouver la comme de contrôle de « %s » dans le fichier Release"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Aucune clé publique n'est disponible pour la/les clé(s) suivante(s) :\n"
@@ -3062,17 +3056,17 @@ msgstr ""
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Le fichier Release a expiré, %s ignoré (non valable depuis %s)"
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribution en conflit : %s (%s attendu, mais %s obtenu)"
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -3082,12 +3076,13 @@ msgstr ""
 "pas mis à jour et les fichiers d'index précédents seront utilisés. Erreur de "
 "GPG : %s : %s\n"
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Erreur de GPG : %s : %s"
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3096,7 +3091,7 @@ msgstr ""
 "Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
 "devrez corriger ce paquet vous-même (absence d'architecture)."
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3105,7 +3100,7 @@ msgstr ""
 "Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
 "devrez corriger ce paquet vous-même."
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3113,7 +3108,7 @@ msgstr ""
 "Les fichiers d'index des paquets sont corrompus. Aucun champ « Filename: » "
 "pour le paquet %s."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "Taille incohérente"
 
@@ -3238,22 +3233,22 @@ msgstr "Écriture de la nouvelle liste de sources\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Les entrées de listes de sources pour ce disque sont :\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "%i enregistrements écrits.\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "%i enregistrements écrits avec %i fichiers manquants.\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "%i enregistrements écrits avec %i fichiers qui ne correspondent pas\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
@@ -3274,6 +3269,17 @@ msgstr "Impossible de trouver l'enregistrement d'authentification pour %s"
 #, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Somme de contrôle de hachage incohérente pour %s"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, c-format
+msgid "No keyring installed in %s."
+msgstr "Pas de porte-clés installé dans %s."
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

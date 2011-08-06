@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2010-11-27 13:54+0100\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
@@ -2069,34 +2069,28 @@ msgstr "Něco hodně ošklivého se přihodilo při překladu „%s:%s“ (%i - 
 msgid "Unable to connect to %s:%s:"
 msgstr "Nelze se připojit k %s:%s:"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, c-format
-msgid "No keyring installed in %s."
-msgstr "V %s není nainstalována žádná klíčenka."
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr "Vnitřní chyba: Dobrý podpis, ale nemohu zjistit otisk klíče?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "Byl zaznamenán nejméně jeden neplatný podpis. "
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr "Nelze spustit „gpgv“ pro ověření podpisu (je gpgv nainstalováno?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "Neznámá chyba při spouštění gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "Následující podpisy jsou neplatné:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2451,7 +2445,7 @@ msgstr "Podproces %s vrátil chybový kód (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Podproces %s neočekávaně skončil"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "Nelze otevřít soubor %s"
@@ -2920,45 +2914,45 @@ msgstr "Chyba IO při ukládání zdrojové cache"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "přejmenování selhalo, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "Neshoda MD5 součtů"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "Neshoda kontrolních součtů"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Nelze zpracovat Release soubor %s"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "K následujícím ID klíčů není dostupný veřejný klíč:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Souboru Release vypršela platnost, ignoruji %s (neplatný již %s)"
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konfliktní distribuce: %s (očekáváno %s, obdrženo %s)"
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -2967,12 +2961,13 @@ msgstr ""
 "Při ověřování podpisů se objevila chyba. Repositář není aktualizovaný, tudíž "
 "se použijí předchozí indexové soubory. Chyba GPG: %s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Chyba GPG: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2981,7 +2976,7 @@ msgstr ""
 "Nebyl jsem schopen nalézt soubor s balíkem %s. To by mohlo znamenat, že "
 "tento balík je třeba opravit ručně (kvůli chybějící architektuře)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2990,14 +2985,14 @@ msgstr ""
 "Nebyl jsem schopen nalézt soubor s balíkem %s. Asi budete muset tento balík "
 "opravit ručně."
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "Indexové soubory balíku jsou narušeny. Chybí pole Filename: u balíku %s."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "Velikosti nesouhlasí"
 
@@ -3122,22 +3117,22 @@ msgstr "Zapisuji nový seznam balíků\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Seznamy zdrojů na tomto disku jsou:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Zapsáno %i záznamů.\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Zapsáno %i záznamů s chybějícími soubory (%i).\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Zapsáno %i záznamů s nesouhlasícími soubory (%i).\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "Zapsáno %i záznamů s chybějícími (%i) a nesouhlasícími (%i) soubory.\n"
@@ -3156,6 +3151,17 @@ msgstr "Nelze najít autentizační záznam pro: %s"
 #, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Neshoda kontrolních součtů pro: %s"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, c-format
+msgid "No keyring installed in %s."
+msgstr "V %s není nainstalována žádná klíčenka."
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

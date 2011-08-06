@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2010-09-01 23:51+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
@@ -2084,36 +2084,30 @@ msgstr "Der skete noget underligt under opløsning af '%s:%s' (%i - %s)"
 msgid "Unable to connect to %s:%s:"
 msgstr "Kunne ikke forbinde til %s:%s:"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, c-format
-msgid "No keyring installed in %s."
-msgstr "Ingen nøglering installeret i %s."
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 "Intern fejl: Gyldig signatur, men kunne ikke afgøre nøgle-fingeraftryk?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "Stødte på mindst én ugyldig signatur."
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 "Kunne ikke køre 'gpgv' for at verificere signaturen (er gpgv installeret?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "Ukendt fejl ved kørsel af gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "Følgende signaturer var ugyldige:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2468,7 +2462,7 @@ msgstr "Underprocessen %s returnerede en fejlkode (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Underprocessen %s afsluttedes uventet"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "Kunne ikke åbne filen %s"
@@ -2941,28 +2935,28 @@ msgstr "IO-fejl ved gemning af kilde-mellemlageret"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "omdøbning mislykkedes, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum stemmer ikke"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "Hashsum stemmer ikke"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Kunne ikke fortolke udgivelsesfil %s"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Der er ingen tilgængelige offentlige nøgler for følgende nøgle-ID'er:\n"
@@ -2970,17 +2964,17 @@ msgstr ""
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr "Udgivelsesfil udløbet, ignorerer %s (ugyldig siden %s)"
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konfliktdistribution: %s (forventede %s men fik %s)"
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
@@ -2989,12 +2983,13 @@ msgstr ""
 "Der opstod en fejl under underskriftsbekræftelse. Arkivet er ikke opdateret "
 "og den forrige indeksfil vil blive brugt. GPG-fejl: %s: %s\n"
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG-fejl: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3003,7 +2998,7 @@ msgstr ""
 "Jeg kunne ikke lokalisere filen til %s-pakken. Det betyder muligvis at du er "
 "nødt til manuelt at reparere denne pakke. (grundet manglende arch)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -3012,13 +3007,13 @@ msgstr ""
 "Jeg kunne ikke lokalisere filen til %s-pakken. Det betyder muligvis at du er "
 "nødt til manuelt at reparere denne pakke."
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "Pakkeindeksfilerne er i stykker. Intet 'Filename:'-felt for pakken %s."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "Størrelsen stemmer ikke"
 
@@ -3143,22 +3138,22 @@ msgstr "Skriver ny kildeliste\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Denne disk har følgende kildeliste-indgange:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Skrev %i poster.\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Skrev %i poster med %i manglende filer.\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Skrev %i poster med %i ikke-trufne filer\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr "Skrev %i poster med %i manglende filer og %i ikke-trufne filer\n"
@@ -3177,6 +3172,17 @@ msgstr "Kan ikke finde godkendelsesregistrering for: %s"
 #, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Hashsum stemmer ikke: %s"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, c-format
+msgid "No keyring installed in %s."
+msgstr "Ingen nøglering installeret i %s."
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

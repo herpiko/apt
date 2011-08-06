@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.26\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2008-12-11 14:52+0200\n"
 "Last-Translator: Tapio Lehtonen <tale@debian.org>\n"
 "Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
@@ -2072,37 +2072,31 @@ msgstr "Jotain kenkkua tapahtui selvitettäessä \"%s: %s\" (%i)"
 msgid "Unable to connect to %s:%s:"
 msgstr "Ei ole mahdollista muodostaa yhteyttä %s %s:"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, fuzzy, c-format
-msgid "No keyring installed in %s."
-msgstr "Asennus keskeytetään."
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 "Sisäinen virhe: Allekirjoitus kelpaa, mutta avaimen sormenjälki tuntematon?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "LÖytyi ainakin yksi kelvoton allekirjoitus."
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 #, fuzzy
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 "Ei käynnistynyt \"%s\" allekirjoitusta tarkistamaan (onko gpgv asennettu?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "Tapahtui tuntematon virhe suoritettaessa gpgv"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "Seuraavat allekirjoitukset eivät olleet kelvollisia:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2452,7 +2446,7 @@ msgstr "Aliprosessi %s palautti virhekoodin (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Aliprosessi %s lopetti odottamatta"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "Tiedostoa %s ei voitu avata"
@@ -2918,57 +2912,58 @@ msgstr "Syöttö/Tulostus -virhe tallennettaessa pakettivarastoa"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "nimen vaihto ei onnistunut, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum ei täsmää"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 msgid "Hash Sum mismatch"
 msgstr "Hash Sum täsmää"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Pakettitiedostoa %s (1) ei voi jäsentää"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Julkisia avaimia ei ole saatavilla, avainten ID:t ovat:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2977,7 +2972,7 @@ msgstr ""
 "En löytänyt pakettia %s vastaavaa tiedostoa. Voit ehkä joutua korjaamaan "
 "tämän paketin itse (puuttuvan arkkitehtuurin vuoksi)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2986,7 +2981,7 @@ msgstr ""
 "Pakettia %s vastaavaa tiedostoa ei löytynyt. Voit ehkä joutua korjaamaan "
 "tämän paketin itse."
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -2994,7 +2989,7 @@ msgstr ""
 "Pakettihakemistotiedostot ovat turmeltuneet. Paketille %s ei ole Filename-"
 "kenttää."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "Koko ei täsmää"
 
@@ -3117,22 +3112,22 @@ msgstr "Kirjoitetaan uusi lähdeluettelo\n"
 msgid "Source list entries for this disc are:\n"
 msgstr "Tämän levyn lähdekoodipakettien luettelon tietueita ovat:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "Kirjoitettiin %i tietuetta.\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "Kirjoitettiin %i tietuetta joissa oli %i puuttuvaa tiedostoa.\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "Kirjoitettiin %i tietuetta joissa oli %i paritonta tiedostoa\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
@@ -3153,6 +3148,17 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Hash mismatch for: %s"
 msgstr "Hash Sum täsmää"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, fuzzy, c-format
+msgid "No keyring installed in %s."
+msgstr "Asennus keskeytetään."
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

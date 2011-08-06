@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po.pot\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-21 15:31+0200\n"
+"POT-Creation-Date: 2011-07-07 08:27-0400\n"
 "PO-Revision-Date: 2006-09-19 09:49+0530\n"
 "Last-Translator: Kinley Tshering <gasepkuenden2k3@hotmail.com>\n"
 "Language-Team: Dzongkha <pgeyleg@dit.gov.bt>\n"
@@ -2078,38 +2078,32 @@ msgstr "'%s:%s' (%i)་མོས་མཐུན་འབདཝ་ད་ངན་
 msgid "Unable to connect to %s:%s:"
 msgstr "%s %s:ལུ་མཐུད་མ་ཚུགས།"
 
-#. TRANSLATOR: %s is the trusted keyring parts directory
-#: methods/gpgv.cc:71
-#, fuzzy, c-format
-msgid "No keyring installed in %s."
-msgstr "གཞི་བཙུགས་བར་བཤོལ་འབད་དོ།"
-
-#: methods/gpgv.cc:163
+#: methods/gpgv.cc:166
 msgid ""
 "Internal error: Good signature, but could not determine key fingerprint?!"
 msgstr ""
 "ནང་འཁོད་འཛོལ་བ: མིང་རྟགས་འདི་ལེགས་ཤོམ་ཅིག་འདུག་  འདི་འབདཝ་ད་མཛུབ་རྗེས་ལྡེ་མིག་དེ་གཏན་འབེབས་བཟོ་"
 "མ་ཚུགས?!"
 
-#: methods/gpgv.cc:168
+#: methods/gpgv.cc:171
 msgid "At least one invalid signature was encountered."
 msgstr "ཉུང་མཐའ་རང་ནུས་མེད་ཀྱི་མིང་རྟགས་ཅིག་གདོང་ཐུག་བྱུང་སྟེ་ཡོདཔ་ཨིན།"
 
-#: methods/gpgv.cc:172
+#: methods/gpgv.cc:175
 #, fuzzy
 msgid "Could not execute 'gpgv' to verify signature (is gpgv installed?)"
 msgstr ""
 "མིང་རྟགས་བདེན་སྦྱོར་འབད་ནི་ལུ་'%s'འདི་ལག་ལེན་འཐབ་མ་ཚུགས། (gpgv་དེ་ཁཞི་བཙུགས་འབད་ཡོདཔ་ཨིན་ན།?)"
 
-#: methods/gpgv.cc:177
+#: methods/gpgv.cc:180
 msgid "Unknown error executing gpgv"
 msgstr "gpgv་ལག་ལེན་འཐབ་ནི་ལུ་མ་ཤེས་པའི་འཛོལ་བ་།"
 
-#: methods/gpgv.cc:211 methods/gpgv.cc:218
+#: methods/gpgv.cc:214 methods/gpgv.cc:221
 msgid "The following signatures were invalid:\n"
 msgstr "འོག་གི་མིང་རྟགས་ཚུ་ནུས་མེད་ཨིན་པས།:\n"
 
-#: methods/gpgv.cc:225
+#: methods/gpgv.cc:228
 msgid ""
 "The following signatures couldn't be verified because the public key is not "
 "available:\n"
@@ -2460,7 +2454,7 @@ msgstr "ཡན་ལག་ལས་སྦྱོར་%s་གིས་འཛོ�
 msgid "Sub-process %s exited unexpectedly"
 msgstr "ཡན་ལག་ལས་སྦྱོར་་%s་གིས་རེ་བ་མེད་པར་ཕྱིར་ཐོན་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/contrib/fileutl.cc:764
+#: apt-pkg/contrib/fileutl.cc:764 apt-pkg/indexcopy.cc:673
 #, c-format
 msgid "Could not open file %s"
 msgstr "%s་ཡིག་སྣོད་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
@@ -2930,58 +2924,59 @@ msgstr "IO འཛོལ་བ་འབྱུང་ཁུངས་འདྲ་མ
 msgid "rename failed, %s (%s -> %s)."
 msgstr "%s (%s -> %s)བསྐྱར་མིང་བཏགས་ནི་འདི་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/acquire-item.cc:628
+#: apt-pkg/acquire-item.cc:636
 msgid "MD5Sum mismatch"
 msgstr "ཨེམ་ཌི་༥་ ཁྱོན་བསྡོམས་མ་མཐུན་པ།"
 
-#: apt-pkg/acquire-item.cc:892 apt-pkg/acquire-item.cc:1778
-#: apt-pkg/acquire-item.cc:1921
+#: apt-pkg/acquire-item.cc:900 apt-pkg/acquire-item.cc:1826
+#: apt-pkg/acquire-item.cc:1969
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "ཨེམ་ཌི་༥་ ཁྱོན་བསྡོམས་མ་མཐུན་པ།"
 
-#: apt-pkg/acquire-item.cc:1346
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1361
+#: apt-pkg/acquire-item.cc:1403
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "%s (༡་)་ཐུམ་སྒྲིལ་ཡིག་སྣོད་འདི་མིང་དཔྱད་འབད་མ་ཚུགས།"
 
-#: apt-pkg/acquire-item.cc:1397
+#: apt-pkg/acquire-item.cc:1439
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "འོག་གི་ ཨའི་ཌི་་ ལྡེ་མིག་ཚུ་གི་དོན་ལུ་མི་དམང་གི་ལྡེ་མིག་འདི་འཐོབ་མི་ཚུགས་པས:\n"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time since then the file is invalid - formated in the same way as in
 #. the download progress display (e.g. 7d 3h 42min 1s)
-#: apt-pkg/acquire-item.cc:1434
+#: apt-pkg/acquire-item.cc:1476
 #, c-format
 msgid "Release file expired, ignoring %s (invalid since %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1455
+#: apt-pkg/acquire-item.cc:1497
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1488
+#: apt-pkg/acquire-item.cc:1530
 #, c-format
 msgid ""
 "A error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s\n"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1497
+#. Invalid signature file, reject (LP: #346386) (Closes: #627642)
+#: apt-pkg/acquire-item.cc:1540 apt-pkg/acquire-item.cc:1545
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1569
+#: apt-pkg/acquire-item.cc:1617
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2990,7 +2985,7 @@ msgstr ""
 " %s་ཐུམ་སྒྲིལ་གི་དོན་ལུ་ང་་གི་ཡིག་སྣོད་ཅིག་ག་ཡོད་འཚོལ་མི་འཐོབ་པས། འདི་འབདཝ་ལས་ཁྱོད་ཀྱི་ལག་ཐོག་ལས་ "
 "འ་ནི་ཐུམ་སྒྲིལ་འདི་གི་དཀའ་ངལ་སེལ་དགོཔ་འདུག (arch འདི་བྱིག་སོངམ་ལས་བརྟེན།)"
 
-#: apt-pkg/acquire-item.cc:1628
+#: apt-pkg/acquire-item.cc:1676
 #, c-format
 msgid ""
 "I wasn't able to locate file for the %s package. This might mean you need to "
@@ -2999,14 +2994,14 @@ msgstr ""
 " %s་ཐུམ་སྒྲིལ་གི་དོན་ལུ་ང་་གི་ཡིག་སྣོད་ཅིག་ག་ཡོད་འཚོལ་མི་འཐོབ་པས། འདི་འབདཝ་ལས་ཁྱོད་ཀྱི་ལག་ཐོག་ལས་ "
 "འ་ནི་ཐུམ་སྒྲིལ་འདི་གི་དཀའ་ངལ་སེལ་དགོཔ་འདུག "
 
-#: apt-pkg/acquire-item.cc:1683
+#: apt-pkg/acquire-item.cc:1731
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "ཐུམ་སྒྲིལ་ ཟུར་ཐོ་ཡིག་སྣོད་ཚུ་ངན་ཅན་འགྱོ་ནུག  ཡིག་སྣོད་ཀྱི་མིང་མིན་འདུག: %s་ཐུམ་སྒྲིལ་གྱི་དོན་ལུ་ས་སྒོ།"
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1818
 msgid "Size mismatch"
 msgstr "ཚད་མ་མཐུན།"
 
@@ -3128,22 +3123,22 @@ msgstr "འབྱུང་ཁུངས་ཀྱི་ཐོ་ཡིག་གས
 msgid "Source list entries for this disc are:\n"
 msgstr "འ་ནི་ ཌིསིཀ་གི་དོན་ལུ་ འབྱུང་ཁུངས་ཧྲིལ་བུ་ཚུ་:\n"
 
-#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:909
+#: apt-pkg/indexcopy.cc:270 apt-pkg/indexcopy.cc:928
 #, c-format
 msgid "Wrote %i records.\n"
 msgstr "%i་དྲན་མཐོ་དེ་ཚུ་བྲིས་ཡོད།\n"
 
-#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:911
+#: apt-pkg/indexcopy.cc:272 apt-pkg/indexcopy.cc:930
 #, c-format
 msgid "Wrote %i records with %i missing files.\n"
 msgstr "%i བྱིག་འགྱོ་ཡོད་པའི་ཡིག་སྣོད་ཚུ་དང་གཅིག་ཁར་ %i དྲན་ཐོ་འདི་ཚུ་བྲིས་ཡོད།\n"
 
-#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:914
+#: apt-pkg/indexcopy.cc:275 apt-pkg/indexcopy.cc:933
 #, c-format
 msgid "Wrote %i records with %i mismatched files\n"
 msgstr "%i་མཐུན་སྒྲིག་མེདཔ་པའི་ཡིག་སྣོད་ཚུ་དང་གཅིག་ཁར་ %i་དྲན་ཐོ་ཚུ་བྲིས་བཞག་ཡོདཔ་ཨིན།\n"
 
-#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:917
+#: apt-pkg/indexcopy.cc:278 apt-pkg/indexcopy.cc:936
 #, c-format
 msgid "Wrote %i records with %i missing files and %i mismatched files\n"
 msgstr ""
@@ -3164,6 +3159,17 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Hash mismatch for: %s"
 msgstr "ཨེམ་ཌི་༥་ ཁྱོན་བསྡོམས་མ་མཐུན་པ།"
+
+#: apt-pkg/indexcopy.cc:677
+#, c-format
+msgid "File %s doesn't start with a clearsigned message"
+msgstr ""
+
+#. TRANSLATOR: %s is the trusted keyring parts directory
+#: apt-pkg/indexcopy.cc:708
+#, fuzzy, c-format
+msgid "No keyring installed in %s."
+msgstr "གཞི་བཙུགས་བར་བཤོལ་འབད་དོ།"
 
 #: apt-pkg/cacheset.cc:337
 #, c-format

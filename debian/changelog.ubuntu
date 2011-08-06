@@ -1,3 +1,27 @@
+apt (0.8.13.2ubuntu4.1) natty-security; urgency=low
+
+  * SECURITY UPDATE: incorrect InRelease file signature validation
+    (LP: #784473)
+    - apt-pkg/indexcopy.cc, methods/gpgv.cc: Ensure file starts with
+      clearsigned message header.
+    - patch thanks to David Kalnischkies.
+    - CVE-2011-1829
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Thu, 07 Jul 2011 08:20:46 -0400
+
+apt (0.8.13.2ubuntu4) natty-proposed; urgency=low
+
+  [ Julian Andres Klode ]
+  * apt-pkg/acquire-item.cc:
+    - Reject files known to be invalid (LP: #346386) (Closes: #627642)
+
+  [ Michael Vogt ]
+  * apt-pkg/acquire-item.cc:
+    - do not reject empty Packages files when checking them for
+      correctness
+
+ -- Brian Murray <brian@ubuntu.com>  Fri, 10 Jun 2011 12:05:03 -0700
+
 apt (0.8.13.2ubuntu3) natty-proposed; urgency=low
 
   * apt-pkg/deb/dpkgpm.cc:
