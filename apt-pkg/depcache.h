@@ -231,7 +231,9 @@ class pkgDepCache : protected pkgCache::Namespace
       // Various test members for the current status of the package
       inline bool NewInstall() const {return Status == 2 && Mode == ModeInstall;};
       inline bool Delete() const {return Mode == ModeDelete;};
+      inline bool Purge() const {return Delete() == true && (iFlags & pkgDepCache::Purge) == pkgDepCache::Purge; };
       inline bool Keep() const {return Mode == ModeKeep;};
+      inline bool Protect() const {return (iFlags & Protected) == Protected;};
       inline bool Upgrade() const {return Status > 0 && Mode == ModeInstall;};
       inline bool Upgradable() const {return Status >= 1;};
       inline bool Downgrade() const {return Status < 0 && Mode == ModeInstall;};
@@ -241,6 +243,7 @@ class pkgDepCache : protected pkgCache::Namespace
       inline bool InstBroken() const {return (DepState & DepInstMin) != DepInstMin;};
       inline bool InstPolicyBroken() const {return (DepState & DepInstPolicy) != DepInstPolicy;};
       inline bool Install() const {return Mode == ModeInstall;};
+      inline bool ReInstall() const {return Delete() == false && (iFlags & pkgDepCache::ReInstall) == pkgDepCache::ReInstall;};
       inline VerIterator InstVerIter(pkgCache &Cache)
                 {return VerIterator(Cache,InstallVer);};
       inline VerIterator CandidateVerIter(pkgCache &Cache)
@@ -255,11 +258,21 @@ class pkgDepCache : protected pkgCache::Namespace
    class Policy
    {
       public:
-      
+      Policy() {
+         InstallRecommends = _config->FindB("APT::Install-Recommends", false);
+         InstallSuggests = _config->FindB("APT::Install-Suggests", false);
+      }
+
       virtual VerIterator GetCandidateVer(PkgIterator const &Pkg);
       virtual bool IsImportantDep(DepIterator const &Dep);
-      
+      virtual signed short GetPriority(PkgIterator const &Pkg);
+      virtual signed short GetPriority(PkgFileIterator const &File);
+
       virtual ~Policy() {};
+
+      private:
+      bool InstallRecommends;
+      bool InstallSuggests;
    };
 
    private:
@@ -313,11 +326,10 @@ class pkgDepCache : protected pkgCache::Namespace
    void Update(PkgIterator const &P);
    
    // Count manipulators
-   void AddSizes(const PkgIterator &Pkg, bool const &Invert = false);
+   void AddSizes(const PkgIterator &Pkg, bool const Invert = false);
    inline void RemoveSizes(const PkgIterator &Pkg) {AddSizes(Pkg, true);};
-   void AddSizes(const PkgIterator &Pkg,signed long Mult) __deprecated;
-   void AddStates(const PkgIterator &Pkg,int Add = 1);
-   inline void RemoveStates(const PkgIterator &Pkg) {AddStates(Pkg,-1);};
+   void AddStates(const PkgIterator &Pkg, bool const Invert = false);
+   inline void RemoveStates(const PkgIterator &Pkg) {AddStates(Pkg,true);};
    
    public:
 
@@ -386,18 +398,17 @@ class pkgDepCache : protected pkgCache::Namespace
    /** \name State Manipulators
     */
    // @{
-   void MarkKeep(PkgIterator const &Pkg, bool Soft = false,
+   bool MarkKeep(PkgIterator const &Pkg, bool Soft = false,
 		 bool FromUser = true, unsigned long Depth = 0);
-   void MarkDelete(PkgIterator const &Pkg, bool Purge = false,
+   bool MarkDelete(PkgIterator const &Pkg, bool MarkPurge = false,
                    unsigned long Depth = 0, bool FromUser = true);
-   void MarkInstall(PkgIterator const &Pkg,bool AutoInst = true,
+   bool MarkInstall(PkgIterator const &Pkg,bool AutoInst = true,
 		    unsigned long Depth = 0, bool FromUser = true,
 		    bool ForceImportantDeps = false);
    void MarkProtected(PkgIterator const &Pkg) { PkgState[Pkg->ID].iFlags |= Protected; };
 
    void SetReInstall(PkgIterator const &Pkg,bool To);
-   // FIXME: Remove the unused boolean parameter on abi break
-   void SetCandidateVersion(VerIterator TargetVer, bool const &Pseudo = true);
+   void SetCandidateVersion(VerIterator TargetVer);
    bool SetCandidateRelease(pkgCache::VerIterator TargetVer,
 				std::string const &TargetRel);
    /** Set the candidate version for dependencies too if needed.
@@ -457,7 +468,7 @@ class pkgDepCache : protected pkgCache::Namespace
     *  \param Depth     recursive deep of this Marker call
     *  \param FromUser  was the remove requested by the user?
     */
-   virtual bool IsDeleteOk(const PkgIterator &Pkg,bool Purge = false,
+   virtual bool IsDeleteOk(const PkgIterator &Pkg,bool MarkPurge = false,
 			    unsigned long Depth = 0, bool FromUser = true);
 
    // read persistent states
@@ -482,13 +493,6 @@ class pkgDepCache : protected pkgCache::Namespace
    virtual ~pkgDepCache();
 
    private:
-   // Helper for Update(OpProgress) to remove pseudoinstalled arch all packages
-   // FIXME: they are private so shouldn't affect abi, but just in case…
-   __deprecated bool RemovePseudoInstalledPkg(PkgIterator &Pkg, std::set<unsigned long> &recheck) { return true; };
-   __deprecated bool ReInstallPseudoForGroup(unsigned long const &Grp, std::set<unsigned long> &recheck) { return true; };
-   __deprecated bool ReInstallPseudoForGroup(pkgCache::PkgIterator const &P, std::set<unsigned long> &recheck) { return true; };
-
-
    bool IsModeChangeOk(ModeList const mode, PkgIterator const &Pkg,
 			unsigned long const Depth, bool const FromUser);
 };

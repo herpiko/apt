@@ -94,7 +94,7 @@ void pkgAcquire::Item::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
 // ---------------------------------------------------------------------
 /* Stash status and the file size. Note that setting Complete means 
    sub-phases of the acquire process such as decompresion are operating */
-void pkgAcquire::Item::Start(string /*Message*/,unsigned long Size)
+void pkgAcquire::Item::Start(string /*Message*/,unsigned long long Size)
 {
    Status = StatFetching;
    if (FileSize == 0 && Complete == false)
@@ -104,7 +104,7 @@ void pkgAcquire::Item::Start(string /*Message*/,unsigned long Size)
 // Acquire::Item::Done - Item downloaded OK				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcquire::Item::Done(string Message,unsigned long Size,string Hash,
+void pkgAcquire::Item::Done(string Message,unsigned long long Size,string Hash,
 			    pkgAcquire::MethodConfig *Cnf)
 {
    // We just downloaded something..
@@ -245,7 +245,7 @@ void pkgAcqSubIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{*
    }
 }
 									/*}}}*/
-void pkgAcqSubIndex::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
+void pkgAcqSubIndex::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -544,7 +544,7 @@ void pkgAcqDiffIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{
    Dequeue();
 }
 									/*}}}*/
-void pkgAcqDiffIndex::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
+void pkgAcqDiffIndex::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -681,17 +681,17 @@ bool pkgAcqIndexDiffs::QueueNextDiff()					/*{{{*/
    // remove all patches until the next matching patch is found
    // this requires the Index file to be ordered
    for(vector<DiffInfo>::iterator I=available_patches.begin();
-       available_patches.size() > 0 && 
+       available_patches.empty() == false &&
 	  I != available_patches.end() &&
-	  (*I).sha1 != local_sha1; 
-       I++) 
+	  I->sha1 != local_sha1;
+       ++I)
    {
       available_patches.erase(I);
    }
 
    // error checking and falling back if no patch was found
-   if(available_patches.size() == 0) 
-   { 
+   if(available_patches.empty() == true)
+   {
       Failed("", NULL);
       return false;
    }
@@ -710,7 +710,7 @@ bool pkgAcqIndexDiffs::QueueNextDiff()					/*{{{*/
    return true;
 }
 									/*}}}*/
-void pkgAcqIndexDiffs::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
+void pkgAcqIndexDiffs::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
 			    pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -756,7 +756,7 @@ void pkgAcqIndexDiffs::Done(string Message,unsigned long Size,string Md5Hash,	/*
       chmod(FinalFile.c_str(),0644);
 
       // see if there is more to download
-      if(available_patches.size() > 0) {
+      if(available_patches.empty() == false) {
 	 new pkgAcqIndexDiffs(Owner, RealURI, Description, Desc.ShortDesc,
 			      ExpectedHash, ServerSha1, available_patches);
 	 return Finish();
@@ -881,7 +881,7 @@ void pkgAcqIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{*/
    to the uncompressed version of the file. If this is so the file
    is copied into the partial directory. In all other cases the file
    is decompressed with a gzip uri. */
-void pkgAcqIndex::Done(string Message,unsigned long Size,string Hash,
+void pkgAcqIndex::Done(string Message,unsigned long long Size,string Hash,
 		       pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,Hash,Cfg);
@@ -1123,7 +1123,7 @@ string pkgAcqMetaSig::Custom600Headers()
    return "\nIndex-File: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
 }
 
-void pkgAcqMetaSig::Done(string Message,unsigned long Size,string MD5,
+void pkgAcqMetaSig::Done(string Message,unsigned long long Size,string MD5,
 			 pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,MD5,Cfg);
@@ -1232,7 +1232,7 @@ string pkgAcqMetaIndex::Custom600Headers()
    return "\nIndex-File: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
 }
 									/*}}}*/
-void pkgAcqMetaIndex::Done(string Message,unsigned long Size,string Hash,	/*{{{*/
+void pkgAcqMetaIndex::Done(string Message,unsigned long long Size,string Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,Hash,Cfg);
@@ -1258,8 +1258,9 @@ void pkgAcqMetaIndex::Done(string Message,unsigned long Size,string Hash,	/*{{{*
       if (SigFile == "")
       {
          // There was no signature file, so we are finished.  Download
-         // the indexes without verification.
-         QueueIndexes(false);
+         // the indexes and do only hashsum verification
+         MetaIndexParser->Load(DestFile);
+         QueueIndexes(true);
       }
       else
       {
@@ -1374,7 +1375,7 @@ void pkgAcqMetaIndex::QueueIndexes(bool verify)				/*{{{*/
 #endif
    for (vector <struct IndexTarget*>::const_iterator Target = IndexTargets->begin();
         Target != IndexTargets->end();
-        Target++)
+        ++Target)
    {
       HashString ExpectedIndexHash;
       if (verify)
@@ -1396,6 +1397,7 @@ void pkgAcqMetaIndex::QueueIndexes(bool verify)				/*{{{*/
 	    {
 	       std::cerr << "Queueing: " << (*Target)->URI << std::endl;
 	       std::cerr << "Expected Hash: " << ExpectedIndexHash.toStr() << std::endl;
+	       std::cerr << "For: " << Record->MetaKeyFilename << std::endl;
 	    }
 	    if (ExpectedIndexHash.empty() == true && (*Target)->IsOptional() == false)
 	    {
@@ -1473,8 +1475,10 @@ bool pkgAcqMetaIndex::VerifyVendor(string Message)			/*{{{*/
 	 // TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 	 // the time since then the file is invalid - formated in the same way as in
 	 // the download progress display (e.g. 7d 3h 42min 1s)
-	 return _error->Error(_("Release file expired, ignoring %s (invalid since %s)"),
-	                      RealURI.c_str(), TimeToStr(invalid_since).c_str());
+	 return _error->Error(
+            _("Release file for %s is expired (invalid since %s). "
+              "Updates for this repository will not be applied."),
+            RealURI.c_str(), TimeToStr(invalid_since).c_str());
    }
 
    if (_config->FindB("Debug::pkgAcquire::Auth", false)) 
@@ -1548,6 +1552,26 @@ void pkgAcqMetaIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
       }
       // gpgv method failed 
       ReportMirrorFailure("GPGFailure");
+   }
+
+   /* Always move the meta index, even if gpgv failed. This ensures
+    * that PackageFile objects are correctly filled in */
+   if (FileExists(DestFile)) {
+      string FinalFile = _config->FindDir("Dir::State::lists");
+      FinalFile += URItoFileName(RealURI);
+      /* InRelease files become Release files, otherwise
+       * they would be considered as trusted later on */
+      if (SigFile == DestFile) {
+	 RealURI = RealURI.replace(RealURI.rfind("InRelease"), 9,
+	                               "Release");
+	 FinalFile = FinalFile.replace(FinalFile.rfind("InRelease"), 9,
+	                               "Release");
+	 SigFile = FinalFile;
+      }
+      Rename(DestFile,FinalFile);
+      chmod(FinalFile.c_str(),0644);
+
+      DestFile = FinalFile;
    }
 
    // No Release file was present, or verification failed, so fall
@@ -1649,7 +1673,7 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *Owner,pkgSourceList *Sources,
 
    // check if we have one trusted source for the package. if so, switch
    // to "TrustedOnly" mode
-   for (pkgCache::VerFileIterator i = Version.FileList(); i.end() == false; i++)
+   for (pkgCache::VerFileIterator i = Version.FileList(); i.end() == false; ++i)
    {
       pkgIndexFile *Index;
       if (Sources->FindIndex(i.File(),Index) == false)
@@ -1673,7 +1697,7 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *Owner,pkgSourceList *Sources,
 
    // Select a source
    if (QueueNext() == false && _error->PendingError() == false)
-      _error->Error(_("I wasn't able to locate file for the %s package. "
+      _error->Error(_("I wasn't able to locate a file for the %s package. "
 		    "This might mean you need to manually fix this package."),
 		    Version.ParentPkg().Name());
 }
@@ -1686,7 +1710,7 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *Owner,pkgSourceList *Sources,
 bool pkgAcqArchive::QueueNext()
 {
    string const ForceHash = _config->Find("Acquire::ForceHash");
-   for (; Vf.end() == false; Vf++)
+   for (; Vf.end() == false; ++Vf)
    {
       // Ignore not source sources
       if ((Vf.File()->Flags & pkgCache::Flag::NotSource) != 0)
@@ -1710,6 +1734,8 @@ bool pkgAcqArchive::QueueNext()
       string PkgFile = Parse.FileName();
       if (ForceHash.empty() == false)
       {
+	 if(stringcasecmp(ForceHash, "sha512") == 0)
+	    ExpectedHash = HashString("SHA512", Parse.SHA512Hash());
 	 if(stringcasecmp(ForceHash, "sha256") == 0)
 	    ExpectedHash = HashString("SHA256", Parse.SHA256Hash());
 	 else if (stringcasecmp(ForceHash, "sha1") == 0)
@@ -1720,7 +1746,9 @@ bool pkgAcqArchive::QueueNext()
       else
       {
 	 string Hash;
-	 if ((Hash = Parse.SHA256Hash()).empty() == false)
+	 if ((Hash = Parse.SHA512Hash()).empty() == false)
+	    ExpectedHash = HashString("SHA512", Hash);
+	 else if ((Hash = Parse.SHA256Hash()).empty() == false)
 	    ExpectedHash = HashString("SHA256", Hash);
 	 else if ((Hash = Parse.SHA1Hash()).empty() == false)
 	    ExpectedHash = HashString("SHA1", Hash);
@@ -1744,7 +1772,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(FinalFile.c_str(),&Buf) == 0)
       {
 	 // Make sure the size matches
-	 if ((unsigned)Buf.st_size == Version->Size)
+	 if ((unsigned long long)Buf.st_size == Version->Size)
 	 {
 	    Complete = true;
 	    Local = true;
@@ -1763,7 +1791,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(FinalFile.c_str(),&Buf) == 0)
       {
 	 // Make sure the size matches
-	 if ((unsigned)Buf.st_size == Version->Size)
+	 if ((unsigned long long)Buf.st_size == Version->Size)
 	 {
 	    Complete = true;
 	    Local = true;
@@ -1783,7 +1811,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(DestFile.c_str(),&Buf) == 0)
       {
 	 // Hmm, the partial file is too big, erase it
-	 if ((unsigned)Buf.st_size > Version->Size)
+	 if ((unsigned long long)Buf.st_size > Version->Size)
 	    unlink(DestFile.c_str());
 	 else
 	    PartialSize = Buf.st_size;
@@ -1797,7 +1825,7 @@ bool pkgAcqArchive::QueueNext()
       Desc.ShortDesc = Version.ParentPkg().Name();
       QueueURI(Desc);
 
-      Vf++;
+      ++Vf;
       return true;
    }
    return false;
@@ -1806,7 +1834,7 @@ bool pkgAcqArchive::QueueNext()
 // AcqArchive::Done - Finished fetching					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcqArchive::Done(string Message,unsigned long Size,string CalcHash,
+void pkgAcqArchive::Done(string Message,unsigned long long Size,string CalcHash,
 			 pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,CalcHash,Cfg);
@@ -1871,7 +1899,7 @@ void pkgAcqArchive::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
        StringToBool(LookupTag(Message,"Transient-Failure"),false) == true)
    {
       // Vf = Version.FileList();
-      while (Vf.end() == false) Vf++;
+      while (Vf.end() == false) ++Vf;
       StoreFilename = string();
       Item::Failed(Message,Cnf);
       return;
@@ -1917,7 +1945,7 @@ void pkgAcqArchive::Finished()
 // ---------------------------------------------------------------------
 /* The file is added to the queue */
 pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
-		       unsigned long Size,string Dsc,string ShortDesc,
+		       unsigned long long Size,string Dsc,string ShortDesc,
 		       const string &DestDir, const string &DestFilename,
                        bool IsIndexFile) :
                        Item(Owner), ExpectedHash(Hash), IsIndexFile(IsIndexFile)
@@ -1945,7 +1973,7 @@ pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
    if (stat(DestFile.c_str(),&Buf) == 0)
    {
       // Hmm, the partial file is too big, erase it
-      if ((unsigned)Buf.st_size > Size)
+      if ((unsigned long long)Buf.st_size > Size)
 	 unlink(DestFile.c_str());
       else
 	 PartialSize = Buf.st_size;
@@ -1957,7 +1985,7 @@ pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
 // AcqFile::Done - Item downloaded OK					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcqFile::Done(string Message,unsigned long Size,string CalcHash,
+void pkgAcqFile::Done(string Message,unsigned long long Size,string CalcHash,
 		      pkgAcquire::MethodConfig *Cnf)
 {
    Item::Done(Message,Size,CalcHash,Cnf);
@@ -2045,13 +2073,3 @@ string pkgAcqFile::Custom600Headers()
    return "";
 }
 									/*}}}*/
-bool IndexTarget::IsOptional() const {
-   if (strncmp(ShortDesc.c_str(), "Translation", 11) != 0)
-      return false;
-   return true;
-}
-bool IndexTarget::IsSubIndex() const {
-   if (ShortDesc != "TranslationIndex")
-      return false;
-   return true;
-}

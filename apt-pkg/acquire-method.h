@@ -23,6 +23,7 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/strutl.h>
 
+#include <stdarg.h>
 
 class Hashes;
 class pkgAcqMethod
@@ -45,12 +46,13 @@ class pkgAcqMethod
       string MD5Sum;
       string SHA1Sum;
       string SHA256Sum;
+      string SHA512Sum;
       vector<string> GPGVOutput;
       time_t LastModified;
       bool IMSHit;
       string Filename;
-      unsigned long Size;
-      unsigned long ResumePoint;
+      unsigned long long Size;
+      unsigned long long ResumePoint;
       
       void TakeHashes(Hashes &Hash);
       FetchResult();
@@ -77,6 +79,8 @@ class pkgAcqMethod
 
    bool MediaFail(string Required,string Drive);
    virtual void Exit() {};
+
+   void PrintStatus(char const * const header, const char* Format, va_list &args) const;
 
    public:
    enum CnfFlags {SingleInstance = (1<<0),

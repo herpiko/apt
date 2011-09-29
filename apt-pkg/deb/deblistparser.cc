@@ -128,12 +128,7 @@ bool debListParser::NewVersion(pkgCache::VerIterator &Ver)
    }
 
    if (ArchitectureAll() == true)
-      switch (Ver->MultiArch)
-      {
-	 case pkgCache::Version::Foreign: Ver->MultiArch = pkgCache::Version::AllForeign; break;
-	 case pkgCache::Version::Allowed: Ver->MultiArch = pkgCache::Version::AllAllowed; break;
-	 default: Ver->MultiArch = pkgCache::Version::All;
-      }
+      Ver->MultiArch |= pkgCache::Version::All;
 
    // Archive Size
    Ver->Size = Section.FindULL("Size");
@@ -201,9 +196,9 @@ string debListParser::DescriptionLanguage()
    if (Section.FindS("Description").empty() == false)
       return "";
 
-   std::vector<string> const lang = APT::Configuration::getLanguages();
+   std::vector<string> const lang = APT::Configuration::getLanguages(true);
    for (std::vector<string>::const_iterator l = lang.begin();
-	l != lang.end(); l++)
+	l != lang.end(); ++l)
       if (Section.FindS(string("Description-").append(*l).c_str()).empty() == false)
 	 return *l;
 
@@ -284,18 +279,18 @@ unsigned short debListParser::VersionHash()
       /* Strip out any spaces from the text, this undoes dpkgs reformatting
          of certain fields. dpkg also has the rather interesting notion of
          reformatting depends operators < -> <= */
-      char *I = S;
+      char *J = S;
       for (; Start != End; Start++)
       {
 	 if (isspace(*Start) == 0)
-	    *I++ = tolower_ascii(*Start);
+	    *J++ = tolower_ascii(*Start);
 	 if (*Start == '<' && Start[1] != '<' && Start[1] != '=')
-	    *I++ = '=';
+	    *J++ = '=';
 	 if (*Start == '>' && Start[1] != '>' && Start[1] != '=')
-	    *I++ = '=';
+	    *J++ = '=';
       }
 
-      Result = AddCRC16(Result,S,I - S);
+      Result = AddCRC16(Result,S,J - S);
    }
    
    return Result;
@@ -461,7 +456,7 @@ const char *debListParser::ConvertRelation(const char *I,unsigned int &Op)
  *
  * The complete architecture, consisting of <kernel>-<cpu>.
  */
-static string CompleteArch(std::string& arch) {
+static string CompleteArch(std::string const &arch) {
     if (arch == "armel")              return "linux-arm";
     if (arch == "armhf")              return "linux-arm";
     if (arch == "lpia")               return "linux-i386";
@@ -487,7 +482,7 @@ const char *debListParser::ParseDepends(const char *Start,const char *Stop,
    // Parse off the package name
    const char *I = Start;
    for (;I != Stop && isspace(*I) == 0 && *I != '(' && *I != ')' &&
-	*I != ',' && *I != '|'; I++);
+	*I != ',' && *I != '|' && *I != '[' && *I != ']'; I++);
    
    // Malformed, no '('
    if (I != Stop && *I == ')')
@@ -500,9 +495,13 @@ const char *debListParser::ParseDepends(const char *Start,const char *Stop,
    Package.assign(Start,I - Start);
 
    // We don't want to confuse library users which can't handle MultiArch
+   string const arch = _config->Find("APT::Architecture");
    if (StripMultiArch == true) {
       size_t const found = Package.rfind(':');
-      if (found != string::npos)
+      if (found != string::npos &&
+	  (strcmp(Package.c_str() + found, ":any") == 0 ||
+	   strcmp(Package.c_str() + found, ":native") == 0 ||
+	   strcmp(Package.c_str() + found + 1, arch.c_str()) == 0))
 	 Package = Package.substr(0,found);
    }
 
@@ -543,7 +542,6 @@ const char *debListParser::ParseDepends(const char *Start,const char *Stop,
 
    if (ParseArchFlags == true)
    {
-      string arch = _config->Find("APT::Architecture");
       string completeArch = CompleteArch(arch);
 
       // Parse an architecture
@@ -687,12 +685,12 @@ bool debListParser::ParseProvides(pkgCache::VerIterator &Ver)
 
    if (MultiArchEnabled == false)
       return true;
-   else if (Ver->MultiArch == pkgCache::Version::Allowed || Ver->MultiArch == pkgCache::Version::AllAllowed)
+   else if ((Ver->MultiArch & pkgCache::Version::Allowed) == pkgCache::Version::Allowed)
    {
       string const Package = string(Ver.ParentPkg().Name()).append(":").append("any");
       return NewProvidesAllArch(Ver, Package, Ver.VerStr());
    }
-   else if (Ver->MultiArch == pkgCache::Version::Foreign || Ver->MultiArch == pkgCache::Version::AllForeign)
+   else if ((Ver->MultiArch & pkgCache::Version::Foreign) == pkgCache::Version::Foreign)
       return NewProvidesAllArch(Ver, Ver.ParentPkg().Name(), Ver.VerStr());
 
    return true;
@@ -781,7 +779,9 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
       size_t len = 0;
 
       // Skip empty lines
-      for (; buffer[len] == '\r' && buffer[len] == '\n'; ++len);
+      for (; buffer[len] == '\r' && buffer[len] == '\n'; ++len)
+         /* nothing */
+         ;
       if (buffer[len] == '\0')
 	 continue;
 
@@ -795,13 +795,25 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
       }
 
       // seperate the tag from the data
-      for (; buffer[len] != ':' && buffer[len] != '\0'; ++len);
+      for (; buffer[len] != ':' && buffer[len] != '\0'; ++len)
+         /* nothing */
+         ;
       if (buffer[len] == '\0')
 	 continue;
       char* dataStart = buffer + len;
-      for (++dataStart; *dataStart == ' '; ++dataStart);
+      for (++dataStart; *dataStart == ' '; ++dataStart)
+         /* nothing */
+         ;
       char* dataEnd = dataStart;
-      for (++dataEnd; *dataEnd != '\0'; ++dataEnd);
+      for (++dataEnd; *dataEnd != '\0'; ++dataEnd)
+         /* nothing */
+         ;
+      // The last char should be a newline, but we can never be sure: #633350
+      char* lineEnd = dataEnd;
+      for (--lineEnd; *lineEnd == '\r' || *lineEnd == '\n'; --lineEnd)
+         /* nothing */
+         ;
+      ++lineEnd;
 
       // which datastorage need to be updated
       map_ptrloc* writeTo = NULL;
@@ -816,7 +828,7 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
       APT_PARSER_WRITETO(FileI->Label, "Label")
       #undef APT_PARSER_WRITETO
       #define APT_PARSER_FLAGIT(X) else if (strncmp(#X, buffer, len) == 0) \
-	 pkgTagSection::FindFlag(FileI->Flags, pkgCache::Flag:: X, dataStart, dataEnd-1);
+	 pkgTagSection::FindFlag(FileI->Flags, pkgCache::Flag:: X, dataStart, lineEnd);
       APT_PARSER_FLAGIT(NotAutomatic)
       APT_PARSER_FLAGIT(ButAutomaticUpgrades)
       #undef APT_PARSER_FLAGIT

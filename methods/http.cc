@@ -402,10 +402,10 @@ ServerState::RunHeadersResult ServerState::RunHeaders()
       if (Debug == true)
 	 clog << Data;
       
-      for (string::const_iterator I = Data.begin(); I < Data.end(); I++)
+      for (string::const_iterator I = Data.begin(); I < Data.end(); ++I)
       {
 	 string::const_iterator J = I;
-	 for (; J != Data.end() && *J != '\n' && *J != '\r';J++);
+	 for (; J != Data.end() && *J != '\n' && *J != '\r'; ++J);
 	 if (HeaderLine(string(I,J)) == false)
 	    return RUN_HEADERS_PARSE_ERROR;
 	 I = J;
@@ -778,9 +778,10 @@ bool HttpMethod::Go(bool ToFile,ServerState *Srv)
    
    if (Srv->In.WriteSpace() == true && ToFile == true && FileFD != -1)
       FD_SET(FileFD,&wfds);
-   
+
    // Add stdin
-   FD_SET(STDIN_FILENO,&rfds);
+   if (_config->FindB("Acquire::http::DependOnSTDIN", true) == true)
+      FD_SET(STDIN_FILENO,&rfds);
 	  
    // Figure out the max fd
    int MaxFd = FileFD;
@@ -947,9 +948,25 @@ HttpMethod::DealWithHeaders(FetchResult &Res,ServerState *Srv)
            && Srv->Result != 304    // Not Modified
            && Srv->Result != 306))  // (Not part of HTTP/1.1, reserved)
    {
-      if (!Srv->Location.empty())
+      if (Srv->Location.empty() == true);
+      else if (Srv->Location[0] == '/' && Queue->Uri.empty() == false)
       {
-         NextURI = Srv->Location;
+	 URI Uri = Queue->Uri;
+	 if (Uri.Host.empty() == false)
+	 {
+	    if (Uri.Port != 0)
+	       strprintf(NextURI, "http://%s:%u", Uri.Host.c_str(), Uri.Port);
+	    else
+	       NextURI = "http://" + Uri.Host;
+	 }
+	 else
+	    NextURI.clear();
+	 NextURI.append(DeQuoteString(Srv->Location));
+	 return TRY_AGAIN_OR_REDIRECT;
+      }
+      else
+      {
+         NextURI = DeQuoteString(Srv->Location);
          return TRY_AGAIN_OR_REDIRECT;
       }
       /* else pass through for error message */
@@ -1113,7 +1130,13 @@ int HttpMethod::Loop()
          do a WaitFd above.. Otherwise the FD is closed. */
       int Result = Run(true);
       if (Result != -1 && (Result != 0 || Queue == 0))
-	 return 100;
+      {
+	 if(FailReason.empty() == false ||
+	    _config->FindB("Acquire::http::DependOnSTDIN", true) == true)
+	    return 100;
+	 else
+	    return 0;
+      }
 
       if (Queue == 0)
 	 continue;
@@ -1302,7 +1325,7 @@ int HttpMethod::Loop()
                StopRedirects = true;
             else
             {
-               for (StringVectorIterator I = R.begin(); I != R.end(); I++)
+               for (StringVectorIterator I = R.begin(); I != R.end(); ++I)
                   if (Queue->Uri == *I)
                   {
                      R[0] = "STOP";

@@ -13,6 +13,7 @@
 // Include Files							/*{{{*/
 #include <string>
 #include <vector>
+#include <limits>
 									/*}}}*/
 namespace APT {
 class Configuration {							/*{{{*/
@@ -36,7 +37,7 @@ public:									/*{{{*/
 	 *  \param Cached saves the result so we need to calculated it only once
 	 *                this parameter should ony be used for testing purposes.
 	 *
-	 *  \return a vector of (all) Language Codes in the prefered usage order
+	 *  \return a vector of the compression types in the prefered usage order
 	 */
 	std::vector<std::string> static const getCompressionTypes(bool const &Cached = true);
 
@@ -94,7 +95,7 @@ public:									/*{{{*/
 		Compressor(char const *name, char const *extension, char const *binary,
 			   char const *compressArg, char const *uncompressArg,
 			   unsigned short const cost);
-		Compressor() {};
+		Compressor() : Cost(std::numeric_limits<unsigned short>::max()) {};
 	};
 
 	/** \brief Return a vector of Compressors supported for data.tar's

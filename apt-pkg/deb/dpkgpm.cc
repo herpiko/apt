@@ -14,8 +14,8 @@
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/pkgrecords.h>
 #include <apt-pkg/strutl.h>
-#include <apti18n.h>
 #include <apt-pkg/fileutl.h>
+#include <apt-pkg/cachefile.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -26,12 +26,13 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <errno.h>
-#include <string.h>
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
 #include <sstream>
 #include <map>
+#include <pwd.h>
+#include <grp.h>
 
 #include <termios.h>
 #include <unistd.h>
@@ -43,6 +44,21 @@
 									/*}}}*/
 
 using namespace std;
+
+class pkgDPkgPMPrivate 
+{
+public:
+   pkgDPkgPMPrivate() : dpkgbuf_pos(0), term_out(NULL), history_out(NULL)
+   {
+   }
+   bool stdin_is_dev_null;
+   // the buffer we use for the dpkg status-fd reading
+   char dpkgbuf[1024];
+   int dpkgbuf_pos;
+   FILE *term_out;
+   FILE *history_out;
+   string dpkg_error;
+};
 
 namespace
 {
@@ -108,9 +124,9 @@ ionice(int PID)
 // ---------------------------------------------------------------------
 /* */
 pkgDPkgPM::pkgDPkgPM(pkgDepCache *Cache) 
-   : pkgPackageManager(Cache), dpkgbuf_pos(0),
-     term_out(NULL), history_out(NULL), PackagesDone(0), PackagesTotal(0)
+   : pkgPackageManager(Cache), PackagesDone(0), PackagesTotal(0)
 {
+   d = new pkgDPkgPMPrivate();
 }
 									/*}}}*/
 // DPkgPM::pkgDPkgPM - Destructor					/*{{{*/
@@ -118,6 +134,7 @@ pkgDPkgPM::pkgDPkgPM(pkgDepCache *Cache)
 /* */
 pkgDPkgPM::~pkgDPkgPM()
 {
+   delete d;
 }
 									/*}}}*/
 // DPkgPM::Install - Install a package					/*{{{*/
@@ -211,7 +228,7 @@ bool pkgDPkgPM::SendV2Pkgs(FILE *F)
    fprintf(F,"\n");
  
    // Write out the package actions in order.
-   for (vector<Item>::iterator I = List.begin(); I != List.end(); I++)
+   for (vector<Item>::iterator I = List.begin(); I != List.end(); ++I)
    {
       if(I->Pkg.end() == true)
 	 continue;
@@ -333,7 +350,7 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
       // Feed it the filenames.
       if (Version <= 1)
       {
-	 for (vector<Item>::iterator I = List.begin(); I != List.end(); I++)
+	 for (vector<Item>::iterator I = List.begin(); I != List.end(); ++I)
 	 {
 	    // Only deal with packages to be installed from .deb
 	    if (I->Op != Item::Install)
@@ -374,7 +391,7 @@ void pkgDPkgPM::DoStdin(int master)
    if (len)
       write(master, input_buf, len);
    else
-      stdin_is_dev_null = true;
+      d->stdin_is_dev_null = true;
 }
 									/*}}}*/
 // DPkgPM::DoTerminalPty - Read the terminal pty and write log		/*{{{*/
@@ -391,15 +408,16 @@ void pkgDPkgPM::DoTerminalPty(int master)
    {
       // this happens when the child is about to exit, we
       // give it time to actually exit, otherwise we run
-      // into a race
-      usleep(500000);
+      // into a race so we sleep for half a second.
+      struct timespec sleepfor = { 0, 500000000 };
+      nanosleep(&sleepfor, NULL);
       return;
    }  
    if(len <= 0) 
       return;
    write(1, term_buf, len);
-   if(term_out)
-      fwrite(term_buf, len, sizeof(char), term_out);
+   if(d->term_out)
+      fwrite(term_buf, len, sizeof(char), d->term_out);
 }
 									/*}}}*/
 // DPkgPM::ProcessDpkgStatusBuf                                        	/*{{{*/
@@ -603,14 +621,14 @@ void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
    char *p, *q;
    int len;
 
-   len=read(statusfd, &dpkgbuf[dpkgbuf_pos], sizeof(dpkgbuf)-dpkgbuf_pos);
-   dpkgbuf_pos += len;
+   len=read(statusfd, &d->dpkgbuf[d->dpkgbuf_pos], sizeof(d->dpkgbuf)-d->dpkgbuf_pos);
+   d->dpkgbuf_pos += len;
    if(len <= 0)
       return;
 
    // process line by line if we have a buffer
-   p = q = dpkgbuf;
-   while((q=(char*)memchr(p, '\n', dpkgbuf+dpkgbuf_pos-p)) != NULL)
+   p = q = d->dpkgbuf;
+   while((q=(char*)memchr(p, '\n', d->dpkgbuf+d->dpkgbuf_pos-p)) != NULL)
    {
       *q = 0;
       ProcessDpkgStatusLine(OutStatusFd, p);
@@ -618,8 +636,8 @@ void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
    }
 
    // now move the unprocessed bits (after the final \n that is now a 0x0) 
-   // to the start and update dpkgbuf_pos
-   p = (char*)memrchr(dpkgbuf, 0, dpkgbuf_pos);
+   // to the start and update d->dpkgbuf_pos
+   p = (char*)memrchr(d->dpkgbuf, 0, d->dpkgbuf_pos);
    if(p == NULL)
       return;
 
@@ -627,8 +645,8 @@ void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
    p++;
 
    // move the unprocessed tail to the start and update pos
-   memmove(dpkgbuf, p, p-dpkgbuf);
-   dpkgbuf_pos = dpkgbuf+dpkgbuf_pos-p;
+   memmove(d->dpkgbuf, p, p-d->dpkgbuf);
+   d->dpkgbuf_pos = d->dpkgbuf+d->dpkgbuf_pos-p;
 }
 									/*}}}*/
 // DPkgPM::WriteHistoryTag						/*{{{*/
@@ -640,7 +658,7 @@ void pkgDPkgPM::WriteHistoryTag(string const &tag, string value)
    // poor mans rstrip(", ")
    if (value[length-2] == ',' && value[length-1] == ' ')
       value.erase(length - 2, 2);
-   fprintf(history_out, "%s: %s\n", tag.c_str(), value.c_str());
+   fprintf(d->history_out, "%s: %s\n", tag.c_str(), value.c_str());
 }									/*}}}*/
 // DPkgPM::OpenLog							/*{{{*/
 bool pkgDPkgPM::OpenLog()
@@ -661,13 +679,19 @@ bool pkgDPkgPM::OpenLog()
 				   _config->Find("Dir::Log::Terminal"));
    if (!logfile_name.empty())
    {
-      term_out = fopen(logfile_name.c_str(),"a");
-      if (term_out == NULL)
+      d->term_out = fopen(logfile_name.c_str(),"a");
+      if (d->term_out == NULL)
 	 return _error->WarningE("OpenLog", _("Could not open file '%s'"), logfile_name.c_str());
-      setvbuf(term_out, NULL, _IONBF, 0);
-      SetCloseExec(fileno(term_out), true);
-      chmod(logfile_name.c_str(), 0600);
-      fprintf(term_out, "\nLog started: %s\n", timestr);
+      setvbuf(d->term_out, NULL, _IONBF, 0);
+      SetCloseExec(fileno(d->term_out), true);
+      struct passwd *pw;
+      struct group *gr;
+      pw = getpwnam("root");
+      gr = getgrnam("adm");
+      if (pw != NULL && gr != NULL)
+	  chown(logfile_name.c_str(), pw->pw_uid, gr->gr_gid);
+      chmod(logfile_name.c_str(), 0644);
+      fprintf(d->term_out, "\nLog started: %s\n", timestr);
    }
 
    // write your history
@@ -675,41 +699,52 @@ bool pkgDPkgPM::OpenLog()
 				   _config->Find("Dir::Log::History"));
    if (!history_name.empty())
    {
-      history_out = fopen(history_name.c_str(),"a");
-      if (history_out == NULL)
+      d->history_out = fopen(history_name.c_str(),"a");
+      if (d->history_out == NULL)
 	 return _error->WarningE("OpenLog", _("Could not open file '%s'"), history_name.c_str());
       chmod(history_name.c_str(), 0644);
-      fprintf(history_out, "\nStart-Date: %s\n", timestr);
-      string remove, purge, install, upgrade, downgrade;
-      for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; I++)
+      fprintf(d->history_out, "\nStart-Date: %s\n", timestr);
+      string remove, purge, install, reinstall, upgrade, downgrade;
+      for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       {
-	 if (Cache[I].NewInstall())
-	 {
-	    install += I.FullName(false) + string(" (") + Cache[I].CandVersion;
-	    if (Cache[I].Flags & pkgCache::Flag::Auto)
-	       install+= ", automatic";
-	    install += string("), ");
+	 enum { CANDIDATE, CANDIDATE_AUTO, CURRENT_CANDIDATE, CURRENT } infostring;
+	 string *line = NULL;
+	 #define HISTORYINFO(X, Y) { line = &X; infostring = Y; }
+	 if (Cache[I].NewInstall() == true)
+	    HISTORYINFO(install, CANDIDATE_AUTO)
+	 else if (Cache[I].ReInstall() == true)
+	    HISTORYINFO(reinstall, CANDIDATE)
+	 else if (Cache[I].Upgrade() == true)
+	    HISTORYINFO(upgrade, CURRENT_CANDIDATE)
+	 else if (Cache[I].Downgrade() == true)
+	    HISTORYINFO(downgrade, CURRENT_CANDIDATE)
+	 else if (Cache[I].Delete() == true)
+	    HISTORYINFO((Cache[I].Purge() ? purge : remove), CURRENT)
+	 else
+	    continue;
+	 #undef HISTORYINFO
+	 line->append(I.FullName(false)).append(" (");
+	 switch (infostring) {
+	 case CANDIDATE: line->append(Cache[I].CandVersion); break;
+	 case CANDIDATE_AUTO:
+	    line->append(Cache[I].CandVersion);
+	    if ((Cache[I].Flags & pkgCache::Flag::Auto) == pkgCache::Flag::Auto)
+	       line->append(", automatic");
+	    break;
+	 case CURRENT_CANDIDATE: line->append(Cache[I].CurVersion).append(", ").append(Cache[I].CandVersion); break;
+	 case CURRENT: line->append(Cache[I].CurVersion); break;
 	 }
-	 else if (Cache[I].Upgrade())
-	    upgrade += I.FullName(false) + string(" (") + Cache[I].CurVersion + string(", ") + Cache[I].CandVersion + string("), ");
-	 else if (Cache[I].Downgrade())
-	    downgrade += I.FullName(false) + string(" (") + Cache[I].CurVersion + string(", ") + Cache[I].CandVersion + string("), ");
-	 else if (Cache[I].Delete())
-	 {
-	    if ((Cache[I].iFlags & pkgDepCache::Purge) == pkgDepCache::Purge)
-	       purge += I.FullName(false) + string(" (") + Cache[I].CurVersion + string("), ");	    
-	    else
-	       remove += I.FullName(false) + string(" (") + Cache[I].CurVersion + string("), ");	    
-	 }
+	 line->append("), ");
       }
       if (_config->Exists("Commandline::AsString") == true)
 	 WriteHistoryTag("Commandline", _config->Find("Commandline::AsString"));
       WriteHistoryTag("Install", install);
+      WriteHistoryTag("Reinstall", reinstall);
       WriteHistoryTag("Upgrade", upgrade);
       WriteHistoryTag("Downgrade",downgrade);
       WriteHistoryTag("Remove",remove);
       WriteHistoryTag("Purge",purge);
-      fflush(history_out);
+      fflush(d->history_out);
    }
    
    return true;
@@ -723,16 +758,16 @@ bool pkgDPkgPM::CloseLog()
    struct tm *tmp = localtime(&t);
    strftime(timestr, sizeof(timestr), "%F  %T", tmp);
 
-   if(term_out)
+   if(d->term_out)
    {
-      fprintf(term_out, "Log ended: ");
-      fprintf(term_out, "%s", timestr);
-      fprintf(term_out, "\n");
-      fclose(term_out);
+      fprintf(d->term_out, "Log ended: ");
+      fprintf(d->term_out, "%s", timestr);
+      fprintf(d->term_out, "\n");
+      fclose(d->term_out);
    }
-   term_out = NULL;
+   d->term_out = NULL;
 
-   if(history_out)
+   if(d->history_out)
    {
       if (disappearedPkgs.empty() == false)
       {
@@ -749,12 +784,12 @@ bool pkgDPkgPM::CloseLog()
 	 }
 	 WriteHistoryTag("Disappeared", disappear);
       }
-      if (dpkg_error.empty() == false)
-	 fprintf(history_out, "Error: %s\n", dpkg_error.c_str());
-      fprintf(history_out, "End-Date: %s\n", timestr);
-      fclose(history_out);
+      if (d->dpkg_error.empty() == false)
+	 fprintf(d->history_out, "Error: %s\n", d->dpkg_error.c_str());
+      fprintf(d->history_out, "End-Date: %s\n", timestr);
+      fclose(d->history_out);
    }
-   history_out = NULL;
+   d->history_out = NULL;
 
    return true;
 }
@@ -848,21 +883,21 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    // that will be [installed|configured|removed|purged] and add
    // them to the PackageOps map (the dpkg states it goes through)
    // and the PackageOpsTranslations (human readable strings)
-   for (vector<Item>::const_iterator I = List.begin(); I != List.end();I++)
+   for (vector<Item>::const_iterator I = List.begin(); I != List.end(); ++I)
    {
       if((*I).Pkg.end() == true)
 	 continue;
 
       string const name = (*I).Pkg.Name();
       PackageOpsDone[name] = 0;
-      for(int i=0; (DpkgStatesOpMap[(*I).Op][i]).state != NULL;  i++) 
+      for(int i=0; (DpkgStatesOpMap[(*I).Op][i]).state != NULL; ++i)
       {
 	 PackageOps[name].push_back(DpkgStatesOpMap[(*I).Op][i]);
 	 PackagesTotal++;
       }
    }
 
-   stdin_is_dev_null = false;
+   d->stdin_is_dev_null = false;
 
    // create log
    OpenLog();
@@ -873,7 +908,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       // Do all actions with the same Op in one run
       vector<Item>::const_iterator J = I;
       if (TriggersPending == true)
-	 for (; J != List.end(); J++)
+	 for (; J != List.end(); ++J)
 	 {
 	    if (J->Op == I->Op)
 	       continue;
@@ -885,7 +920,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    break;
 	 }
       else
-	 for (; J != List.end() && J->Op == I->Op; J++)
+	 for (; J != List.end() && J->Op == I->Op; ++J)
 	    /* nothing */;
 
       // Generate the argument list
@@ -991,7 +1026,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       // Write in the file or package names
       if (I->Op == Item::Install)
       {
-	 for (;I != J && Size < MaxArgBytes; I++)
+	 for (;I != J && Size < MaxArgBytes; ++I)
 	 {
 	    if (I->File[0] != '/')
 	       return _error->Error("Internal Error, Pathname to install is not absolute '%s'",I->File.c_str());
@@ -1003,7 +1038,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       {
 	 string const nativeArch = _config->Find("APT::Architecture");
 	 unsigned long const oldSize = I->Op == Item::Configure ? Size : 0;
-	 for (;I != J && Size < MaxArgBytes; I++)
+	 for (;I != J && Size < MaxArgBytes; ++I)
 	 {
 	    if((*I).Pkg.end() == true)
 	       continue;
@@ -1062,8 +1097,8 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    const char *s = _("Can not write log, openpty() "
 	                      "failed (/dev/pts not mounted?)\n");
 	    fprintf(stderr, "%s",s);
-            if(term_out)
-              fprintf(term_out, "%s",s);
+            if(d->term_out)
+              fprintf(d->term_out, "%s",s);
 	    master = slave = -1;
 	 }  else {
 	    struct termios rtt;
@@ -1193,7 +1228,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
 	 // wait for input or output here
 	 FD_ZERO(&rfds);
-	 if (master >= 0 && !stdin_is_dev_null)
+	 if (master >= 0 && !d->stdin_is_dev_null)
 	    FD_SET(0, &rfds); 
 	 FD_SET(_dpkgin, &rfds);
 	 if(master >= 0)
@@ -1247,14 +1282,14 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    RunScripts("DPkg::Post-Invoke");
 
 	 if (WIFSIGNALED(Status) != 0 && WTERMSIG(Status) == SIGSEGV) 
-	    strprintf(dpkg_error, "Sub-process %s received a segmentation fault.",Args[0]);
+	    strprintf(d->dpkg_error, "Sub-process %s received a segmentation fault.",Args[0]);
 	 else if (WIFEXITED(Status) != 0)
-	    strprintf(dpkg_error, "Sub-process %s returned an error code (%u)",Args[0],WEXITSTATUS(Status));
+	    strprintf(d->dpkg_error, "Sub-process %s returned an error code (%u)",Args[0],WEXITSTATUS(Status));
 	 else 
-	    strprintf(dpkg_error, "Sub-process %s exited unexpectedly",Args[0]);
+	    strprintf(d->dpkg_error, "Sub-process %s exited unexpectedly",Args[0]);
 
-	 if(dpkg_error.size() > 0)
-	    _error->Error("%s", dpkg_error.c_str());
+	 if(d->dpkg_error.size() > 0)
+	    _error->Error("%s", d->dpkg_error.c_str());
 
 	 if(stopOnError) 
 	 {
@@ -1267,6 +1302,23 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
    if (RunScripts("DPkg::Post-Invoke") == false)
       return false;
+
+   if (_config->FindB("Debug::pkgDPkgPM",false) == false)
+   {
+      std::string const oldpkgcache = _config->FindFile("Dir::cache::pkgcache");
+      if (oldpkgcache.empty() == false && RealFileExists(oldpkgcache) == true &&
+	  unlink(oldpkgcache.c_str()) == 0)
+      {
+	 std::string const srcpkgcache = _config->FindFile("Dir::cache::srcpkgcache");
+	 if (srcpkgcache.empty() == false && RealFileExists(srcpkgcache) == true)
+	 {
+	    _error->PushToStack();
+	    pkgCacheFile CacheFile;
+	    CacheFile.BuildCaches(NULL, true);
+	    _error->RevertToStack();
+	 }
+      }
+   }
 
    Cache.writeStateFile(NULL);
    return true;
@@ -1317,8 +1369,21 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
 
    // do not report out-of-memory failures 
    if(strstr(errormsg, strerror(ENOMEM)) != NULL ||
-      strstr(errormsg, "Cannot allocate memory") != NULL) {
+      strstr(errormsg, "failed to allocate memory") != NULL) {
       std::clog << _("No apport report written because the error message indicates a out of memory error") << std::endl;
+      return;
+   }
+
+   // do not report bugs regarding inaccessible local files
+   if(strstr(errormsg, strerror(ENOENT)) != NULL ||
+      strstr(errormsg, "cannot access archive") != NULL) {
+      std::clog << _("No apport report written because the error message indicates an issue on the local system") << std::endl;
+      return;
+   }
+
+   // do not report errors encountered when decompressing packages
+   if(strstr(errormsg, "--fsys-tarfile returned error exit status 2") != NULL) {
+      std::clog << _("No apport report written because the error message indicates an issue on the local system") << std::endl;
       return;
    }
 
@@ -1419,8 +1484,8 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    fprintf(report, "ErrorMessage:\n %s\n", errormsg);
 
    // ensure that the log is flushed
-   if(term_out)
-      fflush(term_out);
+   if(d->term_out)
+      fflush(d->term_out);
 
    // attach terminal log it if we have it
    string logfile_name = _config->FindFile("Dir::Log::Terminal");
@@ -1435,6 +1500,24 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
       {
 	 while( fgets(buf, sizeof(buf), log) != NULL)
 	    fprintf(report, " %s", buf);
+         fprintf(report, " \n");
+	 fclose(log);
+      }
+   }
+
+   // attach history log it if we have it
+   string histfile_name = _config->FindFile("Dir::Log::History");
+   if (!histfile_name.empty())
+   {
+      FILE *log = NULL;
+      char buf[1024];
+
+      fprintf(report, "DpkgHistoryLog:\n");
+      log = fopen(histfile_name.c_str(),"r");
+      if(log != NULL)
+      {
+	 while( fgets(buf, sizeof(buf), log) != NULL)
+	    fprintf(report, " %s", buf);
 	 fclose(log);
       }
    }
@@ -1442,7 +1525,7 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    // log the ordering 
    const char *ops_str[] = {"Install", "Configure","Remove","Purge"};
    fprintf(report, "AptOrdering:\n");
-   for (vector<Item>::iterator I = List.begin(); I != List.end(); I++)
+   for (vector<Item>::iterator I = List.begin(); I != List.end(); ++I)
       fprintf(report, " %s: %s\n", (*I).Pkg.Name(), ops_str[(*I).Op]);
 
    // attach dmesg log (to learn about segfaults)

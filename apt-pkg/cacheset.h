@@ -135,7 +135,7 @@ public:									/*{{{*/
 	static APT::PackageSet FromTask(pkgCacheFile &Cache, std::string pattern, CacheSetHelper &helper);
 	static APT::PackageSet FromTask(pkgCacheFile &Cache, std::string const &pattern) {
 		CacheSetHelper helper;
-		return APT::PackageSet::FromTask(Cache, pattern, helper);
+		return FromTask(Cache, pattern, helper);
 	}
 
 	/** \brief returns all packages in the cache whose name matchs a given pattern
@@ -149,7 +149,7 @@ public:									/*{{{*/
 	static APT::PackageSet FromRegEx(pkgCacheFile &Cache, std::string pattern, CacheSetHelper &helper);
 	static APT::PackageSet FromRegEx(pkgCacheFile &Cache, std::string const &pattern) {
 		CacheSetHelper helper;
-		return APT::PackageSet::FromRegEx(Cache, pattern, helper);
+		return FromRegEx(Cache, pattern, helper);
 	}
 
 	/** \brief returns all packages specified by a string
@@ -160,7 +160,7 @@ public:									/*{{{*/
 	static APT::PackageSet FromString(pkgCacheFile &Cache, std::string const &string, CacheSetHelper &helper);
 	static APT::PackageSet FromString(pkgCacheFile &Cache, std::string const &string) {
 		CacheSetHelper helper;
-		return APT::PackageSet::FromString(Cache, string, helper);
+		return FromString(Cache, string, helper);
 	}
 
 	/** \brief returns a package specified by a string
@@ -171,7 +171,7 @@ public:									/*{{{*/
 	static pkgCache::PkgIterator FromName(pkgCacheFile &Cache, std::string const &string, CacheSetHelper &helper);
 	static pkgCache::PkgIterator FromName(pkgCacheFile &Cache, std::string const &string) {
 		CacheSetHelper helper;
-		return APT::PackageSet::FromName(Cache, string, helper);
+		return FromName(Cache, string, helper);
 	}
 
 	/** \brief returns all packages specified on the commandline
@@ -184,7 +184,7 @@ public:									/*{{{*/
 	static APT::PackageSet FromCommandLine(pkgCacheFile &Cache, const char **cmdline, CacheSetHelper &helper);
 	static APT::PackageSet FromCommandLine(pkgCacheFile &Cache, const char **cmdline) {
 		CacheSetHelper helper;
-		return APT::PackageSet::FromCommandLine(Cache, cmdline, helper);
+		return FromCommandLine(Cache, cmdline, helper);
 	}
 
 	struct Modifier {
@@ -215,7 +215,7 @@ public:									/*{{{*/
 		std::list<PackageSet::Modifier> const &mods,
 		unsigned short const &fallback) {
 		CacheSetHelper helper;
-		return APT::PackageSet::GroupedFromCommandLine(Cache, cmdline,
+		return GroupedFromCommandLine(Cache, cmdline,
 				mods, fallback, helper);
 	}
 
@@ -257,7 +257,6 @@ public:									/*{{{*/
 		inline const char *VerStr() const { return (**this).VerStr(); };
 		inline const char *Section() const { return (**this).Section(); };
 		inline const char *Arch() const { return (**this).Arch(); };
-		__deprecated inline const char *Arch(bool const pseudo) const { return (**this).Arch(); };
 		inline pkgCache::PkgIterator ParentPkg() const { return (**this).ParentPkg(); };
 		inline pkgCache::DescIterator DescriptionList() const { return (**this).DescriptionList(); };
 		inline pkgCache::DescIterator TranslatedDescription() const { return (**this).TranslatedDescription(); };
@@ -268,7 +267,6 @@ public:									/*{{{*/
 		inline const char *PriorityType() const { return (**this).PriorityType(); };
 		inline string RelStr() const { return (**this).RelStr(); };
 		inline bool Automatic() const { return (**this).Automatic(); };
-		__deprecated inline bool Pseudo() const { return false; };
 		inline pkgCache::VerFileIterator NewestFile() const { return (**this).NewestFile(); };
 	};
 									/*}}}*/
@@ -309,10 +307,10 @@ public:									/*{{{*/
 	static APT::VersionSet FromCommandLine(pkgCacheFile &Cache, const char **cmdline,
 			APT::VersionSet::Version const &fallback) {
 		CacheSetHelper helper;
-		return APT::VersionSet::FromCommandLine(Cache, cmdline, fallback, helper);
+		return FromCommandLine(Cache, cmdline, fallback, helper);
 	}
 	static APT::VersionSet FromCommandLine(pkgCacheFile &Cache, const char **cmdline) {
-		return APT::VersionSet::FromCommandLine(Cache, cmdline, CANDINST);
+		return FromCommandLine(Cache, cmdline, CANDINST);
 	}
 
 	static APT::VersionSet FromString(pkgCacheFile &Cache, std::string pkg,
@@ -321,10 +319,10 @@ public:									/*{{{*/
 	static APT::VersionSet FromString(pkgCacheFile &Cache, std::string pkg,
 			APT::VersionSet::Version const &fallback) {
 		CacheSetHelper helper;
-		return APT::VersionSet::FromString(Cache, pkg, fallback, helper);
+		return FromString(Cache, pkg, fallback, helper);
 	}
 	static APT::VersionSet FromString(pkgCacheFile &Cache, std::string pkg) {
-		return APT::VersionSet::FromString(Cache, pkg, CANDINST);
+		return FromString(Cache, pkg, CANDINST);
 	}
 
 	/** \brief returns all versions specified for the package
@@ -338,10 +336,10 @@ public:									/*{{{*/
 	static APT::VersionSet FromPackage(pkgCacheFile &Cache, pkgCache::PkgIterator const &P,
 			APT::VersionSet::Version const &fallback) {
 		CacheSetHelper helper;
-		return APT::VersionSet::FromPackage(Cache, P, fallback, helper);
+		return FromPackage(Cache, P, fallback, helper);
 	}
 	static APT::VersionSet FromPackage(pkgCacheFile &Cache, pkgCache::PkgIterator const &P) {
-		return APT::VersionSet::FromPackage(Cache, P, CANDINST);
+		return FromPackage(Cache, P, CANDINST);
 	}
 
 	struct Modifier {
@@ -364,7 +362,7 @@ public:									/*{{{*/
 		std::list<VersionSet::Modifier> const &mods,
 		unsigned short const &fallback) {
 		CacheSetHelper helper;
-		return APT::VersionSet::GroupedFromCommandLine(Cache, cmdline,
+		return GroupedFromCommandLine(Cache, cmdline,
 				mods, fallback, helper);
 	}
 									/*}}}*/

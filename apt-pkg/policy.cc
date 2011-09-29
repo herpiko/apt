@@ -56,8 +56,22 @@ pkgPolicy::pkgPolicy(pkgCache *Owner) : Pins(0), PFPriority(0), Cache(Owner)
    // The config file has a master override.
    string DefRel = _config->Find("APT::Default-Release");
    if (DefRel.empty() == false)
-      CreatePin(pkgVersionMatch::Release,"",DefRel,990);
-      
+   {
+      bool found = false;
+      // FIXME: make ExpressionMatches static to use it here easily
+      pkgVersionMatch vm("", pkgVersionMatch::None);
+      for (pkgCache::PkgFileIterator F = Cache->FileBegin(); F != Cache->FileEnd(); ++F)
+      {
+	 if ((F->Archive != 0 && vm.ExpressionMatches(DefRel, F.Archive()) == true) ||
+	     (F->Codename != 0 && vm.ExpressionMatches(DefRel, F.Codename()) == true) ||
+	     (F->Version != 0 && vm.ExpressionMatches(DefRel, F.Version()) == true))
+	    found = true;
+      }
+      if (found == false)
+	 _error->Error(_("The value '%s' is invalid for APT::Default-Release as such a release is not available in the sources"), DefRel.c_str());
+      else
+	 CreatePin(pkgVersionMatch::Release,"",DefRel,990);
+   }
    InitDefaults();
 }
 									/*}}}*/
@@ -67,7 +81,7 @@ pkgPolicy::pkgPolicy(pkgCache *Owner) : Pins(0), PFPriority(0), Cache(Owner)
 bool pkgPolicy::InitDefaults()
 {   
    // Initialize the priorities based on the status of the package file
-   for (pkgCache::PkgFileIterator I = Cache->FileBegin(); I != Cache->FileEnd(); I++)
+   for (pkgCache::PkgFileIterator I = Cache->FileBegin(); I != Cache->FileEnd(); ++I)
    {
       PFPriority[I->ID] = 500;
       if ((I->Flags & pkgCache::Flag::NotSource) == pkgCache::Flag::NotSource)
@@ -84,10 +98,10 @@ bool pkgPolicy::InitDefaults()
    signed Cur = 989;
    StatusOverride = false;
    for (vector<Pin>::const_iterator I = Defaults.begin(); I != Defaults.end();
-	I++, Cur--)
+	++I, --Cur)
    {
       pkgVersionMatch Match(I->Data,I->Type);
-      for (pkgCache::PkgFileIterator F = Cache->FileBegin(); F != Cache->FileEnd(); F++)
+      for (pkgCache::PkgFileIterator F = Cache->FileBegin(); F != Cache->FileEnd(); ++F)
       {
 	 if (Match.FileMatch(F) == true && Fixed[F->ID] == false)
 	 {
@@ -108,7 +122,7 @@ bool pkgPolicy::InitDefaults()
    }
 
    if (_config->FindB("Debug::pkgPolicy",false) == true)
-      for (pkgCache::PkgFileIterator F = Cache->FileBegin(); F != Cache->FileEnd(); F++)
+      for (pkgCache::PkgFileIterator F = Cache->FileBegin(); F != Cache->FileEnd(); ++F)
 	 std::clog << "Prio of " << F.FileName() << ' ' << PFPriority[F->ID] << std::endl; 
    
    return true;   
@@ -148,12 +162,12 @@ pkgCache::VerIterator pkgPolicy::GetCandidateVer(pkgCache::PkgIterator const &Pk
       tracks the default when the default is taken away, and a permanent
       pin that stays at that setting.
     */
-   for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; Ver++)
+   for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver)
    {
       /* Lets see if this version is the installed version */
       bool instVer = (Pkg.CurrentVer() == Ver);
 
-      for (pkgCache::VerFileIterator VF = Ver.FileList(); VF.end() == false; VF++)
+      for (pkgCache::VerFileIterator VF = Ver.FileList(); VF.end() == false; ++VF)
       {
 	 /* If this is the status file, and the current version is not the
 	    version in the status file (ie it is not installed, or somesuch)
@@ -210,35 +224,71 @@ void pkgPolicy::CreatePin(pkgVersionMatch::MatchType Type,string Name,
 {
    if (Name.empty() == true)
    {
-      Pin *P = &*Defaults.insert(Defaults.end(),PkgPin());
+      Pin *P = &*Defaults.insert(Defaults.end(),Pin());
       P->Type = Type;
       P->Priority = Priority;
       P->Data = Data;
       return;
    }
 
-   // Get a spot to put the pin
-   pkgCache::GrpIterator Grp = Cache->FindGrp(Name);
-   for (pkgCache::PkgIterator Pkg = Grp.FindPkg("any");
-	Pkg.end() != true; Pkg = Grp.NextPkg(Pkg))
-   {
-      Pin *P = 0;
-      if (Pkg.end() == false)
-	 P = Pins + Pkg->ID;
-      else
-      {
-	 // Check the unmatched table
-	 for (vector<PkgPin>::iterator I = Unmatched.begin();
-	      I != Unmatched.end() && P == 0; I++)
-	    if (I->Pkg == Name)
-	       P = &*I;
+   size_t found = Name.rfind(':');
+   string Arch;
+   if (found != string::npos) {
+      Arch = Name.substr(found+1);
+      Name.erase(found);
+   }
 
-	 if (P == 0)
-	    P = &*Unmatched.insert(Unmatched.end(),PkgPin());
-      }
+   // Allow pinning by wildcards
+   // TODO: Maybe we should always prefer specific pins over non-
+   // specific ones.
+   if (Name[0] == '/' || Name.find_first_of("*[?") != string::npos)
+   {
+      pkgVersionMatch match(Data, Type);
+      for (pkgCache::GrpIterator G = Cache->GrpBegin(); G.end() != true; ++G)
+	 if (match.ExpressionMatches(Name, G.Name()))
+	 {
+	    if (Arch.empty() == false)
+	       CreatePin(Type, string(G.Name()).append(":").append(Arch), Data, Priority);
+	    else
+	       CreatePin(Type, G.Name(), Data, Priority);
+	 }
+      return;
+   }
+
+   // find the package (group) this pin applies to
+   pkgCache::GrpIterator Grp;
+   pkgCache::PkgIterator Pkg;
+   if (Arch.empty() == false)
+      Pkg = Cache->FindPkg(Name, Arch);
+   else {
+      Grp = Cache->FindGrp(Name);
+      if (Grp.end() == false)
+	 Pkg = Grp.PackageList();
+   }
+
+   if (Pkg.end() == true)
+   {
+      PkgPin *P = &*Unmatched.insert(Unmatched.end(),PkgPin(Name));
+      if (Arch.empty() == false)
+	 P->Pkg.append(":").append(Arch);
       P->Type = Type;
       P->Priority = Priority;
       P->Data = Data;
+      return;
+   }
+
+   for (; Pkg.end() != true; Pkg = Grp.NextPkg(Pkg))
+   {
+      Pin *P = Pins + Pkg->ID;
+      // the first specific stanza for a package is the ruler,
+      // all others need to be ignored
+      if (P->Type != pkgVersionMatch::None)
+	 P = &*Unmatched.insert(Unmatched.end(),PkgPin(Pkg.FullName()));
+      P->Type = Type;
+      P->Priority = Priority;
+      P->Data = Data;
+      if (Grp.end() == true)
+	 break;
    }
 }
 									/*}}}*/
@@ -269,6 +319,10 @@ signed short pkgPolicy::GetPriority(pkgCache::PkgIterator const &Pkg)
    }
    
    return 0;
+}
+signed short pkgPolicy::GetPriority(pkgCache::PkgFileIterator const &File)
+{
+   return PFPriority[File->ID];
 }
 									/*}}}*/
 // PreferenceSection class - Overriding the default TrimRecord method	/*{{{*/
@@ -306,7 +360,7 @@ bool ReadPinDir(pkgPolicy &Plcy,string Dir)
    vector<string> const List = GetListOfFilesInDir(Dir, "pref", true, true);
 
    // Read the files
-   for (vector<string>::const_iterator I = List.begin(); I != List.end(); I++)
+   for (vector<string>::const_iterator I = List.begin(); I != List.end(); ++I)
       if (ReadPinFile(Plcy, *I) == false)
 	 return false;
    return true;

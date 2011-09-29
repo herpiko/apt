@@ -53,7 +53,7 @@ const Configuration::getCompressionTypes(bool const &Cached) {
 	// load the order setting into our vector
 	std::vector<std::string> const order = _config->FindVector("Acquire::CompressionTypes::Order");
 	for (std::vector<std::string>::const_iterator o = order.begin();
-	     o != order.end(); o++) {
+	     o != order.end(); ++o) {
 		if ((*o).empty() == true)
 			continue;
 		// ignore types we have no method ready to use
@@ -224,7 +224,7 @@ std::vector<std::string> const Configuration::getLanguages(bool const &All,
 		environment.push_back("en");
 	}
 
-	// Support settings like Acquire::Translation=none on the command line to
+	// Support settings like Acquire::Languages=none on the command line to
 	// override the configuration settings vector of languages.
 	string const forceLang = _config->Find("Acquire::Languages","");
 	if (forceLang.empty() == false) {
@@ -274,7 +274,7 @@ std::vector<std::string> const Configuration::getLanguages(bool const &All,
 	// then needed and ensure the codes are not listed twice.
 	bool noneSeen = false;
 	for (std::vector<string>::const_iterator l = lang.begin();
-	     l != lang.end(); l++) {
+	     l != lang.end(); ++l) {
 		if (*l == "environment") {
 			for (std::vector<string>::const_iterator e = environment.begin();
 			     e != environment.end(); ++e) {
@@ -352,7 +352,7 @@ std::vector<std::string> const Configuration::getArchitectures(bool const &Cache
 
 	if (archs.empty() == true ||
 	    std::find(archs.begin(), archs.end(), arch) == archs.end())
-		archs.push_back(arch);
+		archs.insert(archs.begin(), arch);
 
 	// erase duplicates and empty strings
 	for (std::vector<string>::reverse_iterator a = archs.rbegin();

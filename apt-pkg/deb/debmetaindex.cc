@@ -142,11 +142,13 @@ string debReleaseIndex::TranslationIndexURI(const char *Type, const string &Sect
       return URI + "dists/" + Dist + "/" + TranslationIndexURISuffix(Type, Section);
 }
 
-debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist) {
-	this->URI = URI;
-	this->Dist = Dist;
-	this->Indexes = NULL;
-	this->Type = "deb";
+debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist) :
+					metaIndex(URI, Dist, "deb"), Trusted(CHECK_TRUST)
+{}
+
+debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist, bool const Trusted) :
+					metaIndex(URI, Dist, "deb") {
+	SetTrusted(Trusted);
 }
 
 debReleaseIndex::~debReleaseIndex() {
@@ -195,15 +197,18 @@ vector <struct IndexTarget *>* debReleaseIndex::ComputeIndexTargets() const {
 		}
 	}
 
+	std::vector<std::string> const lang = APT::Configuration::getLanguages(true);
+	if (lang.empty() == true)
+		return IndexTargets;
+
 	// get the Translations:
 	// - if its a dists-style repository get the i18n/Index first
 	// - if its flat try to acquire files by guessing
 	if (Dist[Dist.size() - 1] == '/') {
-		std::vector<std::string> const lang = APT::Configuration::getLanguages(true);
 		for (std::set<std::string>::const_iterator s = sections.begin();
 		     s != sections.end(); ++s) {
 			for (std::vector<std::string>::const_iterator l = lang.begin();
-			     l != lang.end(); l++) {
+			     l != lang.end(); ++l) {
 				if (*l == "none") continue;
 				IndexTarget * Target = new OptionalIndexTarget();
 				Target->ShortDesc = "Translation-" + *l;
@@ -233,7 +238,7 @@ bool debReleaseIndex::GetIndexes(pkgAcquire *Owner, bool const &GetAll) const
    // special case for --print-uris
    if (GetAll) {
       vector <struct IndexTarget *> *targets = ComputeIndexTargets();
-      for (vector <struct IndexTarget*>::const_iterator Target = targets->begin(); Target != targets->end(); Target++) {
+      for (vector <struct IndexTarget*>::const_iterator Target = targets->begin(); Target != targets->end(); ++Target) {
 	 new pkgAcqIndex(Owner, (*Target)->URI, (*Target)->Description,
 			 (*Target)->ShortDesc, HashString());
       }
@@ -249,8 +254,22 @@ bool debReleaseIndex::GetIndexes(pkgAcquire *Owner, bool const &GetAll) const
 	return true;
 }
 
+void debReleaseIndex::SetTrusted(bool const Trusted)
+{
+	if (Trusted == true)
+		this->Trusted = ALWAYS_TRUSTED;
+	else
+		this->Trusted = NEVER_TRUSTED;
+}
+
 bool debReleaseIndex::IsTrusted() const
 {
+   if (Trusted == ALWAYS_TRUSTED)
+      return true;
+   else if (Trusted == NEVER_TRUSTED)
+      return false;
+
+
    if(_config->FindB("APT::Authentication::TrustCDROM", false))
       if(URI.substr(0,strlen("cdrom:")) == "cdrom:")
 	 return true;
@@ -276,7 +295,7 @@ vector <pkgIndexFile *> *debReleaseIndex::GetIndexFiles() {
 	if (src != ArchEntries.end()) {
 		vector<debSectionEntry const*> const SectionEntries = src->second;
 		for (vector<debSectionEntry const*>::const_iterator I = SectionEntries.begin();
-		     I != SectionEntries.end(); I++)
+		     I != SectionEntries.end(); ++I)
 			Indexes->push_back(new debSourcesIndex (URI, Dist, (*I)->Section, IsTrusted()));
 	}
 
@@ -291,7 +310,7 @@ vector <pkgIndexFile *> *debReleaseIndex::GetIndexFiles() {
 		if (a->first == "source")
 			continue;
 		for (vector<debSectionEntry const*>::const_iterator I = a->second.begin();
-		     I != a->second.end(); I++) {
+		     I != a->second.end(); ++I) {
 			Indexes->push_back(new debPackagesIndex (URI, Dist, (*I)->Section, IsTrusted(), a->first));
 			sections[(*I)->Section].insert(lang.begin(), lang.end());
 		}
@@ -300,7 +319,7 @@ vector <pkgIndexFile *> *debReleaseIndex::GetIndexFiles() {
 	for (map<string, set<string> >::const_iterator s = sections.begin();
 	     s != sections.end(); ++s)
 		for (set<string>::const_iterator l = s->second.begin();
-		     l != s->second.end(); l++) {
+		     l != s->second.end(); ++l) {
 			if (*l == "none") continue;
 			Indexes->push_back(new debTranslationsIndex(URI,Dist,s->first,(*l).c_str()));
 		}
@@ -346,15 +365,19 @@ class debSLTypeDebian : public pkgSourceList::Type
       vector<string> const Archs =
 		(arch != Options.end()) ? VectorizeString(arch->second, ',') :
 				APT::Configuration::getArchitectures();
+      map<string, string>::const_iterator const trusted = Options.find("trusted");
 
       for (vector<metaIndex *>::const_iterator I = List.begin();
-	   I != List.end(); I++)
+	   I != List.end(); ++I)
       {
 	 // We only worry about debian entries here
 	 if (strcmp((*I)->GetType(), "deb") != 0)
 	    continue;
 
 	 debReleaseIndex *Deb = (debReleaseIndex *) (*I);
+	 if (trusted != Options.end())
+	    Deb->SetTrusted(StringToBool(trusted->second, false));
+
 	 /* This check insures that there will be only one Release file
 	    queued for all the Packages files and Sources files it
 	    corresponds to. */
@@ -372,9 +395,14 @@ class debSLTypeDebian : public pkgSourceList::Type
 	    return true;
 	 }
       }
+
       // No currently created Release file indexes this entry, so we create a new one.
-      // XXX determine whether this release is trusted or not
-      debReleaseIndex *Deb = new debReleaseIndex(URI, Dist);
+      debReleaseIndex *Deb;
+      if (trusted != Options.end())
+	 Deb = new debReleaseIndex(URI, Dist, StringToBool(trusted->second, false));
+      else
+	 Deb = new debReleaseIndex(URI, Dist);
+
       if (IsSrc == true)
 	 Deb->PushSectionEntry ("source", new debReleaseIndex::debSectionEntry(Section, IsSrc));
       else

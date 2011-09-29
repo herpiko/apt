@@ -5,9 +5,12 @@ unset GREP_OPTIONS
 
 # We don't use a secret keyring, of course, but gpg panics and
 # implodes if there isn't one available
-GPG_CMD='gpg --ignore-time-conflict --no-options --no-default-keyring --secret-keyring /etc/apt/secring.gpg'
+SECRETKEYRING="$(mktemp)"
+trap "rm -f '${SECRETKEYRING}'" 0 HUP INT QUIT ILL ABRT FPE SEGV PIPE TERM
+GPG_CMD="gpg --ignore-time-conflict --no-options --no-default-keyring --secret-keyring ${SECRETKEYRING}"
 
 if [ "$(id -u)" -eq 0 ]; then
+	# we could use a tmpfile here too, but creation of this tends to be time-consuming
 	GPG_CMD="$GPG_CMD --trustdb-name /etc/apt/trustdb.gpg"
 fi
 
@@ -20,6 +23,13 @@ ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
 REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
 ARCHIVE_KEYRING_URI=http://arsip-dev.blankonlinux.or.id/blankon/project/blankon-archive-keyring.gpg
 
+
+requires_root() {
+	if [ "$(id -u)" -ne 0 ]; then
+		echo >&1 "ERROR: This command can only be used by root."
+		exit 1
+	fi
+}
 
 add_keys_with_verify_against_master_keyring() {
     ADD_KEYRING=$1
@@ -59,13 +69,14 @@ add_keys_with_verify_against_master_keyring() {
 # (otherwise it does not make sense from a security POV)
 net_update() {
     if [ -z "$ARCHIVE_KEYRING_URI" ]; then
-	echo "ERROR: no location for the archive-keyring given"
+	echo >&2 "ERROR: Your distribution is not supported in net-update as no uri for the archive-keyring is set"
 	exit 1
     fi
+    requires_root
     # in theory we would need to depend on wget for this, but this feature
     # isn't useable in debian anyway as we have no keyring uri nor a master key
     if ! which wget >/dev/null 2>&1; then
-	echo "ERROR: an installed wget is required for a network-based update"
+	echo >&2 "ERROR: an installed wget is required for a network-based update"
 	exit 1
     fi
     if [ ! -d /var/lib/apt/keyrings ]; then
@@ -90,9 +101,10 @@ net_update() {
 update() {
     if [ ! -f $ARCHIVE_KEYRING ]; then
 	echo >&2 "ERROR: Can't find the archive-keyring"
-	echo >&2 "Is the blankon-keyring package installed?"
+	echo >&2 "Is the ubuntu-keyring package installed?"
 	exit 1
     fi
+    requires_root
 
     # add new keys from the package;
 
@@ -184,10 +196,12 @@ fi
 
 case "$command" in
     add)
+        requires_root
         $GPG --quiet --batch --import "$1"
         echo "OK"
         ;;
     del|rm|remove)
+        requires_root
         $GPG --quiet --batch --delete-key --yes "$1"
         echo "OK"
         ;;

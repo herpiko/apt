@@ -98,12 +98,16 @@ pkgCacheGenerator::~pkgCacheGenerator()
       return;
    
    Cache.HeaderP->Dirty = false;
+   Cache.HeaderP->CacheFileSize = Map.Size();
    Map.Sync(0,sizeof(pkgCache::Header));
 }
 									/*}}}*/
 void pkgCacheGenerator::ReMap(void const * const oldMap, void const * const newMap) {/*{{{*/
    if (oldMap == newMap)
       return;
+
+   if (_config->FindB("Debug::pkgCacheGen", false))
+      std::clog << "Remaping from " << oldMap << " to " << newMap << std::endl;
 
    Cache.ReMap(false);
 
@@ -217,7 +221,7 @@ bool pkgCacheGenerator::MergeList(ListParser &List,
 
 	    // don't add a new description if we have one for the given
 	    // md5 && language
-	    for ( ; Desc.end() == false; Desc++)
+	    for ( ; Desc.end() == false; ++Desc)
 	       if (MD5SumValue(Desc.md5()) == CurMd5 && 
 	           Desc.LanguageCode() == List.DescriptionLanguage())
 		  duplicate=true;
@@ -226,7 +230,7 @@ bool pkgCacheGenerator::MergeList(ListParser &List,
 	    
  	    for (Desc = Ver.DescriptionList();
 		 Desc.end() == false;
-		 LastDesc = &Desc->NextDesc, Desc++)
+		 LastDesc = &Desc->NextDesc, ++Desc)
 	    {
  	       if (MD5SumValue(Desc.md5()) == CurMd5) 
                {
@@ -392,7 +396,7 @@ bool pkgCacheGenerator::MergeFileProvides(ListParser &List)
       unsigned long Hash = List.VersionHash();
       pkgCache::VerIterator Ver = Pkg.VersionList();
       Dynamic<pkgCache::VerIterator> DynVer(Ver);
-      for (; Ver.end() == false; Ver++)
+      for (; Ver.end() == false; ++Ver)
       {
 	 if (Ver->Hash == Hash && Version.c_str() == Ver.VerStr())
 	 {
@@ -508,7 +512,7 @@ bool pkgCacheGenerator::NewFileVer(pkgCache::VerIterator &Ver,
    
    // Link it to the end of the list
    map_ptrloc *Last = &Ver->FileList;
-   for (pkgCache::VerFileIterator V = Ver.FileList(); V.end() == false; V++)
+   for (pkgCache::VerFileIterator V = Ver.FileList(); V.end() == false; ++V)
       Last = &V->NextFile;
    VF->NextFile = *Last;
    *Last = VF.Index();
@@ -565,7 +569,7 @@ bool pkgCacheGenerator::NewFileDesc(pkgCache::DescIterator &Desc,
 
    // Link it to the end of the list
    map_ptrloc *Last = &Desc->FileList;
-   for (pkgCache::DescFileIterator D = Desc.FileList(); D.end() == false; D++)
+   for (pkgCache::DescFileIterator D = Desc.FileList(); D.end() == false; ++D)
       Last = &D->NextFile;
 
    DF->NextFile = *Last;
@@ -620,7 +624,7 @@ bool pkgCacheGenerator::FinishCache(OpProgress *Progress)
       // Create Conflicts in between the group
       pkgCache::GrpIterator G = GetCache().GrpBegin();
       Dynamic<pkgCache::GrpIterator> DynG(G);
-      for (; G.end() != true; G++)
+      for (; G.end() != true; ++G)
       {
 	 string const PkgName = G.Name();
 	 pkgCache::PkgIterator P = G.PackageList();
@@ -631,9 +635,11 @@ bool pkgCacheGenerator::FinishCache(OpProgress *Progress)
 	    Dynamic<pkgCache::PkgIterator> DynallPkg(allPkg);
 	    pkgCache::VerIterator V = P.VersionList();
 	    Dynamic<pkgCache::VerIterator> DynV(V);
-	    for (; V.end() != true; V++)
+	    for (; V.end() != true; ++V)
 	    {
-	       char const * const Arch = P.Arch();
+               // copy P.Arch() into a string here as a cache remap
+               // in NewDepends() later may alter the pointer location
+	       string Arch = P.Arch() == NULL ? "" : P.Arch();
 	       map_ptrloc *OldDepLast = NULL;
 	       /* MultiArch handling introduces a lot of implicit Dependencies:
 		- MultiArch: same → Co-Installable if they have the same version
@@ -684,7 +690,7 @@ bool pkgCacheGenerator::NewDepends(pkgCache::PkgIterator &Pkg,
 				   string const &Version,
 				   unsigned int const &Op,
 				   unsigned int const &Type,
-				   map_ptrloc *OldDepLast)
+				   map_ptrloc* &OldDepLast)
 {
    void const * const oldMap = Map.Data();
    // Get a structure
@@ -723,7 +729,7 @@ bool pkgCacheGenerator::NewDepends(pkgCache::PkgIterator &Pkg,
    if (OldDepLast == NULL)
    {
       OldDepLast = &Ver->DependsList;
-      for (pkgCache::DepIterator D = Ver.DependsList(); D.end() == false; D++)
+      for (pkgCache::DepIterator D = Ver.DependsList(); D.end() == false; ++D)
 	 OldDepLast = &D->NextDepends;
    } else if (oldMap != Map.Data())
       OldDepLast += (map_ptrloc*) Map.Data() - (map_ptrloc*) oldMap;
@@ -915,8 +921,11 @@ unsigned long pkgCacheGenerator::WriteUniqString(const char *S,
 /* This just verifies that each file in the list of index files exists,
    has matching attributes with the cache and the cache does not have
    any extra files. */
-static bool CheckValidity(const string &CacheFile, FileIterator Start, 
-                          FileIterator End,MMap **OutMap = 0)
+static bool CheckValidity(const string &CacheFile, 
+                          pkgSourceList &List,
+                          FileIterator Start, 
+                          FileIterator End,
+                          MMap **OutMap = 0)
 {
    bool const Debug = _config->FindB("Debug::pkgCacheGen", false);
    // No file, certainly invalid
@@ -924,6 +933,13 @@ static bool CheckValidity(const string &CacheFile, FileIterator Start,
    {
       if (Debug == true)
 	 std::clog << "CacheFile doesn't exist" << std::endl;
+      return false;
+   }
+
+   if (List.GetLastModifiedTime() > GetModificationTime(CacheFile))
+   {
+      if (Debug == true)
+	 std::clog << "sources.list is newer than the cache" << std::endl;
       return false;
    }
 
@@ -943,7 +959,7 @@ static bool CheckValidity(const string &CacheFile, FileIterator Start,
       verify the IMS data and check that it is on the disk too.. */
    SPtrArray<bool> Visited = new bool[Cache.HeaderP->PackageFileCount];
    memset(Visited,0,sizeof(*Visited)*Cache.HeaderP->PackageFileCount);
-   for (; Start != End; Start++)
+   for (; Start != End; ++Start)
    {
       if (Debug == true)
 	 std::clog << "Checking PkgFile " << (*Start)->Describe() << ": ";
@@ -1010,7 +1026,7 @@ static bool CheckValidity(const string &CacheFile, FileIterator Start,
 static unsigned long ComputeSize(FileIterator Start,FileIterator End)
 {
    unsigned long TotalSize = 0;
-   for (; Start != End; Start++)
+   for (; Start != End; ++Start)
    {
       if ((*Start)->HasPackages() == false)
 	 continue;      
@@ -1028,7 +1044,7 @@ static bool BuildCache(pkgCacheGenerator &Gen,
 		       FileIterator Start, FileIterator End)
 {
    FileIterator I;
-   for (I = Start; I != End; I++)
+   for (I = Start; I != End; ++I)
    {
       if ((*I)->HasPackages() == false)
 	 continue;
@@ -1058,7 +1074,7 @@ static bool BuildCache(pkgCacheGenerator &Gen,
 	 Progress->Done();
       TotalSize = ComputeSize(Start, End);
       CurrentSize = 0;
-      for (I = Start; I != End; I++)
+      for (I = Start; I != End; ++I)
       {
 	 unsigned long Size = (*I)->Size();
 	 if (Progress != NULL)
@@ -1105,12 +1121,12 @@ bool pkgCacheGenerator::MakeStatusCache(pkgSourceList &List,OpProgress *Progress
    vector<pkgIndexFile *> Files;
    for (vector<metaIndex *>::const_iterator i = List.begin();
         i != List.end();
-        i++)
+        ++i)
    {
       vector <pkgIndexFile *> *Indexes = (*i)->GetIndexFiles();
       for (vector<pkgIndexFile *>::const_iterator j = Indexes->begin();
 	   j != Indexes->end();
-	   j++)
+	   ++j)
          Files.push_back (*j);
    }
    
@@ -1152,7 +1168,7 @@ bool pkgCacheGenerator::MakeStatusCache(pkgSourceList &List,OpProgress *Progress
       Progress->OverallProgress(0,1,1,_("Reading package lists"));
 
    // Cache is OK, Fin.
-   if (CheckValidity(CacheFile,Files.begin(),Files.end(),OutMap) == true)
+   if (CheckValidity(CacheFile, List, Files.begin(),Files.end(),OutMap) == true)
    {
       if (Progress != NULL)
 	 Progress->OverallProgress(1,1,1,_("Reading package lists"));
@@ -1169,16 +1185,32 @@ bool pkgCacheGenerator::MakeStatusCache(pkgSourceList &List,OpProgress *Progress
    SPtr<DynamicMMap> Map;
    if (Writeable == true && CacheFile.empty() == false)
    {
+      _error->PushToStack();
       unlink(CacheFile.c_str());
       CacheF = new FileFd(CacheFile,FileFd::WriteAtomic);
       fchmod(CacheF->Fd(),0644);
       Map = CreateDynamicMMap(CacheF, MMap::Public);
       if (_error->PendingError() == true)
-	 return false;
-      if (Debug == true)
+      {
+	 delete CacheF.UnGuard();
+	 delete Map.UnGuard();
+	 if (Debug == true)
+	    std::clog << "Open filebased MMap FAILED" << std::endl;
+	 Writeable = false;
+	 if (AllowMem == false)
+	 {
+	    _error->MergeWithStack();
+	    return false;
+	 }
+	 _error->RevertToStack();
+      }
+      else if (Debug == true)
+      {
+	 _error->MergeWithStack();
 	 std::clog << "Open filebased MMap" << std::endl;
+      }
    }
-   else
+   if (Writeable == false || CacheFile.empty() == true)
    {
       // Just build it in memory..
       Map = CreateDynamicMMap(NULL);
@@ -1189,7 +1221,7 @@ bool pkgCacheGenerator::MakeStatusCache(pkgSourceList &List,OpProgress *Progress
    // Lets try the source cache.
    unsigned long CurrentSize = 0;
    unsigned long TotalSize = 0;
-   if (CheckValidity(SrcCacheFile,Files.begin(),
+   if (CheckValidity(SrcCacheFile, List, Files.begin(),
 		     Files.begin()+EndOfSource) == true)
    {
       if (Debug == true)
