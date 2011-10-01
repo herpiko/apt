@@ -1,0 +1,20 @@
+ganti berkas di semua folder kecuali debian
+* cmdline/apt-key 
+    - Drop ubuntu keyring
+  * debian/apt.postinst
+    - Drop Ubuntu keyring
+  * debian/rules
+    - Drop Ubuntu keyring
+  * share
+    - Drop ubuntu-keyring.gpg
+
+* Remove translation manual
+    - remove debian/patches (doesn't work)
+    - change po/LINGUAS
+    - change doc/lang.makefile
+    - change doc/po4a.conf
+
+changelog.ubuntu
+control
+control.stripped
+
