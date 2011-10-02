@@ -6,7 +6,6 @@ SUBDIR=doc/@@LANG@@
 include ../../buildlib/defaults.mak
 
 # Language Code of this translation
-#-LC=@@LANG@@
-LC=id
+LC=@@LANG@@
 
 include $(PO4A_MANPAGE_H)
