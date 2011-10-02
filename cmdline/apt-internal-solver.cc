@@ -1,6 +1,6 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-/* ######################################################################
+/* #####################################################################
 
    cover around the internal solver to be able to run it like an external
 
