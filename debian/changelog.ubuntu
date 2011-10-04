@@ -1,3 +1,69 @@
+apt (0.8.16~exp5ubuntu12) oneiric; urgency=low
+
+  [ David Kalnischkies ]  
+  * apt-pkg/deb/deblistparser.cc:
+    - fix crash when the dynamic mmap needs to be remapped during
+      LoadReleaseInfo (LP: #854090)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 26 Sep 2011 13:31:11 +0200
+
+apt (0.8.16~exp5ubuntu11) oneiric; urgency=low
+
+  [ Colin Watson ]
+  * ftparchive/cachedb.cc:
+    - fix buffersize in bytes2hex
+  
+  [ Marc Deslauriers ]
+  * SECURITY UPDATE: Disable apt-key net-update for now, as validation
+    code is insecure.
+    - cmdline/apt-key: exit immediately out of net_update().
+    - CVE number pending
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 22 Sep 2011 17:30:45 +0200
+
+apt (0.8.16~exp5ubuntu10) oneiric; urgency=low
+
+  * methods/https.cc:
+    - cleanup broken downloads properly (just like http)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 20 Sep 2011 18:26:13 +0200
+
+apt (0.8.16~exp5ubuntu9) oneiric; urgency=low
+
+  [ Michael Vogt ]
+  * apt-pkg/acquire-item.h, apt-pkg/deb/debmetaindex.cc:
+    - fix fetching translated package descriptions (including the newly
+      stripped out english ones) by adding OptionalSubIndexTarget
+
+  [ David Kalnischkies ]
+  * apt-pkg/acquire-item.cc:
+    - if no Release.gpg file is found try to verify with hashes,
+      but do not fail if a hash can't be found
+  * apt-pkg/indexrecords.cc:
+    - fix Acquire::Max-ValidTime option by interpreting it really
+      as seconds as specified in the manpage and not as days
+    - add an Acquire::Min-ValidTime option (Closes: #640122)
+  * doc/apt.conf.5.xml:
+    - reword Acquire::Max-ValidTime documentation to make clear
+      that it doesn't provide the new Min-ValidTime functionality
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Fri, 16 Sep 2011 09:50:16 +0200
+
+apt (0.8.16~exp5ubuntu8) oneiric; urgency=low
+
+  * cherry pick r1825 from lp:~mvo/apt/mvo:
+    * apt-pkg/contrib/configuration.cc:
+    - fix double delete (LP: #848907)
+    - ignore only the invalid regexp instead of all options
+
+  * cherry pick r2165 from lp:~donkult/apt/sid:
+    [ David Kalnischkies ]
+    * cmdline/apt-get.cc:
+      - output list of virtual package providers to c1out in -q=1
+        instead of /dev/null to unbreak sbuild (LP: #816155)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 13 Sep 2011 18:23:09 +0200
+
 apt (0.8.16~exp5ubuntu7) oneiric; urgency=low
 
   [ Michael Vogt ]

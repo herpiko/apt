@@ -21,7 +21,7 @@ GPG="$GPG_CMD"
 MASTER_KEYRING=/usr/share/keyrings/blankon-master-keyring.gpg
 ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
 REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
-ARCHIVE_KEYRING_URI=http://arsip-dev.blankonlinux.or.id/blankon/project/blankon-archive-keyring.gpg
+ARCHIVE_KEYRING_URI=http://arsip.blankonlinux.or.id/project/blankon-archive-keyring.gpg
 
 
 requires_root() {
@@ -68,6 +68,9 @@ add_keys_with_verify_against_master_keyring() {
 # the archive-keyring keys needs to be signed with the master key
 # (otherwise it does not make sense from a security POV)
 net_update() {
+    # Disabled for now as code is insecure
+    exit 1
+
     if [ -z "$ARCHIVE_KEYRING_URI" ]; then
 	echo >&2 "ERROR: Your distribution is not supported in net-update as no uri for the archive-keyring is set"
 	exit 1
