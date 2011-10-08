@@ -152,11 +152,11 @@ apt-doc: build-doc
 #
 # apt-doc install
 #
-	# Copy the guides
-	dh_installdocs -p$@ $(BLD)/docs/guide*.text \
-			    $(BLD)/docs/guide*.html \
-			    $(BLD)/docs/offline*.text \
-			    $(BLD)/docs/offline*.html
+	# Copy the guides - local removed by pri_yess
+	dh_installdocs -p$@ $(BLD)/docs/guide.text \
+			    $(BLD)/docs/guide.html \
+			    $(BLD)/docs/offline.text \
+			    $(BLD)/docs/offline.html
 	dh_installchangelogs -p$@
 	dh_compress -p$@
 	dh_fixperms -p$@
@@ -203,7 +203,8 @@ apt: build build-doc
 	dh_bugfiles -p$@
 	dh_lintian -p$@
 	dh_installexamples -p$@ $(BLD)/docs/examples/*
-	dh_installman -p$@ $(wildcard $(patsubst %,doc/%.[158],$(apt_MANPAGES)) $(patsubst %,doc/*/%.*.[158],$(apt_MANPAGES)))
+	# local removed
+	dh_installman -p$@ $(wildcard $(patsubst %,doc/%.[158],$(apt_MANPAGES)) $(patsubst %,doc/%.*.[158],$(apt_MANPAGES)))
 	dh_installcron -p$@
 	dh_installdocs -p$@
 	dh_installchangelogs -p$@
@@ -251,8 +252,8 @@ apt-utils: build
 	dh_installdocs -p$@
 	dh_installexamples -p$@
 
-	# Install the man pages..
-	dh_installman -p$@ $(wildcard $(patsubst %,doc/%.[158],$(apt-utils_MANPAGES)) $(patsubst %,doc/*/%.*.[158],$(apt-utils_MANPAGES)))
+	# Install the man pages.. - without local
+	dh_installman -p$@ $(wildcard $(patsubst %,doc/%.[158],$(apt-utils_MANPAGES)) $(patsubst %,doc/%.*.[158],$(apt-utils_MANPAGES)))
 
 	dh_installchangelogs -p$@
 	dh_strip -p$@
