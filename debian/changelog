@@ -1,3 +1,18 @@
+apt (0.8.16~exp5ubuntu13+blankon1) rote; urgency=low
+
+  * New Upstream updates
+    [ Adam Conrad ]
+  * On armel, call update-apt-xapian-index with '-u' to keep the CPU
+    and I/O usage low.  We would do this on all arches, but there's a
+    regression risk here, but that's better than killing slow systems.
+  
+    [ Michael Vogt ]
+  * cmdline/apt-key:
+    - fix apt-key net-update, thanks to Marc Deslauriers and 
+      Adam Conrad for the code review (LP: #857472)
+   
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Wed, 12 Oct 2011 06:03:40 +0700
+
 apt (0.8.16~exp5ubuntu12+blankon2) rote; urgency=low
 
   * remove locale
