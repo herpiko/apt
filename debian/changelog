@@ -1,3 +1,19 @@
+apt (0.8.16~exp5ubuntu14.1+blankon1) rote; urgency=low
+  
+  * New upstream updates
+  * apt-pkg/edsp.cc:
+    - fix FTBFS
+    [ David Kalnischkies ]  
+  * apt-pkg/pkgcachegen.cc:
+    - refactor MergeList by creating -Group, -Package and -Version specialist
+    - share description list between "same" versions (LP: #868977)
+      This also means that descriptions are shared across archives now.
+  * apt-pkg/pkgcache.cc:
+    - always prefer "en" over "" for "en"-language regardless of cache-order
+      (LP: #868977) 
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Fri, 21 Oct 2011 17:12:39 +0700
+
 apt (0.8.16~exp5ubuntu13+blankon1) rote; urgency=low
 
   * New Upstream updates
