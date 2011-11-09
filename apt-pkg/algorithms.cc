@@ -20,15 +20,12 @@
 #include <apt-pkg/version.h>
 #include <apt-pkg/sptr.h>
 #include <apt-pkg/acquire-item.h>
-#include <apt-pkg/edsp.h>
-
+    
 #include <apti18n.h>
 #include <sys/types.h>
 #include <cstdlib>
 #include <algorithm>
 #include <iostream>
-
-#include <stdio.h>
 									/*}}}*/
 using namespace std;
 
@@ -330,12 +327,6 @@ bool pkgFixBroken(pkgDepCache &Cache)
  */
 bool pkgDistUpgrade(pkgDepCache &Cache)
 {
-   std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, false, true, false, &Prog);
-   }
-
    pkgDepCache::ActionGroup group(Cache);
 
    /* Upgrade all installed packages first without autoinst to help the resolver
@@ -388,12 +379,6 @@ bool pkgDistUpgrade(pkgDepCache &Cache)
    to install packages not marked for install */
 bool pkgAllUpgrade(pkgDepCache &Cache)
 {
-   std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, &Prog);
-   }
-
    pkgDepCache::ActionGroup group(Cache);
 
    pkgProblemResolver Fix(&Cache);
@@ -740,20 +725,7 @@ bool pkgProblemResolver::DoUpgrade(pkgCache::PkgIterator Pkg)
    return true;
 }
 									/*}}}*/
-// ProblemResolver::Resolve - calls a resolver to fix the situation	/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-bool pkgProblemResolver::Resolve(bool BrokenFix)
-{
-   std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, false, false, false, &Prog);
-   }
-   return ResolveInternal(BrokenFix);
-}
-									/*}}}*/
-// ProblemResolver::ResolveInternal - Run the resolution pass		/*{{{*/
+// ProblemResolver::Resolve - Run the resolution pass			/*{{{*/
 // ---------------------------------------------------------------------
 /* This routines works by calculating a score for each package. The score
    is derived by considering the package's priority and all reverse 
@@ -767,9 +739,11 @@ bool pkgProblemResolver::Resolve(bool BrokenFix)
  
    The BrokenFix flag enables a mode where the algorithm tries to 
    upgrade packages to advoid problems. */
-bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
+bool pkgProblemResolver::Resolve(bool BrokenFix)
 {
    pkgDepCache::ActionGroup group(Cache);
+
+   unsigned long Size = Cache.Head().PackageCount;
 
    // Record which packages are marked for install
    bool Again = false;
@@ -800,9 +774,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
       clog << "Starting" << endl;
    
    MakeScores();
-
-   unsigned long const Size = Cache.Head().PackageCount;
-
+   
    /* We have to order the packages so that the broken fixing pass 
       operates from highest score to lowest. This prevents problems when
       high score packages cause the removal of lower score packages that
@@ -1030,7 +1002,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		     if (BrokenFix == false || DoUpgrade(I) == false)
 		     {
 			// Consider other options
-			if (InOr == false)
+			if (InOr == false || Cache[I].Garbage == true)
 			{
 			   if (Debug == true)
 			      clog << "  Removing " << I.FullName(false) << " rather than change " << Start.TargetPkg().FullName(false) << endl;
@@ -1235,21 +1207,6 @@ bool pkgProblemResolver::InstOrNewPolicyBroken(pkgCache::PkgIterator I)
    in that it does not install or remove any packages. It is assumed that the
    system was non-broken previously. */
 bool pkgProblemResolver::ResolveByKeep()
-{
-   std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, &Prog);
-   }
-   return ResolveByKeepInternal();
-}
-									/*}}}*/
-// ProblemResolver::ResolveByKeepInternal - Resolve problems using keep	/*{{{*/
-// ---------------------------------------------------------------------
-/* This is the work horse of the soft upgrade routine. It is very gental
-   in that it does not install or remove any packages. It is assumed that the
-   system was non-broken previously. */
-bool pkgProblemResolver::ResolveByKeepInternal()
 {
    pkgDepCache::ActionGroup group(Cache);
 

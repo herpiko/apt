@@ -74,7 +74,6 @@ bool pkgInitConfig(Configuration &Cnf)
    Cnf.CndSet("Dir::Etc::trusted", "trusted.gpg");
    Cnf.CndSet("Dir::Etc::trustedparts","trusted.gpg.d");
    Cnf.CndSet("Dir::Bin::methods","/usr/lib/apt/methods");
-   Cnf.CndSet("Dir::Bin::solvers::","/usr/lib/apt/solvers");
    Cnf.CndSet("Dir::Media::MountPath","/media/apt");
 
    // State   
@@ -82,16 +81,12 @@ bool pkgInitConfig(Configuration &Cnf)
    Cnf.CndSet("Dir::Log::Terminal","term.log");
    Cnf.CndSet("Dir::Log::History","history.log");
 
-   if (Cnf.Exists("Dir::Ignore-Files-Silently") == false)
-   {
-      Cnf.Set("Dir::Ignore-Files-Silently::", "~$");
-      Cnf.Set("Dir::Ignore-Files-Silently::", "\\.disabled$");
-      Cnf.Set("Dir::Ignore-Files-Silently::", "\\.bak$");
-      Cnf.Set("Dir::Ignore-Files-Silently::", "\\.dpkg-[a-z]+$");
-      // ubuntu specific
-      Cnf.Set("Dir::Ignore-Files-Silently::", "\\.distUpgrade$");
-      Cnf.Set("Dir::Ignore-Files-Silently::", "\\.save$");
-   }
+   Cnf.Set("Dir::Ignore-Files-Silently::", "~$");
+   Cnf.Set("Dir::Ignore-Files-Silently::", "\\.disabled$");
+   Cnf.Set("Dir::Ignore-Files-Silently::", "\\.bak$");
+   Cnf.Set("Dir::Ignore-Files-Silently::", "\\.dpkg-[a-z]+$");
+   Cnf.Set("Dir::Ignore-Files-Silently::", "\\.save$");
+   Cnf.Set("Dir::Ignore-Files-Silently::", "\\.orig$");
 
    // Default cdrom mount point
    Cnf.CndSet("Acquire::cdrom::mount", "/media/cdrom/");

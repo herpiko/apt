@@ -26,24 +26,15 @@
 
 debSystem debSys;
 
-class debSystemPrivate {
-public:
-   debSystemPrivate() : LockFD(-1), LockCount(0), StatusFile(0)
-   {
-   }
-   // For locking support
-   int LockFD;
-   unsigned LockCount;
-   
-   debStatusIndex *StatusFile;
-};
-
 // System::debSystem - Constructor					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
 debSystem::debSystem()
 {
-   d = new debSystemPrivate();
+   LockFD = -1;
+   LockCount = 0;
+   StatusFile = 0;
+   
    Label = "Debian dpkg interface";
    VS = &debVS;
 }
@@ -53,8 +44,7 @@ debSystem::debSystem()
 /* */
 debSystem::~debSystem()
 {
-   delete d->StatusFile;
-   delete d;
+   delete StatusFile;
 }
 									/*}}}*/
 // System::Lock - Get the lock						/*{{{*/
@@ -64,16 +54,16 @@ debSystem::~debSystem()
 bool debSystem::Lock()
 {
    // Disable file locking
-   if (_config->FindB("Debug::NoLocking",false) == true || d->LockCount > 1)
+   if (_config->FindB("Debug::NoLocking",false) == true || LockCount > 1)
    {
-      d->LockCount++;
+      LockCount++;
       return true;
    }
 
    // Create the lockfile
    string AdminDir = flNotFile(_config->Find("Dir::State::status"));
-   d->LockFD = GetLock(AdminDir + "lock");
-   if (d->LockFD == -1)
+   LockFD = GetLock(AdminDir + "lock");
+   if (LockFD == -1)
    {
       if (errno == EACCES || errno == EAGAIN)
 	 return _error->Error(_("Unable to lock the administration directory (%s), "
@@ -86,8 +76,8 @@ bool debSystem::Lock()
    // See if we need to abort with a dirty journal
    if (CheckUpdates() == true)
    {
-      close(d->LockFD);
-      d->LockFD = -1;
+      close(LockFD);
+      LockFD = -1;
       const char *cmd;
       if (getenv("SUDO_USER") != NULL)
 	 cmd = "sudo dpkg --configure -a";
@@ -99,7 +89,7 @@ bool debSystem::Lock()
                              "run '%s' to correct the problem. "), cmd);
    }
 
-	 d->LockCount++;
+	 LockCount++;
       
    return true;
 }
@@ -109,15 +99,15 @@ bool debSystem::Lock()
 /* */
 bool debSystem::UnLock(bool NoErrors)
 {
-   if (d->LockCount == 0 && NoErrors == true)
+   if (LockCount == 0 && NoErrors == true)
       return false;
    
-   if (d->LockCount < 1)
+   if (LockCount < 1)
       return _error->Error(_("Not locked"));
-   if (--d->LockCount == 0)
+   if (--LockCount == 0)
    {
-      close(d->LockFD);
-      d->LockCount = 0;
+      close(LockFD);
+      LockCount = 0;
    }
    
    return true;
@@ -178,9 +168,9 @@ bool debSystem::Initialize(Configuration &Cnf)
    Cnf.CndSet("Dir::State::status","/var/lib/dpkg/status");
    Cnf.CndSet("Dir::Bin::dpkg","/usr/bin/dpkg");
 
-   if (d->StatusFile) {
-     delete d->StatusFile;
-     d->StatusFile = 0;
+   if (StatusFile) {
+     delete StatusFile;
+     StatusFile = 0;
    }
 
    return true;
@@ -218,9 +208,9 @@ signed debSystem::Score(Configuration const &Cnf)
 /* */
 bool debSystem::AddStatusFiles(vector<pkgIndexFile *> &List)
 {
-   if (d->StatusFile == 0)
-      d->StatusFile = new debStatusIndex(_config->FindFile("Dir::State::status"));
-   List.push_back(d->StatusFile);
+   if (StatusFile == 0)
+      StatusFile = new debStatusIndex(_config->FindFile("Dir::State::status"));
+   List.push_back(StatusFile);
    return true;
 }
 									/*}}}*/
@@ -230,11 +220,11 @@ bool debSystem::AddStatusFiles(vector<pkgIndexFile *> &List)
 bool debSystem::FindIndex(pkgCache::PkgFileIterator File,
 			  pkgIndexFile *&Found) const
 {
-   if (d->StatusFile == 0)
+   if (StatusFile == 0)
       return false;
-   if (d->StatusFile->FindInCache(*File.Cache()) == File)
+   if (StatusFile->FindInCache(*File.Cache()) == File)
    {
-      Found = d->StatusFile;
+      Found = StatusFile;
       return true;
    }
    

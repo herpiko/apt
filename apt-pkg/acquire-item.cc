@@ -94,7 +94,7 @@ void pkgAcquire::Item::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
 // ---------------------------------------------------------------------
 /* Stash status and the file size. Note that setting Complete means 
    sub-phases of the acquire process such as decompresion are operating */
-void pkgAcquire::Item::Start(string /*Message*/,unsigned long long Size)
+void pkgAcquire::Item::Start(string /*Message*/,unsigned long Size)
 {
    Status = StatFetching;
    if (FileSize == 0 && Complete == false)
@@ -104,7 +104,7 @@ void pkgAcquire::Item::Start(string /*Message*/,unsigned long long Size)
 // Acquire::Item::Done - Item downloaded OK				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcquire::Item::Done(string Message,unsigned long long Size,string Hash,
+void pkgAcquire::Item::Done(string Message,unsigned long Size,string Hash,
 			    pkgAcquire::MethodConfig *Cnf)
 {
    // We just downloaded something..
@@ -245,7 +245,7 @@ void pkgAcqSubIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{*
    }
 }
 									/*}}}*/
-void pkgAcqSubIndex::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
+void pkgAcqSubIndex::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -544,7 +544,7 @@ void pkgAcqDiffIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{
    Dequeue();
 }
 									/*}}}*/
-void pkgAcqDiffIndex::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
+void pkgAcqDiffIndex::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -710,7 +710,7 @@ bool pkgAcqIndexDiffs::QueueNextDiff()					/*{{{*/
    return true;
 }
 									/*}}}*/
-void pkgAcqIndexDiffs::Done(string Message,unsigned long long Size,string Md5Hash,	/*{{{*/
+void pkgAcqIndexDiffs::Done(string Message,unsigned long Size,string Md5Hash,	/*{{{*/
 			    pkgAcquire::MethodConfig *Cnf)
 {
    if(Debug)
@@ -881,7 +881,7 @@ void pkgAcqIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)	/*{{{*/
    to the uncompressed version of the file. If this is so the file
    is copied into the partial directory. In all other cases the file
    is decompressed with a gzip uri. */
-void pkgAcqIndex::Done(string Message,unsigned long long Size,string Hash,
+void pkgAcqIndex::Done(string Message,unsigned long Size,string Hash,
 		       pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,Hash,Cfg);
@@ -1123,7 +1123,7 @@ string pkgAcqMetaSig::Custom600Headers()
    return "\nIndex-File: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
 }
 
-void pkgAcqMetaSig::Done(string Message,unsigned long long Size,string MD5,
+void pkgAcqMetaSig::Done(string Message,unsigned long Size,string MD5,
 			 pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,MD5,Cfg);
@@ -1232,7 +1232,7 @@ string pkgAcqMetaIndex::Custom600Headers()
    return "\nIndex-File: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
 }
 									/*}}}*/
-void pkgAcqMetaIndex::Done(string Message,unsigned long long Size,string Hash,	/*{{{*/
+void pkgAcqMetaIndex::Done(string Message,unsigned long Size,string Hash,	/*{{{*/
 			   pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,Hash,Cfg);
@@ -1731,8 +1731,6 @@ bool pkgAcqArchive::QueueNext()
       string PkgFile = Parse.FileName();
       if (ForceHash.empty() == false)
       {
-	 if(stringcasecmp(ForceHash, "sha512") == 0)
-	    ExpectedHash = HashString("SHA512", Parse.SHA512Hash());
 	 if(stringcasecmp(ForceHash, "sha256") == 0)
 	    ExpectedHash = HashString("SHA256", Parse.SHA256Hash());
 	 else if (stringcasecmp(ForceHash, "sha1") == 0)
@@ -1743,9 +1741,7 @@ bool pkgAcqArchive::QueueNext()
       else
       {
 	 string Hash;
-	 if ((Hash = Parse.SHA512Hash()).empty() == false)
-	    ExpectedHash = HashString("SHA512", Hash);
-	 else if ((Hash = Parse.SHA256Hash()).empty() == false)
+	 if ((Hash = Parse.SHA256Hash()).empty() == false)
 	    ExpectedHash = HashString("SHA256", Hash);
 	 else if ((Hash = Parse.SHA1Hash()).empty() == false)
 	    ExpectedHash = HashString("SHA1", Hash);
@@ -1769,7 +1765,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(FinalFile.c_str(),&Buf) == 0)
       {
 	 // Make sure the size matches
-	 if ((unsigned long long)Buf.st_size == Version->Size)
+	 if ((unsigned)Buf.st_size == Version->Size)
 	 {
 	    Complete = true;
 	    Local = true;
@@ -1788,7 +1784,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(FinalFile.c_str(),&Buf) == 0)
       {
 	 // Make sure the size matches
-	 if ((unsigned long long)Buf.st_size == Version->Size)
+	 if ((unsigned)Buf.st_size == Version->Size)
 	 {
 	    Complete = true;
 	    Local = true;
@@ -1808,7 +1804,7 @@ bool pkgAcqArchive::QueueNext()
       if (stat(DestFile.c_str(),&Buf) == 0)
       {
 	 // Hmm, the partial file is too big, erase it
-	 if ((unsigned long long)Buf.st_size > Version->Size)
+	 if ((unsigned)Buf.st_size > Version->Size)
 	    unlink(DestFile.c_str());
 	 else
 	    PartialSize = Buf.st_size;
@@ -1831,7 +1827,7 @@ bool pkgAcqArchive::QueueNext()
 // AcqArchive::Done - Finished fetching					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcqArchive::Done(string Message,unsigned long long Size,string CalcHash,
+void pkgAcqArchive::Done(string Message,unsigned long Size,string CalcHash,
 			 pkgAcquire::MethodConfig *Cfg)
 {
    Item::Done(Message,Size,CalcHash,Cfg);
@@ -1942,7 +1938,7 @@ void pkgAcqArchive::Finished()
 // ---------------------------------------------------------------------
 /* The file is added to the queue */
 pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
-		       unsigned long long Size,string Dsc,string ShortDesc,
+		       unsigned long Size,string Dsc,string ShortDesc,
 		       const string &DestDir, const string &DestFilename,
                        bool IsIndexFile) :
                        Item(Owner), ExpectedHash(Hash), IsIndexFile(IsIndexFile)
@@ -1970,7 +1966,7 @@ pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
    if (stat(DestFile.c_str(),&Buf) == 0)
    {
       // Hmm, the partial file is too big, erase it
-      if ((unsigned long long)Buf.st_size > Size)
+      if ((unsigned)Buf.st_size > Size)
 	 unlink(DestFile.c_str());
       else
 	 PartialSize = Buf.st_size;
@@ -1982,7 +1978,7 @@ pkgAcqFile::pkgAcqFile(pkgAcquire *Owner,string URI,string Hash,
 // AcqFile::Done - Item downloaded OK					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgAcqFile::Done(string Message,unsigned long long Size,string CalcHash,
+void pkgAcqFile::Done(string Message,unsigned long Size,string CalcHash,
 		      pkgAcquire::MethodConfig *Cnf)
 {
    Item::Done(Message,Size,CalcHash,Cnf);
@@ -2070,3 +2066,13 @@ string pkgAcqFile::Custom600Headers()
    return "";
 }
 									/*}}}*/
+bool IndexTarget::IsOptional() const {
+   if (strncmp(ShortDesc.c_str(), "Translation", 11) != 0)
+      return false;
+   return true;
+}
+bool IndexTarget::IsSubIndex() const {
+   if (ShortDesc != "TranslationIndex")
+      return false;
+   return true;
+}

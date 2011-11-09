@@ -6,6 +6,10 @@ BASENAME=_libapt_test
 # Bring in the default rules
 include ../../buildlib/defaults.mak
 
+.PHONY: test
+test:
+	./run-tests
+
 # Program for testing getLanguageCode
 PROGRAM = getLanguages${BASENAME}
 SLIBS = -lapt-pkg
@@ -45,12 +49,6 @@ include $(PROGRAM_H)
 PROGRAM = GlobalError${BASENAME}
 SLIBS = -lapt-pkg
 SOURCE = globalerror_test.cc
-include $(PROGRAM_H)
-
-# test the different Hashsum classes
-PROGRAM = HashSums${BASENAME}
-SLIBS = -lapt-pkg
-SOURCE = hashsums_test.cc
 include $(PROGRAM_H)
 
 # test the strutils stuff

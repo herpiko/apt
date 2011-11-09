@@ -434,13 +434,6 @@ fi
 UPDATED=0
 UPDATE_STAMP=/var/lib/apt/periodic/update-stamp
 if check_stamp $UPDATE_STAMP $UpdateInterval; then
-    # check for a new archive signing key (against the master keyring)
-    if eval apt-key net-update $XSTDERR; then
-       debug_echo "apt-key net-update (success)"
-    else
-       debug_echo "apt-key net-update (failure)"
-    fi
-    # run apt-get update
     if eval apt-get $XAPTOPT -y update $XSTDERR; then
 	debug_echo "download updated metadata (success)."
 	if which dbus-send >/dev/null && pidof dbus-daemon >/dev/null; then
@@ -454,14 +447,6 @@ if check_stamp $UPDATE_STAMP $UpdateInterval; then
 	fi
 	update_stamp $UPDATE_STAMP
 	UPDATED=1
-        # now run apt-xapian-index if it is installed to ensure the index
-        # is up-to-date
-        if [ -x /usr/sbin/update-apt-xapian-index ]; then
-            if [ "$(dpkg --print-architecture)" = "armel" ]; then
-                xapian_extra_args='-u'
-            fi
-            nice ionice -c3 update-apt-xapian-index -q $xapian_extra_args
-        fi
     else
 	debug_echo "download updated metadata (error)"
     fi

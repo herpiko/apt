@@ -406,8 +406,60 @@ bool pkgDepCache::CheckDep(DepIterator Dep,int Type,PkgIterator &Res)
 									/*}}}*/
 // DepCache::AddSizes - Add the packages sizes to the counters		/*{{{*/
 // ---------------------------------------------------------------------
+/* Call with Mult = -1 to preform the inverse opration
+   The Mult increases the complexity of the calulations here and is unused -
+   or do we really have a usecase for removing the size of a package two
+   times? So let us replace it with a simple bool and be done with it… */
+__deprecated void pkgDepCache::AddSizes(const PkgIterator &Pkg,signed long Mult)
+{
+   StateCache &P = PkgState[Pkg->ID];
+   
+   if (Pkg->VersionList == 0)
+      return;
+   
+   if (Pkg.State() == pkgCache::PkgIterator::NeedsConfigure && 
+       P.Keep() == true)
+      return;
+   
+   // Compute the size data
+   if (P.NewInstall() == true)
+   {
+      iUsrSize += (signed long long)(Mult*P.InstVerIter(*this)->InstalledSize);
+      iDownloadSize += (signed long long)(Mult*P.InstVerIter(*this)->Size);
+      return;
+   }
+   
+   // Upgrading
+   if (Pkg->CurrentVer != 0 && 
+       (P.InstallVer != (Version *)Pkg.CurrentVer() || 
+	(P.iFlags & ReInstall) == ReInstall) && P.InstallVer != 0)
+   {
+      iUsrSize += (signed long long)(Mult*((signed long long)P.InstVerIter(*this)->InstalledSize - 
+			(signed long long)Pkg.CurrentVer()->InstalledSize));
+      iDownloadSize += (signed long long)(Mult*P.InstVerIter(*this)->Size);
+      return;
+   }
+   
+   // Reinstall
+   if (Pkg.State() == pkgCache::PkgIterator::NeedsUnpack &&
+       P.Delete() == false)
+   {
+      iDownloadSize += (signed long long)(Mult*P.InstVerIter(*this)->Size);
+      return;
+   }
+   
+   // Removing
+   if (Pkg->CurrentVer != 0 && P.InstallVer == 0)
+   {
+      iUsrSize -= (signed long long)(Mult*Pkg.CurrentVer()->InstalledSize);
+      return;
+   }   
+}
+									/*}}}*/
+// DepCache::AddSizes - Add the packages sizes to the counters		/*{{{*/
+// ---------------------------------------------------------------------
 /* Call with Inverse = true to preform the inverse opration */
-void pkgDepCache::AddSizes(const PkgIterator &Pkg, bool const Inverse)
+void pkgDepCache::AddSizes(const PkgIterator &Pkg, bool const &Inverse)
 {
    StateCache &P = PkgState[Pkg->ID];
    
@@ -478,9 +530,8 @@ void pkgDepCache::AddSizes(const PkgIterator &Pkg, bool const Inverse)
    calld Remove/Add itself. Remember, dependencies can be circular so
    while processing a dep for Pkg it is possible that Add/Remove
    will be called on Pkg */
-void pkgDepCache::AddStates(const PkgIterator &Pkg, bool const Invert)
+void pkgDepCache::AddStates(const PkgIterator &Pkg,int Add)
 {
-   signed char const Add = (Invert == false) ? 1 : -1;
    StateCache &State = PkgState[Pkg->ID];
    
    // The Package is broken (either minimal dep or policy dep)
@@ -755,17 +806,17 @@ void pkgDepCache::Update(PkgIterator const &Pkg)
 // DepCache::MarkKeep - Put the package in the keep state		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool pkgDepCache::MarkKeep(PkgIterator const &Pkg, bool Soft, bool FromUser,
+void pkgDepCache::MarkKeep(PkgIterator const &Pkg, bool Soft, bool FromUser,
                            unsigned long Depth)
 {
    if (IsModeChangeOk(ModeKeep, Pkg, Depth, FromUser) == false)
-      return false;
+      return;
 
    /* Reject an attempt to keep a non-source broken installed package, those
       must be upgraded */
    if (Pkg.State() == PkgIterator::NeedsUnpack && 
        Pkg.CurrentVer().Downloadable() == false)
-      return false;
+      return;
 
    /* We changed the soft state all the time so the UI is a bit nicer
       to use */
@@ -773,7 +824,7 @@ bool pkgDepCache::MarkKeep(PkgIterator const &Pkg, bool Soft, bool FromUser,
 
    // Check that it is not already kept
    if (P.Mode == ModeKeep)
-      return true;
+      return;
 
    if (Soft == true)
       P.iFlags |= AutoKept;
@@ -806,31 +857,31 @@ bool pkgDepCache::MarkKeep(PkgIterator const &Pkg, bool Soft, bool FromUser,
       P.InstallVer = Pkg.CurrentVer();
 
    AddStates(Pkg);
-   Update(Pkg);
-   AddSizes(Pkg);
 
-   return true;
+   Update(Pkg);
+
+   AddSizes(Pkg);
 }
 									/*}}}*/
 // DepCache::MarkDelete - Put the package in the delete state		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool pkgDepCache::MarkDelete(PkgIterator const &Pkg, bool rPurge,
+void pkgDepCache::MarkDelete(PkgIterator const &Pkg, bool rPurge,
                              unsigned long Depth, bool FromUser)
 {
    if (IsModeChangeOk(ModeDelete, Pkg, Depth, FromUser) == false)
-      return false;
+      return;
 
    StateCache &P = PkgState[Pkg->ID];
 
    // Check that it is not already marked for delete
    if ((P.Mode == ModeDelete || P.InstallVer == 0) && 
        (Pkg.Purge() == true || rPurge == false))
-      return true;
+      return;
 
    // check if we are allowed to remove the package
    if (IsDeleteOk(Pkg,rPurge,Depth,FromUser) == false)
-      return false;
+      return;
 
    P.iFlags &= ~(AutoKept | Purge);
    if (rPurge == true)
@@ -854,7 +905,6 @@ bool pkgDepCache::MarkDelete(PkgIterator const &Pkg, bool rPurge,
    Update(Pkg);
    AddSizes(Pkg);
 
-   return true;
 }
 									/*}}}*/
 // DepCache::IsDeleteOk - check if it is ok to remove this package	/*{{{*/
@@ -867,7 +917,6 @@ bool pkgDepCache::IsDeleteOk(PkgIterator const &Pkg,bool rPurge,
    if (FromUser == false && Pkg->CurrentVer == 0)
    {
       StateCache &P = PkgState[Pkg->ID];
-      // Status == 2 means this applies for new installs only
       if (P.InstallVer != 0 && P.Status == 2 && (P.Flags & Flag::Auto) != Flag::Auto)
       {
 	 if (DebugMarker == true)
@@ -936,18 +985,18 @@ bool pkgDepCache::IsModeChangeOk(ModeList const mode, PkgIterator const &Pkg,
 // DepCache::MarkInstall - Put the package in the install state		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
+void pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
 			      unsigned long Depth, bool FromUser,
 			      bool ForceImportantDeps)
 {
    if (IsModeChangeOk(ModeInstall, Pkg, Depth, FromUser) == false)
-      return false;
+      return;
 
    StateCache &P = PkgState[Pkg->ID];
 
    // See if there is even any possible instalation candidate
    if (P.CandidateVer == 0)
-      return false;
+      return;
 
    /* Check that it is not already marked for install and that it can be 
       installed */
@@ -956,13 +1005,13 @@ bool pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
 	P.CandidateVer == (Version *)Pkg.CurrentVer()))
    {
       if (P.CandidateVer == (Version *)Pkg.CurrentVer() && P.InstallVer == 0)
-	 return MarkKeep(Pkg, false, FromUser, Depth+1);
-      return true;
+	 MarkKeep(Pkg, false, FromUser, Depth+1);
+      return;
    }
 
    // check if we are allowed to install the package
    if (IsInstallOk(Pkg,AutoInst,Depth,FromUser) == false)
-      return false;
+      return;
 
    ActionGroup group(*this);
    P.iFlags &= ~AutoKept;
@@ -997,8 +1046,8 @@ bool pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
    Update(Pkg);
    AddSizes(Pkg);
 
-   if (AutoInst == false || _config->Find("APT::Solver", "internal") != "internal")
-      return true;
+   if (AutoInst == false)
+      return;
 
    if (DebugMarker == true)
       std::clog << OutputInDepth(Depth) << "MarkInstall " << Pkg << " FU=" << FromUser << std::endl;
@@ -1042,7 +1091,7 @@ bool pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
 	    continue;
 	 // if the dependency was critical, we can't install it, so remove it again
 	 MarkDelete(Pkg,false,Depth + 1, false);
-	 return false;
+	 return;
       }
 
       /* Check if any ImportantDep() (but not Critical) were added
@@ -1173,17 +1222,14 @@ bool pkgDepCache::MarkInstall(PkgIterator const &Pkg,bool AutoInst,
 	       continue;
 
 	    if (PkgState[Pkg->ID].CandidateVer != *I &&
-		Start->Type == Dep::DpkgBreaks &&
-		MarkInstall(Pkg,true,Depth + 1, false, ForceImportantDeps) == true)
-	       continue;
-	    else if (MarkDelete(Pkg,false,Depth + 1, false) == false)
-	       break;
+	        Start->Type == Dep::DpkgBreaks)
+	       MarkInstall(Pkg,true,Depth + 1, false, ForceImportantDeps);
+	    else
+	       MarkDelete(Pkg,false,Depth + 1, false);
 	 }
 	 continue;
       }      
    }
-
-   return Dep.end() == true;
 }
 									/*}}}*/
 // DepCache::IsInstallOk - check if it is ok to install this package	/*{{{*/
@@ -1222,7 +1268,7 @@ void pkgDepCache::SetReInstall(PkgIterator const &Pkg,bool To)
 // DepCache::SetCandidateVersion - Change the candidate version		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgDepCache::SetCandidateVersion(VerIterator TargetVer)
+void pkgDepCache::SetCandidateVersion(VerIterator TargetVer, bool const &Pseudo)
 {
    pkgCache::PkgIterator Pkg = TargetVer.ParentPkg();
    StateCache &P = PkgState[Pkg->ID];
@@ -1512,7 +1558,7 @@ bool pkgDepCache::Policy::IsImportantDep(DepIterator const &Dep)
       return true;
    else if(Dep->Type == pkgCache::Dep::Recommends) 
    {
-      if (InstallRecommends)
+      if ( _config->FindB("APT::Install-Recommends", false))
 	 return true;
       // we suport a special mode to only install-recommends for certain
       // sections
@@ -1523,16 +1569,10 @@ bool pkgDepCache::Policy::IsImportantDep(DepIterator const &Dep)
 	 return true;
    }
    else if(Dep->Type == pkgCache::Dep::Suggests)
-      return InstallSuggests;
+     return _config->FindB("APT::Install-Suggests", false);
 
    return false;
 }
-									/*}}}*/
-// Policy::GetPriority - Get the priority of the package pin		/*{{{*/
-signed short pkgDepCache::Policy::GetPriority(pkgCache::PkgIterator const &Pkg)
-{ return 0; };
-signed short pkgDepCache::Policy::GetPriority(pkgCache::PkgFileIterator const &File)
-{ return 0; };
 									/*}}}*/
 pkgDepCache::InRootSetFunc *pkgDepCache::GetRootSetFunc()		/*{{{*/
 {
@@ -1559,9 +1599,6 @@ bool pkgDepCache::MarkFollowsSuggests()
 // pkgDepCache::MarkRequired - the main mark algorithm			/*{{{*/
 bool pkgDepCache::MarkRequired(InRootSetFunc &userFunc)
 {
-   if (_config->Find("APT::Solver", "internal") != "internal")
-      return true;
-
    bool follow_recommends;
    bool follow_suggests;
    bool debug_autoremove = _config->FindB("Debug::pkgAutoRemove",false);

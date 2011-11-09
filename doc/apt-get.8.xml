@@ -317,7 +317,7 @@
 
      <varlistentry><term>autoremove</term>
      <listitem><para><literal>autoremove</literal> is used to remove packages that were automatically
-     installed to satisfy dependencies for some package and that are no more needed.</para></listitem>
+     installed to satisfy dependencies for other packages and are now no longer needed.</para></listitem>
      </varlistentry>
 
      <varlistentry><term>changelog</term>
@@ -431,11 +431,6 @@
      package, trying to install a unauthenticated package or removing an essential package 
      occurs then <literal>apt-get</literal> will abort. 
      Configuration Item: <literal>APT::Get::Assume-Yes</literal>.</para></listitem>
-     </varlistentry>
-
-     <varlistentry><term><option>--assume-no</option></term>
-     <listitem><para>Automatic "no" to all prompts.
-     Configuration Item: <literal>APT::Get::Assume-No</literal>.</para></listitem>
      </varlistentry>
 
      <varlistentry><term><option>-u</option></term><term><option>--show-upgraded</option></term>

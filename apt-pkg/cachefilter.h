@@ -16,8 +16,6 @@ namespace APT {
 namespace CacheFilter {
 // PackageNameMatchesRegEx						/*{{{*/
 class PackageNameMatchesRegEx {
-         /** \brief dpointer placeholder (for later in case we need it) */
-         void *d;
 	regex_t* pattern;
 public:
 	PackageNameMatchesRegEx(std::string const &Pattern);

@@ -18,12 +18,19 @@
 using std::vector;
 using std::map;
 
-class pkgDPkgPMPrivate;
 
 class pkgDPkgPM : public pkgPackageManager
 {
    private:
-   pkgDPkgPMPrivate *d;
+
+   bool stdin_is_dev_null;
+
+   // the buffer we use for the dpkg status-fd reading
+   char dpkgbuf[1024];
+   int dpkgbuf_pos;
+   FILE *term_out;
+   FILE *history_out;
+   string dpkg_error;
 
    /** \brief record the disappear action and handle accordingly
 

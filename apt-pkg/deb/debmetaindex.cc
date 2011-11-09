@@ -9,6 +9,7 @@
 #include <apt-pkg/error.h>
 
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -142,13 +143,11 @@ string debReleaseIndex::TranslationIndexURI(const char *Type, const string &Sect
       return URI + "dists/" + Dist + "/" + TranslationIndexURISuffix(Type, Section);
 }
 
-debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist) :
-					metaIndex(URI, Dist, "deb"), Trusted(CHECK_TRUST)
-{}
-
-debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist, bool const Trusted) :
-					metaIndex(URI, Dist, "deb") {
-	SetTrusted(Trusted);
+debReleaseIndex::debReleaseIndex(string const &URI, string const &Dist) {
+	this->URI = URI;
+	this->Dist = Dist;
+	this->Indexes = NULL;
+	this->Type = "deb";
 }
 
 debReleaseIndex::~debReleaseIndex() {
@@ -197,7 +196,11 @@ vector <struct IndexTarget *>* debReleaseIndex::ComputeIndexTargets() const {
 		}
 	}
 
-	std::vector<std::string> const lang = APT::Configuration::getLanguages(true);
+	std::vector<std::string> lang = APT::Configuration::getLanguages(true);
+	std::vector<std::string>::iterator lend = std::remove(lang.begin(), lang.end(), "none");
+	if (lend != lang.end())
+		lang.erase(lend);
+
 	if (lang.empty() == true)
 		return IndexTargets;
 
@@ -209,7 +212,6 @@ vector <struct IndexTarget *>* debReleaseIndex::ComputeIndexTargets() const {
 		     s != sections.end(); ++s) {
 			for (std::vector<std::string>::const_iterator l = lang.begin();
 			     l != lang.end(); ++l) {
-				if (*l == "none") continue;
 				IndexTarget * Target = new OptionalIndexTarget();
 				Target->ShortDesc = "Translation-" + *l;
 				Target->MetaKey = TranslationIndexURISuffix(l->c_str(), *s);
@@ -221,7 +223,7 @@ vector <struct IndexTarget *>* debReleaseIndex::ComputeIndexTargets() const {
 	} else {
 		for (std::set<std::string>::const_iterator s = sections.begin();
 		     s != sections.end(); ++s) {
-			IndexTarget * Target = new OptionalSubIndexTarget();
+			IndexTarget * Target = new OptionalIndexTarget();
 			Target->ShortDesc = "TranslationIndex";
 			Target->MetaKey = TranslationIndexURISuffix("Index", *s);
 			Target->URI = TranslationIndexURI("Index", *s);
@@ -254,22 +256,8 @@ bool debReleaseIndex::GetIndexes(pkgAcquire *Owner, bool const &GetAll) const
 	return true;
 }
 
-void debReleaseIndex::SetTrusted(bool const Trusted)
-{
-	if (Trusted == true)
-		this->Trusted = ALWAYS_TRUSTED;
-	else
-		this->Trusted = NEVER_TRUSTED;
-}
-
 bool debReleaseIndex::IsTrusted() const
 {
-   if (Trusted == ALWAYS_TRUSTED)
-      return true;
-   else if (Trusted == NEVER_TRUSTED)
-      return false;
-
-
    if(_config->FindB("APT::Authentication::TrustCDROM", false))
       if(URI.substr(0,strlen("cdrom:")) == "cdrom:")
 	 return true;
@@ -365,7 +353,6 @@ class debSLTypeDebian : public pkgSourceList::Type
       vector<string> const Archs =
 		(arch != Options.end()) ? VectorizeString(arch->second, ',') :
 				APT::Configuration::getArchitectures();
-      map<string, string>::const_iterator const trusted = Options.find("trusted");
 
       for (vector<metaIndex *>::const_iterator I = List.begin();
 	   I != List.end(); ++I)
@@ -375,9 +362,6 @@ class debSLTypeDebian : public pkgSourceList::Type
 	    continue;
 
 	 debReleaseIndex *Deb = (debReleaseIndex *) (*I);
-	 if (trusted != Options.end())
-	    Deb->SetTrusted(StringToBool(trusted->second, false));
-
 	 /* This check insures that there will be only one Release file
 	    queued for all the Packages files and Sources files it
 	    corresponds to. */
@@ -395,14 +379,9 @@ class debSLTypeDebian : public pkgSourceList::Type
 	    return true;
 	 }
       }
-
       // No currently created Release file indexes this entry, so we create a new one.
-      debReleaseIndex *Deb;
-      if (trusted != Options.end())
-	 Deb = new debReleaseIndex(URI, Dist, StringToBool(trusted->second, false));
-      else
-	 Deb = new debReleaseIndex(URI, Dist);
-
+      // XXX determine whether this release is trusted or not
+      debReleaseIndex *Deb = new debReleaseIndex(URI, Dist);
       if (IsSrc == true)
 	 Deb->PushSectionEntry ("source", new debReleaseIndex::debSectionEntry(Section, IsSrc));
       else

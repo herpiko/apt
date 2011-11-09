@@ -37,9 +37,9 @@ using namespace std;
 // Acquire::pkgAcquire - Constructor					/*{{{*/
 // ---------------------------------------------------------------------
 /* We grab some runtime state from the configuration space */
-pkgAcquire::pkgAcquire() : LockFD(-1), Queues(0), Workers(0), Configs(0), Log(NULL), ToFetch(0),
+pkgAcquire::pkgAcquire() : Queues(0), Workers(0), Configs(0), Log(NULL), ToFetch(0),
 			   Debug(_config->FindB("Debug::pkgAcquire",false)),
-			   Running(false)
+			   Running(false), LockFD(-1)
 {
    string const Mode = _config->Find("Acquire::Queue-Mode","host");
    if (strcasecmp(Mode.c_str(),"host") == 0)
@@ -47,10 +47,10 @@ pkgAcquire::pkgAcquire() : LockFD(-1), Queues(0), Workers(0), Configs(0), Log(NU
    if (strcasecmp(Mode.c_str(),"access") == 0)
       QueueMode = QueueAccess;
 }
-pkgAcquire::pkgAcquire(pkgAcquireStatus *Progress) :  LockFD(-1), Queues(0), Workers(0),
+pkgAcquire::pkgAcquire(pkgAcquireStatus *Progress) : Queues(0), Workers(0),
 			   Configs(0), Log(Progress), ToFetch(0),
 			   Debug(_config->FindB("Debug::pkgAcquire",false)),
-			   Running(false)
+			   Running(false), LockFD(-1)
 {
    string const Mode = _config->Find("Acquire::Queue-Mode","host");
    if (strcasecmp(Mode.c_str(),"host") == 0)
@@ -445,6 +445,10 @@ pkgAcquire::Worker *pkgAcquire::WorkerStep(Worker *I)
    if it is part of the download set. */
 bool pkgAcquire::Clean(string Dir)
 {
+   // non-existing directories are by definition clean…
+   if (DirectoryExists(Dir) == false)
+      return true;
+
    DIR *D = opendir(Dir.c_str());   
    if (D == 0)
       return _error->Errno("opendir",_("Unable to read %s"),Dir.c_str());
@@ -799,7 +803,7 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
    }
    
    // Compute the current completion
-   unsigned long long ResumeSize = 0;
+   unsigned long ResumeSize = 0;
    for (pkgAcquire::Worker *I = Owner->WorkersBegin(); I != 0;
 	I = Owner->WorkerStep(I))
       if (I->CurrentItem != 0 && I->CurrentItem->Owner->Complete == false)
@@ -838,7 +842,7 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
       else
 	 CurrentCPS = ((CurrentBytes - ResumeSize) - LastBytes)/Delta;
       LastBytes = CurrentBytes - ResumeSize;
-      ElapsedTime = (unsigned long long)Delta;
+      ElapsedTime = (unsigned long)Delta;
       Time = NewTime;
    }
 
@@ -849,9 +853,8 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
 
       char msg[200];
       long i = CurrentItems < TotalItems ? CurrentItems + 1 : CurrentItems;
-      unsigned long long ETA = 0;
-      if(CurrentCPS > 0)
-         ETA = (TotalBytes - CurrentBytes) / CurrentCPS;
+      unsigned long ETA =
+	 (unsigned long)((TotalBytes - CurrentBytes) / CurrentCPS);
 
       // only show the ETA if it makes sense
       if (ETA > 0 && ETA < 172800 /* two days */ )
@@ -907,13 +910,13 @@ void pkgAcquireStatus::Stop()
    else
       CurrentCPS = FetchedBytes/Delta;
    LastBytes = CurrentBytes;
-   ElapsedTime = (unsigned long long)Delta;
+   ElapsedTime = (unsigned int)Delta;
 }
 									/*}}}*/
 // AcquireStatus::Fetched - Called when a byte set has been fetched	/*{{{*/
 // ---------------------------------------------------------------------
 /* This is used to get accurate final transfer rate reporting. */
-void pkgAcquireStatus::Fetched(unsigned long long Size,unsigned long long Resume)
+void pkgAcquireStatus::Fetched(unsigned long Size,unsigned long Resume)
 {   
    FetchedBytes += Size - Resume;
 }

@@ -135,11 +135,6 @@ bool YnPrompt(bool Default=true)
       c1out << _("Y") << endl;
       return true;
    }
-   else if (_config->FindB("APT::Get::Assume-No",false) == true)
-   {
-      c1out << _("N") << endl;
-      return false;
-   }
 
    char response[1024] = "";
    cin.getline(response, sizeof(response));
@@ -1630,7 +1625,8 @@ bool DoUpdate(CommandLine &CmdL)
    if (_config->FindB("APT::Get::Download",true) == true)
        ListUpdate(Stat, *List);
 
-   // Rebuild the cache.   
+   // Rebuild the cache.
+   pkgCacheFile::RemoveCaches();
    if (Cache.BuildCaches() == false)
       return false;
    
@@ -1688,8 +1684,9 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	    // install it in the first place, so nuke it instead of show it
 	    if (Cache[Pkg].Install() == true && Pkg.CurrentVer() == 0)
 	    {
+	       if (Pkg.CandVersion() != 0)
+	          tooMuch.insert(Pkg);
 	       Cache->MarkDelete(Pkg, false);
-	       tooMuch.insert(Pkg);
 	    }
 	    // only show stuff in the list that is not yet marked for removal
 	    else if(hideAutoRemove == false && Cache[Pkg].Delete() == false) 
@@ -1713,33 +1710,41 @@ bool DoAutomaticRemove(CacheFile &Cache)
       bool Changed;
       do {
 	 Changed = false;
-	 for (APT::PackageSet::const_iterator P = tooMuch.begin();
-	      P != tooMuch.end() && Changed == false; ++P)
+	 for (APT::PackageSet::const_iterator Pkg = tooMuch.begin();
+	      Pkg != tooMuch.end() && Changed == false; ++Pkg)
 	 {
-	    for (pkgCache::DepIterator R = P.RevDependsList();
-		 R.end() == false; ++R)
-	    {
-	       if (R.IsNegative() == true ||
-		   Cache->IsImportantDep(R) == false)
-		  continue;
-	       pkgCache::PkgIterator N = R.ParentPkg();
-	       if (N.end() == true || (N->CurrentVer == 0 && (*Cache)[N].Install() == false))
-		  continue;
-	       if (Debug == true)
-		  std::clog << "Save " << P << " as another installed garbage package depends on it" << std::endl;
-	       Cache->MarkInstall(P, false);
-	       if(hideAutoRemove == false)
+	    APT::PackageSet too;
+	    too.insert(Pkg);
+	    for (pkgCache::PrvIterator Prv = Cache[Pkg].CandidateVerIter(Cache).ProvidesList();
+		 Prv.end() == false; ++Prv)
+	       too.insert(Prv.ParentPkg());
+	    for (APT::PackageSet::const_iterator P = too.begin();
+		 P != too.end() && Changed == false; ++P) {
+	       for (pkgCache::DepIterator R = P.RevDependsList();
+		    R.end() == false; ++R)
 	       {
-		  ++autoRemoveCount;
-		  if (smallList == false)
-		  {
-		     autoremovelist += P.FullName(true) + " ";
-		     autoremoveversions += string(Cache[P].CandVersion) + "\n";
-		  }
+		  if (R.IsNegative() == true ||
+		      Cache->IsImportantDep(R) == false)
+		     continue;
+		 pkgCache::PkgIterator N = R.ParentPkg();
+		 if (N.end() == true || (N->CurrentVer == 0 && (*Cache)[N].Install() == false))
+		    continue;
+		 if (Debug == true)
+		    std::clog << "Save " << Pkg << " as another installed garbage package depends on it" << std::endl;
+		 Cache->MarkInstall(Pkg, false);
+		 if (hideAutoRemove == false)
+		 {
+		    ++autoRemoveCount;
+		    if (smallList == false)
+		    {
+		       autoremovelist += Pkg.FullName(true) + " ";
+		       autoremoveversions += string(Cache[Pkg].CandVersion) + "\n";
+		    }
+		 }
+		 tooMuch.erase(Pkg);
+		 Changed = true;
+		 break;
 	       }
-	       tooMuch.erase(P);
-	       Changed = true;
-	       break;
 	    }
 	 }
       } while (Changed == true);
@@ -1897,7 +1902,8 @@ bool DoInstall(CommandLine &CmdL)
       {
 	 // Call the scored problem resolver
 	 Fix->InstallProtect();
-	 Fix->Resolve(true);
+	 if (Fix->Resolve(true) == false)
+	    _error->Discard();
 	 delete Fix;
       }
 
@@ -1923,11 +1929,8 @@ bool DoInstall(CommandLine &CmdL)
 	 c1out << _("The following information may help to resolve the situation:") << endl;
 	 c1out << endl;
 	 ShowBroken(c1out,Cache,false);
-	 if (_error->PendingError() == true)
-	    return false;
-	 else
-	    return _error->Error(_("Broken packages"));
-      }
+	 return _error->Error(_("Broken packages"));
+      }   
    }
    if (!DoAutomaticRemove(Cache)) 
       return false;
@@ -2210,10 +2213,14 @@ bool DoDSelectUpgrade(CommandLine &CmdL)
 /* */
 bool DoClean(CommandLine &CmdL)
 {
+   std::string const archivedir = _config->FindDir("Dir::Cache::archives");
+   std::string const pkgcache = _config->FindFile("Dir::cache::pkgcache");
+   std::string const srcpkgcache = _config->FindFile("Dir::cache::srcpkgcache");
+
    if (_config->FindB("APT::Get::Simulate") == true)
    {
-      cout << "Del " << _config->FindDir("Dir::Cache::archives") << "* " <<
-	 _config->FindDir("Dir::Cache::archives") << "partial/*" << endl;
+      cout << "Del " << archivedir << "* " << archivedir << "partial/*"<< endl
+	   << "Del " << pkgcache << " " << srcpkgcache << endl;
       return true;
    }
    
@@ -2221,14 +2228,17 @@ bool DoClean(CommandLine &CmdL)
    FileFd Lock;
    if (_config->FindB("Debug::NoLocking",false) == false)
    {
-      Lock.Fd(GetLock(_config->FindDir("Dir::Cache::Archives") + "lock"));
+      Lock.Fd(GetLock(archivedir + "lock"));
       if (_error->PendingError() == true)
 	 return _error->Error(_("Unable to lock the download directory"));
    }
    
    pkgAcquire Fetcher;
-   Fetcher.Clean(_config->FindDir("Dir::Cache::archives"));
-   Fetcher.Clean(_config->FindDir("Dir::Cache::archives") + "partial/");
+   Fetcher.Clean(archivedir);
+   Fetcher.Clean(archivedir + "partial/");
+
+   pkgCacheFile::RemoveCaches();
+
    return true;
 }
 									/*}}}*/
@@ -2310,8 +2320,6 @@ bool DoDownload(CommandLine &CmdL)
       strprintf(descr, _("Downloading %s %s"), Pkg.Name(), Ver.VerStr());
       // get the most appropriate hash
       HashString hash;
-      if (rec.SHA512Hash() != "")
-         hash = HashString("sha512", rec.SHA512Hash());
       if (rec.SHA256Hash() != "")
          hash = HashString("sha256", rec.SHA256Hash());
       else if (rec.SHA1Hash() != "")
@@ -2428,7 +2436,7 @@ bool DoSource(CommandLine &CmdL)
 		  Src.c_str(), vcs.c_str(), uri.c_str());
 	 if(vcs == "Bzr") 
 	    ioprintf(c1out,_("Please use:\n"
-			     "bzr branch %s\n"
+			     "bzr get %s\n"
 			     "to retrieve the latest (possibly unreleased) "
 			     "updates to the package.\n"),
 		     uri.c_str());
@@ -3120,10 +3128,7 @@ bool DownloadChangelog(CacheFile &CacheFile, pkgAcquire &Fetcher,
       return true;
 
    // error
-   pkgRecords Recs(CacheFile);
-   pkgRecords::Parser &rec=Recs.Lookup(Ver.FileList());
-   string srcpkg = rec.SourcePkg().empty() ? Pkg.Name() : rec.SourcePkg();
-   return _error->Error("changelog for this version is not (yet) available; try https://launchpad.net/ubuntu/+source/%s/+changelog", srcpkg.c_str());
+   return _error->Error("changelog download failed");
 }
 									/*}}}*/
 // DisplayFileInPager - Display File with pager        			/*{{{*/
@@ -3349,8 +3354,7 @@ int main(int argc,const char *argv[])					/*{{{*/
       {'s',"dry-run","APT::Get::Simulate",0},
       {'s',"no-act","APT::Get::Simulate",0},
       {'y',"yes","APT::Get::Assume-Yes",0},
-      {'y',"assume-yes","APT::Get::Assume-Yes",0},
-      {0,"assume-no","APT::Get::Assume-No",0},
+      {'y',"assume-yes","APT::Get::Assume-Yes",0},      
       {'f',"fix-broken","APT::Get::Fix-Broken",0},
       {'u',"show-upgraded","APT::Get::Show-Upgraded",0},
       {'m',"ignore-missing","APT::Get::Fix-Missing",0},
@@ -3380,7 +3384,6 @@ int main(int argc,const char *argv[])					/*{{{*/
       {0,"install-recommends","APT::Install-Recommends",CommandLine::Boolean},
       {0,"install-suggests","APT::Install-Suggests",CommandLine::Boolean},
       {0,"fix-policy","APT::Get::Fix-Policy-Broken",0},
-      {0,"solver","APT::Solver",CommandLine::HasArg},
       {'c',"config-file",0,CommandLine::ConfigFile},
       {'o',"option",0,CommandLine::ArbItem},
       {0,0,0,0}};

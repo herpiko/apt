@@ -64,7 +64,8 @@ pkgPolicy::pkgPolicy(pkgCache *Owner) : Pins(0), PFPriority(0), Cache(Owner)
       {
 	 if ((F->Archive != 0 && vm.ExpressionMatches(DefRel, F.Archive()) == true) ||
 	     (F->Codename != 0 && vm.ExpressionMatches(DefRel, F.Codename()) == true) ||
-	     (F->Version != 0 && vm.ExpressionMatches(DefRel, F.Version()) == true))
+	     (F->Version != 0 && vm.ExpressionMatches(DefRel, F.Version()) == true) ||
+	     (DefRel.length() > 2 && DefRel[1] == '='))
 	    found = true;
       }
       if (found == false)
@@ -319,10 +320,6 @@ signed short pkgPolicy::GetPriority(pkgCache::PkgIterator const &Pkg)
    }
    
    return 0;
-}
-signed short pkgPolicy::GetPriority(pkgCache::PkgFileIterator const &File)
-{
-   return PFPriority[File->ID];
 }
 									/*}}}*/
 // PreferenceSection class - Overriding the default TrimRecord method	/*{{{*/

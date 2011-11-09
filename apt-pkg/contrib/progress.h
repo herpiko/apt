@@ -55,7 +55,8 @@ class OpProgress
    public:
    
    void Progress(unsigned long Current);
-   void SubProgress(unsigned long SubTotal, const string &Op = "", float const Percent = -1);
+   void SubProgress(unsigned long SubTotal);
+   void SubProgress(unsigned long SubTotal,const string &Op);
    void OverallProgress(unsigned long Current,unsigned long Total,
 			unsigned long Size,const string &Op);
    virtual void Done() {};

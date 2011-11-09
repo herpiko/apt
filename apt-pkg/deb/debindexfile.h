@@ -22,12 +22,8 @@
 
 class debStatusIndex : public pkgIndexFile
 {
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
-   protected:
    string File;
-
+   
    public:
 
    virtual const Type *GetType() const;
@@ -40,18 +36,13 @@ class debStatusIndex : public pkgIndexFile
    virtual bool HasPackages() const {return true;};
    virtual unsigned long Size() const;
    virtual bool Merge(pkgCacheGenerator &Gen,OpProgress *Prog) const;
-   bool Merge(pkgCacheGenerator &Gen,OpProgress *Prog, unsigned long const Flag) const;
    virtual pkgCache::PkgFileIterator FindInCache(pkgCache &Cache) const;
 
    debStatusIndex(string File);
-   virtual ~debStatusIndex() {};
 };
     
 class debPackagesIndex : public pkgIndexFile
 {
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
    string URI;
    string Dist;
    string Section;
@@ -81,14 +72,10 @@ class debPackagesIndex : public pkgIndexFile
 
    debPackagesIndex(string const &URI, string const &Dist, string const &Section,
 			bool const &Trusted, string const &Arch = "native");
-   virtual ~debPackagesIndex() {};
 };
 
 class debTranslationsIndex : public pkgIndexFile
 {
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
    string URI;
    string Dist;
    string Section;
@@ -116,14 +103,10 @@ class debTranslationsIndex : public pkgIndexFile
    virtual pkgCache::PkgFileIterator FindInCache(pkgCache &Cache) const;
 
    debTranslationsIndex(string URI,string Dist,string Section, char const * const Language);
-   virtual ~debTranslationsIndex() {};
 };
 
 class debSourcesIndex : public pkgIndexFile
 {
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
    string URI;
    string Dist;
    string Section;
@@ -153,7 +136,6 @@ class debSourcesIndex : public pkgIndexFile
    virtual unsigned long Size() const;
    
    debSourcesIndex(string URI,string Dist,string Section,bool Trusted);
-   virtual ~debSourcesIndex() {};
 };
 
 #endif

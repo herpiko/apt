@@ -25,12 +25,9 @@ class debListParser : public pkgCacheGenerator::ListParser
       const char *Str;
       unsigned char Val;
    };
-
+   
    private:
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
-   protected:
+   
    pkgTagFile Tags;
    pkgTagSection Section;
    unsigned long iOffset;
@@ -39,7 +36,7 @@ class debListParser : public pkgCacheGenerator::ListParser
    bool MultiArchEnabled;
 
    unsigned long UniqFindTagWrite(const char *Tag);
-   virtual bool ParseStatus(pkgCache::PkgIterator &Pkg,pkgCache::VerIterator &Ver);
+   bool ParseStatus(pkgCache::PkgIterator &Pkg,pkgCache::VerIterator &Ver);
    bool ParseDepends(pkgCache::VerIterator &Ver,const char *Tag,
 		     unsigned int Type);
    bool ParseProvides(pkgCache::VerIterator &Ver);
@@ -77,7 +74,6 @@ class debListParser : public pkgCacheGenerator::ListParser
    static const char *ConvertRelation(const char *I,unsigned int &Op);
 
    debListParser(FileFd *File, string const &Arch = "");
-   virtual ~debListParser() {};
 };
 
 #endif

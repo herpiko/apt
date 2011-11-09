@@ -24,40 +24,26 @@
 
 using std::string;
 
-class pkgTagFilePrivate
-{
-public:
-   pkgTagFilePrivate(FileFd *pFd, unsigned long Size) : Fd(*pFd), Size(Size)
-   {
-   }
-   FileFd &Fd;
-   char *Buffer;
-   char *Start;
-   char *End;
-   bool Done;
-   unsigned long iOffset;
-   unsigned long Size;
-};
-
 // TagFile::pkgTagFile - Constructor					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-pkgTagFile::pkgTagFile(FileFd *pFd,unsigned long Size)
+pkgTagFile::pkgTagFile(FileFd *pFd,unsigned long Size) :
+     Fd(*pFd),
+     Size(Size)
 {
-   d = new pkgTagFilePrivate(pFd, Size);
-
-   if (d->Fd.IsOpen() == false)
+   if (Fd.IsOpen() == false)
    {
-      d->Start = d->End = d->Buffer = 0;
-      d->Done = true;
-      d->iOffset = 0;
+      Buffer = 0;
+      Start = End = Buffer = 0;
+      Done = true;
+      iOffset = 0;
       return;
    }
    
-   d->Buffer = new char[Size];
-   d->Start = d->End = d->Buffer;
-   d->Done = false;
-   d->iOffset = 0;
+   Buffer = new char[Size];
+   Start = End = Buffer;
+   Done = false;
+   iOffset = 0;
    Fill();
 }
 									/*}}}*/
@@ -66,14 +52,7 @@ pkgTagFile::pkgTagFile(FileFd *pFd,unsigned long Size)
 /* */
 pkgTagFile::~pkgTagFile()
 {
-   delete [] d->Buffer;
-   delete d;
-}
-									/*}}}*/
-// TagFile::Offset - Return the current offset in the buffer     	/*{{{*/
-unsigned long pkgTagFile::Offset()
-{
-   return d->iOffset;
+   delete [] Buffer;
 }
 									/*}}}*/
 // TagFile::Resize - Resize the internal buffer				/*{{{*/
@@ -84,22 +63,22 @@ unsigned long pkgTagFile::Offset()
 bool pkgTagFile::Resize()
 {
    char *tmp;
-   unsigned long EndSize = d->End - d->Start;
+   unsigned long EndSize = End - Start;
 
    // fail is the buffer grows too big
-   if(d->Size > 1024*1024+1)
+   if(Size > 1024*1024+1)
       return false;
 
    // get new buffer and use it
-   tmp = new char[2*d->Size];
-   memcpy(tmp, d->Buffer, d->Size);
-   d->Size = d->Size*2;
-   delete [] d->Buffer;
-   d->Buffer = tmp;
+   tmp = new char[2*Size];
+   memcpy(tmp, Buffer, Size);
+   Size = Size*2;
+   delete [] Buffer;
+   Buffer = tmp;
 
    // update the start/end pointers to the new buffer
-   d->Start = d->Buffer;
-   d->End = d->Start + EndSize;
+   Start = Buffer;
+   End = Start + EndSize;
    return true;
 }
 									/*}}}*/
@@ -111,20 +90,20 @@ bool pkgTagFile::Resize()
  */
 bool pkgTagFile::Step(pkgTagSection &Tag)
 {
-   while (Tag.Scan(d->Start,d->End - d->Start) == false)
+   while (Tag.Scan(Start,End - Start) == false)
    {
       if (Fill() == false)
 	 return false;
       
-      if(Tag.Scan(d->Start,d->End - d->Start))
+      if(Tag.Scan(Start,End - Start))
 	 break;
 
       if (Resize() == false)
 	 return _error->Error(_("Unable to parse package file %s (1)"),
-                              d->Fd.Name().c_str());
+				 Fd.Name().c_str());
    }
-   d->Start += Tag.size();
-   d->iOffset += Tag.size();
+   Start += Tag.size();
+   iOffset += Tag.size();
 
    Tag.Trim();
    return true;
@@ -136,37 +115,37 @@ bool pkgTagFile::Step(pkgTagSection &Tag)
    then fills the rest from the file */
 bool pkgTagFile::Fill()
 {
-   unsigned long EndSize = d->End - d->Start;
+   unsigned long EndSize = End - Start;
    unsigned long Actual = 0;
    
-   memmove(d->Buffer,d->Start,EndSize);
-   d->Start = d->Buffer;
-   d->End = d->Buffer + EndSize;
+   memmove(Buffer,Start,EndSize);
+   Start = Buffer;
+   End = Buffer + EndSize;
    
-   if (d->Done == false)
+   if (Done == false)
    {
       // See if only a bit of the file is left
-      if (d->Fd.Read(d->End, d->Size - (d->End - d->Buffer),&Actual) == false)
+      if (Fd.Read(End,Size - (End - Buffer),&Actual) == false)
 	 return false;
-      if (Actual != d->Size - (d->End - d->Buffer))
-	 d->Done = true;
-      d->End += Actual;
+      if (Actual != Size - (End - Buffer))
+	 Done = true;
+      End += Actual;
    }
    
-   if (d->Done == true)
+   if (Done == true)
    {
       if (EndSize <= 3 && Actual == 0)
 	 return false;
-      if (d->Size - (d->End - d->Buffer) < 4)
+      if (Size - (End - Buffer) < 4)
 	 return true;
       
       // Append a double new line if one does not exist
       unsigned int LineCount = 0;
-      for (const char *E = d->End - 1; E - d->End < 6 && (*E == '\n' || *E == '\r'); E--)
+      for (const char *E = End - 1; E - End < 6 && (*E == '\n' || *E == '\r'); E--)
 	 if (*E == '\n')
 	    LineCount++;
       for (; LineCount < 2; LineCount++)
-	 *d->End++ = '\n';
+	 *End++ = '\n';
       
       return true;
    }
@@ -181,33 +160,33 @@ bool pkgTagFile::Fill()
 bool pkgTagFile::Jump(pkgTagSection &Tag,unsigned long Offset)
 {
    // We are within a buffer space of the next hit..
-   if (Offset >= d->iOffset && d->iOffset + (d->End - d->Start) > Offset)
+   if (Offset >= iOffset && iOffset + (End - Start) > Offset)
    {
-      unsigned long Dist = Offset - d->iOffset;
-      d->Start += Dist;
-      d->iOffset += Dist;
+      unsigned long Dist = Offset - iOffset;
+      Start += Dist;
+      iOffset += Dist;
       return Step(Tag);
    }
 
    // Reposition and reload..
-   d->iOffset = Offset;
-   d->Done = false;
-   if (d->Fd.Seek(Offset) == false)
+   iOffset = Offset;
+   Done = false;
+   if (Fd.Seek(Offset) == false)
       return false;
-   d->End = d->Start = d->Buffer;
+   End = Start = Buffer;
    
    if (Fill() == false)
       return false;
 
-   if (Tag.Scan(d->Start, d->End - d->Start) == true)
+   if (Tag.Scan(Start,End - Start) == true)
       return true;
    
    // This appends a double new line (for the real eof handling)
    if (Fill() == false)
       return false;
    
-   if (Tag.Scan(d->Start, d->End - d->Start) == false)
-      return _error->Error(_("Unable to parse package file %s (2)"),d->Fd.Name().c_str());
+   if (Tag.Scan(Start,End - Start) == false)
+      return _error->Error(_("Unable to parse package file %s (2)"),Fd.Name().c_str());
    
    return true;
 }
@@ -478,7 +457,6 @@ static const char *iTFRewritePackageOrder[] = {
                           "MD5Sum",
                           "SHA1",
                           "SHA256",
-                          "SHA512",
                            "MSDOS-Filename",   // Obsolete
                           "Description",
                           0};

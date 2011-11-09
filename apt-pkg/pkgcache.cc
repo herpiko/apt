@@ -84,8 +84,6 @@ pkgCache::Header::Header()
    memset(PkgHashTable,0,sizeof(PkgHashTable));
    memset(GrpHashTable,0,sizeof(GrpHashTable));
    memset(Pools,0,sizeof(Pools));
-
-   CacheFileSize = 0;
 }
 									/*}}}*/
 // Cache::Header::CheckSizes - Check if the two headers have same *sz	/*{{{*/
@@ -156,9 +154,6 @@ bool pkgCache::ReMap(bool const &Errorchecks)
        HeaderP->MinorVersion != DefHeader.MinorVersion ||
        HeaderP->CheckSizes(DefHeader) == false)
       return _error->Error(_("The package cache file is an incompatible version"));
-
-   if (Map.Size() < HeaderP->CacheFileSize)
-      return _error->Error(_("The package cache file is corrupted, it is too small"));
 
    // Locate our VS..
    if (HeaderP->VerSysName == 0 ||
@@ -754,6 +749,9 @@ bool pkgCache::VerIterator::Automatic() const
    return false;
 }
 									/*}}}*/
+// VerIterator::Pseudo - deprecated no-op method			/*{{{*/
+bool pkgCache::VerIterator::Pseudo() const { return false; }
+									/*}}}*/
 // VerIterator::NewestFile - Return the newest file version relation	/*{{{*/
 // ---------------------------------------------------------------------
 /* This looks at the version numbers associated with all of the sources
@@ -893,22 +891,11 @@ pkgCache::DescIterator pkgCache::VerIterator::TranslatedDescription() const
    {
       pkgCache::DescIterator Desc = DescriptionList();
       for (; Desc.end() == false; ++Desc)
-	 if (*l == Desc.LanguageCode())
+	 if (*l == Desc.LanguageCode() ||
+	     (*l == "en" && strcmp(Desc.LanguageCode(),"") == 0))
 	    break;
       if (Desc.end() == true)
-      {
-	 if (*l == "en")
-	 {
-	    Desc = DescriptionList();
-	    for (; Desc.end() == false; ++Desc)
-	       if (strcmp(Desc.LanguageCode(), "") == 0)
-		  break;
-	    if (Desc.end() == true)
-	       continue;
-	 }
-	 else
-	    continue;
-      }
+	 continue;
       return Desc;
    }
    for (pkgCache::DescIterator Desc = DescriptionList();

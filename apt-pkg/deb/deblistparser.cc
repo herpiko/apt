@@ -128,7 +128,12 @@ bool debListParser::NewVersion(pkgCache::VerIterator &Ver)
    }
 
    if (ArchitectureAll() == true)
-      Ver->MultiArch |= pkgCache::Version::All;
+      switch (Ver->MultiArch)
+      {
+	 case pkgCache::Version::Foreign: Ver->MultiArch = pkgCache::Version::AllForeign; break;
+	 case pkgCache::Version::Allowed: Ver->MultiArch = pkgCache::Version::AllAllowed; break;
+	 default: Ver->MultiArch = pkgCache::Version::All;
+      }
 
    // Archive Size
    Ver->Size = Section.FindULL("Size");
@@ -520,9 +525,9 @@ const char *debListParser::ParseDepends(const char *Start,const char *Stop,
       // Skip whitespace
       for (;I != Stop && isspace(*I) != 0; I++);
       Start = I;
-      for (;I != Stop && *I != ')'; I++);
-      if (I == Stop || Start == I)
-	 return 0;     
+      I = (const char*) memchr(I, ')', Stop - I);
+      if (I == NULL || Start == I)
+	 return 0;
       
       // Skip trailing whitespace
       const char *End = I;
@@ -685,12 +690,12 @@ bool debListParser::ParseProvides(pkgCache::VerIterator &Ver)
 
    if (MultiArchEnabled == false)
       return true;
-   else if ((Ver->MultiArch & pkgCache::Version::Allowed) == pkgCache::Version::Allowed)
+   else if (Ver->MultiArch == pkgCache::Version::Allowed || Ver->MultiArch == pkgCache::Version::AllAllowed)
    {
       string const Package = string(Ver.ParentPkg().Name()).append(":").append("any");
       return NewProvidesAllArch(Ver, Package, Ver.VerStr());
    }
-   else if ((Ver->MultiArch & pkgCache::Version::Foreign) == pkgCache::Version::Foreign)
+   else if (Ver->MultiArch == pkgCache::Version::Foreign || Ver->MultiArch == pkgCache::Version::AllForeign)
       return NewProvidesAllArch(Ver, Ver.ParentPkg().Name(), Ver.VerStr());
 
    return true;
@@ -795,37 +800,32 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
       }
 
       // seperate the tag from the data
-      for (; buffer[len] != ':' && buffer[len] != '\0'; ++len)
-         /* nothing */
-         ;
-      if (buffer[len] == '\0')
+      const char* dataStart = strchr(buffer + len, ':');
+      if (dataStart == NULL)
 	 continue;
-      char* dataStart = buffer + len;
+      len = dataStart - buffer;
       for (++dataStart; *dataStart == ' '; ++dataStart)
          /* nothing */
          ;
-      char* dataEnd = dataStart;
-      for (++dataEnd; *dataEnd != '\0'; ++dataEnd)
-         /* nothing */
-         ;
+      const char* dataEnd = (const char*)rawmemchr(dataStart, '\0');
       // The last char should be a newline, but we can never be sure: #633350
-      char* lineEnd = dataEnd;
+      const char* lineEnd = dataEnd;
       for (--lineEnd; *lineEnd == '\r' || *lineEnd == '\n'; --lineEnd)
          /* nothing */
          ;
       ++lineEnd;
 
       // which datastorage need to be updated
-      enum { Suite, Component, Version, Origin, Codename, Label, None } writeTo = None;
+      map_ptrloc* writeTo = NULL;
       if (buffer[0] == ' ')
 	 ;
-      #define APT_PARSER_WRITETO(X) else if (strncmp(#X, buffer, len) == 0) writeTo = X;
-      APT_PARSER_WRITETO(Suite)
-      APT_PARSER_WRITETO(Component)
-      APT_PARSER_WRITETO(Version)
-      APT_PARSER_WRITETO(Origin)
-      APT_PARSER_WRITETO(Codename)
-      APT_PARSER_WRITETO(Label)
+      #define APT_PARSER_WRITETO(X, Y) else if (strncmp(Y, buffer, len) == 0) writeTo = &X;
+      APT_PARSER_WRITETO(FileI->Archive, "Suite")
+      APT_PARSER_WRITETO(FileI->Component, "Component")
+      APT_PARSER_WRITETO(FileI->Version, "Version")
+      APT_PARSER_WRITETO(FileI->Origin, "Origin")
+      APT_PARSER_WRITETO(FileI->Codename, "Codename")
+      APT_PARSER_WRITETO(FileI->Label, "Label")
       #undef APT_PARSER_WRITETO
       #define APT_PARSER_FLAGIT(X) else if (strncmp(#X, buffer, len) == 0) \
 	 pkgTagSection::FindFlag(FileI->Flags, pkgCache::Flag:: X, dataStart, lineEnd);
@@ -835,19 +835,19 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
 
       // load all data from the line and save it
       string data;
-      if (writeTo != None)
+      if (writeTo != NULL)
 	 data.append(dataStart, dataEnd);
       if (sizeof(buffer) - 1 == (dataEnd - buffer))
       {
 	 while (fgets(buffer, sizeof(buffer), release) != NULL)
 	 {
-	    if (writeTo != None)
+	    if (writeTo != NULL)
 	       data.append(buffer);
 	    if (strlen(buffer) != sizeof(buffer) - 1)
 	       break;
 	 }
       }
-      if (writeTo != None)
+      if (writeTo != NULL)
       {
 	 // remove spaces and stuff from the end of the data line
 	 for (std::string::reverse_iterator s = data.rbegin();
@@ -857,15 +857,7 @@ bool debListParser::LoadReleaseInfo(pkgCache::PkgFileIterator &FileI,
 	       break;
 	    *s = '\0';
 	 }
-	 switch (writeTo) {
-	 case Suite: FileI->Archive = WriteUniqString(data); break;
-	 case Component: FileI->Component = WriteUniqString(data); break;
-	 case Version: FileI->Version = WriteUniqString(data); break;
-	 case Origin: FileI->Origin = WriteUniqString(data); break;
-	 case Codename: FileI->Codename = WriteUniqString(data); break;
-	 case Label: FileI->Label = WriteUniqString(data); break;
-	 case None: break;
-	 }
+	 *writeTo = WriteUniqString(data);
       }
    }
    fclose(release);

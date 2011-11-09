@@ -25,9 +25,6 @@
 
 class pkgCacheFile
 {
-   /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
-
    protected:
    
    MMap *Map;
@@ -60,6 +57,7 @@ class pkgCacheFile
    bool Open(OpProgress *Progress = NULL, bool WithLock = true);
    inline bool ReadOnlyOpen(OpProgress *Progress = NULL) { return Open(Progress, false); };
    __deprecated bool Open(OpProgress &Progress,bool const &WithLock = true) { return Open(&Progress, WithLock); };
+   static void RemoveCaches();
    void Close();
 
    inline pkgCache* GetPkgCache() { BuildCaches(NULL, false); return Cache; };
