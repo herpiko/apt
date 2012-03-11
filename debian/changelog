@@ -1,3 +1,45 @@
+apt (0.8.15.10blankon1) rote; urgency=low
+
+  * Merge Whit debian/sid
+  
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Sun, 11 Mar 2012 09:03:42 +0700
+
+apt (0.8.15.10) unstable; urgency=high
+
+  [ David Kalnischkies ]
+  * algorithms.cc:
+    - show a debug why a package was kept by ResolveByKeep()
+  * doc/manpage-style.xml:
+    - put <brackets> around email addresses
+  * doc/po/de.po:
+    - apply typo-fix from Michael Basse, thanks! (LP: #900770)
+  * apt-pkg/acquire-item.cc:
+    - remove 'old' InRelease file if we can't get a new one before
+      proceeding with Release.gpg to avoid the false impression of a still
+      trusted repository by a (still present) old InRelease file.
+      Thanks to Simon Ruderich for reporting this issue! (CVE-2012-0214)
+
+  [ Chris Leick ]
+  * German manpage translation update
+  * doc/*.xml:
+    - find and fix a bunch of misspellings
+
+  [ Program translation updates ]
+  * Dutch (Jeroen Schot). Closes: #652230
+  * Slovak (Ivan Masar). Closes: #652985
+  * Russian (Yuri Kozlov). Closes: #654844
+  * Hungarian (Gabor Kelemen). Closes: #655238
+  * Polish (Michał Kułach). Closes: #656908
+  * Danish (Joe Hansen). Closes: #658643
+  * French: replace "étiquetage" by "épinglage" for "pinning"
+  
+  [ Michael Vogt ]
+  * merged patch from lp:~uusijani/apt/uusi-branch: 
+     Correct fi translation for hash sum mismatches (lp:420403)
+     Thanks to Jani Uusitalo
+
+ -- Michael Vogt <mvo@debian.org>  Tue, 06 Mar 2012 14:14:26 +0100
+
 apt (0.8.15.9blankon1) rote; urgency=low
 
   * cdmline/apt-key
