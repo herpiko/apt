@@ -660,7 +660,6 @@ DOXYGEN
 DEBIANDOC_TEXT
 DEBIANDOC_HTML
 NEED_SOCKLEN_T_DEFINE
-HAVE_C9X
 HAVE_TIMEGM
 HAVE_STATVFS
 HAVE_BZ2
@@ -695,6 +694,7 @@ build_os
 build_vendor
 build_cpu
 build
+PACKAGE_MAIL
 PACKAGE
 target_alias
 host_alias
@@ -1923,189 +1923,6 @@ $as_echo "$ac_res" >&6; }
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } @%:@ ac_fn_c_check_member
-
-@%:@ ac_fn_c_compute_int LINENO EXPR VAR INCLUDES
-@%:@ --------------------------------------------
-@%:@ Tries to find the compile-time value of EXPR in a program that includes
-@%:@ INCLUDES, setting VAR accordingly. Returns whether the value could be
-@%:@ computed
-ac_fn_c_compute_int ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  if test "$cross_compiling" = yes; then
-    # Depending upon the size, compute the lo and hi bounds.
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-static int test_array @<:@1 - 2 * !(($2) >= 0)@:>@;
-test_array @<:@0@:>@ = 0;
-return test_array @<:@0@:>@;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_lo=0 ac_mid=0
-  while :; do
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-static int test_array @<:@1 - 2 * !(($2) <= $ac_mid)@:>@;
-test_array @<:@0@:>@ = 0;
-return test_array @<:@0@:>@;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_hi=$ac_mid; break
-else
-  as_fn_arith $ac_mid + 1 && ac_lo=$as_val
-			if test $ac_lo -le $ac_mid; then
-			  ac_lo= ac_hi=
-			  break
-			fi
-			as_fn_arith 2 '*' $ac_mid + 1 && ac_mid=$as_val
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  done
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-static int test_array @<:@1 - 2 * !(($2) < 0)@:>@;
-test_array @<:@0@:>@ = 0;
-return test_array @<:@0@:>@;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_hi=-1 ac_mid=-1
-  while :; do
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-static int test_array @<:@1 - 2 * !(($2) >= $ac_mid)@:>@;
-test_array @<:@0@:>@ = 0;
-return test_array @<:@0@:>@;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_lo=$ac_mid; break
-else
-  as_fn_arith '(' $ac_mid ')' - 1 && ac_hi=$as_val
-			if test $ac_mid -le $ac_hi; then
-			  ac_lo= ac_hi=
-			  break
-			fi
-			as_fn_arith 2 '*' $ac_mid && ac_mid=$as_val
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  done
-else
-  ac_lo= ac_hi=
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-# Binary search between lo and hi bounds.
-while test "x$ac_lo" != "x$ac_hi"; do
-  as_fn_arith '(' $ac_hi - $ac_lo ')' / 2 + $ac_lo && ac_mid=$as_val
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-int
-main ()
-{
-static int test_array @<:@1 - 2 * !(($2) <= $ac_mid)@:>@;
-test_array @<:@0@:>@ = 0;
-return test_array @<:@0@:>@;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_hi=$ac_mid
-else
-  as_fn_arith '(' $ac_mid ')' + 1 && ac_lo=$as_val
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-done
-case $ac_lo in @%:@((
-?*) eval "$3=\$ac_lo"; ac_retval=0 ;;
-'') ac_retval=1 ;;
-esac
-  else
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-static long int longval () { return $2; }
-static unsigned long int ulongval () { return $2; }
-@%:@include <stdio.h>
-@%:@include <stdlib.h>
-int
-main ()
-{
-
-  FILE *f = fopen ("conftest.val", "w");
-  if (! f)
-    return 1;
-  if (($2) < 0)
-    {
-      long int i = longval ();
-      if (i != ($2))
-	return 1;
-      fprintf (f, "%ld", i);
-    }
-  else
-    {
-      unsigned long int i = ulongval ();
-      if (i != ($2))
-	return 1;
-      fprintf (f, "%lu", i);
-    }
-  /* Do not output a trailing newline, as this causes \r\n confusion
-     on some platforms.  */
-  return ferror (f) || fclose (f) != 0;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  echo >>conftest.val; read $3 <conftest.val; ac_retval=0
-else
-  ac_retval=1
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-rm -f conftest.val
-
-  fi
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-  as_fn_set_status $ac_retval
-
-} @%:@ ac_fn_c_compute_int
 cat >config.log <<_ACEOF
 This file contains any messages produced by compilers while
 running configure, to aid debugging if configure makes a mistake.
@@ -2492,7 +2309,8 @@ ac_config_headers="$ac_config_headers include/config.h:buildlib/config.h.in incl
 
 
 PACKAGE="apt"
-PACKAGE_VERSION="0.9.4"
+PACKAGE_VERSION="0.9.5.1"
+PACKAGE_MAIL="APT Development Team <deity@lists.debian.org>"
 cat >>confdefs.h <<_ACEOF
 @%:@define PACKAGE "$PACKAGE"
 _ACEOF
@@ -2500,6 +2318,11 @@ _ACEOF
 cat >>confdefs.h <<_ACEOF
 @%:@define PACKAGE_VERSION "$PACKAGE_VERSION"
 _ACEOF
+
+cat >>confdefs.h <<_ACEOF
+@%:@define PACKAGE_MAIL "$PACKAGE_MAIL"
+_ACEOF
+
 
 
 
@@ -4837,33 +4660,6 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C99 integer types" >&5
-$as_echo_n "checking for C99 integer types... " >&6; }
-if ${apt_cv_c9x_ints+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <inttypes.h>
-int
-main ()
-{
-uint8_t Foo1;uint16_t Foo2;uint32_t Foo3;
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  apt_cv_c9x_ints=yes
-else
-  apt_cv_c9x_ints=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $apt_cv_c9x_ints" >&5
-$as_echo "$apt_cv_c9x_ints" >&6; }
-
 ac_fn_c_check_func "$LINENO" "statvfs" "ac_cv_func_statvfs"
 if test "x$ac_cv_func_statvfs" = xyes; then :
   HAVE_STATVFS=yes
@@ -4924,25 +4720,6 @@ fi
 
 
 
-
-archline="`awk \" ! /^#|^\\\$/ {if (match(\\\"$archset\\\",\\\$1)) {print; exit}}\" $srcdir/buildlib/sizetable | cut -f 2- -d ' '`"
-if test "x$archline" != "x"; then
-   
-   set $archline
-   if test "$1" = "little"; then
-      ac_cv_c_bigendian=no
-   else
-      ac_cv_c_bigendian=yes
-   fi
-   size_char=$2
-   size_int=$3
-   size_short=$4
-   size_long=$5
-fi
-
-if test "$cross_compiling" = "yes" -a "x$archline" = "x"; then
-  as_fn_error architecture must be present in sizetable "When cross compiling" "$LINENO" 5
-fi
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether byte ordering is bigendian" >&5
 $as_echo_n "checking whether byte ordering is bigendian... " >&6; }
 if ${ac_cv_c_bigendian+:} false; then :
@@ -5167,145 +4944,6 @@ $as_echo "@%:@define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
  presetting ac_cv_c_bigendian=no (or yes) will help" "$LINENO" 5 ;;
  esac
 
-
-HAVE_C9X=yes
-if test x"$apt_cv_c9x_ints" = x"no"; then
-   # The cast to long int works around a bug in the HP C Compiler
-# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
-# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
-# This bug is HP SR number 8606223364.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of char" >&5
-$as_echo_n "checking size of char... " >&6; }
-if ${ac_cv_sizeof_char+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (char))" "ac_cv_sizeof_char"        "$ac_includes_default"; then :
-  
-else
-  if test "$ac_cv_type_char" = yes; then
-     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error 77 "cannot compute sizeof (char)
-See \`config.log' for more details" "$LINENO" 5; }
-   else
-     ac_cv_sizeof_char=0
-   fi
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_char" >&5
-$as_echo "$ac_cv_sizeof_char" >&6; }
-
-
-
-cat >>confdefs.h <<_ACEOF
-@%:@define SIZEOF_CHAR $ac_cv_sizeof_char
-_ACEOF
-
-
-   # The cast to long int works around a bug in the HP C Compiler
-# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
-# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
-# This bug is HP SR number 8606223364.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of int" >&5
-$as_echo_n "checking size of int... " >&6; }
-if ${ac_cv_sizeof_int+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (int))" "ac_cv_sizeof_int"        "$ac_includes_default"; then :
-  
-else
-  if test "$ac_cv_type_int" = yes; then
-     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error 77 "cannot compute sizeof (int)
-See \`config.log' for more details" "$LINENO" 5; }
-   else
-     ac_cv_sizeof_int=0
-   fi
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_int" >&5
-$as_echo "$ac_cv_sizeof_int" >&6; }
-
-
-
-cat >>confdefs.h <<_ACEOF
-@%:@define SIZEOF_INT $ac_cv_sizeof_int
-_ACEOF
-
-
-   # The cast to long int works around a bug in the HP C Compiler
-# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
-# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
-# This bug is HP SR number 8606223364.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of short" >&5
-$as_echo_n "checking size of short... " >&6; }
-if ${ac_cv_sizeof_short+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (short))" "ac_cv_sizeof_short"        "$ac_includes_default"; then :
-  
-else
-  if test "$ac_cv_type_short" = yes; then
-     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error 77 "cannot compute sizeof (short)
-See \`config.log' for more details" "$LINENO" 5; }
-   else
-     ac_cv_sizeof_short=0
-   fi
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_short" >&5
-$as_echo "$ac_cv_sizeof_short" >&6; }
-
-
-
-cat >>confdefs.h <<_ACEOF
-@%:@define SIZEOF_SHORT $ac_cv_sizeof_short
-_ACEOF
-
-
-   # The cast to long int works around a bug in the HP C Compiler
-# version HP92453-01 B.11.11.23709.GP, which incorrectly rejects
-# declarations like `int a3[[(sizeof (unsigned char)) >= 0]];'.
-# This bug is HP SR number 8606223364.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking size of long" >&5
-$as_echo_n "checking size of long... " >&6; }
-if ${ac_cv_sizeof_long+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if ac_fn_c_compute_int "$LINENO" "(long int) (sizeof (long))" "ac_cv_sizeof_long"        "$ac_includes_default"; then :
-  
-else
-  if test "$ac_cv_type_long" = yes; then
-     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error 77 "cannot compute sizeof (long)
-See \`config.log' for more details" "$LINENO" 5; }
-   else
-     ac_cv_sizeof_long=0
-   fi
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_sizeof_long" >&5
-$as_echo "$ac_cv_sizeof_long" >&6; }
-
-
-
-cat >>confdefs.h <<_ACEOF
-@%:@define SIZEOF_LONG $ac_cv_sizeof_long
-_ACEOF
-
-
-  
-   HAVE_C9X=
-   
-fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for missing socklen_t" >&5
 $as_echo_n "checking for missing socklen_t... " >&6; }
