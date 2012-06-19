@@ -1,3 +1,45 @@
+apt (0.9.7blankon1) rote; urgency=low
+
+  * Merge whit sid
+  * New Upstream release
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Tue, 19 Jun 2012 07:49:30 +0700
+
+apt (0.9.7) unstable; urgency=low
+
+  [ Julian Andres Klode ]
+  * apt-pkg/contrib/mmap.cc:
+    - Fix the Fallback option to work correctly, by not calling
+      realloc() on a map mapped by mmap(), and by using malloc
+      and friends instead of new[].
+    - Zero out the new memory allocated with realloc().
+
+  [ Daniel Hartwig ]
+  * apt-pkg/pkgcachegen.cc:
+    - always reset _error->StackCount in MakeStatusCache (Closes: #677175)
+
+  [ David Kalnischkies ]
+  * apt-pkg/deb/deblistparser.cc:
+    - ensure that mixed positive/negative architecture wildcards
+      are handled in the same way as dpkg handles them
+    - use PackageArchitectureMatchesSpecification filter
+  * apt-pkg/cachefilter.cc:
+    - add PackageArchitectureMatchesSpecification (Closes: #672603)
+  * apt-pkg/cacheset.cc:
+    - add PackageContainerInterface::FromGroup to support
+      architecture specifications with wildcards on the commandline
+  * apt-pkg/pkgcache.cc:
+    - do a string comparision for architecture checking in IsMultiArchImplicit
+      as 'unique' strings in the pkgcache aren't unique (Closes: #677454)
+  * buildlib/configure.mak:
+    - print a message detailing how to get config.guess and config.sub
+      in case they are not in /usr/share/misc (Closes: #677312)
+  * cmdline/apt-get.cc:
+    - print a friendly message in 'download' if a package can't be
+      downloaded (Closes: #677887)
+
+ -- Michael Vogt <mvo@debian.org>  Tue, 19 Jun 2012 16:42:43 +0200
+
 apt (0.9.6blankon1) rote; urgency=low
 
   * Merge whit sid.
