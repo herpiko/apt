@@ -75,7 +75,7 @@ net_update() {
     fi
     requires_root
     # in theory we would need to depend on wget for this, but this feature
-    # isn't useable in debian anyway as we have no keyring uri nor a master key
+    # isn't useable in blankon anyway as we have no keyring uri nor a master key
     if ! which wget >/dev/null 2>&1; then
 	echo >&2 "ERROR: an installed wget is required for a network-based update"
 	exit 1
