@@ -25,6 +25,7 @@ ARCHIVE_KEYRING_URI=""
 ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
 REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
 
+
 requires_root() {
 	if [ "$(id -u)" -ne 0 ]; then
 		echo >&1 "ERROR: This command can only be used by root."
@@ -75,7 +76,7 @@ net_update() {
     fi
     requires_root
     # in theory we would need to depend on wget for this, but this feature
-    # isn't useable in blankon anyway as we have no keyring uri nor a master key
+    # isn't useable in debian anyway as we have no keyring uri nor a master key
     if ! which wget >/dev/null 2>&1; then
 	echo >&2 "ERROR: an installed wget is required for a network-based update"
 	exit 1
