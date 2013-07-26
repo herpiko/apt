@@ -1,27 +1,27 @@
 Source: apt
 Section: admin
 Priority: important
-aintainer: BlankOn Developers <blankon-dev@googlegroups.com>
+Maintainer: BlankOn Developers <blankon-dev@googlegroups.com>
 XSBC-Original-Maintainer: APT Development Team <deity@lists.debian.org>
 Uploaders: Michael Vogt <mvo@debian.org>, Otavio Salvador <otavio@debian.org>,
  Christian Perrier <bubulle@debian.org>, Daniel Burrows <dburrows@debian.org>,
  Julian Andres Klode <jak@debian.org>
 Standards-Version: 3.9.3
 Build-Depends: dpkg-dev (>= 1.15.8), debhelper (>= 8.1.3~), libdb-dev,
- gettext (>= 0.12), libcurl4-gnutls-dev (>= 7.19.0),
+ gettext (>= 0.12), libcurl4-gnutls-dev (>= 7.19.4~),
  zlib1g-dev, libbz2-dev, xsltproc, docbook-xsl, docbook-xml,
  po4a (>= 0.34-2), autotools-dev, autoconf, automake
 Build-Depends-Indep: doxygen, debiandoc-sgml
 Build-Conflicts: autoconf2.13, automake1.4
-Vcs-Bzr: http://bzr.debian.org/apt/debian-sid/
-Vcs-Browser: http://bzr.debian.org/loggerhead/apt/debian-sid/
+Vcs-Git: git://anonscm.debian.org/apt/apt.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=apt/apt.git
 
 Package: apt
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, blankon-keyring, gnupg
-Replaces: manpages-pl (<< 20060617-3~)
+Depends: ${shlibs:Depends}, ${misc:Depends}, blankon-keyring, debian-archive-keyring, gnupg
+Replaces: manpages-pl (<< 20060617-3~), manpages-it
 Conflicts: python-apt (<< 0.7.93.2~)
-Suggests: aptitude | synaptic | wajig, xz-utils, python-apt
+Suggests: aptitude | synaptic | wajig, dpkg-dev, apt-doc, xz-utils, python-apt
 Description: commandline package manager
  This package provides commandline tools for searching and
  managing as well as querying information about packages
@@ -42,6 +42,7 @@ Architecture: any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Breaks: apt (<< 0.9.4~)
 Section: libs
 Description: package managment runtime library
  This library provides the common functionality for searching and

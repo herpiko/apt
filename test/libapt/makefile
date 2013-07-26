@@ -2,6 +2,7 @@
 BASE=../..
 SUBDIR=test/libapt
 BASENAME=_libapt_test
+APT_DOMAIN=none
 
 # Bring in the default rules
 include ../../buildlib/defaults.mak
@@ -86,3 +87,22 @@ PROGRAM = CdromFindPackages${BASENAME}
 SLIBS = -lapt-pkg
 SOURCE = cdromfindpackages_test.cc
 include $(PROGRAM_H)
+
+# test cdroms index reduction for source.list
+PROGRAM = CdromReduceSourceList${BASENAME}
+SLIBS = -lapt-pkg
+SOURCE = cdromreducesourcelist_test.cc
+include $(PROGRAM_H)
+
+# test IndexCopy::ConvertToSourceList
+PROGRAM = IndexCopyToSourceList${BASENAME}
+SLIBS = -lapt-pkg
+SOURCE = indexcopytosourcelist_test.cc
+include $(PROGRAM_H)
+
+# test tagfile
+PROGRAM = PkgTagFile${BASENAME}
+SLIBS = -lapt-pkg
+SOURCE = tagfile_test.cc
+include $(PROGRAM_H)
+

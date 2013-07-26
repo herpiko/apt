@@ -52,7 +52,7 @@ pkgCache::Header::Header()
    /* Whenever the structures change the major version should be bumped,
       whenever the generator changes the minor version should be bumped. */
    MajorVersion = 8;
-   MinorVersion = 0;
+   MinorVersion = 1;
    Dirty = false;
    
    HeaderSz = sizeof(pkgCache::Header);
@@ -182,18 +182,17 @@ unsigned long pkgCache::sHash(const string &Str) const
 {
    unsigned long Hash = 0;
    for (string::const_iterator I = Str.begin(); I != Str.end(); ++I)
-      Hash = 5*Hash + tolower_ascii(*I);
+      Hash = 41 * Hash + tolower_ascii(*I);
    return Hash % _count(HeaderP->PkgHashTable);
 }
 
 unsigned long pkgCache::sHash(const char *Str) const
 {
-   unsigned long Hash = 0;
-   for (const char *I = Str; *I != 0; ++I)
-      Hash = 5*Hash + tolower_ascii(*I);
+   unsigned long Hash = tolower_ascii(*Str);
+   for (const char *I = Str + 1; *I != 0; ++I)
+      Hash = 41 * Hash + tolower_ascii(*I);
    return Hash % _count(HeaderP->PkgHashTable);
 }
-
 									/*}}}*/
 // Cache::SingleArchFindPkg - Locate a package by name			/*{{{*/
 // ---------------------------------------------------------------------
@@ -206,9 +205,14 @@ pkgCache::PkgIterator pkgCache::SingleArchFindPkg(const string &Name)
    Package *Pkg = PkgP + HeaderP->PkgHashTable[Hash(Name)];
    for (; Pkg != PkgP; Pkg = PkgP + Pkg->NextPackage)
    {
-      if (Pkg->Name != 0 && StrP[Pkg->Name] == Name[0] &&
-          stringcasecmp(Name,StrP + Pkg->Name) == 0)
-         return PkgIterator(*this,Pkg);
+      if (unlikely(Pkg->Name == 0))
+	 continue;
+
+      int const cmp = strcasecmp(Name.c_str(), StrP + Pkg->Name);
+      if (cmp == 0)
+	 return PkgIterator(*this, Pkg);
+      else if (cmp < 0)
+	 break;
    }
    return PkgIterator(*this,0);
 }
@@ -238,7 +242,7 @@ pkgCache::PkgIterator pkgCache::FindPkg(const string &Name) {
 // ---------------------------------------------------------------------
 /* Returns 0 on error, pointer to the package otherwise */
 pkgCache::PkgIterator pkgCache::FindPkg(const string &Name, string const &Arch) {
-	if (MultiArchCache() == false) {
+	if (MultiArchCache() == false && Arch != "none") {
 		if (Arch == "native" || Arch == "all" || Arch == "any" ||
 		    Arch == NativeArch())
 			return SingleArchFindPkg(Name);
@@ -265,9 +269,14 @@ pkgCache::GrpIterator pkgCache::FindGrp(const string &Name) {
 	// Look at the hash bucket for the group
 	Group *Grp = GrpP + HeaderP->GrpHashTable[sHash(Name)];
 	for (; Grp != GrpP; Grp = GrpP + Grp->Next) {
-		if (Grp->Name != 0 && StrP[Grp->Name] == Name[0] &&
-		    stringcasecmp(Name, StrP + Grp->Name) == 0)
+		if (unlikely(Grp->Name == 0))
+		   continue;
+
+		int const cmp = strcasecmp(Name.c_str(), StrP + Grp->Name);
+		if (cmp == 0)
 			return GrpIterator(*this, Grp);
+		else if (cmp < 0)
+			break;
 	}
 
 	return GrpIterator(*this,0);
@@ -279,22 +288,22 @@ pkgCache::GrpIterator pkgCache::FindGrp(const string &Name) {
    type in the weird debian style.. */
 const char *pkgCache::CompTypeDeb(unsigned char Comp)
 {
-   const char *Ops[] = {"","<=",">=","<<",">>","=","!="};
-   if ((unsigned)(Comp & 0xF) < 7)
-      return Ops[Comp & 0xF];
-   return "";	 
+   const char * const Ops[] = {"","<=",">=","<<",">>","=","!="};
+   if (unlikely((unsigned)(Comp & 0xF) >= sizeof(Ops)/sizeof(Ops[0])))
+      return "";
+   return Ops[Comp & 0xF];
 }
 									/*}}}*/
 // Cache::CompType - Return a string describing the compare type	/*{{{*/
 // ---------------------------------------------------------------------
-/* This returns a string representation of the dependency compare 
+/* This returns a string representation of the dependency compare
    type */
 const char *pkgCache::CompType(unsigned char Comp)
 {
-   const char *Ops[] = {"","<=",">=","<",">","=","!="};
-   if ((unsigned)(Comp & 0xF) < 7)
-      return Ops[Comp & 0xF];
-   return "";	 
+   const char * const Ops[] = {"","<=",">=","<",">","=","!="};
+   if (unlikely((unsigned)(Comp & 0xF) >= sizeof(Ops)/sizeof(Ops[0])))
+      return "";
+   return Ops[Comp & 0xF];
 }
 									/*}}}*/
 // Cache::DepType - Return a string describing the dep type		/*{{{*/
@@ -376,6 +385,10 @@ pkgCache::PkgIterator pkgCache::GrpIterator::FindPreferredPkg(bool const &Prefer
 		if (Pkg.end() == false && (PreferNonVirtual == false || Pkg->VersionList != 0))
 			return Pkg;
 	}
+	// packages without an architecture
+	Pkg = FindPkg("none");
+	if (Pkg.end() == false && (PreferNonVirtual == false || Pkg->VersionList != 0))
+		return Pkg;
 
 	if (PreferNonVirtual == true)
 		return FindPreferredPkg(false);
@@ -621,8 +634,7 @@ pkgCache::Version **pkgCache::DepIterator::AllTargets() const
       {
 	 if (IsIgnorable(I.ParentPkg()) == true)
 	    continue;
-
-	 if (Owner->VS->CheckDep(I.VerStr(),S->CompareOp,TargetVer()) == false)
+	 if (IsSatisfied(I) == false)
 	    continue;
 
 	 Size++;
@@ -635,8 +647,7 @@ pkgCache::Version **pkgCache::DepIterator::AllTargets() const
       {
 	 if (IsIgnorable(I) == true)
 	    continue;
-
-	 if (Owner->VS->CheckDep(I.ProvideVersion(),S->CompareOp,TargetVer()) == false)
+	 if (IsSatisfied(I) == false)
 	    continue;
 
 	 Size++;
@@ -686,8 +697,29 @@ void pkgCache::DepIterator::GlobOr(DepIterator &Start,DepIterator &End)
    on virtual packages. */
 bool pkgCache::DepIterator::IsIgnorable(PkgIterator const &Pkg) const
 {
-   if (ParentPkg() == TargetPkg())
-      return IsNegative();
+   if (IsNegative() == false)
+      return false;
+
+   pkgCache::PkgIterator PP = ParentPkg();
+   pkgCache::PkgIterator PT = TargetPkg();
+   if (PP->Group != PT->Group)
+      return false;
+   // self-conflict
+   if (PP == PT)
+      return true;
+   pkgCache::VerIterator PV = ParentVer();
+   // ignore group-conflict on a M-A:same package - but not our implicit dependencies
+   // so that we can have M-A:same packages conflicting with their own real name
+   if ((PV->MultiArch & pkgCache::Version::Same) == pkgCache::Version::Same)
+   {
+      // Replaces: ${self}:other ( << ${binary:Version})
+      if (S->Type == pkgCache::Dep::Replaces && S->CompareOp == pkgCache::Dep::Less && strcmp(PV.VerStr(), TargetVer()) == 0)
+	 return false;
+      // Breaks: ${self}:other (!= ${binary:Version})
+      if (S->Type == pkgCache::Dep::DpkgBreaks && S->CompareOp == pkgCache::Dep::NotEquals && strcmp(PV.VerStr(), TargetVer()) == 0)
+	 return false;
+      return true;
+   }
 
    return false;
 }
@@ -721,6 +753,16 @@ bool pkgCache::DepIterator::IsMultiArchImplicit() const
 	S->Type == pkgCache::Dep::Conflicts))
       return true;
    return false;
+}
+									/*}}}*/
+// DepIterator::IsSatisfied - check if a version satisfied the dependency /*{{{*/
+bool pkgCache::DepIterator::IsSatisfied(VerIterator const &Ver) const
+{
+   return Owner->VS->CheckDep(Ver.VerStr(),S->CompareOp,TargetVer());
+}
+bool pkgCache::DepIterator::IsSatisfied(PrvIterator const &Prv) const
+{
+   return Owner->VS->CheckDep(Prv.ProvideVersion(),S->CompareOp,TargetVer());
 }
 									/*}}}*/
 // ostream operator to handle string representation of a dependecy	/*{{{*/
@@ -880,6 +922,18 @@ string pkgCache::VerIterator::RelStr() const
    if (S->ParentPkg != 0)
       Res.append(" [").append(Arch()).append("]");
    return Res;
+}
+									/*}}}*/
+// VerIterator::MultiArchType - string representing MultiArch flag	/*{{{*/
+const char * pkgCache::VerIterator::MultiArchType() const
+{
+   if ((S->MultiArch & pkgCache::Version::Same) == pkgCache::Version::Same)
+      return "same";
+   else if ((S->MultiArch & pkgCache::Version::Foreign) == pkgCache::Version::Foreign)
+      return "foreign";
+   else if ((S->MultiArch & pkgCache::Version::Allowed) == pkgCache::Version::Allowed)
+      return "allowed";
+   return "none";
 }
 									/*}}}*/
 // PkgFileIterator::IsOk - Checks if the cache is in sync with the file	/*{{{*/

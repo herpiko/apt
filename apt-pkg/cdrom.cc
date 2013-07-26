@@ -272,6 +272,29 @@ bool pkgCdrom::DropBinaryArch(vector<string> &List)
    return true;
 }
 									/*}}}*/
+// DropTranslation - Dump unwanted Translation-<lang> files		/*{{{*/
+// ---------------------------------------------------------------------
+/* Here we drop everything that is not configured in Acquire::Languages */
+bool pkgCdrom::DropTranslation(vector<string> &List)
+{
+   for (unsigned int I = 0; I < List.size(); I++)
+   {
+      const char *Start;
+      if ((Start = strstr(List[I].c_str(), "/Translation-")) == NULL)
+	 continue;
+      Start += strlen("/Translation-");
+
+      if (APT::Configuration::checkLanguage(Start, true) == true)
+	 continue;
+
+      // not accepted -> Erase it
+      List.erase(List.begin() + I);
+      --I; // the next entry is at the same index after the erase
+   }
+
+   return true;
+}
+									/*}}}*/
 // DropRepeats - Drop repeated files resulting from symlinks		/*{{{*/
 // ---------------------------------------------------------------------
 /* Here we go and stat every file that we found and strip dup inodes. */
@@ -363,6 +386,7 @@ void pkgCdrom::ReduceSourcelist(string CD,vector<string> &List)
 
       string Word1 = string(*I,Space,SSpace-Space);
       string Prefix = string(*I,0,Space);
+      string Component = string(*I,SSpace);
       for (vector<string>::iterator J = List.begin(); J != I; ++J)
       {
 	 // Find a space..
@@ -377,9 +401,11 @@ void pkgCdrom::ReduceSourcelist(string CD,vector<string> &List)
 	    continue;
 	 if (string(*J,Space2,SSpace2-Space2) != Word1)
 	    continue;
-	 
-	 *J += string(*I,SSpace);
-	 *I = string();
+
+	 string Component2 = string(*J, SSpace2) + " ";
+	 if (Component2.find(Component + " ") == std::string::npos)
+	    *J += Component;
+	 I->clear();
       }
    }   
 
@@ -711,6 +737,8 @@ bool pkgCdrom::Add(pkgCdromStatus *log)					/*{{{*/
    DropRepeats(SigList,"InRelease");
    _error->RevertToStack();
    DropRepeats(TransList,"");
+   if (_config->FindB("APT::CDROM::DropTranslation", true) == true)
+      DropTranslation(TransList);
    if(log != NULL) {
       msg.str("");
       ioprintf(msg, _("Found %zu package indexes, %zu source indexes, "
@@ -801,6 +829,14 @@ bool pkgCdrom::Add(pkgCdromStatus *log)					/*{{{*/
       log->Update(msg.str());
       log->Update(_("Copying package lists..."), STEP_COPY);
    }
+
+   // check for existence and possibly create state directory for copying
+   string const listDir = _config->FindDir("Dir::State::lists");
+   string const partialListDir = listDir + "partial/";
+   if (CreateAPTDirectoryIfNeeded(_config->FindDir("Dir::State"), partialListDir) == false &&
+       CreateAPTDirectoryIfNeeded(listDir, partialListDir) == false)
+      return _error->Errno("cdrom", _("List directory %spartial is missing."), listDir.c_str());
+
    // take care of the signatures and copy them if they are ok
    // (we do this before PackageCopy as it modifies "List" and "SourceList")
    SigVerify SignVerify;

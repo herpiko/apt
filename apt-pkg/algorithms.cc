@@ -194,6 +194,11 @@ bool pkgSimulate::Remove(PkgIterator iPkg,bool Purge)
 {
    // Adapt the iterator
    PkgIterator Pkg = Sim.FindPkg(iPkg.Name(), iPkg.Arch());
+   if (Pkg.end() == true)
+   {
+      std::cerr << (Purge ? "Purg" : "Remv") << " invalid package " << iPkg.FullName() << std::endl;
+      return false;
+   }
 
    Flags[Pkg->ID] = 3;
    Sim.MarkDelete(Pkg);
@@ -282,13 +287,13 @@ bool pkgApplyStatus(pkgDepCache &Cache)
 		 Cache[I].CandidateVerIter(Cache).Downloadable() == true)
 	       Cache.MarkInstall(I, true, 0, false);
 	    else
-	       Cache.MarkDelete(I);
+	       Cache.MarkDelete(I, false, 0, false);
 	 }
 	 break;
 
 	 // This means removal failed
 	 case pkgCache::State::HalfInstalled:
-	 Cache.MarkDelete(I);
+	 Cache.MarkDelete(I, false, 0, false);
 	 break;
 	 
 	 default:
@@ -545,11 +550,14 @@ void pkgProblemResolver::MakeScores()
    unsigned long Size = Cache.Head().PackageCount;
    memset(Scores,0,sizeof(*Scores)*Size);
 
-   // Important Required Standard Optional Extra
+   // Maps to pkgCache::State::VerPriority
+   //   which is "Important Required Standard Optional Extra"
+   // (yes, that is confusing, the order of pkgCache::State::VerPriority
+   //  needs to be adjusted but that requires a ABI break)
    int PrioMap[] = {
       0,
-      _config->FindI("pkgProblemResolver::Scores::Important",3),
-      _config->FindI("pkgProblemResolver::Scores::Required",2),
+      _config->FindI("pkgProblemResolver::Scores::Important",2),
+      _config->FindI("pkgProblemResolver::Scores::Required",3),
       _config->FindI("pkgProblemResolver::Scores::Standard",1),
       _config->FindI("pkgProblemResolver::Scores::Optional",-1),
       _config->FindI("pkgProblemResolver::Scores::Extra",-2)
@@ -563,11 +571,11 @@ void pkgProblemResolver::MakeScores()
 
    if (_config->FindB("Debug::pkgProblemResolver::ShowScores",false) == true)
       clog << "Settings used to calculate pkgProblemResolver::Scores::" << endl
-         << "  Important => " << PrioMap[1] << endl
-         << "  Required => " << PrioMap[2] << endl
-         << "  Standard => " << PrioMap[3] << endl
-         << "  Optional => " << PrioMap[4] << endl
-         << "  Extra => " << PrioMap[5] << endl
+         << "  Required => " << PrioMap[pkgCache::State::Required] << endl
+         << "  Important => " << PrioMap[pkgCache::State::Important] << endl
+         << "  Standard => " << PrioMap[pkgCache::State::Standard] << endl
+         << "  Optional => " << PrioMap[pkgCache::State::Optional] << endl
+         << "  Extra => " << PrioMap[pkgCache::State::Extra] << endl
          << "  Essentials => " << PrioEssentials << endl
          << "  InstalledAndNotObsolete => " << PrioInstalledAndNotObsolete << endl
          << "  Depends => " << PrioDepends << endl
@@ -640,7 +648,10 @@ void pkgProblemResolver::MakeScores()
 	      D->Type != pkgCache::Dep::Recommends))
 	    continue;	 
 	 
-	 Scores[I->ID] += abs(OldScores[D.ParentPkg()->ID]);
+	 // Do not propagate negative scores otherwise
+	 // an extra (-2) package might score better than an optional (-1)
+	 if (OldScores[D.ParentPkg()->ID] > 0)
+	     Scores[I->ID] += OldScores[D.ParentPkg()->ID];
       }      
    }
 
@@ -769,7 +780,7 @@ bool pkgProblemResolver::DoUpgrade(pkgCache::PkgIterator Pkg)
       if (WasKept == true)
 	 Cache.MarkKeep(Pkg, false, false);
       else
-	 Cache.MarkDelete(Pkg);
+	 Cache.MarkDelete(Pkg, false, 0, false);
       return false;
    }	 
    
@@ -834,8 +845,10 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
    }
    while (Again == true);
 
-   if (Debug == true)
-      clog << "Starting" << endl;
+   if (Debug == true) {
+      clog << "Starting pkgProblemResolver with broken count: " 
+           << Cache.BrokenCount() << endl;
+   }
    
    MakeScores();
 
@@ -863,8 +876,10 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
          }
    }
 
-   if (Debug == true)
-      clog << "Starting 2" << endl;
+   if (Debug == true) {
+      clog << "Starting 2 pkgProblemResolver with broken count: " 
+           << Cache.BrokenCount() << endl;
+   }
 
    /* Now consider all broken packages. For each broken package we either
       remove the package or fix it's problem. We do this once, it should
@@ -898,7 +913,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		OldBreaks < Cache.BrokenCount())
 	    {
 	       if (OldVer == 0)
-		  Cache.MarkDelete(I);
+		  Cache.MarkDelete(I, false, 0, false);
 	       else
 		  Cache.MarkKeep(I, false, false);
 	    }	    
@@ -937,7 +952,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		     {
 			if (Debug == true)
 			   clog << "  Or group remove for " << I.FullName(false) << endl;
-			Cache.MarkDelete(I);
+			Cache.MarkDelete(I, false, 0, false);
 			Change = true;
 		     }
 		  }
@@ -1072,7 +1087,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 			{
 			   if (Debug == true)
 			      clog << "  Removing " << I.FullName(false) << " rather than change " << Start.TargetPkg().FullName(false) << endl;
-			   Cache.MarkDelete(I);
+			   Cache.MarkDelete(I, false, 0, false);
 			   if (Counter > 1 && Scores[Pkg->ID] > Scores[I->ID])
 			      Scores[I->ID] = Scores[Pkg->ID];
 			}
@@ -1161,7 +1176,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		  if (Debug == true)
 		     clog << "  Removing " << I.FullName(false) << " because I can't find " << Start.TargetPkg().FullName(false) << endl;
 		  if (InOr == false)
-		     Cache.MarkDelete(I);
+		     Cache.MarkDelete(I, false, 0, false);
 	       }
 
 	       Change = true;
@@ -1188,7 +1203,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		  {
 		     if (Debug == true)
 			clog << "  Fixing " << I.FullName(false) << " via remove of " << J->Pkg.FullName(false) << endl;
-		     Cache.MarkDelete(J->Pkg);
+		     Cache.MarkDelete(J->Pkg, false, 0, false);
 		  }
 	       }
 	       else
@@ -1414,18 +1429,26 @@ bool pkgProblemResolver::ResolveByKeepInternal()
 	 continue;
       
       // Restart again.
-      if (K == LastStop)
-	 return _error->Error("Internal Error, pkgProblemResolver::ResolveByKeep is looping on package %s.",I.FullName(false).c_str());
+      if (K == LastStop) {
+          // I is an iterator based off our temporary package list,
+          // so copy the name we need before deleting the temporary list
+          std::string const LoopingPackage = I.FullName(false);
+          delete[] PList;
+          return _error->Error("Internal Error, pkgProblemResolver::ResolveByKeep is looping on package %s.", LoopingPackage.c_str());
+      }
       LastStop = K;
       K = PList - 1;
-   }   
+   }
 
+   delete[] PList;
    return true;
 }
 									/*}}}*/
-// ProblemResolver::InstallProtect - Install all protected packages	/*{{{*/
+// ProblemResolver::InstallProtect - deprecated cpu-eating no-op	/*{{{*/
 // ---------------------------------------------------------------------
-/* This is used to make sure protected packages are installed */
+/* Actions issued with FromUser bit set are protected from further
+   modification (expect by other calls with FromUser set) nowadays , so we
+   don't need to reissue actions here, they are already set in stone. */
 void pkgProblemResolver::InstallProtect()
 {
    pkgDepCache::ActionGroup group(Cache);

@@ -560,7 +560,7 @@ pkgAcqIndexDiffs::pkgAcqIndexDiffs(pkgAcquire *Owner,
    Desc.Owner = this;
    Desc.ShortDesc = ShortDesc;
 
-   if(available_patches.size() == 0) 
+   if(available_patches.empty() == true)
    {
       // we are done (yeah!)
       Finish(true);
@@ -1289,7 +1289,14 @@ void pkgAcqMetaIndex::RetrievalDone(string Message)			/*{{{*/
       string FinalFile = _config->FindDir("Dir::State::lists");
       FinalFile += URItoFileName(RealURI);
       if (SigFile == DestFile)
+      {
 	 SigFile = FinalFile;
+	 // constructor of pkgAcqMetaClearSig moved it out of the way,
+	 // now move it back in on IMS hit for the 'old' file
+	 string const OldClearSig = DestFile + ".reverify";
+	 if (RealFileExists(OldClearSig) == true)
+	    Rename(OldClearSig, FinalFile);
+      }
       DestFile = FinalFile;
    }
    Complete = true;
@@ -1503,22 +1510,19 @@ void pkgAcqMetaIndex::Failed(string Message,pkgAcquire::MethodConfig *Cnf)
    if (AuthPass == true)
    {
       // gpgv method failed, if we have a good signature 
-      string LastGoodSigFile = _config->FindDir("Dir::State::lists");
-      if (DestFile == SigFile)
-	 LastGoodSigFile.append(URItoFileName(RealURI));
-      else
-	 LastGoodSigFile.append("partial/").append(URItoFileName(RealURI)).append(".gpg.reverify");
+      string LastGoodSigFile = _config->FindDir("Dir::State::lists").append("partial/").append(URItoFileName(RealURI));
+      if (DestFile != SigFile)
+	 LastGoodSigFile.append(".gpg");
+      LastGoodSigFile.append(".reverify");
 
       if(FileExists(LastGoodSigFile))
       {
+	 string VerifiedSigFile = _config->FindDir("Dir::State::lists") + URItoFileName(RealURI);
 	 if (DestFile != SigFile)
-	 {
-	    string VerifiedSigFile = _config->FindDir("Dir::State::lists") +
-					URItoFileName(RealURI) + ".gpg";
-	    Rename(LastGoodSigFile,VerifiedSigFile);
-	 }
+	    VerifiedSigFile.append(".gpg");
+	 Rename(LastGoodSigFile, VerifiedSigFile);
 	 Status = StatTransientNetworkError;
-	 _error->Warning(_("A error occurred during the signature "
+	 _error->Warning(_("An error occurred during the signature "
 			   "verification. The repository is not updated "
 			   "and the previous index files will be used. "
 			   "GPG error: %s: %s\n"),
@@ -1577,6 +1581,15 @@ pkgAcqMetaClearSig::pkgAcqMetaClearSig(pkgAcquire *Owner,		/*{{{*/
 	MetaSigURI(MetaSigURI), MetaSigURIDesc(MetaSigURIDesc), MetaSigShortDesc(MetaSigShortDesc)
 {
    SigFile = DestFile;
+
+   // keep the old InRelease around in case of transistent network errors
+   string const Final = _config->FindDir("Dir::State::lists") + URItoFileName(RealURI);
+   struct stat Buf;
+   if (stat(Final.c_str(),&Buf) == 0)
+   {
+      string const LastGoodSig = DestFile + ".reverify";
+      Rename(Final,LastGoodSig);
+   }
 }
 									/*}}}*/
 // pkgAcqMetaClearSig::Custom600Headers - Insert custom request headers	/*{{{*/
@@ -1589,7 +1602,11 @@ string pkgAcqMetaClearSig::Custom600Headers()
 
    struct stat Buf;
    if (stat(Final.c_str(),&Buf) != 0)
-      return "\nIndex-File: true\nFail-Ignore: true\n";
+   {
+      Final = DestFile + ".reverify";
+      if (stat(Final.c_str(),&Buf) != 0)
+	 return "\nIndex-File: true\nFail-Ignore: true\n";
+   }
 
    return "\nIndex-File: true\nFail-Ignore: true\nLast-Modified: " + TimeRFC1123(Buf.st_mtime);
 }
@@ -1643,7 +1660,7 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *Owner,pkgSourceList *Sources,
       assumption here that all the available sources for this version share
       the same extension.. */
    // Skip not source sources, they do not have file fields.
-   for (; Vf.end() == false; Vf++)
+   for (; Vf.end() == false; ++Vf)
    {
       if ((Vf.File()->Flags & pkgCache::Flag::NotSource) != 0)
 	 continue;
@@ -1730,7 +1747,7 @@ bool pkgAcqArchive::QueueNext()
       {
 	 if(stringcasecmp(ForceHash, "sha512") == 0)
 	    ExpectedHash = HashString("SHA512", Parse.SHA512Hash());
-	 if(stringcasecmp(ForceHash, "sha256") == 0)
+	 else if(stringcasecmp(ForceHash, "sha256") == 0)
 	    ExpectedHash = HashString("SHA256", Parse.SHA256Hash());
 	 else if (stringcasecmp(ForceHash, "sha1") == 0)
 	    ExpectedHash = HashString("SHA1", Parse.SHA1Hash());

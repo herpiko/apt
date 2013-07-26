@@ -1,3 +1,28 @@
+apt (0.9.9.3blankon1) suroboyo; urgency=low
+
+  * New Upstream Release 
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Fri, 26 Jul 2013 17:42:15 +0700
+
+apt (0.9.9.3) unstable; urgency=low
+
+  [ Ben Hutchings ]
+  * debian/apt.auto-removal.sh:
+    - do not include debug symbol packages for the kernel in the 
+      blacklist (closes: #717616)
+  
+  [ Michael Vogt ]
+  * debian/apt.postinst:
+    - run /etc/kernel/postinst.d/apt-auto-removal once on upgrade
+      to ensure that the correct auto-removal list is generated
+      (closes: #717615)
+
+  [ David Kalnischkies ]
+  * skip all Description fields in apt-cache, not just first (Closes: 717254)
+  * fix 'apt-cache search' crash with missing description (Closes: 647590)
+
+ -- Michael Vogt <mvo@debian.org>  Thu, 25 Jul 2013 17:14:58 +0200
+
 apt (0.9.7.4blankon1) rote; urgency=low
 
   * New Upstream Release
