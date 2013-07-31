@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2006-06-12 14:35+0545\n"
 "Last-Translator: Shiva Pokharel <pokharelshiva@hotmail.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1376,7 +1376,7 @@ msgstr "डेटा सकेटको जडान समय सकियो"
 msgid "Unable to accept connection"
 msgstr "जडान स्वीकार गर्न असक्षम भयो"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "समस्या द्रुतान्वेषण फाइल"
 
@@ -1533,43 +1533,43 @@ msgstr "HTTP सर्भर संग भाँचिएको दायरा 
 msgid "Unknown date format"
 msgstr "अज्ञात मिति ढाँचा"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "असफल चयन गर्नुहोस्"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "जडान समय सकियो"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "निर्गात फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "फाइलमा त्रुटि लेखिदैछ"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "सर्भरबाट त्रुटि पढिदैछ । दूर गन्तब्य बन्द जडान"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "सर्भरबाट त्रुटि पढिदैछ"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "खराब हेडर डेटा"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "जडान असफल भयो"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "आन्तरिक त्रुटि"
 
@@ -2972,41 +2972,41 @@ msgstr "पुन:नामकरण असफल गरियो, %s (%s -> %s)
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum मेल भएन"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "MD5Sum मेल भएन"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "प्याकेज फाइल पद वर्णन गर्न असक्षम %s (१)"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "निम्न कुञ्जी IDs को लागि कुनै सार्वजनिक कुञ्जी उपलब्ध छैन:\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
 "repository will not be applied."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3014,12 +3014,12 @@ msgid ""
 msgstr ""
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3028,7 +3028,7 @@ msgstr ""
 "%s प्याकेजको लागि मैले फाइल स्थित गर्न सकिन । यसको मतलब तपाईँले म्यानुल्ली यो प्याकेज "
 "निश्चित गर्नुहोस् । (arch हराएरहेको कारणले) "
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3037,13 +3037,13 @@ msgstr ""
 "%s प्याकेजको लागि मैले फाइल स्थित गर्न सकिन । यसको मतलब तपाईँले म्यानुल्ली यो प्याकेज "
 "निश्चित गर्नुहोस् ।"
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "प्याकेज अनुक्रमणिका फाइलहरू दूषित भए । प्याकेज %s को लागि कुनै फाइलनाम: फाँट छैन ।"
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "साइज मेल खाएन"
 

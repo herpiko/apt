@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.8.0~pre1\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2010-08-26 14:42+0800\n"
 "Last-Translator: Aron Xu <happyaron.xu@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -1375,7 +1375,7 @@ msgstr "数据套接字连接超时"
 msgid "Unable to accept connection"
 msgstr "无法接受连接"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "把文件加入哈希表时出错"
 
@@ -1531,43 +1531,43 @@ msgstr "该 HTTP 服务器的 range 支持不正常"
 msgid "Unknown date format"
 msgstr "无法识别的日期格式"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "select 调用出错"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "连接超时"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "写输出文件时出错"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "写入文件出错"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "写入文件出错"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "从服务器读取数据时出错，对方关闭了连接"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "从服务器读取数据出错"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "错误的报头数据"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "连接失败"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "内部错误"
 
@@ -2964,40 +2964,40 @@ msgstr "无法重命名文件，%s (%s -> %s)。"
 msgid "MD5Sum mismatch"
 msgstr "MD5 校验和不符"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "Hash 校验和不符"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "无法解析软件包仓库 Release 文件 %s"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "以下 ID 的密钥没有可用的公钥：\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
 "repository will not be applied."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "冲突的发行版：%s (期望 %s 但得到 %s)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3006,12 +3006,12 @@ msgstr ""
 "校验签名出错。此仓库未被更新，仍然使用以前的索引文件。GPG 错误：%s: %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG 错误：%s: %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3020,7 +3020,7 @@ msgstr ""
 "我无法找到一个对应 %s 软件包的文件。在这种情况下可能需要您手动修正这个软件"
 "包。(缘于架构缺失)"
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3028,13 +3028,13 @@ msgid ""
 msgstr ""
 "我无法找到对应 %s 软件包的文件。在这种情况下您可能需要手动修正这个软件包。"
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "软件包的索引文件已损坏。找不到对应软件包 %s 的 Filename: 字段。"
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "大小不符"
 

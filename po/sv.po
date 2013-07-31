@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2010-08-24 21:18+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <debian-l10n-swedish@debian.org>\n"
@@ -1416,7 +1416,7 @@ msgstr "Anslutet datauttag (socket) fick inte svar inom tidsgränsen"
 msgid "Unable to accept connection"
 msgstr "Kunde inte ta emot anslutningen"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "Problem med att lägga filen till hashtabellen"
 
@@ -1582,43 +1582,43 @@ msgstr "Den här http-serverns stöd för delvis hämtning fungerar inte"
 msgid "Unknown date format"
 msgstr "Okänt datumformat"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "\"Select\" misslyckades"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "Anslutningen överskred tidsgränsen"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "Fel vid skrivning till utdatafil"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "Fel vid skrivning till fil"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "Fel vid skrivning till filen"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Fel vid läsning från server: Andra änden stängde förbindelsen"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "Fel vid läsning från server"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "Felaktiga data i huvud"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "Anslutningen misslyckades"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "Internt fel"
 
@@ -3045,40 +3045,40 @@ msgstr "namnbyte misslyckades, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "MD5-kontrollsumman stämmer inte"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "Hash-kontrollsumman stämmer inte"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Kunde inte tolka \"Release\"-filen %s"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Det finns ingen öppen nyckel tillgänglig för följande nyckel-id:n:\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
 "repository will not be applied."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konflikt i distribution: %s (förväntade %s men fick %s)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3089,12 +3089,12 @@ msgstr ""
 "%s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG-fel: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3103,7 +3103,7 @@ msgstr ""
 "Jag kunde inte hitta någon fil för paketet %s. Detta kan betyda att du "
 "manuellt måste reparera detta paket (på grund av saknad arkitektur)."
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3112,13 +3112,13 @@ msgstr ""
 "Jag kunde inte hitta någon fil för paketet %s. Detta kan betyda att du "
 "manuellt måste reparera detta paket."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "Paketindexfilerna är skadede. Inget \"Filename:\"-fält för paketet %s."
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "Storleken stämmer inte"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2012-10-27 22:44+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -1389,7 +1389,7 @@ msgstr "หมดเวลารอเชื่อมต่อซ็อกเก
 msgid "Unable to accept connection"
 msgstr "ไม่สามารถรับการเชื่อมต่อ"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "เกิดปัญหาขณะคำนวณค่าแฮชของแฟ้ม"
 
@@ -1545,43 +1545,43 @@ msgstr "การสนับสนุน Content-Range ที่เซิร์
 msgid "Unknown date format"
 msgstr "พบรูปแบบวันที่ที่ไม่รู้จัก"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "select ไม่สำเร็จ"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "หมดเวลารอเชื่อมต่อ"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "เกิดข้อผิดพลาดขณะเขียนลงแฟ้มผลลัพธ์"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "เกิดข้อผิดพลาดขณะเขียนลงแฟ้ม"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "เกิดข้อผิดพลาดขณะเขียนลงแฟ้ม"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "เกิดข้อผิดพลาดขณะอ่านข้อมูลจากเซิร์ฟเวอร์ ปลายทางอีกด้านหนึ่งปิดการเชื่อมต่อ"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "เกิดข้อผิดพลาดขณะอ่านข้อมูลจากเซิร์ฟเวอร์"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "ข้อมูลส่วนหัวผิดพลาด"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "เชื่อมต่อไม่สำเร็จ"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "ข้อผิดพลาดภายใน"
 
@@ -2971,12 +2971,12 @@ msgstr "เปลี่ยนชื่อไม่สำเร็จ: %s (%s -> 
 msgid "MD5Sum mismatch"
 msgstr "MD5Sum ไม่ตรงกัน"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "ผลรวมแฮชไม่ตรงกัน"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -2985,16 +2985,16 @@ msgstr ""
 "ไม่พบรายการ '%s' ที่ต้องการในแฟ้ม Release (รายการ sources.list ไม่ถูกต้อง "
 "หรือแฟ้มผิดรูปแบบ)"
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "ไม่พบผลรวมแฮชสำหรับ '%s' ในแฟ้ม Release"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "ไม่มีกุญแจสาธารณะสำหรับกุญแจหมายเลขต่อไปนี้:\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
@@ -3003,12 +3003,12 @@ msgstr ""
 "แฟ้ม Release สำหรับ %s หมดอายุแล้ว (ตั้งแต่ %s ที่แล้ว) จะไม่ใช้รายการปรับรุ่นต่างๆ "
 "ของคลังแพกเกจนี้"
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "ชุดจัดแจกขัดแย้งกัน: %s (ต้องการ %s แต่พบ %s)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3018,32 +3018,32 @@ msgstr ""
 "ข้อผิดพลาดจาก GPG: %s: %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "ข้อผิดพลาดจาก GPG: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
 "to manually fix this package. (due to missing arch)"
 msgstr "ไม่พบแฟ้มสำหรับแพกเกจ %s คุณอาจต้องแก้ปัญหาแพกเกจนี้เอง (ไม่มี arch)"
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
 "to manually fix this package."
 msgstr "ไม่พบแฟ้มสำหรับแพกเกจ %s คุณอาจต้องแก้ปัญหาแพกเกจนี้เอง"
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "แฟ้มดัชนีแพกเกจเสียหาย ไม่มีข้อมูล Filename: (ชื่อแฟ้ม) สำหรับแพกเกจ %s"
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "ขนาดไม่ตรงกัน"
 

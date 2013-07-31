@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-all\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2012-09-25 20:19+0300\n"
 "Last-Translator: A. Bondarenko <artem.brz@gmail.com>\n"
 "Language-Team: Українська <uk@li.org>\n"
@@ -1453,7 +1453,7 @@ msgstr "Час з'єднання з сокетом даних вичерпавс
 msgid "Unable to accept connection"
 msgstr "Неможливо прийняти з'єднання"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "Проблема хешування файла"
 
@@ -1613,43 +1613,43 @@ msgstr "Цей HTTP сервер має поламану підтримку 'ran
 msgid "Unknown date format"
 msgstr "Невідомий формат дати"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "Вибір провалився"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "Час очікування з'єднання вийшов"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "Помилка запису у вихідний файл"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "Помилка запису у файл"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "Помилка запису у файл"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Помилка зчитування з сервера. Віддалена сторона закрила з'єднання"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "Помилка зчитування з сервера"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "Погана заголовкова інформація"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "З'єднання не вдалося"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "Внутрішня помилка"
 
@@ -3090,12 +3090,12 @@ msgstr "не вдалося перейменувати, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "Невідповідність MD5Sum"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "Невідповідність хешу MD5Sum"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3104,16 +3104,16 @@ msgstr ""
 "Неможливо знайти очікуваний запис '%s' у 'Release' файлі (Невірний запис у "
 "sources.list, або пошкоджений файл)"
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Неможливо знайти хеш-суму для '%s' у 'Release' файлі"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Відсутній публічний ключ для заданих ідентифікаторів (ID) ключа:\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
@@ -3122,12 +3122,12 @@ msgstr ""
 "Файл 'Release' для %s застарів (недійсний з %s). Оновлення для цього "
 "репозиторія не будуть застосовані."
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Конфліктуючий дистрибутив: %s (очікувався %s, але є %s)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3137,12 +3137,12 @@ msgstr ""
 "попередні індексні файли будуть використані. Помилка GPG: %s: %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Помилка GPG: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3151,7 +3151,7 @@ msgstr ""
 "Я не зміг знайти файл для пакунку %s. Можливо, це значить, що вам потрібно "
 "власноруч виправити цей пакунок. (через відсутність 'arch')"
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3160,14 +3160,14 @@ msgstr ""
 "Я не зміг знайти файл для пакунку %s. Можливо, це значить, що вам потрібно "
 "власноруч виправити цей пакунок."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "Індексні файли пакунків пошкоджені. Немає поля 'Filename' для пакунку %s."
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "Невідповідність розміру"
 

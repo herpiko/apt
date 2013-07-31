@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2013-04-09 07:58+0200\n"
 "Last-Translator: Christian Perrier <bubulle@debian.org>\n"
 "Language-Team: French <debian-l10n-french@lists.debian.org>\n"
@@ -1473,7 +1473,7 @@ msgstr "Délai de connexion au port de données dépassé"
 msgid "Unable to accept connection"
 msgstr "Impossible d'accepter une connexion"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "Problème de hachage du fichier"
 
@@ -1637,43 +1637,43 @@ msgstr "Ce serveur http possède un support des limites non-valide"
 msgid "Unknown date format"
 msgstr "Format de date inconnu"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "Sélection défaillante"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "Délai de connexion dépassé"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "Erreur d'écriture du fichier de sortie"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "Erreur d'écriture sur un fichier"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "Erreur d'écriture sur le fichier"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Erreur de lecture depuis le serveur distant et clôture de la connexion"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "Erreur de lecture du serveur"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "Mauvais en-tête de donnée"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "Échec de la connexion"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "Erreur interne"
 
@@ -3141,12 +3141,12 @@ msgstr "impossible de changer le nom, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "Somme de contrôle MD5 incohérente"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "Somme de contrôle de hachage incohérente"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3155,18 +3155,18 @@ msgstr ""
 "Impossible de trouver l'entrée « %s » attendue dans le fichier « Release » : "
 " ligne non valable dans sources.list ou fichier corrompu"
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr ""
 "Impossible de trouver la comme de contrôle de « %s » dans le fichier Release"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Aucune clé publique n'est disponible pour la/les clé(s) suivante(s) :\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
@@ -3175,12 +3175,12 @@ msgstr ""
 "Le fichier « Release » pour %s a expiré (plus valable depuis %s). Les mises "
 "à jour depuis ce dépôt  ne s'effectueront pas."
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribution en conflit : %s (%s attendu, mais %s obtenu)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3191,12 +3191,12 @@ msgstr ""
 "GPG : %s : %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Erreur de GPG : %s : %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3205,7 +3205,7 @@ msgstr ""
 "Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
 "devrez corriger ce paquet vous-même (absence d'architecture)."
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3214,7 +3214,7 @@ msgstr ""
 "Impossible de localiser un fichier du paquet %s. Cela signifie que vous "
 "devrez corriger ce paquet vous-même."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3222,7 +3222,7 @@ msgstr ""
 "Les fichiers d'index des paquets sont corrompus. Aucun champ « Filename: » "
 "pour le paquet %s."
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "Taille incohérente"
 

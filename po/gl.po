@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po_gl\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-07-25 17:32+0200\n"
+"POT-Creation-Date: 2013-07-26 10:09+0200\n"
 "PO-Revision-Date: 2011-05-12 15:28+0100\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: galician <proxecto@trasno.net>\n"
@@ -1424,7 +1424,7 @@ msgstr "A conexión do socket de datos esgotou o tempo"
 msgid "Unable to accept connection"
 msgstr "Non é posíbel aceptar a conexión"
 
-#: methods/ftp.cc:872 methods/http.cc:1026 methods/rsh.cc:311
+#: methods/ftp.cc:872 methods/http.cc:1038 methods/rsh.cc:311
 msgid "Problem hashing file"
 msgstr "Xurdiu un problema ao calcular o hash do ficheiro"
 
@@ -1587,44 +1587,44 @@ msgstr "Este servidor HTTP ten a compatibilidade de rangos estragada"
 msgid "Unknown date format"
 msgstr "Formato de datos descoñecido"
 
-#: methods/http.cc:814
+#: methods/http.cc:826
 msgid "Select failed"
 msgstr "Fallou a chamada a select"
 
-#: methods/http.cc:819
+#: methods/http.cc:831
 msgid "Connection timed out"
 msgstr "A conexión esgotou o tempo"
 
-#: methods/http.cc:842
+#: methods/http.cc:854
 msgid "Error writing to output file"
 msgstr "Produciuse un erro ao escribir no ficheiro de saída"
 
-#: methods/http.cc:873
+#: methods/http.cc:885
 msgid "Error writing to file"
 msgstr "Produciuse un erro ao escribir nun ficheiro"
 
-#: methods/http.cc:901
+#: methods/http.cc:913
 msgid "Error writing to the file"
 msgstr "Produciuse un erro ao escribir no ficheiro"
 
-#: methods/http.cc:915
+#: methods/http.cc:927
 msgid "Error reading from server. Remote end closed connection"
 msgstr ""
 "Produciuse un erro ao ler do servidor. O extremo remoto pechou a conexión"
 
-#: methods/http.cc:917
+#: methods/http.cc:929
 msgid "Error reading from server"
 msgstr "Produciuse un erro ao ler do servidor"
 
-#: methods/http.cc:1185
+#: methods/http.cc:1197
 msgid "Bad header data"
 msgstr "Datos da cabeceira incorrectos"
 
-#: methods/http.cc:1202 methods/http.cc:1257
+#: methods/http.cc:1214 methods/http.cc:1269
 msgid "Connection failed"
 msgstr "Produciuse un fallo na conexión"
 
-#: methods/http.cc:1349
+#: methods/http.cc:1361
 msgid "Internal error"
 msgstr "Produciuse un erro interno"
 
@@ -3060,12 +3060,12 @@ msgstr "non foi posíbel cambiar o nome, %s (%s -> %s)."
 msgid "MD5Sum mismatch"
 msgstr "A MD5Sum non coincide"
 
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1876
-#: apt-pkg/acquire-item.cc:2019
+#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1887
+#: apt-pkg/acquire-item.cc:2030
 msgid "Hash Sum mismatch"
 msgstr "A sumas «hash» non coinciden"
 
-#: apt-pkg/acquire-item.cc:1377
+#: apt-pkg/acquire-item.cc:1388
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3074,29 +3074,29 @@ msgstr ""
 "Non é posíbel atopar a entrada agardada «%s» no ficheiro de publicación "
 "(entrada sources.list incorrecta ou ficheiro con formato incorrecto)"
 
-#: apt-pkg/acquire-item.cc:1393
+#: apt-pkg/acquire-item.cc:1404
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr ""
 "Non é posíbel ler a suma de comprobación para «%s» no ficheiro de publicación"
 
-#: apt-pkg/acquire-item.cc:1435
+#: apt-pkg/acquire-item.cc:1446
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Non hai unha chave pública dispoñíbel para os seguintes ID de chave:\n"
 
-#: apt-pkg/acquire-item.cc:1473
+#: apt-pkg/acquire-item.cc:1484
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
 "repository will not be applied."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1495
+#: apt-pkg/acquire-item.cc:1506
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Conflito na distribución: %s (agardábase %s mais obtívose %s)"
 
-#: apt-pkg/acquire-item.cc:1525
+#: apt-pkg/acquire-item.cc:1536
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3107,12 +3107,12 @@ msgstr ""
 "%s: %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1535 apt-pkg/acquire-item.cc:1540
+#: apt-pkg/acquire-item.cc:1546 apt-pkg/acquire-item.cc:1551
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "Produciuse un erro de GPG: %s %s"
 
-#: apt-pkg/acquire-item.cc:1652
+#: apt-pkg/acquire-item.cc:1663
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3121,7 +3121,7 @@ msgstr ""
 "Non é posíbel atopar un ficheiro para o paquete %s. Isto pode significar que "
 "ten que arranxar este paquete a man. (Falta a arquitectura)"
 
-#: apt-pkg/acquire-item.cc:1711
+#: apt-pkg/acquire-item.cc:1722
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3130,7 +3130,7 @@ msgstr ""
 "Non é posíbel atopar un ficheiro para o paquete %s. Isto pode significar que "
 "ten que arranxar este paquete a man."
 
-#: apt-pkg/acquire-item.cc:1770
+#: apt-pkg/acquire-item.cc:1781
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
@@ -3138,7 +3138,7 @@ msgstr ""
 "Os ficheiros de índices de paquetes están danados. Non hai un campo "
 "Filename: para o paquete %s."
 
-#: apt-pkg/acquire-item.cc:1868
+#: apt-pkg/acquire-item.cc:1879
 msgid "Size mismatch"
 msgstr "Os tamaños non coinciden"
 
