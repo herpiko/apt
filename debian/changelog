@@ -1,3 +1,88 @@
+apt (0.9.11.2blankon1) suroboyo; urgency=low
+
+  * New Upstream Release
+
+ -- Mahyudiin Idram Ahmad <dotovr@di.blankon.in>  Fri, 06 Sep 2013 19:53:25 +0700
+
+apt (0.9.11.2) unstable; urgency=low
+
+  [ Milo Casagrande ]
+  * Update Italian translation. Closes: #721030
+  
+  [ Trần Ngọc Quân ]
+  * Update Vietnamese translation. Closes: #720752
+  
+  [ Michael Vogt ]
+  * dselect/install:
+   - remove "-f" option for apt-get clean/auto-clean (closes: #720532)
+  * apt-private/private-cmndline.cc:
+    - fix typo in CmdMatches() selection for dselect-upgrade (closes: #720532)
+  * use SPtr<pkgProblemResolver> in DoInstall() to simplify the code
+  * allow pkg manipulation in the upgrade/dist-upgrade commandline, like
+    apt-get dist-upgrade 2vcard- 4g8+ (thanks to Thorsten Glaser for the
+    suggestion)
+
+  [ Angel Guzman Maeso ]
+  * replace usage of potential dangerous mktemp with mkstemp
+
+ -- Michael Vogt <mvo@debian.org>  Sat, 31 Aug 2013 16:45:31 +0200
+
+apt (0.9.11.1) unstable; urgency=low
+
+  [ Michael Vogt ]
+  * more coverity fixes:
+    - explicit init 
+    - always chdir("/") after chroot()
+    - ftparchive/override.cc: fix "skip empty lines" code, the pointer 
+      needs to get de-referenced first
+  * dselect/update: 
+    - remove "-f" option for apt-get update to fix breakage (closes: 720532)
+
+  [ Christopher Baines ]
+  * Add test for bug #507998
+
+  [ David Kalnischkies ]
+  * add a breaks libapt-inst for FileFd changes in 0.9.9 (Closes: 720449)
+  * add versions to manpages-it Replaces+Breaks
+
+  [ Ángel Guzmán Maeso ]
+  * apt-pkg:contrib Avoid compiler warning about sign-compare
+
+ -- Michael Vogt <mvo@debian.org>  Sat, 24 Aug 2013 09:13:27 +0200
+
+apt (0.9.11) unstable; urgency=low
+
+  [ Daniel Hartwig ]
+  * Clarify units of Acquire::http::Dl-Limit (closes: #705445)
+  * Show a error message if {,dist-}upgrade is used with additional
+    arguments (closes: #705510)
+
+  [ Michael Vogt ]
+  * lp:~mvo/apt/config-clear:
+    - support Configuration.Clear() for a clear of the entire 
+      configuration
+  * lp:~mvo/apt/add-glob-function:
+    -  add Glob() to fileutl.{cc,h}
+  * feature/apt-binary2
+    - refactor large chunks of cmdline/*.cc into a new libapt-private
+      library that is shared between the internal apt cmdline tools
+    - install libapt-private* into the apt binary
+    - add PACKAGE_MATCHER_ABI_COMPAT define so that this branch can be 
+      merged without breaking ABI
+    - add lintian override for no-shlibs-control-file so that
+      the internal libapt-private.so.0.0.0 can be shipped
+    - adjust apt.install.in to only install libapt-private.so.*
+
+  [ David Kalnischkies ]
+  * ensure that pkgTagFile isn't writing past Buffer length (Closes: 719629)
+  * allow Pre-Install-Pkgs hooks to get info over an FD != stdin
+    (Closes: #671726)
+
+  [ Christian PERRIER ]
+  * French translation update.
+
+ -- Michael Vogt <mvo@debian.org>  Wed, 21 Aug 2013 17:51:09 +0200
+
 apt (0.9.10blankon1) suroboyo; urgency=low
 
   * New upstream release

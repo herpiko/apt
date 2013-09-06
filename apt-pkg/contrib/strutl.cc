@@ -943,6 +943,8 @@ bool StrToTime(const string &Val,time_t &Result)
    Tm.tm_isdst = 0;
    if (Month[0] != 0)
       Tm.tm_mon = MonthConv(Month);
+   else
+      Tm.tm_mon = 0; // we don't have a month, so pick something
    Tm.tm_year -= 1900;
    
    // Convert to local time and then to GMT
@@ -1291,6 +1293,18 @@ bool CheckDomainList(const string &Host,const string &List)
    return false;
 }
 									/*}}}*/
+// strv_length - Return the length of a NULL-terminated string array	/*{{{*/
+// ---------------------------------------------------------------------
+/* */
+size_t strv_length(const char **str_array)
+{
+   size_t i;
+   for (i=0; str_array[i] != NULL; i++)
+      /* nothing */
+      ;
+   return i;
+}
+
 // DeEscapeString - unescape (\0XX and \xXX) from a string		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
