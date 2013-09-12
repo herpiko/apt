@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.9.9.4\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-08-31 16:53+0200\n"
+"POT-Creation-Date: 2013-09-10 17:54+0200\n"
 "PO-Revision-Date: 2013-08-11 19:39+0900\n"
 "Last-Translator: Kenshi Muto <kmuto@debian.org>\n"
 "Language-Team: Debian Japanese List <debian-japanese@lists.debian.org>\n"
@@ -92,7 +92,7 @@ msgid "Total space accounted for: "
 msgstr "総占有容量: "
 
 #: cmdline/apt-cache.cc:497 cmdline/apt-cache.cc:1146
-#: apt-private/private-show.cc:50
+#: apt-private/private-show.cc:52
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Package ファイル %s が同期していません。"
@@ -100,7 +100,7 @@ msgstr "Package ファイル %s が同期していません。"
 #: cmdline/apt-cache.cc:575 cmdline/apt-cache.cc:1432
 #: cmdline/apt-cache.cc:1434 cmdline/apt-cache.cc:1511 cmdline/apt-mark.cc:48
 #: cmdline/apt-mark.cc:95 cmdline/apt-mark.cc:221
-#: apt-private/private-show.cc:113 apt-private/private-show.cc:115
+#: apt-private/private-show.cc:114 apt-private/private-show.cc:116
 msgid "No packages found"
 msgstr "パッケージが見つかりません"
 
@@ -157,7 +157,7 @@ msgid "  Version table:"
 msgstr "  バージョンテーブル:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1523 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -296,38 +296,38 @@ msgstr ""
 "  -c=? 指定した設定ファイルを読み込む\n"
 "  -o=? 指定した設定オプションを適用する (例: -o dir::cache=/tmp)\n"
 
-#: cmdline/apt-get.cc:225
+#: cmdline/apt-get.cc:222
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr "パッケージ '%2$s' の利用できないターゲットリリース '%1$s' を無視"
 
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:254
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "'%2$s' の代わりに '%1$s' をソースパッケージとして選出しています\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:292
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "パッケージ '%2$s' の利用できないバージョン '%1$s' を無視"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:323
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "パッケージ %s が見つかりません"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s は手動でインストールしたと設定されました。\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s は自動でインストールしたと設定されました。\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -335,47 +335,47 @@ msgstr ""
 "このコマンドは時代遅れです。'apt-mark auto' および 'apt-mark manual' を代わり"
 "に使用してください。"
 
-#: cmdline/apt-get.cc:357
+#: cmdline/apt-get.cc:354
 msgid "Calculating upgrade... "
 msgstr "アップグレードパッケージを検出しています ... "
 
-#: cmdline/apt-get.cc:360 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "失敗"
 
-#: cmdline/apt-get.cc:369
+#: cmdline/apt-get.cc:366
 msgid "Done"
 msgstr "完了"
 
-#: cmdline/apt-get.cc:436 cmdline/apt-get.cc:444
+#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
 msgid "Internal error, problem resolver broke stuff"
 msgstr "内部エラー、問題リゾルバが何かを破壊しました"
 
-#: cmdline/apt-get.cc:472 cmdline/apt-get.cc:509
+#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
 msgid "Unable to lock the download directory"
 msgstr "ダウンロードディレクトリをロックできません"
 
-#: cmdline/apt-get.cc:566
+#: cmdline/apt-get.cc:563
 #, c-format
 msgid "Can't find a source to download version '%s' of '%s'"
 msgstr "'%2$s' のバージョン '%1$s' をダウンロードするソースが見つかりません"
 
-#: cmdline/apt-get.cc:571
+#: cmdline/apt-get.cc:568
 #, c-format
 msgid "Downloading %s %s"
 msgstr "%s %s をダウンロードしています"
 
-#: cmdline/apt-get.cc:631
+#: cmdline/apt-get.cc:628
 msgid "Must specify at least one package to fetch source for"
 msgstr ""
 "ソースを取得するには少なくとも 1 つのパッケージ名を指定する必要があります"
 
-#: cmdline/apt-get.cc:671 cmdline/apt-get.cc:983
+#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "%s のソースパッケージが見つかりません"
 
-#: cmdline/apt-get.cc:688
+#: cmdline/apt-get.cc:685
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -385,7 +385,7 @@ msgstr ""
 "ます:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:693
+#: cmdline/apt-get.cc:690
 #, c-format
 msgid ""
 "Please use:\n"
@@ -397,86 +397,86 @@ msgstr ""
 "bzr branch %s\n"
 "を使用してください。\n"
 
-#: cmdline/apt-get.cc:746
+#: cmdline/apt-get.cc:743
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "すでにダウンロードされたファイル '%s' をスキップします\n"
 
-#: cmdline/apt-get.cc:769 cmdline/apt-get.cc:772
-#: apt-private/private-install.cc:233 apt-private/private-install.cc:236
+#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
+#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "%s の空き領域を測定できません"
 
-#: cmdline/apt-get.cc:783
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "%s に充分な空きスペースがありません"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:792
+#: cmdline/apt-get.cc:789
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "%2$sB 中 %1$sB のソースアーカイブを取得する必要があります。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:797
+#: cmdline/apt-get.cc:794
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "%sB のソースアーカイブを取得する必要があります。\n"
 
-#: cmdline/apt-get.cc:803
+#: cmdline/apt-get.cc:800
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "ソース %s を取得\n"
 
-#: cmdline/apt-get.cc:834 apt-private/private-install.cc:360
+#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
 #: apt-pkg/algorithms.cc:1607
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "%s の取得に失敗しました  %s\n"
 
-#: cmdline/apt-get.cc:841
+#: cmdline/apt-get.cc:838
 msgid "Failed to fetch some archives."
 msgstr "いくつかのアーカイブの取得に失敗しました。"
 
-#: cmdline/apt-get.cc:846 apt-private/private-install.cc:379
+#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
 msgid "Download complete and in download only mode"
 msgstr "ダウンロードオンリーモードでパッケージのダウンロードが完了しました"
 
-#: cmdline/apt-get.cc:872
+#: cmdline/apt-get.cc:869
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "すでに %s に展開されたソースがあるため、展開をスキップします\n"
 
-#: cmdline/apt-get.cc:884
+#: cmdline/apt-get.cc:881
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "展開コマンド '%s' が失敗しました。\n"
 
-#: cmdline/apt-get.cc:885
+#: cmdline/apt-get.cc:882
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 "'dpkg-dev' パッケージがインストールされていることを確認してください。\n"
 
-#: cmdline/apt-get.cc:907
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "ビルドコマンド '%s' が失敗しました。\n"
 
-#: cmdline/apt-get.cc:927
+#: cmdline/apt-get.cc:924
 msgid "Child process failed"
 msgstr "子プロセスが失敗しました"
 
-#: cmdline/apt-get.cc:946
+#: cmdline/apt-get.cc:943
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "ビルド依存関係をチェックするパッケージを少なくとも 1 つ指定する必要があります"
 
-#: cmdline/apt-get.cc:971
+#: cmdline/apt-get.cc:968
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -485,17 +485,17 @@ msgstr ""
 "%s に利用可能なアーキテクチャ情報がありません。セットアップのために apt."
 "conf(5) の APT::Architectures を参照してください。"
 
-#: cmdline/apt-get.cc:995 cmdline/apt-get.cc:998
+#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "%s のビルド依存情報を取得できません"
 
-#: cmdline/apt-get.cc:1018
+#: cmdline/apt-get.cc:1015
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s にはビルド依存情報が指定されていません。\n"
 
-#: cmdline/apt-get.cc:1188
+#: cmdline/apt-get.cc:1185
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -504,7 +504,7 @@ msgstr ""
 "パッケージ %3$s が '%4$s' パッケージで許されていないため、%2$s に対する %1$s "
 "の依存関係を満たすことができません"
 
-#: cmdline/apt-get.cc:1206
+#: cmdline/apt-get.cc:1203
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -513,14 +513,14 @@ msgstr ""
 "パッケージ %3$s が見つからないため、%2$s に対する %1$s の依存関係を満たすこと"
 "ができません"
 
-#: cmdline/apt-get.cc:1229
+#: cmdline/apt-get.cc:1226
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "%2$s の依存関係 %1$s を満たすことができません: インストールされた %3$s パッ"
 "ケージは新しすぎます"
 
-#: cmdline/apt-get.cc:1268
+#: cmdline/apt-get.cc:1265
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -529,7 +529,7 @@ msgstr ""
 "パッケージ %3$s の候補バージョンはバージョンについての要求を満たせないた"
 "め、%2$s に対する %1$s の依存関係を満たすことができません"
 
-#: cmdline/apt-get.cc:1274
+#: cmdline/apt-get.cc:1271
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -538,30 +538,30 @@ msgstr ""
 "パッケージ %3$s の候補バージョンが存在しないため、%2$s に対する %1$s の依存関"
 "係を満たすことができません"
 
-#: cmdline/apt-get.cc:1297
+#: cmdline/apt-get.cc:1294
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%2$s の依存関係 %1$s を満たすことができません: %3$s"
 
-#: cmdline/apt-get.cc:1312
+#: cmdline/apt-get.cc:1309
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "%s のビルド依存関係を満たすことができませんでした。"
 
-#: cmdline/apt-get.cc:1317
+#: cmdline/apt-get.cc:1314
 msgid "Failed to process build dependencies"
 msgstr "ビルド依存関係の処理に失敗しました"
 
-#: cmdline/apt-get.cc:1410 cmdline/apt-get.cc:1422
+#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "%s (%s) の変更履歴"
 
-#: cmdline/apt-get.cc:1528
+#: cmdline/apt-get.cc:1525
 msgid "Supported modules:"
 msgstr "サポートされているモジュール:"
 
-#: cmdline/apt-get.cc:1569
+#: cmdline/apt-get.cc:1566
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -680,7 +680,7 @@ msgstr "%s はすでに保留されていません。\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1045
+#: apt-pkg/deb/dpkgpm.cc:1060
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "%s を待ちましたが、そこにはありませんでした"
@@ -1121,7 +1121,7 @@ msgstr "接続失敗"
 msgid "Internal error"
 msgstr "内部エラー"
 
-#: apt-private/private-list.cc:142
+#: apt-private/private-list.cc:141
 msgid "Listing"
 msgstr ""
 
@@ -1141,71 +1141,71 @@ msgstr "検証なしにこれらのパッケージをインストールします
 msgid "Some packages could not be authenticated"
 msgstr "いくつかのパッケージを認証できませんでした"
 
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:256
+#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
 msgid "There are problems and -y was used without --force-yes"
 msgstr "問題が発生し、-y オプションが --force-yes なしで使用されました"
 
-#: apt-private/private-install.cc:136
+#: apt-private/private-install.cc:134
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "内部エラー、InstallPackages が壊れたパッケージで呼び出されました!"
 
-#: apt-private/private-install.cc:145
+#: apt-private/private-install.cc:143
 msgid "Packages need to be removed but remove is disabled."
 msgstr "パッケージを削除しなければなりませんが、削除が無効になっています。"
 
-#: apt-private/private-install.cc:156
+#: apt-private/private-install.cc:154
 msgid "Internal error, Ordering didn't finish"
 msgstr "内部エラー、調整が終わっていません"
 
-#: apt-private/private-install.cc:194
+#: apt-private/private-install.cc:192
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "おっと、サイズがマッチしません。apt@packages.debian.org にメールしてください"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:201
+#: apt-private/private-install.cc:199
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "%2$sB 中 %1$sB のアーカイブを取得する必要があります。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:206
+#: apt-private/private-install.cc:204
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "%sB のアーカイブを取得する必要があります。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:213
+#: apt-private/private-install.cc:211
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "この操作後に追加で %sB のディスク容量が消費されます。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:218
+#: apt-private/private-install.cc:216
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "この操作後に %sB のディスク容量が解放されます。\n"
 
-#: apt-private/private-install.cc:246
+#: apt-private/private-install.cc:244
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "%s に充分な空きスペースがありません。"
 
-#: apt-private/private-install.cc:262 apt-private/private-install.cc:284
+#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr "Trivial Only が指定されましたが、これは簡単な操作ではありません。"
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:264
 msgid "Yes, do as I say!"
 msgstr "Yes, do as I say!"
 
-#: apt-private/private-install.cc:268
+#: apt-private/private-install.cc:266
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1216,19 +1216,19 @@ msgstr ""
 "続行するには、'%s' というフレーズをタイプしてください。\n"
 " ?] "
 
-#: apt-private/private-install.cc:274 apt-private/private-install.cc:292
+#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
 msgid "Abort."
 msgstr "中断しました。"
 
-#: apt-private/private-install.cc:289
+#: apt-private/private-install.cc:287
 msgid "Do you want to continue?"
 msgstr "続行しますか?"
 
-#: apt-private/private-install.cc:378
+#: apt-private/private-install.cc:376
 msgid "Some files failed to download"
 msgstr "いくつかのファイルの取得に失敗しました"
 
-#: apt-private/private-install.cc:385
+#: apt-private/private-install.cc:383
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1236,19 +1236,19 @@ msgstr ""
 "いくつかのアーカイブを取得できません。apt-get update を実行するか --fix-"
 "missing オプションを付けて試してみてください。"
 
-#: apt-private/private-install.cc:389
+#: apt-private/private-install.cc:387
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "--fix-missing とメディア交換は現在同時にはサポートされていません"
 
-#: apt-private/private-install.cc:394
+#: apt-private/private-install.cc:392
 msgid "Unable to correct missing packages."
 msgstr "足りないパッケージを直すことができません。"
 
-#: apt-private/private-install.cc:395
+#: apt-private/private-install.cc:393
 msgid "Aborting install."
 msgstr "インストールを中断します。"
 
-#: apt-private/private-install.cc:423
+#: apt-private/private-install.cc:421
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1259,16 +1259,16 @@ msgstr[0] ""
 "以下のパッケージは、全ファイルが別のパッケージで上書きされたため、\n"
 "システムから消えました:"
 
-#: apt-private/private-install.cc:427
+#: apt-private/private-install.cc:425
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "注意: これは dpkg により自動でわざと行われれます。"
 
-#: apt-private/private-install.cc:450
+#: apt-private/private-install.cc:446
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr ""
 "一連のものを削除するようになっていないので、AutoRemover を開始できません"
 
-#: apt-private/private-install.cc:554
+#: apt-private/private-install.cc:550
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1286,15 +1286,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:557 apt-private/private-install.cc:699
+#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
 msgid "The following information may help to resolve the situation:"
 msgstr "以下の情報がこの問題を解決するために役立つかもしれません:"
 
-#: apt-private/private-install.cc:561
+#: apt-private/private-install.cc:557
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "内部エラー、AutoRemover が何かを破壊しました"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:564
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1303,7 +1303,7 @@ msgid_plural ""
 msgstr[0] ""
 "以下のパッケージが自動でインストールされましたが、もう必要とされていません:"
 
-#: apt-private/private-install.cc:572
+#: apt-private/private-install.cc:568
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1312,18 +1312,18 @@ msgstr[0] ""
 "%lu つのパッケージが自動でインストールされましたが、もう必要とされていませ"
 "ん:\n"
 
-#: apt-private/private-install.cc:574
+#: apt-private/private-install.cc:570
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "これを削除するには 'apt-get autoremove' を利用してください。"
 
-#: apt-private/private-install.cc:669
+#: apt-private/private-install.cc:664
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr ""
 "以下の問題を解決するために 'apt-get -f install' を実行する必要があるかもしれ"
 "ません:"
 
-#: apt-private/private-install.cc:671
+#: apt-private/private-install.cc:666
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1331,7 +1331,7 @@ msgstr ""
 "未解決の依存関係です。'apt-get -f install' を実行してみてください (または解法"
 "を明示してください)。"
 
-#: apt-private/private-install.cc:684
+#: apt-private/private-install.cc:679
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1343,117 +1343,117 @@ msgstr ""
 "であれば) 必要なパッケージがまだ作成されていなかったり Incoming から移\n"
 "動されていないことが考えられます。"
 
-#: apt-private/private-install.cc:705
+#: apt-private/private-install.cc:700
 msgid "Broken packages"
 msgstr "壊れたパッケージ"
 
-#: apt-private/private-install.cc:759
+#: apt-private/private-install.cc:753
 msgid "The following extra packages will be installed:"
 msgstr "以下の特別パッケージがインストールされます:"
 
-#: apt-private/private-install.cc:849
+#: apt-private/private-install.cc:843
 msgid "Suggested packages:"
 msgstr "提案パッケージ:"
 
-#: apt-private/private-install.cc:850
+#: apt-private/private-install.cc:844
 msgid "Recommended packages:"
 msgstr "推奨パッケージ:"
 
-#: apt-private/private-output.cc:198
+#: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
 msgstr ""
 
-#: apt-private/private-output.cc:204
+#: apt-private/private-output.cc:203
 #, fuzzy
 msgid "[installed,local]"
 msgstr " [インストール済み]"
 
-#: apt-private/private-output.cc:207
+#: apt-private/private-output.cc:206
 msgid "[installed,auto-removable]"
 msgstr ""
 
-#: apt-private/private-output.cc:209
+#: apt-private/private-output.cc:208
 #, fuzzy
 msgid "[installed,automatic]"
 msgstr " [インストール済み]"
 
-#: apt-private/private-output.cc:211
+#: apt-private/private-output.cc:210
 #, fuzzy
 msgid "[installed]"
 msgstr " [インストール済み]"
 
-#: apt-private/private-output.cc:217
+#: apt-private/private-output.cc:216
 msgid "[upgradable from: "
 msgstr ""
 
-#: apt-private/private-output.cc:223
+#: apt-private/private-output.cc:222
 msgid "[residual-config]"
 msgstr ""
 
-#: apt-private/private-output.cc:312
+#: apt-private/private-output.cc:310
 msgid "The following packages have unmet dependencies:"
 msgstr "以下のパッケージには満たせない依存関係があります:"
 
-#: apt-private/private-output.cc:402
+#: apt-private/private-output.cc:400
 #, c-format
 msgid "but %s is installed"
 msgstr "しかし、%s はインストールされています"
 
-#: apt-private/private-output.cc:404
+#: apt-private/private-output.cc:402
 #, c-format
 msgid "but %s is to be installed"
 msgstr "しかし、%s はインストールされようとしています"
 
-#: apt-private/private-output.cc:411
+#: apt-private/private-output.cc:409
 msgid "but it is not installable"
 msgstr "しかし、インストールすることができません"
 
-#: apt-private/private-output.cc:413
+#: apt-private/private-output.cc:411
 msgid "but it is a virtual package"
 msgstr "しかし、これは仮想パッケージです"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not installed"
 msgstr "しかし、インストールされていません"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not going to be installed"
 msgstr "しかし、インストールされようとしていません"
 
-#: apt-private/private-output.cc:421
+#: apt-private/private-output.cc:419
 msgid " or"
 msgstr " または"
 
-#: apt-private/private-output.cc:450
+#: apt-private/private-output.cc:448
 msgid "The following NEW packages will be installed:"
 msgstr "以下のパッケージが新たにインストールされます:"
 
-#: apt-private/private-output.cc:476
+#: apt-private/private-output.cc:474
 msgid "The following packages will be REMOVED:"
 msgstr "以下のパッケージは「削除」されます:"
 
-#: apt-private/private-output.cc:498
+#: apt-private/private-output.cc:496
 msgid "The following packages have been kept back:"
 msgstr "以下のパッケージは保留されます:"
 
-#: apt-private/private-output.cc:519
+#: apt-private/private-output.cc:517
 msgid "The following packages will be upgraded:"
 msgstr "以下のパッケージはアップグレードされます:"
 
-#: apt-private/private-output.cc:540
+#: apt-private/private-output.cc:538
 msgid "The following packages will be DOWNGRADED:"
 msgstr "以下のパッケージは「ダウングレード」されます:"
 
-#: apt-private/private-output.cc:560
+#: apt-private/private-output.cc:558
 msgid "The following held packages will be changed:"
 msgstr "以下の変更禁止パッケージは変更されます:"
 
-#: apt-private/private-output.cc:615
+#: apt-private/private-output.cc:613
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (%s のため) "
 
-#: apt-private/private-output.cc:623
+#: apt-private/private-output.cc:621
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
 "This should NOT be done unless you know exactly what you are doing!"
@@ -1461,27 +1461,27 @@ msgstr ""
 "警告: 以下の不可欠パッケージが削除されます。\n"
 "何をしようとしているか本当にわかっていない場合は、実行してはいけません!"
 
-#: apt-private/private-output.cc:654
+#: apt-private/private-output.cc:652
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "アップグレード: %lu 個、新規インストール: %lu 個、"
 
-#: apt-private/private-output.cc:658
+#: apt-private/private-output.cc:656
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "再インストール: %lu 個、"
 
-#: apt-private/private-output.cc:660
+#: apt-private/private-output.cc:658
 #, c-format
 msgid "%lu downgraded, "
 msgstr "ダウングレード: %lu 個、"
 
-#: apt-private/private-output.cc:662
+#: apt-private/private-output.cc:660
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "削除: %lu 個、保留: %lu 個。\n"
 
-#: apt-private/private-output.cc:666
+#: apt-private/private-output.cc:664
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu 個のパッケージが完全にインストールまたは削除されていません。\n"
@@ -1490,7 +1490,7 @@ msgstr "%lu 個のパッケージが完全にインストールまたは削除�
 #. e.g. "Do you want to continue? [Y/n] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:688
+#: apt-private/private-output.cc:686
 msgid "[Y/n]"
 msgstr "[Y/n]"
 
@@ -1498,21 +1498,21 @@ msgstr "[Y/n]"
 #. e.g. "Should this file be removed? [y/N] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:694
+#: apt-private/private-output.cc:692
 msgid "[y/N]"
 msgstr "[y/N]"
 
 #. TRANSLATOR: "Yes" answer printed for a yes/no question if --assume-yes is set
-#: apt-private/private-output.cc:705
+#: apt-private/private-output.cc:703
 msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc:711
+#: apt-private/private-output.cc:709
 msgid "N"
 msgstr "N"
 
-#: apt-private/private-output.cc:733 apt-pkg/cachefilter.cc:33
+#: apt-private/private-output.cc:731 apt-pkg/cachefilter.cc:33
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "正規表現の展開エラー - %s"
@@ -1547,7 +1547,7 @@ msgstr ""
 msgid "Unmet dependencies. Try using -f."
 msgstr "未解決の依存関係があります。-f オプションを試してください。"
 
-#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:56
+#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:57
 msgid "Sorting"
 msgstr ""
 
@@ -1555,15 +1555,15 @@ msgstr ""
 msgid "The update command takes no arguments"
 msgstr "update コマンドは引数をとりません"
 
-#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:46
+#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:45
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "内部エラー、AllUpgrade が何かを破壊しました"
 
-#: apt-private/private-search.cc:60
+#: apt-private/private-search.cc:61
 msgid "Full Text Search"
 msgstr ""
 
-#: apt-private/private-show.cc:105
+#: apt-private/private-show.cc:106
 msgid "not a real pacakge (virtual)"
 msgstr ""
 
@@ -3350,12 +3350,12 @@ msgstr "外部ソルバを実行"
 msgid "Installing %s"
 msgstr "%s をインストールしています"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:995
+#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
 #, c-format
 msgid "Configuring %s"
 msgstr "%s を設定しています"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1002
+#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
 #, c-format
 msgid "Removing %s"
 msgstr "%s を削除しています"
@@ -3376,87 +3376,87 @@ msgid "Running post-installation trigger %s"
 msgstr "インストール後トリガ %s を実行しています"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:749
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "ディレクトリ '%s' が見つかりません"
 
-#: apt-pkg/deb/dpkgpm.cc:761 apt-pkg/deb/dpkgpm.cc:783
+#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "ファイル '%s' をオープンできませんでした"
 
-#: apt-pkg/deb/dpkgpm.cc:988
+#: apt-pkg/deb/dpkgpm.cc:1003
 #, c-format
 msgid "Preparing %s"
 msgstr "%s を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:989
+#: apt-pkg/deb/dpkgpm.cc:1004
 #, c-format
 msgid "Unpacking %s"
 msgstr "%s を展開しています"
 
-#: apt-pkg/deb/dpkgpm.cc:994
+#: apt-pkg/deb/dpkgpm.cc:1009
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s の設定を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:996
+#: apt-pkg/deb/dpkgpm.cc:1011
 #, c-format
 msgid "Installed %s"
 msgstr "%s をインストールしました"
 
-#: apt-pkg/deb/dpkgpm.cc:1001
+#: apt-pkg/deb/dpkgpm.cc:1016
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s の削除を準備しています"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1018
 #, c-format
 msgid "Removed %s"
 msgstr "%s を削除しました"
 
-#: apt-pkg/deb/dpkgpm.cc:1008
+#: apt-pkg/deb/dpkgpm.cc:1023
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s を完全に削除する準備をしています"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1024
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s を完全に削除しました"
 
-#: apt-pkg/deb/dpkgpm.cc:1257 apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "%s に書き込めません"
 
-#: apt-pkg/deb/dpkgpm.cc:1257
+#: apt-pkg/deb/dpkgpm.cc:1272
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1293
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1292
+#: apt-pkg/deb/dpkgpm.cc:1307
 msgid "Running dpkg"
 msgstr "dpkg を実行しています"
 
-#: apt-pkg/deb/dpkgpm.cc:1464
+#: apt-pkg/deb/dpkgpm.cc:1479
 msgid "Operation was interrupted before it could finish"
 msgstr "操作はそれが完了する前に中断されました"
 
-#: apt-pkg/deb/dpkgpm.cc:1526
+#: apt-pkg/deb/dpkgpm.cc:1541
 msgid "No apport report written because MaxReports is reached already"
 msgstr "MaxReports にすでに達しているため、レポートは書き込まれません"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1531
+#: apt-pkg/deb/dpkgpm.cc:1546
 msgid "dependency problems - leaving unconfigured"
 msgstr "依存関係の問題 - 未設定のままにしています"
 
-#: apt-pkg/deb/dpkgpm.cc:1533
+#: apt-pkg/deb/dpkgpm.cc:1548
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3464,7 +3464,7 @@ msgstr ""
 "エラーメッセージは前の失敗から続くエラーであることを示しているので、レポート"
 "は書き込まれません。"
 
-#: apt-pkg/deb/dpkgpm.cc:1539
+#: apt-pkg/deb/dpkgpm.cc:1554
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3472,7 +3472,7 @@ msgstr ""
 "エラーメッセージはディスクフルエラーであることを示しているので、レポートは書"
 "き込まれません。"
 
-#: apt-pkg/deb/dpkgpm.cc:1545
+#: apt-pkg/deb/dpkgpm.cc:1560
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3480,7 +3480,7 @@ msgstr ""
 "エラーメッセージはメモリ超過エラーであることを示しているので、レポートは書き"
 "込まれません。"
 
-#: apt-pkg/deb/dpkgpm.cc:1552
+#: apt-pkg/deb/dpkgpm.cc:1567
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

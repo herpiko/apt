@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.7.21\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-08-31 16:53+0200\n"
+"POT-Creation-Date: 2013-09-10 17:54+0200\n"
 "PO-Revision-Date: 2012-06-25 17:23+0300\n"
 "Last-Translator: Damyan Ivanov <dmn@debian.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
@@ -95,7 +95,7 @@ msgid "Total space accounted for: "
 msgstr "Общо отчетено пространство: "
 
 #: cmdline/apt-cache.cc:497 cmdline/apt-cache.cc:1146
-#: apt-private/private-show.cc:50
+#: apt-private/private-show.cc:52
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Пакетният файл %s не е синхронизиран."
@@ -103,7 +103,7 @@ msgstr "Пакетният файл %s не е синхронизиран."
 #: cmdline/apt-cache.cc:575 cmdline/apt-cache.cc:1432
 #: cmdline/apt-cache.cc:1434 cmdline/apt-cache.cc:1511 cmdline/apt-mark.cc:48
 #: cmdline/apt-mark.cc:95 cmdline/apt-mark.cc:221
-#: apt-private/private-show.cc:113 apt-private/private-show.cc:115
+#: apt-private/private-show.cc:114 apt-private/private-show.cc:116
 msgid "No packages found"
 msgstr "Няма намерени пакети"
 
@@ -160,7 +160,7 @@ msgid "  Version table:"
 msgstr "  Таблица с версиите:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1523 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -296,38 +296,38 @@ msgstr ""
 "  -o=? Настройване на произволна конфигурационна опция, т.е. -o dir::cache=/"
 "tmp\n"
 
-#: cmdline/apt-get.cc:225
+#: cmdline/apt-get.cc:222
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr "Игнориране на несъществуващо издание „%s“ на пакета „%s“"
 
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:254
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Използване на пакет източник „%s“ вместо „%s“\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:292
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "Игнориране на несъществуваща версия „%s“ на пакета „%s“"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:323
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Неуспех при намирането на пакет %s"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s е отбелязан като ръчно инсталиран.\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s е отбелязан като автоматично инсталиран.\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -335,46 +335,46 @@ msgstr ""
 "Тази команда е остаряла. Вместо нея използвайте „apt-mark auto“ и „apt-mark "
 "manual“."
 
-#: cmdline/apt-get.cc:357
+#: cmdline/apt-get.cc:354
 msgid "Calculating upgrade... "
 msgstr "Изчисляване на актуализацията..."
 
-#: cmdline/apt-get.cc:360 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "Неуспех"
 
-#: cmdline/apt-get.cc:369
+#: cmdline/apt-get.cc:366
 msgid "Done"
 msgstr "Готово"
 
-#: cmdline/apt-get.cc:436 cmdline/apt-get.cc:444
+#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Вътрешна грешка, „problem resolver“ счупи нещо в системата"
 
-#: cmdline/apt-get.cc:472 cmdline/apt-get.cc:509
+#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
 msgid "Unable to lock the download directory"
 msgstr "Неуспех при заключването на директорията за изтегляне"
 
-#: cmdline/apt-get.cc:566
+#: cmdline/apt-get.cc:563
 #, c-format
 msgid "Can't find a source to download version '%s' of '%s'"
 msgstr "Не е открит източник, от който да се изтегли версия „%s“ на „%s“"
 
-#: cmdline/apt-get.cc:571
+#: cmdline/apt-get.cc:568
 #, c-format
 msgid "Downloading %s %s"
 msgstr "Изтегляне на %s %s"
 
-#: cmdline/apt-get.cc:631
+#: cmdline/apt-get.cc:628
 msgid "Must specify at least one package to fetch source for"
 msgstr "Трябва да укажете поне един пакет за изтегляне на изходния му код"
 
-#: cmdline/apt-get.cc:671 cmdline/apt-get.cc:983
+#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Неуспех при намирането на изходен код на пакет %s"
 
-#: cmdline/apt-get.cc:688
+#: cmdline/apt-get.cc:685
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -384,7 +384,7 @@ msgstr ""
 "адрес:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:693
+#: cmdline/apt-get.cc:690
 #, c-format
 msgid ""
 "Please use:\n"
@@ -396,86 +396,86 @@ msgstr ""
 "за да изтеглите последните промени в пакета (евентуално в процес на "
 "разработка).\n"
 
-#: cmdline/apt-get.cc:746
+#: cmdline/apt-get.cc:743
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Пропускане на вече изтегления файл „%s“\n"
 
-#: cmdline/apt-get.cc:769 cmdline/apt-get.cc:772
-#: apt-private/private-install.cc:233 apt-private/private-install.cc:236
+#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
+#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Неуспех при определянето на свободното пространство в %s"
 
-#: cmdline/apt-get.cc:783
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Нямате достатъчно свободно пространство в %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:792
+#: cmdline/apt-get.cc:789
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Необходимо е да се изтеглят %sB/%sB архиви изходен код.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:797
+#: cmdline/apt-get.cc:794
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Необходимо е да се изтеглят %sB архиви изходен код.\n"
 
-#: cmdline/apt-get.cc:803
+#: cmdline/apt-get.cc:800
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Изтегляне на изходен код %s\n"
 
-#: cmdline/apt-get.cc:834 apt-private/private-install.cc:360
+#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
 #: apt-pkg/algorithms.cc:1607
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Неуспех при изтеглянето на %s  %s\n"
 
-#: cmdline/apt-get.cc:841
+#: cmdline/apt-get.cc:838
 msgid "Failed to fetch some archives."
 msgstr "Неуспех при изтеглянето на някои архиви."
 
-#: cmdline/apt-get.cc:846 apt-private/private-install.cc:379
+#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
 msgid "Download complete and in download only mode"
 msgstr "Изтеглянето завърши в режим само на изтегляне"
 
-#: cmdline/apt-get.cc:872
+#: cmdline/apt-get.cc:869
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr ""
 "Пропускане на разпакетирането на вече разпакетирания изходен код в %s\n"
 
-#: cmdline/apt-get.cc:884
+#: cmdline/apt-get.cc:881
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Командата за разпакетиране „%s“ пропадна.\n"
 
-#: cmdline/apt-get.cc:885
+#: cmdline/apt-get.cc:882
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Проверете дали имате инсталиран пакета „dpkg-dev“.\n"
 
-#: cmdline/apt-get.cc:907
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Командата за компилиране „%s“ пропадна.\n"
 
-#: cmdline/apt-get.cc:927
+#: cmdline/apt-get.cc:924
 msgid "Child process failed"
 msgstr "Процесът-потомък пропадна"
 
-#: cmdline/apt-get.cc:946
+#: cmdline/apt-get.cc:943
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Трябва да укажете поне един пакет за проверка на зависимости за компилиране"
 
-#: cmdline/apt-get.cc:971
+#: cmdline/apt-get.cc:968
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -484,18 +484,18 @@ msgstr ""
 "Липсва информация за архитектурата %s. Прегледайте информацията за APT::"
 "Architectures в apt.conf(5)."
 
-#: cmdline/apt-get.cc:995 cmdline/apt-get.cc:998
+#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr ""
 "Неуспех при получаването на информация за зависимостите за компилиране на %s"
 
-#: cmdline/apt-get.cc:1018
+#: cmdline/apt-get.cc:1015
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s няма зависимости за компилиране.\n"
 
-#: cmdline/apt-get.cc:1188
+#: cmdline/apt-get.cc:1185
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -504,7 +504,7 @@ msgstr ""
 "Зависимост %s за пакета %s не може да бъде удовлетворена, %s не се позволява "
 "за пакети „%s“"
 
-#: cmdline/apt-get.cc:1206
+#: cmdline/apt-get.cc:1203
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -513,14 +513,14 @@ msgstr ""
 "Зависимост %s за пакета %s не може да бъде удовлетворена, понеже пакета %s "
 "не може да бъде намерен"
 
-#: cmdline/apt-get.cc:1229
+#: cmdline/apt-get.cc:1226
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Неуспех при удовлетворяването на зависимост %s за пакета %s: Инсталираният "
 "пакет %s е твърде нов"
 
-#: cmdline/apt-get.cc:1268
+#: cmdline/apt-get.cc:1265
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -529,7 +529,7 @@ msgstr ""
 "Зависимост %s за пакета %s не може да бъде удовлетворена, понеже версията "
 "кандидат на пакета %s не може да удовлетвори изискването за версия"
 
-#: cmdline/apt-get.cc:1274
+#: cmdline/apt-get.cc:1271
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -538,30 +538,30 @@ msgstr ""
 "Зависимост %s за пакета %s не може да бъде удовлетворена, понеже пакета %s "
 "няма подходящи версии"
 
-#: cmdline/apt-get.cc:1297
+#: cmdline/apt-get.cc:1294
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Неуспех при удовлетворяването на зависимост %s за пакета %s: %s"
 
-#: cmdline/apt-get.cc:1312
+#: cmdline/apt-get.cc:1309
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Зависимостите за компилиране на %s не можаха да бъдат удовлетворени."
 
-#: cmdline/apt-get.cc:1317
+#: cmdline/apt-get.cc:1314
 msgid "Failed to process build dependencies"
 msgstr "Неуспех при обработката на зависимостите за компилиране"
 
-#: cmdline/apt-get.cc:1410 cmdline/apt-get.cc:1422
+#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Журнал на промените в %s (%s)"
 
-#: cmdline/apt-get.cc:1528
+#: cmdline/apt-get.cc:1525
 msgid "Supported modules:"
 msgstr "Поддържани модули:"
 
-#: cmdline/apt-get.cc:1569
+#: cmdline/apt-get.cc:1566
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -678,7 +678,7 @@ msgstr "Пакетът „%s“ вече е задържан.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1045
+#: apt-pkg/deb/dpkgpm.cc:1060
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Изчака се завършването на %s, но той не беше пуснат"
@@ -1123,7 +1123,7 @@ msgstr "Неуспех при свързването"
 msgid "Internal error"
 msgstr "Вътрешна грешка"
 
-#: apt-private/private-list.cc:142
+#: apt-private/private-list.cc:141
 msgid "Listing"
 msgstr ""
 
@@ -1143,44 +1143,44 @@ msgstr "Инсталиране на тези пакети без проверк�
 msgid "Some packages could not be authenticated"
 msgstr "Някои пакети не можаха да бъдат удостоверени"
 
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:256
+#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
 msgid "There are problems and -y was used without --force-yes"
 msgstr "Има проблеми и „-y“ е използвано без „--force-yes“"
 
-#: apt-private/private-install.cc:136
+#: apt-private/private-install.cc:134
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "Вътрешна грешка, „InstallPackages“ е предизвикано при счупени пакети!"
 
-#: apt-private/private-install.cc:145
+#: apt-private/private-install.cc:143
 msgid "Packages need to be removed but remove is disabled."
 msgstr "Трябва да бъдат премахнати пакети, но премахването е изключено."
 
-#: apt-private/private-install.cc:156
+#: apt-private/private-install.cc:154
 msgid "Internal error, Ordering didn't finish"
 msgstr "Вътрешна грешка, „Ordering“ не завърши"
 
-#: apt-private/private-install.cc:194
+#: apt-private/private-install.cc:192
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "Странно.. Размерите не съвпадат, изпратете е-поща на apt@packages.debian.org"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:201
+#: apt-private/private-install.cc:199
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Необходимо е да се изтеглят %sB/%sB архиви.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:206
+#: apt-private/private-install.cc:204
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "Необходимо е да се изтеглят %sB архиви.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:213
+#: apt-private/private-install.cc:211
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr ""
@@ -1189,27 +1189,27 @@ msgstr ""
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:218
+#: apt-private/private-install.cc:216
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "След тази операция ще бъде освободено %sB дисково пространство.\n"
 
-#: apt-private/private-install.cc:246
+#: apt-private/private-install.cc:244
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "Нямате достатъчно свободно пространство в %s."
 
-#: apt-private/private-install.cc:262 apt-private/private-install.cc:284
+#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr "Указано е „Trivial Only“, но това не е тривиална операция."
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:264
 msgid "Yes, do as I say!"
 msgstr "Да, прави каквото казвам!"
 
-#: apt-private/private-install.cc:268
+#: apt-private/private-install.cc:266
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1220,19 +1220,19 @@ msgstr ""
 "За да продължите, въведете фразата „%s“\n"
 " ?] "
 
-#: apt-private/private-install.cc:274 apt-private/private-install.cc:292
+#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
 msgid "Abort."
 msgstr "Прекъсване."
 
-#: apt-private/private-install.cc:289
+#: apt-private/private-install.cc:287
 msgid "Do you want to continue?"
 msgstr "Искате ли да продължите?"
 
-#: apt-private/private-install.cc:378
+#: apt-private/private-install.cc:376
 msgid "Some files failed to download"
 msgstr "Някои файлове не можаха да бъдат изтеглени"
 
-#: apt-private/private-install.cc:385
+#: apt-private/private-install.cc:383
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1240,19 +1240,19 @@ msgstr ""
 "Неуспех при изтеглянето на някои архиви, може да изпълните „apt-get update“ "
 "или да опитате с „--fix-missing“?"
 
-#: apt-private/private-install.cc:389
+#: apt-private/private-install.cc:387
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "„--fix-missing“ и превключване на носители не се поддържа все още"
 
-#: apt-private/private-install.cc:394
+#: apt-private/private-install.cc:392
 msgid "Unable to correct missing packages."
 msgstr "Неуспех при коригирането на липсващите пакети."
 
-#: apt-private/private-install.cc:395
+#: apt-private/private-install.cc:393
 msgid "Aborting install."
 msgstr "Прекъсване на инсталирането."
 
-#: apt-private/private-install.cc:423
+#: apt-private/private-install.cc:421
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1266,15 +1266,15 @@ msgstr[1] ""
 "Следните пакети са отстранени от системата поради препокриване на всичките "
 "им файлове от други пакети:"
 
-#: apt-private/private-install.cc:427
+#: apt-private/private-install.cc:425
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "Това се прави автоматично от dpkg."
 
-#: apt-private/private-install.cc:450
+#: apt-private/private-install.cc:446
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "Не би трябвало да се изтрива. AutoRemover няма да бъде стартиран"
 
-#: apt-private/private-install.cc:554
+#: apt-private/private-install.cc:550
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1292,16 +1292,16 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:557 apt-private/private-install.cc:699
+#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
 msgid "The following information may help to resolve the situation:"
 msgstr ""
 "Следната информация може да помогне за намиране на изход от ситуацията:"
 
-#: apt-private/private-install.cc:561
+#: apt-private/private-install.cc:557
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Вътрешна грешка, AutoRemover счупи нещо в системата"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:564
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1311,7 +1311,7 @@ msgstr[0] "Следният пакет е бил инсталиран автом
 msgstr[1] ""
 "Следните пакети са били инсталирани автоматично и вече не са необходими:"
 
-#: apt-private/private-install.cc:572
+#: apt-private/private-install.cc:568
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1320,17 +1320,17 @@ msgstr[0] "%lu пакет е бил инсталиран автоматично 
 msgstr[1] ""
 "%lu пакета са били инсталирани автоматично и вече не са необходими:\n"
 
-#: apt-private/private-install.cc:574
+#: apt-private/private-install.cc:570
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "Използвайте „apt-get autoremove“ за да го премахнете."
 msgstr[1] "Използвайте „apt-get autoremove“ за да ги премахнете."
 
-#: apt-private/private-install.cc:669
+#: apt-private/private-install.cc:664
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr "Възможно е да изпълните „apt-get -f install“, за да коригирате:"
 
-#: apt-private/private-install.cc:671
+#: apt-private/private-install.cc:666
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1338,7 +1338,7 @@ msgstr ""
 "Неудовлетворени зависимости. Опитайте „apt-get -f install“ без пакети (или "
 "укажете разрешение)."
 
-#: apt-private/private-install.cc:684
+#: apt-private/private-install.cc:679
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1350,117 +1350,117 @@ msgstr ""
 "дистрибуция, че някои необходими пакети още не са създадени или пък\n"
 "са били преместени от Incoming."
 
-#: apt-private/private-install.cc:705
+#: apt-private/private-install.cc:700
 msgid "Broken packages"
 msgstr "Счупени пакети"
 
-#: apt-private/private-install.cc:759
+#: apt-private/private-install.cc:753
 msgid "The following extra packages will be installed:"
 msgstr "Следните допълнителни пакети ще бъдат инсталирани:"
 
-#: apt-private/private-install.cc:849
+#: apt-private/private-install.cc:843
 msgid "Suggested packages:"
 msgstr "Предложени пакети:"
 
-#: apt-private/private-install.cc:850
+#: apt-private/private-install.cc:844
 msgid "Recommended packages:"
 msgstr "Препоръчвани пакети:"
 
-#: apt-private/private-output.cc:198
+#: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
 msgstr ""
 
-#: apt-private/private-output.cc:204
+#: apt-private/private-output.cc:203
 #, fuzzy
 msgid "[installed,local]"
 msgstr " [Инсталиран]"
 
-#: apt-private/private-output.cc:207
+#: apt-private/private-output.cc:206
 msgid "[installed,auto-removable]"
 msgstr ""
 
-#: apt-private/private-output.cc:209
+#: apt-private/private-output.cc:208
 #, fuzzy
 msgid "[installed,automatic]"
 msgstr " [Инсталиран]"
 
-#: apt-private/private-output.cc:211
+#: apt-private/private-output.cc:210
 #, fuzzy
 msgid "[installed]"
 msgstr " [Инсталиран]"
 
-#: apt-private/private-output.cc:217
+#: apt-private/private-output.cc:216
 msgid "[upgradable from: "
 msgstr ""
 
-#: apt-private/private-output.cc:223
+#: apt-private/private-output.cc:222
 msgid "[residual-config]"
 msgstr ""
 
-#: apt-private/private-output.cc:312
+#: apt-private/private-output.cc:310
 msgid "The following packages have unmet dependencies:"
 msgstr "Следните пакети имат неудовлетворени зависимости:"
 
-#: apt-private/private-output.cc:402
+#: apt-private/private-output.cc:400
 #, c-format
 msgid "but %s is installed"
 msgstr "но е инсталиран %s"
 
-#: apt-private/private-output.cc:404
+#: apt-private/private-output.cc:402
 #, c-format
 msgid "but %s is to be installed"
 msgstr "но ще бъде инсталиран %s"
 
-#: apt-private/private-output.cc:411
+#: apt-private/private-output.cc:409
 msgid "but it is not installable"
 msgstr "но той не може да бъде инсталиран"
 
-#: apt-private/private-output.cc:413
+#: apt-private/private-output.cc:411
 msgid "but it is a virtual package"
 msgstr "но той е виртуален пакет"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not installed"
 msgstr "но той не е инсталиран"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not going to be installed"
 msgstr "но той няма да бъде инсталиран"
 
-#: apt-private/private-output.cc:421
+#: apt-private/private-output.cc:419
 msgid " or"
 msgstr " или"
 
-#: apt-private/private-output.cc:450
+#: apt-private/private-output.cc:448
 msgid "The following NEW packages will be installed:"
 msgstr "Следните НОВИ пакети ще бъдат инсталирани:"
 
-#: apt-private/private-output.cc:476
+#: apt-private/private-output.cc:474
 msgid "The following packages will be REMOVED:"
 msgstr "Следните пакети ще бъдат ПРЕМАХНАТИ:"
 
-#: apt-private/private-output.cc:498
+#: apt-private/private-output.cc:496
 msgid "The following packages have been kept back:"
 msgstr "Следните пакети няма да бъдат променени:"
 
-#: apt-private/private-output.cc:519
+#: apt-private/private-output.cc:517
 msgid "The following packages will be upgraded:"
 msgstr "Следните пакети ще бъдат актуализирани:"
 
-#: apt-private/private-output.cc:540
+#: apt-private/private-output.cc:538
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Следните пакети ще бъдат ВЪРНАТИ КЪМ ПО-СТАРА ВЕРСИЯ:"
 
-#: apt-private/private-output.cc:560
+#: apt-private/private-output.cc:558
 msgid "The following held packages will be changed:"
 msgstr "Следните задържани пакети ще бъдат променени:"
 
-#: apt-private/private-output.cc:615
+#: apt-private/private-output.cc:613
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (поради %s) "
 
-#: apt-private/private-output.cc:623
+#: apt-private/private-output.cc:621
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
 "This should NOT be done unless you know exactly what you are doing!"
@@ -1468,27 +1468,27 @@ msgstr ""
 "ПРЕДУПРЕЖДЕНИЕ: Следните необходими пакети ще бъдат премахнати.\n"
 "Това НЕ би трябвало да става освен ако знаете точно какво правите!"
 
-#: apt-private/private-output.cc:654
+#: apt-private/private-output.cc:652
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu актуализирани, %lu нови инсталирани, "
 
-#: apt-private/private-output.cc:658
+#: apt-private/private-output.cc:656
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu преинсталирани, "
 
-#: apt-private/private-output.cc:660
+#: apt-private/private-output.cc:658
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu върнати към по-стара версия, "
 
-#: apt-private/private-output.cc:662
+#: apt-private/private-output.cc:660
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu за премахване и %lu без промяна.\n"
 
-#: apt-private/private-output.cc:666
+#: apt-private/private-output.cc:664
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu не са напълно инсталирани или премахнати.\n"
@@ -1497,7 +1497,7 @@ msgstr "%lu не са напълно инсталирани или премах�
 #. e.g. "Do you want to continue? [Y/n] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:688
+#: apt-private/private-output.cc:686
 msgid "[Y/n]"
 msgstr "[Y/n]"
 
@@ -1505,21 +1505,21 @@ msgstr "[Y/n]"
 #. e.g. "Should this file be removed? [y/N] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:694
+#: apt-private/private-output.cc:692
 msgid "[y/N]"
 msgstr "[y/N]"
 
 #. TRANSLATOR: "Yes" answer printed for a yes/no question if --assume-yes is set
-#: apt-private/private-output.cc:705
+#: apt-private/private-output.cc:703
 msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc:711
+#: apt-private/private-output.cc:709
 msgid "N"
 msgstr "N"
 
-#: apt-private/private-output.cc:733 apt-pkg/cachefilter.cc:33
+#: apt-private/private-output.cc:731 apt-pkg/cachefilter.cc:33
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Грешка при компилирането на регулярния израз - %s"
@@ -1554,7 +1554,7 @@ msgstr ""
 msgid "Unmet dependencies. Try using -f."
 msgstr "Неудовлетворени зависимости. Опитайте с „-f“."
 
-#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:56
+#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:57
 msgid "Sorting"
 msgstr ""
 
@@ -1562,15 +1562,15 @@ msgstr ""
 msgid "The update command takes no arguments"
 msgstr "Командата „update“ не възприема аргументи"
 
-#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:46
+#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:45
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Вътрешна грешка, „AllUpgrade“ счупи нещо в системата"
 
-#: apt-private/private-search.cc:60
+#: apt-private/private-search.cc:61
 msgid "Full Text Search"
 msgstr ""
 
-#: apt-private/private-show.cc:105
+#: apt-private/private-show.cc:106
 msgid "not a real pacakge (virtual)"
 msgstr ""
 
@@ -3372,12 +3372,12 @@ msgstr "Изпълняване на външна програма за удов�
 msgid "Installing %s"
 msgstr "Инсталиране на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:995
+#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
 #, c-format
 msgid "Configuring %s"
 msgstr "Конфигуриране на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1002
+#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
 #, c-format
 msgid "Removing %s"
 msgstr "Премахване на %s"
@@ -3398,89 +3398,89 @@ msgid "Running post-installation trigger %s"
 msgstr "Изпълнение на тригер след инсталиране %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:749
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Директорията „%s“ липсва"
 
-#: apt-pkg/deb/dpkgpm.cc:761 apt-pkg/deb/dpkgpm.cc:783
+#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Неуспех при отваряне на файла „%s“"
 
-#: apt-pkg/deb/dpkgpm.cc:988
+#: apt-pkg/deb/dpkgpm.cc:1003
 #, c-format
 msgid "Preparing %s"
 msgstr "Подготвяне на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:989
+#: apt-pkg/deb/dpkgpm.cc:1004
 #, c-format
 msgid "Unpacking %s"
 msgstr "Разпакетиране на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:994
+#: apt-pkg/deb/dpkgpm.cc:1009
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Подготвяне на %s за конфигуриране"
 
-#: apt-pkg/deb/dpkgpm.cc:996
+#: apt-pkg/deb/dpkgpm.cc:1011
 #, c-format
 msgid "Installed %s"
 msgstr "%s е инсталиран"
 
-#: apt-pkg/deb/dpkgpm.cc:1001
+#: apt-pkg/deb/dpkgpm.cc:1016
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Подготвяне за премахване на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1018
 #, c-format
 msgid "Removed %s"
 msgstr "%s е премахнат"
 
-#: apt-pkg/deb/dpkgpm.cc:1008
+#: apt-pkg/deb/dpkgpm.cc:1023
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Подготовка за пълно премахване на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1024
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s е напълно премахнат"
 
-#: apt-pkg/deb/dpkgpm.cc:1257 apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Неуспех при записа на %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1257
+#: apt-pkg/deb/dpkgpm.cc:1272
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1293
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1292
+#: apt-pkg/deb/dpkgpm.cc:1307
 msgid "Running dpkg"
 msgstr "Изпълняване на dpkg"
 
-#: apt-pkg/deb/dpkgpm.cc:1464
+#: apt-pkg/deb/dpkgpm.cc:1479
 msgid "Operation was interrupted before it could finish"
 msgstr "Операцията е прекъсната"
 
-#: apt-pkg/deb/dpkgpm.cc:1526
+#: apt-pkg/deb/dpkgpm.cc:1541
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 "Поради достигане на максималния брой доклади (MaxReports) не е записан нов "
 "доклад за зависимостите."
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1531
+#: apt-pkg/deb/dpkgpm.cc:1546
 msgid "dependency problems - leaving unconfigured"
 msgstr "отлагане на настройката поради неудовлетворени зависимости"
 
-#: apt-pkg/deb/dpkgpm.cc:1533
+#: apt-pkg/deb/dpkgpm.cc:1548
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3488,7 +3488,7 @@ msgstr ""
 "Доклад за зависимостите не е записан защото съобщението за грешка е породено "
 "от друга грешка."
 
-#: apt-pkg/deb/dpkgpm.cc:1539
+#: apt-pkg/deb/dpkgpm.cc:1554
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3496,7 +3496,7 @@ msgstr ""
 "Доклад за зависимостите не е записан защото грешката е причинена от "
 "недостатъчно дисково пространство"
 
-#: apt-pkg/deb/dpkgpm.cc:1545
+#: apt-pkg/deb/dpkgpm.cc:1560
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3504,7 +3504,7 @@ msgstr ""
 "Доклад за зависимостите не е записан защото грешката е причинена от "
 "недостатъчна оперативна памет"
 
-#: apt-pkg/deb/dpkgpm.cc:1552
+#: apt-pkg/deb/dpkgpm.cc:1567
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

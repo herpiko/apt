@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-0.9.11\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-08-31 16:53+0200\n"
+"POT-Creation-Date: 2013-09-10 17:54+0200\n"
 "PO-Revision-Date: 2013-08-25 14:13+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
@@ -95,7 +95,7 @@ msgid "Total space accounted for: "
 msgstr "Tổng chỗ đã tính dành cho: "
 
 #: cmdline/apt-cache.cc:497 cmdline/apt-cache.cc:1146
-#: apt-private/private-show.cc:50
+#: apt-private/private-show.cc:52
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Tập tin gói %s không đồng bộ được."
@@ -103,7 +103,7 @@ msgstr "Tập tin gói %s không đồng bộ được."
 #: cmdline/apt-cache.cc:575 cmdline/apt-cache.cc:1432
 #: cmdline/apt-cache.cc:1434 cmdline/apt-cache.cc:1511 cmdline/apt-mark.cc:48
 #: cmdline/apt-mark.cc:95 cmdline/apt-mark.cc:221
-#: apt-private/private-show.cc:113 apt-private/private-show.cc:115
+#: apt-private/private-show.cc:114 apt-private/private-show.cc:116
 msgid "No packages found"
 msgstr "Không tìm thấy gói"
 
@@ -161,7 +161,7 @@ msgid "  Version table:"
 msgstr "  Bảng phiên bản:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1523 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -305,38 +305,38 @@ msgstr ""
 "  -c=? Đọc tập tin cấu hình này\n"
 "  -o=? Đặt một tùy chọn cấu hình tùy ý, v.d. “-o dir::cache=/tmp”\n"
 
-#: cmdline/apt-get.cc:225
+#: cmdline/apt-get.cc:222
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr "Bỏ qua bản phát hành đích không sẵn sàng “%s” của gói “%s”"
 
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:254
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Đang chọn “%s” làm gói nguồn, thay thế cho “%s”\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:292
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "Bỏ qua phiên bản không sẵn sàng “%s” của gói “%s”"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:323
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Không tìm thấy gói %s"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s được đặt thành “được cài đặt bằng tay”.\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s được đặt thành “được tự động cài đặt”.\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -344,46 +344,46 @@ msgstr ""
 "Lệnh này đã lỗi thời. Xin hãy dùng lệnh 'apt-mark auto' và 'apt-mark manual' "
 "để thay thế."
 
-#: cmdline/apt-get.cc:357
+#: cmdline/apt-get.cc:354
 msgid "Calculating upgrade... "
 msgstr "Đang tính bước nâng cấp... "
 
-#: cmdline/apt-get.cc:360 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "Gặp lỗi"
 
-#: cmdline/apt-get.cc:369
+#: cmdline/apt-get.cc:366
 msgid "Done"
 msgstr "Xong"
 
-#: cmdline/apt-get.cc:436 cmdline/apt-get.cc:444
+#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Lỗi nội bộ: bộ tháo gỡ vấn đề đã ngắt gì"
 
-#: cmdline/apt-get.cc:472 cmdline/apt-get.cc:509
+#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
 msgid "Unable to lock the download directory"
 msgstr "Không thể khoá thư mục tải về"
 
-#: cmdline/apt-get.cc:566
+#: cmdline/apt-get.cc:563
 #, c-format
 msgid "Can't find a source to download version '%s' of '%s'"
 msgstr "Không tìm thấy nguồn cho việc tải về phiên bản '%s' of '%s'"
 
-#: cmdline/apt-get.cc:571
+#: cmdline/apt-get.cc:568
 #, c-format
 msgid "Downloading %s %s"
 msgstr "Đang tải về %s %s"
 
-#: cmdline/apt-get.cc:631
+#: cmdline/apt-get.cc:628
 msgid "Must specify at least one package to fetch source for"
 msgstr "Phải chỉ định ít nhất một gói để mà lấy mã nguồn về cho nó"
 
-#: cmdline/apt-get.cc:671 cmdline/apt-get.cc:983
+#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Không tìm thấy gói nguồn cho %s"
 
-#: cmdline/apt-get.cc:688
+#: cmdline/apt-get.cc:685
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -393,7 +393,7 @@ msgstr ""
 "“%s” tại:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:693
+#: cmdline/apt-get.cc:690
 #, c-format
 msgid ""
 "Please use:\n"
@@ -404,85 +404,85 @@ msgstr ""
 "bzr branch %s\n"
 "để lấy các gói mới nhất (có thể là chưa phát hành).\n"
 
-#: cmdline/apt-get.cc:746
+#: cmdline/apt-get.cc:743
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Đang bỏ qua tập tin đã được tải về “%s”\n"
 
-#: cmdline/apt-get.cc:769 cmdline/apt-get.cc:772
-#: apt-private/private-install.cc:233 apt-private/private-install.cc:236
+#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
+#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Không thể tìm được chỗ trống trong %s"
 
-#: cmdline/apt-get.cc:783
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Không đủ chỗ trống trên %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:792
+#: cmdline/apt-get.cc:789
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Cần phải lấy %sB/%sB kho nguồn.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:797
+#: cmdline/apt-get.cc:794
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Cần phải lấy %sB từ kho nguồn.\n"
 
-#: cmdline/apt-get.cc:803
+#: cmdline/apt-get.cc:800
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Lấy mã nguồn %s\n"
 
-#: cmdline/apt-get.cc:834 apt-private/private-install.cc:360
+#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
 #: apt-pkg/algorithms.cc:1607
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Gặp lỗi khi lấy về %s  %s\n"
 
-#: cmdline/apt-get.cc:841
+#: cmdline/apt-get.cc:838
 msgid "Failed to fetch some archives."
 msgstr "Gặp lỗi khi lấy một số kho."
 
-#: cmdline/apt-get.cc:846 apt-private/private-install.cc:379
+#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
 msgid "Download complete and in download only mode"
 msgstr "Hoàn tất việc tải về và trong chế độ chỉ tải về"
 
-#: cmdline/apt-get.cc:872
+#: cmdline/apt-get.cc:869
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Đang bỏ qua giải nén nguồn đã giải nén trong %s\n"
 
-#: cmdline/apt-get.cc:884
+#: cmdline/apt-get.cc:881
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Lệnh giải nén “%s” bị lỗi.\n"
 
-#: cmdline/apt-get.cc:885
+#: cmdline/apt-get.cc:882
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Hãy kiểm tra xem gói “dpkg-dev” đã được cài đặt chưa.\n"
 
-#: cmdline/apt-get.cc:907
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Lệnh xây dựng “%s” bị lỗi.\n"
 
-#: cmdline/apt-get.cc:927
+#: cmdline/apt-get.cc:924
 msgid "Child process failed"
 msgstr "Tiến trình con bị lỗi"
 
-#: cmdline/apt-get.cc:946
+#: cmdline/apt-get.cc:943
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Phải ghi rõ ít nhất một gói cần kiểm tra cách phụ thuộc khi xây dụng cho nó"
 
-#: cmdline/apt-get.cc:971
+#: cmdline/apt-get.cc:968
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -491,17 +491,17 @@ msgstr ""
 "Không có thông tin kiến trúc sẵn sàng cho %s. Xem apt.conf(5) APT::"
 "Architectures để cài đặt"
 
-#: cmdline/apt-get.cc:995 cmdline/apt-get.cc:998
+#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Không thể lấy thông tin về cách phụ thuộc khi xây dụng cho %s"
 
-#: cmdline/apt-get.cc:1018
+#: cmdline/apt-get.cc:1015
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s không phụ thuộc vào gì khi xây dụng.\n"
 
-#: cmdline/apt-get.cc:1188
+#: cmdline/apt-get.cc:1185
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -509,7 +509,7 @@ msgid ""
 msgstr ""
 "phụ thuộc %s cho %s không ổn thỏa bởi vì %s không được cho phép trên gói '%s'"
 
-#: cmdline/apt-get.cc:1206
+#: cmdline/apt-get.cc:1203
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -517,14 +517,14 @@ msgid ""
 msgstr ""
 "cách phụ thuộc %s cho %s không thể được thỏa mãn vì không tìm thấy gói %s"
 
-#: cmdline/apt-get.cc:1229
+#: cmdline/apt-get.cc:1226
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Việc cố thỏa mãn quan hệ phụ thuộc %s cho %s bị lỗi vì gói đã cài đặt %s là "
 "quá mới"
 
-#: cmdline/apt-get.cc:1268
+#: cmdline/apt-get.cc:1265
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -533,7 +533,7 @@ msgstr ""
 "cách phụ thuộc %s cho %s không thể được thỏa mãn phiên bản ứng cử của gói %s "
 "có thể thỏa mãn điều kiện phiên bản"
 
-#: cmdline/apt-get.cc:1274
+#: cmdline/apt-get.cc:1271
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -542,30 +542,30 @@ msgstr ""
 "cách phụ thuộc %s cho %s không thể được thỏa mãn bởi vì gói %s không có bản "
 "ứng cử"
 
-#: cmdline/apt-get.cc:1297
+#: cmdline/apt-get.cc:1294
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Việc cố thỏa cách phụ thuộc %s cho %s bị lỗi: %s."
 
-#: cmdline/apt-get.cc:1312
+#: cmdline/apt-get.cc:1309
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Không thể thỏa cách phụ thuộc khi xây dụng cho %s."
 
-#: cmdline/apt-get.cc:1317
+#: cmdline/apt-get.cc:1314
 msgid "Failed to process build dependencies"
 msgstr "Việc xử lý cách phụ thuộc khi xây dụng bị lỗi"
 
-#: cmdline/apt-get.cc:1410 cmdline/apt-get.cc:1422
+#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Changelog cho %s (%s)"
 
-#: cmdline/apt-get.cc:1528
+#: cmdline/apt-get.cc:1525
 msgid "Supported modules:"
 msgstr "Hỗ trợ các mô-đun:"
 
-#: cmdline/apt-get.cc:1569
+#: cmdline/apt-get.cc:1566
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -686,7 +686,7 @@ msgstr "%s đã sẵn được đặt là không giữ lại.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1045
+#: apt-pkg/deb/dpkgpm.cc:1060
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Cần %s nhưng mà không thấy nó ở đây"
@@ -1133,7 +1133,7 @@ msgstr "Kết nối bị ngắt"
 msgid "Internal error"
 msgstr "Gặp lỗi nội bộ"
 
-#: apt-private/private-list.cc:142
+#: apt-private/private-list.cc:141
 msgid "Listing"
 msgstr ""
 
@@ -1153,61 +1153,61 @@ msgstr "Cài đặt những gói này mà không cần thẩm tra?"
 msgid "Some packages could not be authenticated"
 msgstr "Một số gói không thể được xác thực"
 
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:256
+#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
 msgid "There are problems and -y was used without --force-yes"
 msgstr "Có lỗi và đã dùng tùy chọn “-y” mà không có  “--force-yes”"
 
-#: apt-private/private-install.cc:136
+#: apt-private/private-install.cc:134
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "Lỗi nội bộ: InstallPackages (cài đặt gói) được gọi với gói bị hỏng!"
 
-#: apt-private/private-install.cc:145
+#: apt-private/private-install.cc:143
 msgid "Packages need to be removed but remove is disabled."
 msgstr "Cần phải gỡ bỏ một số gói, nhưng mà khả năng Gỡ bỏ (Remove) đã bị tắt."
 
-#: apt-private/private-install.cc:156
+#: apt-private/private-install.cc:154
 msgid "Internal error, Ordering didn't finish"
 msgstr "Gặp lỗi nội bộ: Tiến trình Sắp xếp chưa xong"
 
-#: apt-private/private-install.cc:194
+#: apt-private/private-install.cc:192
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "Lạ nhỉ... Kích cỡ không khớp nhau. Hãy gửi thư cho <apt@packages.debian.org>"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:201
+#: apt-private/private-install.cc:199
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Cần phải lấy %sB/%sB từ kho chứa.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:206
+#: apt-private/private-install.cc:204
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "Cần phải lấy %sB từ kho chứa.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:213
+#: apt-private/private-install.cc:211
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "Sau thao tác này, %sB dung lượng đĩa sẽ bị chiếm dụng.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:218
+#: apt-private/private-install.cc:216
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "Sau thao tác này, %sB dung lượng đĩa sẽ được giải phóng.\n"
 
-#: apt-private/private-install.cc:246
+#: apt-private/private-install.cc:244
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "Bạn không có đủ dung lượng đĩa còn trống trong %s."
 
-#: apt-private/private-install.cc:262 apt-private/private-install.cc:284
+#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr ""
 "Đã đưa ra “Chỉ không đáng kể” (Trivial Only) nhưng mà thao tác này là đáng "
@@ -1215,11 +1215,11 @@ msgstr ""
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:264
 msgid "Yes, do as I say!"
 msgstr "Có, làm đi!"
 
-#: apt-private/private-install.cc:268
+#: apt-private/private-install.cc:266
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1230,19 +1230,19 @@ msgstr ""
 "Nếu vẫn muốn tiếp tục thì hãy gõ cụm từ “%s”\n"
 "?]"
 
-#: apt-private/private-install.cc:274 apt-private/private-install.cc:292
+#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
 msgid "Abort."
 msgstr "Hủy bỏ."
 
-#: apt-private/private-install.cc:289
+#: apt-private/private-install.cc:287
 msgid "Do you want to continue?"
 msgstr "Bạn có muốn tiếp tục không?"
 
-#: apt-private/private-install.cc:378
+#: apt-private/private-install.cc:376
 msgid "Some files failed to download"
 msgstr "Một số tập tin không tải về được"
 
-#: apt-private/private-install.cc:385
+#: apt-private/private-install.cc:383
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1251,20 +1251,20 @@ msgstr ""
 "nhật)\n"
 "hay dùng tùy chọn “--fix-missing” (sửa thiếu sót) không?"
 
-#: apt-private/private-install.cc:389
+#: apt-private/private-install.cc:387
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr ""
 "Chưa hỗ trợ tùy chọn “--fix-missing” (sửa khi thiếu) và trao đổi phương tiện."
 
-#: apt-private/private-install.cc:394
+#: apt-private/private-install.cc:392
 msgid "Unable to correct missing packages."
 msgstr "Không thể sửa những gói còn thiếu."
 
-#: apt-private/private-install.cc:395
+#: apt-private/private-install.cc:393
 msgid "Aborting install."
 msgstr "Đang hủy bỏ tiến trình cài đặt."
 
-#: apt-private/private-install.cc:423
+#: apt-private/private-install.cc:421
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1275,15 +1275,15 @@ msgstr[0] ""
 "Những gói theo đây không còn nằm trên hệ thống này vì mọi tập tin đều bị gói "
 "khác ghi đè:"
 
-#: apt-private/private-install.cc:427
+#: apt-private/private-install.cc:425
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "Ghi chú: Thay đổi này được tự động thực hiện bởi dpkg."
 
-#: apt-private/private-install.cc:450
+#: apt-private/private-install.cc:446
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "Không nên xoá gì thì không thể khởi chạy Bộ Gỡ bỏ Tự động"
 
-#: apt-private/private-install.cc:554
+#: apt-private/private-install.cc:550
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1301,15 +1301,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:557 apt-private/private-install.cc:699
+#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
 msgid "The following information may help to resolve the situation:"
 msgstr "Có lẽ thông tin theo đây sẽ giúp đỡ bạn giải quyết tình trạng này:"
 
-#: apt-private/private-install.cc:561
+#: apt-private/private-install.cc:557
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Lỗi nội bộ: Bộ Gỡ bỏ Tự động đã làm hỏng một thứ gì đó"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:564
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1318,23 +1318,23 @@ msgid_plural ""
 msgstr[0] ""
 "(Các) gói sau đây đã được tự động cài đặt nên không còn cần yêu cầu lại:"
 
-#: apt-private/private-install.cc:572
+#: apt-private/private-install.cc:568
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
 "%lu packages were automatically installed and are no longer required.\n"
 msgstr[0] "%lu gói đã được tự động cài đặt nên không còn cần yêu cầu lại.\n"
 
-#: apt-private/private-install.cc:574
+#: apt-private/private-install.cc:570
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "Hãy dùng lệnh `apt-get autoremove' để gỡ bỏ chúng."
 
-#: apt-private/private-install.cc:669
+#: apt-private/private-install.cc:664
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr "Có lẽ bạn cần chạy lệnh “apt-get -f install” để sửa những cái đó:"
 
-#: apt-private/private-install.cc:671
+#: apt-private/private-install.cc:666
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1342,7 +1342,7 @@ msgstr ""
 "Thưa thỏa mãn quan hệ phụ thuộc. Hãy thử chạy lệnh “apt-get -f install” mà "
 "không có gói nào (hoặc chỉ định cách thức giải quyết)."
 
-#: apt-private/private-install.cc:684
+#: apt-private/private-install.cc:679
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1354,117 +1354,117 @@ msgstr ""
 "chưa ổn định cái mà yêu cầu các gói mà nó còn chưa được tạo ra\n"
 "hay chưa được chuyển ra khỏi phần Incoming (Đến)."
 
-#: apt-private/private-install.cc:705
+#: apt-private/private-install.cc:700
 msgid "Broken packages"
 msgstr "Gói bị hỏng"
 
-#: apt-private/private-install.cc:759
+#: apt-private/private-install.cc:753
 msgid "The following extra packages will be installed:"
 msgstr "Những gói thêm theo đây sẽ được cài đặt:"
 
-#: apt-private/private-install.cc:849
+#: apt-private/private-install.cc:843
 msgid "Suggested packages:"
 msgstr "Các gói đề nghị:"
 
-#: apt-private/private-install.cc:850
+#: apt-private/private-install.cc:844
 msgid "Recommended packages:"
 msgstr "Gói khuyến khích:"
 
-#: apt-private/private-output.cc:198
+#: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
 msgstr ""
 
-#: apt-private/private-output.cc:204
+#: apt-private/private-output.cc:203
 #, fuzzy
 msgid "[installed,local]"
 msgstr " [Đã cài đặt]"
 
-#: apt-private/private-output.cc:207
+#: apt-private/private-output.cc:206
 msgid "[installed,auto-removable]"
 msgstr ""
 
-#: apt-private/private-output.cc:209
+#: apt-private/private-output.cc:208
 #, fuzzy
 msgid "[installed,automatic]"
 msgstr " [Đã cài đặt]"
 
-#: apt-private/private-output.cc:211
+#: apt-private/private-output.cc:210
 #, fuzzy
 msgid "[installed]"
 msgstr " [Đã cài đặt]"
 
-#: apt-private/private-output.cc:217
+#: apt-private/private-output.cc:216
 msgid "[upgradable from: "
 msgstr ""
 
-#: apt-private/private-output.cc:223
+#: apt-private/private-output.cc:222
 msgid "[residual-config]"
 msgstr ""
 
-#: apt-private/private-output.cc:312
+#: apt-private/private-output.cc:310
 msgid "The following packages have unmet dependencies:"
 msgstr "Những gói theo đây chưa thỏa mãn quan hệ phụ thuộc:"
 
-#: apt-private/private-output.cc:402
+#: apt-private/private-output.cc:400
 #, c-format
 msgid "but %s is installed"
 msgstr "nhưng mà %s đã được cài đặt"
 
-#: apt-private/private-output.cc:404
+#: apt-private/private-output.cc:402
 #, c-format
 msgid "but %s is to be installed"
 msgstr "nhưng mà %s sẽ được cài đặt"
 
-#: apt-private/private-output.cc:411
+#: apt-private/private-output.cc:409
 msgid "but it is not installable"
 msgstr "nhưng mà nó không có khả năng cài đặt"
 
-#: apt-private/private-output.cc:413
+#: apt-private/private-output.cc:411
 msgid "but it is a virtual package"
 msgstr "nhưng mà nó là gói ảo"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not installed"
 msgstr "nhưng mà nó chưa được cài đặt"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not going to be installed"
 msgstr "nhưng mà nó sẽ không được cài đặt"
 
-#: apt-private/private-output.cc:421
+#: apt-private/private-output.cc:419
 msgid " or"
 msgstr " hay"
 
-#: apt-private/private-output.cc:450
+#: apt-private/private-output.cc:448
 msgid "The following NEW packages will be installed:"
 msgstr "Theo đây có những gói MỚI sẽ được cài đặt:"
 
-#: apt-private/private-output.cc:476
+#: apt-private/private-output.cc:474
 msgid "The following packages will be REMOVED:"
 msgstr "Theo đây có những gói sẽ bị GỠ BỎ:"
 
-#: apt-private/private-output.cc:498
+#: apt-private/private-output.cc:496
 msgid "The following packages have been kept back:"
 msgstr "Theo đây có những gói đã được giữ lại:"
 
-#: apt-private/private-output.cc:519
+#: apt-private/private-output.cc:517
 msgid "The following packages will be upgraded:"
 msgstr "Theo đây có những gói sẽ được nâng cấp:"
 
-#: apt-private/private-output.cc:540
+#: apt-private/private-output.cc:538
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Theo đây có những gói sẽ được HẠ CẤP:"
 
-#: apt-private/private-output.cc:560
+#: apt-private/private-output.cc:558
 msgid "The following held packages will be changed:"
 msgstr "Theo đây có những gói sẽ được thay đổi:"
 
-#: apt-private/private-output.cc:615
+#: apt-private/private-output.cc:613
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (bởi vì %s) "
 
-#: apt-private/private-output.cc:623
+#: apt-private/private-output.cc:621
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
 "This should NOT be done unless you know exactly what you are doing!"
@@ -1472,27 +1472,27 @@ msgstr ""
 "CẢNH BÁO: Có những gói chủ yếu sau đây sẽ bị gỡ bỏ.\n"
 "ĐỪNG làm như thế trừ khi bạn biết chính xác mình đang làm gì!"
 
-#: apt-private/private-output.cc:654
+#: apt-private/private-output.cc:652
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu nâng cấp, %lu được cài đặt mới, "
 
-#: apt-private/private-output.cc:658
+#: apt-private/private-output.cc:656
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu được cài đặt lại, "
 
-#: apt-private/private-output.cc:660
+#: apt-private/private-output.cc:658
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu bị hạ cấp, "
 
-#: apt-private/private-output.cc:662
+#: apt-private/private-output.cc:660
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu cần gỡ bỏ, và %lu chưa được nâng cấp.\n"
 
-#: apt-private/private-output.cc:666
+#: apt-private/private-output.cc:664
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu chưa được cài đặt toàn bộ hay được gỡ bỏ.\n"
@@ -1501,7 +1501,7 @@ msgstr "%lu chưa được cài đặt toàn bộ hay được gỡ bỏ.\n"
 #. e.g. "Do you want to continue? [Y/n] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:688
+#: apt-private/private-output.cc:686
 msgid "[Y/n]"
 msgstr "[C/k]"
 
@@ -1509,21 +1509,21 @@ msgstr "[C/k]"
 #. e.g. "Should this file be removed? [y/N] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:694
+#: apt-private/private-output.cc:692
 msgid "[y/N]"
 msgstr "[c/K]"
 
 #. TRANSLATOR: "Yes" answer printed for a yes/no question if --assume-yes is set
-#: apt-private/private-output.cc:705
+#: apt-private/private-output.cc:703
 msgid "Y"
 msgstr "C"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc:711
+#: apt-private/private-output.cc:709
 msgid "N"
 msgstr "K"
 
-#: apt-private/private-output.cc:733 apt-pkg/cachefilter.cc:33
+#: apt-private/private-output.cc:731 apt-pkg/cachefilter.cc:33
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Lỗi biên dịch biểu thức chính quy - %s"
@@ -1556,7 +1556,7 @@ msgstr "Bạn có thể chạy lệnh “apt-get -f install” để sửa nhữ
 msgid "Unmet dependencies. Try using -f."
 msgstr "Chưa thỏa mãn quan hệ phụ thuộc. Hãy thử dùng tùy chọn “-f”."
 
-#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:56
+#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:57
 msgid "Sorting"
 msgstr ""
 
@@ -1564,15 +1564,15 @@ msgstr ""
 msgid "The update command takes no arguments"
 msgstr "Lệnh cập nhật không chấp nhận đối số"
 
-#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:46
+#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:45
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Lỗi nội bộ: AllUpgrade (toàn bộ nâng cấp) đã làm hỏng thứ gì đó"
 
-#: apt-private/private-search.cc:60
+#: apt-private/private-search.cc:61
 msgid "Full Text Search"
 msgstr ""
 
-#: apt-private/private-show.cc:105
+#: apt-private/private-show.cc:106
 msgid "not a real pacakge (virtual)"
 msgstr ""
 
@@ -3383,12 +3383,12 @@ msgstr "Thi hành bộ phân giải từ bên ngoài"
 msgid "Installing %s"
 msgstr "Đang cài đặt %s"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:995
+#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
 #, c-format
 msgid "Configuring %s"
 msgstr "Đang cấu hình %s"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1002
+#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
 #, c-format
 msgid "Removing %s"
 msgstr "Đang gỡ bỏ %s"
@@ -3409,88 +3409,88 @@ msgid "Running post-installation trigger %s"
 msgstr "Đang chạy bẫy sau-cài-đặt %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:749
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Thiếu thư mục “%s”"
 
-#: apt-pkg/deb/dpkgpm.cc:761 apt-pkg/deb/dpkgpm.cc:783
+#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Không thể mở tập tin “%s”"
 
-#: apt-pkg/deb/dpkgpm.cc:988
+#: apt-pkg/deb/dpkgpm.cc:1003
 #, c-format
 msgid "Preparing %s"
 msgstr "Đang chuẩn bị %s"
 
-#: apt-pkg/deb/dpkgpm.cc:989
+#: apt-pkg/deb/dpkgpm.cc:1004
 #, c-format
 msgid "Unpacking %s"
 msgstr "Đang mở gói %s"
 
-#: apt-pkg/deb/dpkgpm.cc:994
+#: apt-pkg/deb/dpkgpm.cc:1009
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Đang chuẩn bị cấu hình %s"
 
-#: apt-pkg/deb/dpkgpm.cc:996
+#: apt-pkg/deb/dpkgpm.cc:1011
 #, c-format
 msgid "Installed %s"
 msgstr "Đã cài đặt %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1001
+#: apt-pkg/deb/dpkgpm.cc:1016
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Đang chuẩn bị gỡ bỏ %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1018
 #, c-format
 msgid "Removed %s"
 msgstr "Đã gỡ bỏ %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1008
+#: apt-pkg/deb/dpkgpm.cc:1023
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Đang chuẩn bị gỡ bỏ hoàn toàn %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1024
 #, c-format
 msgid "Completely removed %s"
 msgstr "Gỡ bỏ hoàn toàn %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1257 apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Không thể ghi vào %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1257
+#: apt-pkg/deb/dpkgpm.cc:1272
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1293
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1292
+#: apt-pkg/deb/dpkgpm.cc:1307
 msgid "Running dpkg"
 msgstr "Đang chạy dpkg"
 
-#: apt-pkg/deb/dpkgpm.cc:1464
+#: apt-pkg/deb/dpkgpm.cc:1479
 msgid "Operation was interrupted before it could finish"
 msgstr "Hệ điều hành đã ngắt trước khi nó kịp hoàn thành"
 
-#: apt-pkg/deb/dpkgpm.cc:1526
+#: apt-pkg/deb/dpkgpm.cc:1541
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 "Không ghi báo cáo apport, vì đã tới giới hạn số các báo cáo (MaxReports)"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1531
+#: apt-pkg/deb/dpkgpm.cc:1546
 msgid "dependency problems - leaving unconfigured"
 msgstr "gặp vấn đề về quan hệ phụ thuộc nên để lại không cấu hình"
 
-#: apt-pkg/deb/dpkgpm.cc:1533
+#: apt-pkg/deb/dpkgpm.cc:1548
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3498,14 +3498,14 @@ msgstr ""
 "Không ghi báo cáo apport, vì thông điệp lỗi chỉ thị đây là một lỗi kế tiếp "
 "do một sự thất bại trước đó."
 
-#: apt-pkg/deb/dpkgpm.cc:1539
+#: apt-pkg/deb/dpkgpm.cc:1554
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 "Không ghi báo cáo apport, vì thông điệp lỗi chỉ thị đây là một lỗi “đĩa đầy”"
 
-#: apt-pkg/deb/dpkgpm.cc:1545
+#: apt-pkg/deb/dpkgpm.cc:1560
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3513,7 +3513,7 @@ msgstr ""
 "Không ghi báo cáo apport, vì thông điệp lỗi chỉ thị đây là một lỗi “không đủ "
 "bộ nhớ”"
 
-#: apt-pkg/deb/dpkgpm.cc:1552
+#: apt-pkg/deb/dpkgpm.cc:1567
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

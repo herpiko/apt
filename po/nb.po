@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-08-31 16:53+0200\n"
+"POT-Creation-Date: 2013-09-10 17:54+0200\n"
 "PO-Revision-Date: 2010-09-01 21:10+0200\n"
 "Last-Translator: Hans Fredrik Nordhaug <hans@nordhaug.priv.no>\n"
 "Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
@@ -96,7 +96,7 @@ msgid "Total space accounted for: "
 msgstr "Samlet mengde redegjort plass: "
 
 #: cmdline/apt-cache.cc:497 cmdline/apt-cache.cc:1146
-#: apt-private/private-show.cc:50
+#: apt-private/private-show.cc:52
 #, c-format
 msgid "Package file %s is out of sync."
 msgstr "Pakkefila %s er ikke oppdatert."
@@ -104,7 +104,7 @@ msgstr "Pakkefila %s er ikke oppdatert."
 #: cmdline/apt-cache.cc:575 cmdline/apt-cache.cc:1432
 #: cmdline/apt-cache.cc:1434 cmdline/apt-cache.cc:1511 cmdline/apt-mark.cc:48
 #: cmdline/apt-mark.cc:95 cmdline/apt-mark.cc:221
-#: apt-private/private-show.cc:113 apt-private/private-show.cc:115
+#: apt-private/private-show.cc:114 apt-private/private-show.cc:116
 msgid "No packages found"
 msgstr "Fant ingen pakker"
 
@@ -161,7 +161,7 @@ msgid "  Version table:"
 msgstr "  Versjonstabell:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1523 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -300,83 +300,83 @@ msgstr ""
 "  -c=? Les denne innstillingsfila.\n"
 "  -o=? Sett en vilkårlig innstilling, f.eks. -o dir::cache=/tmp\n"
 
-#: cmdline/apt-get.cc:225
+#: cmdline/apt-get.cc:222
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr "Ignorer utilgjengelig målutgave «%s» av pakke «%s»"
 
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:254
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Velger «%s» som kildepakke istedenfor «%s»\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:292
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "Ignorer utilgjengelig versjon «%s» av pakke «%s»"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:323
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Klarte ikke å finne pakken %s"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s satt til manuell installasjon.\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s satt til automatisk installasjon.\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
 msgstr ""
 
-#: cmdline/apt-get.cc:357
+#: cmdline/apt-get.cc:354
 msgid "Calculating upgrade... "
 msgstr "Beregner oppgradering... "
 
-#: cmdline/apt-get.cc:360 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "Mislyktes"
 
-#: cmdline/apt-get.cc:369
+#: cmdline/apt-get.cc:366
 msgid "Done"
 msgstr "Utført"
 
-#: cmdline/apt-get.cc:436 cmdline/apt-get.cc:444
+#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Intern feil, problemløser ødela noe"
 
-#: cmdline/apt-get.cc:472 cmdline/apt-get.cc:509
+#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
 msgid "Unable to lock the download directory"
 msgstr "Klarer ikke å låse nedlastingsmappa"
 
-#: cmdline/apt-get.cc:566
+#: cmdline/apt-get.cc:563
 #, c-format
 msgid "Can't find a source to download version '%s' of '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:571
+#: cmdline/apt-get.cc:568
 #, c-format
 msgid "Downloading %s %s"
 msgstr ""
 
-#: cmdline/apt-get.cc:631
+#: cmdline/apt-get.cc:628
 msgid "Must specify at least one package to fetch source for"
 msgstr "Du må angi minst en pakke du vil ha kildekoden til"
 
-#: cmdline/apt-get.cc:671 cmdline/apt-get.cc:983
+#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Klarer ikke å finne en kildekodepakke for %s"
 
-#: cmdline/apt-get.cc:688
+#: cmdline/apt-get.cc:685
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -385,7 +385,7 @@ msgstr ""
 "MERK: «%s»-pakker blir vedlikeholdt i versjonskontrollsystemet «%s» på:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:693
+#: cmdline/apt-get.cc:690
 #, fuzzy, c-format
 msgid ""
 "Please use:\n"
@@ -396,122 +396,122 @@ msgstr ""
 "bzr get %s\n"
 "for å hente siste (muligens ikke utgitte) oppdateringer for pakken.\n"
 
-#: cmdline/apt-get.cc:746
+#: cmdline/apt-get.cc:743
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Hopper over allerede nedlastet fil «%s»\n"
 
-#: cmdline/apt-get.cc:769 cmdline/apt-get.cc:772
-#: apt-private/private-install.cc:233 apt-private/private-install.cc:236
+#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
+#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Klarte ikke bestemme ledig plass i %s"
 
-#: cmdline/apt-get.cc:783
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Du har ikke nok ledig plass i %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:792
+#: cmdline/apt-get.cc:789
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Trenger å skaffe %sB av %sB fra kildekodearkivet.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:797
+#: cmdline/apt-get.cc:794
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Trenger å skaffe %sB fra kildekodearkivet.\n"
 
-#: cmdline/apt-get.cc:803
+#: cmdline/apt-get.cc:800
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Skaffer kildekode %s\n"
 
-#: cmdline/apt-get.cc:834 apt-private/private-install.cc:360
+#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
 #: apt-pkg/algorithms.cc:1607
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "Klarte ikke å skaffe %s  %s\n"
 
-#: cmdline/apt-get.cc:841
+#: cmdline/apt-get.cc:838
 msgid "Failed to fetch some archives."
 msgstr "Klarte ikke å skaffe alle arkivene."
 
-#: cmdline/apt-get.cc:846 apt-private/private-install.cc:379
+#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
 msgid "Download complete and in download only mode"
 msgstr "Nedlasting fullført med innstillinga «bare nedlasting»"
 
-#: cmdline/apt-get.cc:872
+#: cmdline/apt-get.cc:869
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Omgår utpakking av allerede utpakket kilde i %s\n"
 
-#: cmdline/apt-get.cc:884
+#: cmdline/apt-get.cc:881
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Utpakkingskommandoen «%s» mislyktes.\n"
 
-#: cmdline/apt-get.cc:885
+#: cmdline/apt-get.cc:882
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Sjekk om pakken «dpkg-dev» er installert.\n"
 
-#: cmdline/apt-get.cc:907
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Byggekommandoen «%s» mislyktes.\n"
 
-#: cmdline/apt-get.cc:927
+#: cmdline/apt-get.cc:924
 msgid "Child process failed"
 msgstr "Barneprosessen mislyktes"
 
-#: cmdline/apt-get.cc:946
+#: cmdline/apt-get.cc:943
 msgid "Must specify at least one package to check builddeps for"
 msgstr "Du må angi minst en pakke du vil sjekke «builddeps» for"
 
-#: cmdline/apt-get.cc:971
+#: cmdline/apt-get.cc:968
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
 "Architectures for setup"
 msgstr ""
 
-#: cmdline/apt-get.cc:995 cmdline/apt-get.cc:998
+#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Klarer ikke å skaffe informasjon om bygge-avhengighetene for %s"
 
-#: cmdline/apt-get.cc:1018
+#: cmdline/apt-get.cc:1015
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s har ingen avhengigheter.\n"
 
-#: cmdline/apt-get.cc:1188
+#: cmdline/apt-get.cc:1185
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
 "packages"
 msgstr "Kravet %s for %s kan ikke oppfylles fordi pakken %s ikke finnes"
 
-#: cmdline/apt-get.cc:1206
+#: cmdline/apt-get.cc:1203
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "Kravet %s for %s kan ikke oppfylles fordi pakken %s ikke finnes"
 
-#: cmdline/apt-get.cc:1229
+#: cmdline/apt-get.cc:1226
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Klarte ikke å tilfredsstille %s avhengighet for %s: den installerte pakken "
 "%s er for ny"
 
-#: cmdline/apt-get.cc:1268
+#: cmdline/apt-get.cc:1265
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -520,37 +520,37 @@ msgstr ""
 "Kravet %s for %s kan ikke oppfylles fordi det ikke finnes noen tilgjengelige "
 "versjoner av pakken %s som oppfyller versjonskravene"
 
-#: cmdline/apt-get.cc:1274
+#: cmdline/apt-get.cc:1271
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
 "version"
 msgstr "Kravet %s for %s kan ikke oppfylles fordi pakken %s ikke finnes"
 
-#: cmdline/apt-get.cc:1297
+#: cmdline/apt-get.cc:1294
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Klarte ikke å tilfredsstille %s avhengighet for %s: %s"
 
-#: cmdline/apt-get.cc:1312
+#: cmdline/apt-get.cc:1309
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Klarte ikke å tilfredstille bygg-avhengighetene for %s."
 
-#: cmdline/apt-get.cc:1317
+#: cmdline/apt-get.cc:1314
 msgid "Failed to process build dependencies"
 msgstr "Klarte ikke å behandle forutsetningene for bygging"
 
-#: cmdline/apt-get.cc:1410 cmdline/apt-get.cc:1422
+#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
 #, fuzzy, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Kobler til %s (%s)"
 
-#: cmdline/apt-get.cc:1528
+#: cmdline/apt-get.cc:1525
 msgid "Supported modules:"
 msgstr "Støttede moduler:"
 
-#: cmdline/apt-get.cc:1569
+#: cmdline/apt-get.cc:1566
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -666,7 +666,7 @@ msgstr "%s er allerede nyeste versjon.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1045
+#: apt-pkg/deb/dpkgpm.cc:1060
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Ventet på %s, men den ble ikke funnet"
@@ -1089,7 +1089,7 @@ msgstr "Forbindelsen mislykkes"
 msgid "Internal error"
 msgstr "Intern feil"
 
-#: apt-private/private-list.cc:142
+#: apt-private/private-list.cc:141
 msgid "Listing"
 msgstr ""
 
@@ -1109,23 +1109,23 @@ msgstr "Installer disse pakkene uten verifikasjon?"
 msgid "Some packages could not be authenticated"
 msgstr "Noen pakker ble ikke autentisert"
 
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:256
+#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
 msgid "There are problems and -y was used without --force-yes"
 msgstr "Det oppsto problemer og «-y» ble brukt uten «--force-yes»"
 
-#: apt-private/private-install.cc:136
+#: apt-private/private-install.cc:134
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "Intern feil, InstallPackages ble kalt med ødelagte pakker!"
 
-#: apt-private/private-install.cc:145
+#: apt-private/private-install.cc:143
 msgid "Packages need to be removed but remove is disabled."
 msgstr "Pakker trenges å fjernes, men funksjonen er slått av."
 
-#: apt-private/private-install.cc:156
+#: apt-private/private-install.cc:154
 msgid "Internal error, Ordering didn't finish"
 msgstr "Intern feil, sortering fullførte ikke"
 
-#: apt-private/private-install.cc:194
+#: apt-private/private-install.cc:192
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "Så rart ... Størrelsene stemmer ikke overens, send en e-post til "
@@ -1133,49 +1133,49 @@ msgstr ""
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:201
+#: apt-private/private-install.cc:199
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Må hente %sB/%sB med arkiver.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:206
+#: apt-private/private-install.cc:204
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "Må hente %sB med arkiver.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:213
+#: apt-private/private-install.cc:211
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "Etter denne operasjonen vil %sB ekstra diskplass bli brukt.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:218
+#: apt-private/private-install.cc:216
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "Etter denne operasjonen vil %sB diskplass bli ledig.\n"
 
-#: apt-private/private-install.cc:246
+#: apt-private/private-install.cc:244
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "Dessverre, ikke nok ledig plass i %s"
 
-#: apt-private/private-install.cc:262 apt-private/private-install.cc:284
+#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr ""
 "«Bare trivielle endringer» ble angitt, men dette er ikke en triviell endring."
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:264
 msgid "Yes, do as I say!"
 msgstr "Ja, gjør som jeg sier!"
 
-#: apt-private/private-install.cc:268
+#: apt-private/private-install.cc:266
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1186,19 +1186,19 @@ msgstr ""
 "For å fortsette skriv inn teksten «%s»\n"
 " ?] "
 
-#: apt-private/private-install.cc:274 apt-private/private-install.cc:292
+#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
 msgid "Abort."
 msgstr "Avbryter."
 
-#: apt-private/private-install.cc:289
+#: apt-private/private-install.cc:287
 msgid "Do you want to continue?"
 msgstr "Vil du fortsette?"
 
-#: apt-private/private-install.cc:378
+#: apt-private/private-install.cc:376
 msgid "Some files failed to download"
 msgstr "Klarte ikke laste ned alle filene"
 
-#: apt-private/private-install.cc:385
+#: apt-private/private-install.cc:383
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1206,19 +1206,19 @@ msgstr ""
 "Klarte ikke å hente alle arkivene. Du kan prøve med «apt-get update» eller "
 "«--fix-missing»."
 
-#: apt-private/private-install.cc:389
+#: apt-private/private-install.cc:387
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "«--fix-missing» og bytte av media støttes nå ikke"
 
-#: apt-private/private-install.cc:394
+#: apt-private/private-install.cc:392
 msgid "Unable to correct missing packages."
 msgstr "Klarer ikke å rette på manglende pakker."
 
-#: apt-private/private-install.cc:395
+#: apt-private/private-install.cc:393
 msgid "Aborting install."
 msgstr "Avbryter installasjonen."
 
-#: apt-private/private-install.cc:423
+#: apt-private/private-install.cc:421
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1232,15 +1232,15 @@ msgstr[1] ""
 "De følgende pakkene forsvant fra systemet ditt siden\n"
 "alle filene er overskrevet av andre pakker:"
 
-#: apt-private/private-install.cc:427
+#: apt-private/private-install.cc:425
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "Merk: Dette er gjort automatisk og med hensikt av dpkg."
 
-#: apt-private/private-install.cc:450
+#: apt-private/private-install.cc:446
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "Vi skal ikke slette ting, kan ikke starte auto-fjerner (AutoRemover)"
 
-#: apt-private/private-install.cc:554
+#: apt-private/private-install.cc:550
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1258,15 +1258,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:557 apt-private/private-install.cc:699
+#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
 msgid "The following information may help to resolve the situation:"
 msgstr "Følgende informasjon kan være til hjelp med å løse problemet:"
 
-#: apt-private/private-install.cc:561
+#: apt-private/private-install.cc:557
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Intern feil, autofjerneren (AutoRemover) ødela noe"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:564
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1277,7 +1277,7 @@ msgstr[0] ""
 msgstr[1] ""
 "Følgende pakker ble automatisk installert og er ikke lenger påkrevet:"
 
-#: apt-private/private-install.cc:572
+#: apt-private/private-install.cc:568
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1285,18 +1285,18 @@ msgid_plural ""
 msgstr[0] "%lu pakke ble automatisk installert og er ikke lenger påkrevet.\n"
 msgstr[1] "%lu pakker ble automatisk installert og er ikke lenger påkrevet.\n"
 
-#: apt-private/private-install.cc:574
+#: apt-private/private-install.cc:570
 #, fuzzy
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "Bruk «apt-get autoremove» for å fjerne dem."
 msgstr[1] "Bruk «apt-get autoremove» for å fjerne dem."
 
-#: apt-private/private-install.cc:669
+#: apt-private/private-install.cc:664
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr "Du vil kanskje utføre «apt-get -f install» for å rette på disse:"
 
-#: apt-private/private-install.cc:671
+#: apt-private/private-install.cc:666
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1304,7 +1304,7 @@ msgstr ""
 "Uinnfridde avhengighetsforhold. Prøv «apt-get -f install» uten pakker (eller "
 "angi en løsning)."
 
-#: apt-private/private-install.cc:684
+#: apt-private/private-install.cc:679
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1316,117 +1316,117 @@ msgstr ""
 "at visse kjernepakker ennå ikke er laget eller flyttet ut av «Incoming» for\n"
 "distribusjonen."
 
-#: apt-private/private-install.cc:705
+#: apt-private/private-install.cc:700
 msgid "Broken packages"
 msgstr "Ødelagte pakker"
 
-#: apt-private/private-install.cc:759
+#: apt-private/private-install.cc:753
 msgid "The following extra packages will be installed:"
 msgstr "Følgende ekstra pakker vil bli installert."
 
-#: apt-private/private-install.cc:849
+#: apt-private/private-install.cc:843
 msgid "Suggested packages:"
 msgstr "Foreslåtte pakker:"
 
-#: apt-private/private-install.cc:850
+#: apt-private/private-install.cc:844
 msgid "Recommended packages:"
 msgstr "Anbefalte pakker"
 
-#: apt-private/private-output.cc:198
+#: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
 msgstr ""
 
-#: apt-private/private-output.cc:204
+#: apt-private/private-output.cc:203
 #, fuzzy
 msgid "[installed,local]"
 msgstr " [Installert]"
 
-#: apt-private/private-output.cc:207
+#: apt-private/private-output.cc:206
 msgid "[installed,auto-removable]"
 msgstr ""
 
-#: apt-private/private-output.cc:209
+#: apt-private/private-output.cc:208
 #, fuzzy
 msgid "[installed,automatic]"
 msgstr " [Installert]"
 
-#: apt-private/private-output.cc:211
+#: apt-private/private-output.cc:210
 #, fuzzy
 msgid "[installed]"
 msgstr " [Installert]"
 
-#: apt-private/private-output.cc:217
+#: apt-private/private-output.cc:216
 msgid "[upgradable from: "
 msgstr ""
 
-#: apt-private/private-output.cc:223
+#: apt-private/private-output.cc:222
 msgid "[residual-config]"
 msgstr ""
 
-#: apt-private/private-output.cc:312
+#: apt-private/private-output.cc:310
 msgid "The following packages have unmet dependencies:"
 msgstr "Følgende pakker har uinnfridde avhengighetsforhold:"
 
-#: apt-private/private-output.cc:402
+#: apt-private/private-output.cc:400
 #, c-format
 msgid "but %s is installed"
 msgstr "men %s er installert"
 
-#: apt-private/private-output.cc:404
+#: apt-private/private-output.cc:402
 #, c-format
 msgid "but %s is to be installed"
 msgstr "men %s skal installeres"
 
-#: apt-private/private-output.cc:411
+#: apt-private/private-output.cc:409
 msgid "but it is not installable"
 msgstr "men lar seg ikke installere"
 
-#: apt-private/private-output.cc:413
+#: apt-private/private-output.cc:411
 msgid "but it is a virtual package"
 msgstr "men er en virtuell pakke"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not installed"
 msgstr "men er ikke installert"
 
-#: apt-private/private-output.cc:416
+#: apt-private/private-output.cc:414
 msgid "but it is not going to be installed"
 msgstr "men skal ikke installeres"
 
-#: apt-private/private-output.cc:421
+#: apt-private/private-output.cc:419
 msgid " or"
 msgstr " eller"
 
-#: apt-private/private-output.cc:450
+#: apt-private/private-output.cc:448
 msgid "The following NEW packages will be installed:"
 msgstr "Følgende NYE pakker vil bli installert:"
 
-#: apt-private/private-output.cc:476
+#: apt-private/private-output.cc:474
 msgid "The following packages will be REMOVED:"
 msgstr "Følgende pakker vil bli FJERNET:"
 
-#: apt-private/private-output.cc:498
+#: apt-private/private-output.cc:496
 msgid "The following packages have been kept back:"
 msgstr "Følgende pakker er holdt tilbake:"
 
-#: apt-private/private-output.cc:519
+#: apt-private/private-output.cc:517
 msgid "The following packages will be upgraded:"
 msgstr "Følgende pakker vil bli oppgradert:"
 
-#: apt-private/private-output.cc:540
+#: apt-private/private-output.cc:538
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Følgende pakker vil bli NEDGRADERT:"
 
-#: apt-private/private-output.cc:560
+#: apt-private/private-output.cc:558
 msgid "The following held packages will be changed:"
 msgstr "Følgende pakker vil bli endret:"
 
-#: apt-private/private-output.cc:615
+#: apt-private/private-output.cc:613
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s (pga. %s) "
 
-#: apt-private/private-output.cc:623
+#: apt-private/private-output.cc:621
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
 "This should NOT be done unless you know exactly what you are doing!"
@@ -1434,27 +1434,27 @@ msgstr ""
 "ADVARSEL: Følgende essensielle pakker vil bli fjernet.\n"
 "Dette bør IKKE gjøres, med mindre du vet nøyaktig hva du gjør!"
 
-#: apt-private/private-output.cc:654
+#: apt-private/private-output.cc:652
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu oppgraderte, %lu nylig installerte, "
 
-#: apt-private/private-output.cc:658
+#: apt-private/private-output.cc:656
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu installert på nytt, "
 
-#: apt-private/private-output.cc:660
+#: apt-private/private-output.cc:658
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu nedgraderte, "
 
-#: apt-private/private-output.cc:662
+#: apt-private/private-output.cc:660
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu å fjerne og %lu ikke oppgradert.\n"
 
-#: apt-private/private-output.cc:666
+#: apt-private/private-output.cc:664
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu pakker ikke fullt installert eller fjernet.\n"
@@ -1463,7 +1463,7 @@ msgstr "%lu pakker ikke fullt installert eller fjernet.\n"
 #. e.g. "Do you want to continue? [Y/n] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:688
+#: apt-private/private-output.cc:686
 msgid "[Y/n]"
 msgstr "[J/n]"
 
@@ -1471,21 +1471,21 @@ msgstr "[J/n]"
 #. e.g. "Should this file be removed? [y/N] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:694
+#: apt-private/private-output.cc:692
 msgid "[y/N]"
 msgstr "[j/N]"
 
 #. TRANSLATOR: "Yes" answer printed for a yes/no question if --assume-yes is set
-#: apt-private/private-output.cc:705
+#: apt-private/private-output.cc:703
 msgid "Y"
 msgstr "J"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc:711
+#: apt-private/private-output.cc:709
 msgid "N"
 msgstr ""
 
-#: apt-private/private-output.cc:733 apt-pkg/cachefilter.cc:33
+#: apt-private/private-output.cc:731 apt-pkg/cachefilter.cc:33
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Kompileringsfeil i regulært uttrykk - %s"
@@ -1518,7 +1518,7 @@ msgstr "Du vil kanskje kjøre «apt-get -f install» for å rette på dette."
 msgid "Unmet dependencies. Try using -f."
 msgstr "Uinnfridde avhengighetsforhold - Prøv «-f»."
 
-#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:56
+#: apt-private/private-cacheset.cc:26 apt-private/private-search.cc:57
 msgid "Sorting"
 msgstr ""
 
@@ -1526,15 +1526,15 @@ msgstr ""
 msgid "The update command takes no arguments"
 msgstr "Oppdaterings-kommandoen tar ingen argumenter"
 
-#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:46
+#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:45
 msgid "Internal error, AllUpgrade broke stuff"
 msgstr "Intern feil - «AllUpgrade» ødela noe"
 
-#: apt-private/private-search.cc:60
+#: apt-private/private-search.cc:61
 msgid "Full Text Search"
 msgstr ""
 
-#: apt-private/private-show.cc:105
+#: apt-private/private-show.cc:106
 msgid "not a real pacakge (virtual)"
 msgstr ""
 
@@ -3306,12 +3306,12 @@ msgstr ""
 msgid "Installing %s"
 msgstr "Installerer %s"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:995
+#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
 #, c-format
 msgid "Configuring %s"
 msgstr "Setter opp %s"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1002
+#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
 #, c-format
 msgid "Removing %s"
 msgstr "Fjerner %s"
@@ -3332,87 +3332,87 @@ msgid "Running post-installation trigger %s"
 msgstr "Kjører etter-installasjonsutløser %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:746
+#: apt-pkg/deb/dpkgpm.cc:749
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Mappa «%s» mangler"
 
-#: apt-pkg/deb/dpkgpm.cc:761 apt-pkg/deb/dpkgpm.cc:783
+#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Klarte ikke åpne fila «%s»"
 
-#: apt-pkg/deb/dpkgpm.cc:988
+#: apt-pkg/deb/dpkgpm.cc:1003
 #, c-format
 msgid "Preparing %s"
 msgstr "Forbereder %s"
 
-#: apt-pkg/deb/dpkgpm.cc:989
+#: apt-pkg/deb/dpkgpm.cc:1004
 #, c-format
 msgid "Unpacking %s"
 msgstr "Pakker ut %s"
 
-#: apt-pkg/deb/dpkgpm.cc:994
+#: apt-pkg/deb/dpkgpm.cc:1009
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Forbereder oppsett av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:996
+#: apt-pkg/deb/dpkgpm.cc:1011
 #, c-format
 msgid "Installed %s"
 msgstr "Installerte %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1001
+#: apt-pkg/deb/dpkgpm.cc:1016
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Forbereder fjerning av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1018
 #, c-format
 msgid "Removed %s"
 msgstr "Fjernet %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1008
+#: apt-pkg/deb/dpkgpm.cc:1023
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Forbereder å fullstendig slette %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1024
 #, c-format
 msgid "Completely removed %s"
 msgstr "Fjernet %s fullstendig"
 
-#: apt-pkg/deb/dpkgpm.cc:1257 apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Kan ikke skrive til %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1257
+#: apt-pkg/deb/dpkgpm.cc:1272
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1278
+#: apt-pkg/deb/dpkgpm.cc:1293
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1292
+#: apt-pkg/deb/dpkgpm.cc:1307
 msgid "Running dpkg"
 msgstr "Kjører dpkg"
 
-#: apt-pkg/deb/dpkgpm.cc:1464
+#: apt-pkg/deb/dpkgpm.cc:1479
 msgid "Operation was interrupted before it could finish"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1526
+#: apt-pkg/deb/dpkgpm.cc:1541
 msgid "No apport report written because MaxReports is reached already"
 msgstr "Ingen apport-rapport skrevet for MaxReports allerede er nådd"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1531
+#: apt-pkg/deb/dpkgpm.cc:1546
 msgid "dependency problems - leaving unconfigured"
 msgstr "avhengighetsproblemer - lar den være uoppsatt"
 
-#: apt-pkg/deb/dpkgpm.cc:1533
+#: apt-pkg/deb/dpkgpm.cc:1548
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3420,7 +3420,7 @@ msgstr ""
 "Ingen apport-rapport skrevet fordi feilmeldingen indikerer at den er en "
 "følgefeil fra en tidligere feil."
 
-#: apt-pkg/deb/dpkgpm.cc:1539
+#: apt-pkg/deb/dpkgpm.cc:1554
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3428,7 +3428,7 @@ msgstr ""
 "Ingen apport-rapport skrevet fordi feilmeldingen indikerer en «full disk»-"
 "feil"
 
-#: apt-pkg/deb/dpkgpm.cc:1545
+#: apt-pkg/deb/dpkgpm.cc:1560
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3436,7 +3436,7 @@ msgstr ""
 "Ingen apport-rapport skrevet fordi feilmeldingen indikerer en «tom for "
 "minne»-feil"
 
-#: apt-pkg/deb/dpkgpm.cc:1552
+#: apt-pkg/deb/dpkgpm.cc:1567
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
