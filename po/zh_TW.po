@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.5.4\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-09-20 16:13+0200\n"
+"POT-Creation-Date: 2013-10-09 22:40+0200\n"
 "PO-Revision-Date: 2009-01-28 10:41+0800\n"
 "Last-Translator: Tetralet <tetralet@gmail.com>\n"
 "Language-Team: Debian-user in Chinese [Big5] <debian-chinese-big5@lists."
@@ -158,7 +158,7 @@ msgid "  Version table:"
 msgstr "  版本列表："
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1494 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -296,90 +296,80 @@ msgstr ""
 "  -c=? 讀取指定的設定檔\n"
 "  -o=? 指定任意的設定選項，例如:-o dir::cache=/tmp\n"
 
-#: cmdline/apt-get.cc:222
+#: cmdline/apt-get.cc:223
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:254
+#: cmdline/apt-get.cc:255
 #, fuzzy, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "無法取得來源套件列表 %s 的狀態"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:292
+#: cmdline/apt-get.cc:293
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:323
+#: cmdline/apt-get.cc:324
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "無法找到套件 %s"
 
-#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:329 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s 被設定為手動安裝。\n"
 
-#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:72
 #, fuzzy, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s 被設定為手動安裝。\n"
 
-#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:339 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
 msgstr ""
 
-#: cmdline/apt-get.cc:354
+#: cmdline/apt-get.cc:355
 msgid "Calculating upgrade... "
 msgstr "籌備升級中... "
 
-#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:358 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "失敗"
 
-#: cmdline/apt-get.cc:366
+#: cmdline/apt-get.cc:367
 msgid "Done"
 msgstr "完成"
 
-#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
+#: cmdline/apt-get.cc:434 cmdline/apt-get.cc:442
 msgid "Internal error, problem resolver broke stuff"
 msgstr "內部錯誤，問題排除器造成了損壞"
 
-#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
+#: cmdline/apt-get.cc:470 cmdline/apt-get.cc:507
 msgid "Unable to lock the download directory"
 msgstr "無法鎖定下載目錄"
 
-#: cmdline/apt-get.cc:563
-#, c-format
-msgid "Can't find a source to download version '%s' of '%s'"
-msgstr ""
-
-#: cmdline/apt-get.cc:568
-#, c-format
-msgid "Downloading %s %s"
-msgstr ""
-
-#: cmdline/apt-get.cc:628
+#: cmdline/apt-get.cc:619
 msgid "Must specify at least one package to fetch source for"
 msgstr "在取得原始碼時必須至少指定一個套件"
 
-#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
+#: cmdline/apt-get.cc:659 cmdline/apt-get.cc:954
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "無法找到 %s 的原始碼套件"
 
-#: cmdline/apt-get.cc:685
+#: cmdline/apt-get.cc:676
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:690
+#: cmdline/apt-get.cc:681
 #, c-format
 msgid ""
 "Please use:\n"
@@ -387,120 +377,114 @@ msgid ""
 "to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:743
+#: cmdline/apt-get.cc:734
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "略過已下載的檔案 '%s'\n"
 
-#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
-#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
+#: cmdline/apt-get.cc:757 cmdline/apt-get.cc:760
+#: apt-private/private-install.cc:188 apt-private/private-install.cc:191
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "無法確認 %s 的未使用空間"
 
-#: cmdline/apt-get.cc:780
+#: cmdline/apt-get.cc:771
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "在 %s 裡沒有足夠的的未使用空間"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:789
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "需要下載 %sB/%sB 的原始套件檔。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:794
+#: cmdline/apt-get.cc:785
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "需要下載 %sB 的原始套件檔。\n"
 
-#: cmdline/apt-get.cc:800
+#: cmdline/apt-get.cc:791
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "取得原始碼 %s\n"
 
-#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
-#: apt-pkg/algorithms.cc:1607
-#, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "無法取得 %s，%s\n"
-
-#: cmdline/apt-get.cc:838
+#: cmdline/apt-get.cc:812
 msgid "Failed to fetch some archives."
 msgstr "無法取得某些套件檔。"
 
-#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
+#: cmdline/apt-get.cc:817 apt-private/private-install.cc:315
 msgid "Download complete and in download only mode"
 msgstr "下載完成，且這是『僅下載』模式"
 
-#: cmdline/apt-get.cc:869
+#: cmdline/apt-get.cc:843
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "不解開，因原始碼已解開至 %s\n"
 
-#: cmdline/apt-get.cc:881
+#: cmdline/apt-get.cc:855
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "解開指令 '%s' 失敗。\n"
 
-#: cmdline/apt-get.cc:882
+#: cmdline/apt-get.cc:856
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "請檢查是否已安裝了 'dpkg-dev' 套件。\n"
 
-#: cmdline/apt-get.cc:904
+#: cmdline/apt-get.cc:878
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "編譯指令 '%s' 失敗。\n"
 
-#: cmdline/apt-get.cc:924
+#: cmdline/apt-get.cc:898
 msgid "Child process failed"
 msgstr "子程序失敗"
 
-#: cmdline/apt-get.cc:943
+#: cmdline/apt-get.cc:917
 msgid "Must specify at least one package to check builddeps for"
 msgstr "在檢查編譯相依關係時必須至少指定一個套件"
 
-#: cmdline/apt-get.cc:968
+#: cmdline/apt-get.cc:942
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
 "Architectures for setup"
 msgstr ""
 
-#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
+#: cmdline/apt-get.cc:966 cmdline/apt-get.cc:969
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "無法取得 %s 的編譯相依關係資訊"
 
-#: cmdline/apt-get.cc:1015
+#: cmdline/apt-get.cc:989
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s 沒有編譯相依關係。\n"
 
-#: cmdline/apt-get.cc:1185
+#: cmdline/apt-get.cc:1159
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
 "packages"
 msgstr "無法滿足 %2$s 所要求的 %1$s 相依關係，因為找不到套件 %3$s"
 
-#: cmdline/apt-get.cc:1203
+#: cmdline/apt-get.cc:1177
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "無法滿足 %2$s 所要求的 %1$s 相依關係，因為找不到套件 %3$s"
 
-#: cmdline/apt-get.cc:1226
+#: cmdline/apt-get.cc:1200
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr "無法滿足 %2$s 的相依關係 %1$s：已安裝的套件 %3$s 太新了"
 
-#: cmdline/apt-get.cc:1265
+#: cmdline/apt-get.cc:1239
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -508,37 +492,37 @@ msgid ""
 msgstr ""
 "無法滿足 %2$s 所要求的 %1$s 相依關係，因為套件 %3$s 沒有版本符合其版本需求"
 
-#: cmdline/apt-get.cc:1271
+#: cmdline/apt-get.cc:1245
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
 "version"
 msgstr "無法滿足 %2$s 所要求的 %1$s 相依關係，因為找不到套件 %3$s"
 
-#: cmdline/apt-get.cc:1294
+#: cmdline/apt-get.cc:1268
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "無法滿足 %2$s 的相依關係 %1$s：%3$s"
 
-#: cmdline/apt-get.cc:1309
+#: cmdline/apt-get.cc:1283
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "無法滿足套件 %s 的編譯相依關係。"
 
-#: cmdline/apt-get.cc:1314
+#: cmdline/apt-get.cc:1288
 msgid "Failed to process build dependencies"
 msgstr "無法處理編譯相依關係"
 
-#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
+#: cmdline/apt-get.cc:1381 cmdline/apt-get.cc:1393
 #, fuzzy, c-format
 msgid "Changelog for %s (%s)"
 msgstr "正和 %s (%s) 連線"
 
-#: cmdline/apt-get.cc:1525
+#: cmdline/apt-get.cc:1499
 msgid "Supported modules:"
 msgstr "已支援模組："
 
-#: cmdline/apt-get.cc:1566
+#: cmdline/apt-get.cc:1540
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -651,7 +635,7 @@ msgstr "%s 已經是最新版本了。\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1060
+#: apt-pkg/deb/dpkgpm.cc:1128
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "等待 %s 但是它並不存在"
@@ -871,7 +855,7 @@ msgstr "Data socket 連線逾時"
 msgid "Unable to accept connection"
 msgstr "無法接受連線"
 
-#: methods/ftp.cc:873 methods/http.cc:1038 methods/rsh.cc:313
+#: methods/ftp.cc:873 methods/server.cc:353 methods/rsh.cc:313
 msgid "Problem hashing file"
 msgstr "有問題的雜湊檔"
 
@@ -1000,71 +984,71 @@ msgstr "由於無法取得它們的公鑰，以下簽章無法進行驗證：\n"
 msgid "Empty files can't be valid archives"
 msgstr ""
 
-#: methods/http.cc:394
-msgid "Waiting for headers"
-msgstr "等待標頭"
-
-#: methods/http.cc:544
-msgid "Bad header line"
-msgstr "標頭行錯誤"
-
-#: methods/http.cc:569 methods/http.cc:576
-msgid "The HTTP server sent an invalid reply header"
-msgstr "HTTP 伺服器傳送了一個無效的回覆標頭"
-
-#: methods/http.cc:606
-msgid "The HTTP server sent an invalid Content-Length header"
-msgstr "HTTP 伺服器傳送了一個無效的 Content-Length 標頭"
-
-#: methods/http.cc:621
-msgid "The HTTP server sent an invalid Content-Range header"
-msgstr "HTTP 伺服器傳送了一個無效的 Content-Range 標頭"
-
-#: methods/http.cc:623
-msgid "This HTTP server has broken range support"
-msgstr "這個 HTTP 伺服器的範圍支援有問題"
-
-#: methods/http.cc:647
-msgid "Unknown date format"
-msgstr "未知的資料格式"
-
-#: methods/http.cc:826
-msgid "Select failed"
-msgstr "選擇失敗"
-
-#: methods/http.cc:831
-msgid "Connection timed out"
-msgstr "連線逾時"
-
-#: methods/http.cc:854
-msgid "Error writing to output file"
-msgstr "在寫入輸出檔時發生錯誤"
-
-#: methods/http.cc:885
-msgid "Error writing to file"
-msgstr "在寫入檔案時發生錯誤"
-
-#: methods/http.cc:913
+#: methods/http.cc:519
 msgid "Error writing to the file"
 msgstr "在寫入該檔時發生錯誤"
 
-#: methods/http.cc:927
+#: methods/http.cc:533
 msgid "Error reading from server. Remote end closed connection"
 msgstr "在讀取伺服器時發生錯誤，遠端主機已關閉連線"
 
-#: methods/http.cc:929
+#: methods/http.cc:535
 msgid "Error reading from server"
 msgstr "在讀取伺服器時發生錯誤"
 
-#: methods/http.cc:1197
+#: methods/http.cc:571
+msgid "Error writing to file"
+msgstr "在寫入檔案時發生錯誤"
+
+#: methods/http.cc:631
+msgid "Select failed"
+msgstr "選擇失敗"
+
+#: methods/http.cc:636
+msgid "Connection timed out"
+msgstr "連線逾時"
+
+#: methods/http.cc:659
+msgid "Error writing to output file"
+msgstr "在寫入輸出檔時發生錯誤"
+
+#: methods/server.cc:56
+msgid "Waiting for headers"
+msgstr "等待標頭"
+
+#: methods/server.cc:114
+msgid "Bad header line"
+msgstr "標頭行錯誤"
+
+#: methods/server.cc:139 methods/server.cc:146
+msgid "The HTTP server sent an invalid reply header"
+msgstr "HTTP 伺服器傳送了一個無效的回覆標頭"
+
+#: methods/server.cc:176
+msgid "The HTTP server sent an invalid Content-Length header"
+msgstr "HTTP 伺服器傳送了一個無效的 Content-Length 標頭"
+
+#: methods/server.cc:199
+msgid "The HTTP server sent an invalid Content-Range header"
+msgstr "HTTP 伺服器傳送了一個無效的 Content-Range 標頭"
+
+#: methods/server.cc:201
+msgid "This HTTP server has broken range support"
+msgstr "這個 HTTP 伺服器的範圍支援有問題"
+
+#: methods/server.cc:225
+msgid "Unknown date format"
+msgstr "未知的資料格式"
+
+#: methods/server.cc:490
 msgid "Bad header data"
 msgstr "錯誤的標頭資料"
 
-#: methods/http.cc:1214 methods/http.cc:1269
+#: methods/server.cc:507 methods/server.cc:564
 msgid "Connection failed"
 msgstr "連線失敗"
 
-#: methods/http.cc:1361
+#: methods/server.cc:656
 msgid "Internal error"
 msgstr "內部錯誤"
 
@@ -1072,86 +1056,70 @@ msgstr "內部錯誤"
 msgid "Listing"
 msgstr ""
 
-#: apt-private/private-install.cc:72
-msgid "WARNING: The following packages cannot be authenticated!"
-msgstr "【警告】：無法驗證下列套件！"
-
-#: apt-private/private-install.cc:76
-msgid "Authentication warning overridden.\n"
-msgstr "忽略了驗證警告。\n"
-
-#: apt-private/private-install.cc:83
-msgid "Install these packages without verification?"
-msgstr "是否不經驗證就安裝這些套件？"
-
-#: apt-private/private-install.cc:85
-msgid "Some packages could not be authenticated"
-msgstr "有部份套件無法驗證"
-
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
-msgid "There are problems and -y was used without --force-yes"
-msgstr "發生了問題，且 -y 並沒有和 --force-yes 搭配使用"
-
-#: apt-private/private-install.cc:134
+#: apt-private/private-install.cc:91
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "內部錯誤，在損毀的套件上執行 InstallPackages！"
 
-#: apt-private/private-install.cc:143
+#: apt-private/private-install.cc:100
 msgid "Packages need to be removed but remove is disabled."
 msgstr "有套件需要被移除，但卻被禁止移除。"
 
-#: apt-private/private-install.cc:154
+#: apt-private/private-install.cc:111
 msgid "Internal error, Ordering didn't finish"
 msgstr "內部錯誤，排序未能完成"
 
-#: apt-private/private-install.cc:192
+#: apt-private/private-install.cc:149
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr "怪哉... 檔案大小不符，請發信給 apt@packages.debian.org"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:199
+#: apt-private/private-install.cc:156
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "需要下載 %sB/%sB 的套件檔。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:204
+#: apt-private/private-install.cc:161
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "需要下載 %sB 的套件檔。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:211
+#: apt-private/private-install.cc:168
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "此操作完成之後，會多佔用 %sB 的磁碟空間。\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:216
+#: apt-private/private-install.cc:173
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "此操作完成之後，會空出 %sB 的磁碟空間。\n"
 
-#: apt-private/private-install.cc:244
+#: apt-private/private-install.cc:201
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "在 %s 裡沒有足夠的的未使用空間。"
 
-#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
+#: apt-private/private-install.cc:211 apt-private/private-download.cc:55
+msgid "There are problems and -y was used without --force-yes"
+msgstr "發生了問題，且 -y 並沒有和 --force-yes 搭配使用"
+
+#: apt-private/private-install.cc:217 apt-private/private-install.cc:239
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr "雖然指定了 Trivial Only（自動答 NO）選項，但這並不是 trivial 操作。"
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:264
+#: apt-private/private-install.cc:221
 msgid "Yes, do as I say!"
 msgstr "Yes, do as I say!"
 
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:223
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1162,20 +1130,20 @@ msgstr ""
 "請輸入 '%s' 這個句子以繼續進行\n"
 " ?] "
 
-#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
+#: apt-private/private-install.cc:229 apt-private/private-install.cc:247
 msgid "Abort."
 msgstr "放棄執行。"
 
-#: apt-private/private-install.cc:287
+#: apt-private/private-install.cc:244
 #, fuzzy
 msgid "Do you want to continue?"
 msgstr "是否繼續進行 [Y/n]？"
 
-#: apt-private/private-install.cc:376
+#: apt-private/private-install.cc:314
 msgid "Some files failed to download"
 msgstr "有部份檔案無法下載"
 
-#: apt-private/private-install.cc:383
+#: apt-private/private-install.cc:321
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1183,19 +1151,19 @@ msgstr ""
 "有部份套件檔無法取得，試著執行 apt-get update 或者試著加上 --fix-missing 選"
 "項？"
 
-#: apt-private/private-install.cc:387
+#: apt-private/private-install.cc:325
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "目前尚未支援 --fix-missing 和媒體抽換"
 
-#: apt-private/private-install.cc:392
+#: apt-private/private-install.cc:330
 msgid "Unable to correct missing packages."
 msgstr "無法修正欠缺的套件。"
 
-#: apt-private/private-install.cc:393
+#: apt-private/private-install.cc:331
 msgid "Aborting install."
 msgstr "放棄安裝。"
 
-#: apt-private/private-install.cc:421
+#: apt-private/private-install.cc:359
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1205,15 +1173,15 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: apt-private/private-install.cc:425
+#: apt-private/private-install.cc:363
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr ""
 
-#: apt-private/private-install.cc:446
+#: apt-private/private-install.cc:384
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "我們沒有計劃要刪除任何東西，無法啟動 AutoRemover"
 
-#: apt-private/private-install.cc:550
+#: apt-private/private-install.cc:492
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1231,15 +1199,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
+#: apt-private/private-install.cc:495 apt-private/private-install.cc:636
 msgid "The following information may help to resolve the situation:"
 msgstr "以下的資訊或許有助於解決當前的情況："
 
-#: apt-private/private-install.cc:557
+#: apt-private/private-install.cc:499
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "內部錯誤，AutoRemover 處理失敗"
 
-#: apt-private/private-install.cc:564
+#: apt-private/private-install.cc:506
 #, fuzzy
 msgid ""
 "The following package was automatically installed and is no longer required:"
@@ -1249,7 +1217,7 @@ msgid_plural ""
 msgstr[0] "以下套件是被自動安裝進來的，且已不再會被用到了："
 msgstr[1] "以下套件是被自動安裝進來的，且已不再會被用到了："
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:510
 #, fuzzy, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1257,18 +1225,18 @@ msgid_plural ""
 msgstr[0] "以下套件是被自動安裝進來的，且已不再會被用到了："
 msgstr[1] "以下套件是被自動安裝進來的，且已不再會被用到了："
 
-#: apt-private/private-install.cc:570
+#: apt-private/private-install.cc:512
 #, fuzzy
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "使用 'apt-get autoremove' 來將其移除。"
 msgstr[1] "使用 'apt-get autoremove' 來將其移除。"
 
-#: apt-private/private-install.cc:664
+#: apt-private/private-install.cc:606
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr "您也許得執行 'apt-get -f install' 以修正這些問題："
 
-#: apt-private/private-install.cc:666
+#: apt-private/private-install.cc:608
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1276,7 +1244,7 @@ msgstr ""
 "未能滿足相依關係。請試著不指定套件來執行 'apt-get -f install'（或採取其它的解"
 "決方案）。"
 
-#: apt-private/private-install.cc:679
+#: apt-private/private-install.cc:621
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1286,21 +1254,42 @@ msgstr ""
 "有些套件無法安裝。這可能意謂著您的要求難以解決，或是若您使用的是\n"
 "unstable 發行版，可能有些必要的套件尚未建立，或是被移出 Incoming 了。"
 
-#: apt-private/private-install.cc:700
+#: apt-private/private-install.cc:642
 msgid "Broken packages"
 msgstr "損毀的套件"
 
-#: apt-private/private-install.cc:753
+#: apt-private/private-install.cc:695
 msgid "The following extra packages will be installed:"
 msgstr "下列的額外套件將被安裝："
 
-#: apt-private/private-install.cc:843
+#: apt-private/private-install.cc:785
 msgid "Suggested packages:"
 msgstr "建議套件："
 
-#: apt-private/private-install.cc:844
+#: apt-private/private-install.cc:786
 msgid "Recommended packages:"
 msgstr "推薦套件："
+
+#: apt-private/private-download.cc:32
+msgid "WARNING: The following packages cannot be authenticated!"
+msgstr "【警告】：無法驗證下列套件！"
+
+#: apt-private/private-download.cc:36
+msgid "Authentication warning overridden.\n"
+msgstr "忽略了驗證警告。\n"
+
+#: apt-private/private-download.cc:41 apt-private/private-download.cc:48
+msgid "Some packages could not be authenticated"
+msgstr "有部份套件無法驗證"
+
+#: apt-private/private-download.cc:46
+msgid "Install these packages without verification?"
+msgstr "是否不經驗證就安裝這些套件？"
+
+#: apt-private/private-download.cc:87 apt-pkg/algorithms.cc:1607
+#, c-format
+msgid "Failed to fetch %s  %s\n"
+msgstr "無法取得 %s，%s\n"
 
 #: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
@@ -1505,7 +1494,7 @@ msgid "Full Text Search"
 msgstr ""
 
 #: apt-private/private-show.cc:106
-msgid "not a real pacakge (virtual)"
+msgid "not a real package (virtual)"
 msgstr ""
 
 #: apt-private/private-main.cc:19
@@ -2191,22 +2180,17 @@ msgid "Unable to stat %s"
 msgstr "無法取得 %s 的狀態"
 
 #: apt-inst/deb/debfile.cc:41 apt-inst/deb/debfile.cc:46
+#: apt-inst/deb/debfile.cc:54
 #, c-format
 msgid "This is not a valid DEB archive, missing '%s' member"
 msgstr "這是個不正確的 DEB 套件檔，沒有 '%s' 成員"
 
-#. FIXME: add data.tar.xz here - adding it now would require a Translation round for a very small gain
-#: apt-inst/deb/debfile.cc:55
-#, c-format
-msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
-msgstr "這是個不正確的 DEB 套件檔，沒有 '%s', '%s' 或 '%s' 成員"
-
-#: apt-inst/deb/debfile.cc:120
+#: apt-inst/deb/debfile.cc:119
 #, c-format
 msgid "Internal error, could not locate member %s"
 msgstr "內部錯誤，找不找到成員 %s"
 
-#: apt-inst/deb/debfile.cc:214
+#: apt-inst/deb/debfile.cc:213
 msgid "Unparsable control file"
 msgstr "無法分析的 control 檔"
 
@@ -2288,7 +2272,7 @@ msgstr ""
 msgid "%lis"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1175
+#: apt-pkg/contrib/strutl.cc:1206
 #, c-format
 msgid "Selection %s not found"
 msgstr "選項 %s 找不到"
@@ -2938,44 +2922,48 @@ msgstr "在儲存來源快取時 IO 錯誤"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "無法重新命名，%s (%s -> %s)。"
 
-#: apt-pkg/acquire-item.cc:599
-msgid "MD5Sum mismatch"
-msgstr "MD5Sum 不符"
-
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1912
-#: apt-pkg/acquire-item.cc:2055
+#: apt-pkg/acquire-item.cc:154
 msgid "Hash Sum mismatch"
 msgstr "Hash Sum 不符"
 
-#: apt-pkg/acquire-item.cc:1402
+#: apt-pkg/acquire-item.cc:159
+msgid "Size mismatch"
+msgstr "大小不符"
+
+#: apt-pkg/acquire-item.cc:164
+#, fuzzy
+msgid "Invalid file format"
+msgstr "無效的操作 %s"
+
+#: apt-pkg/acquire-item.cc:1419
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
 "or malformed file)"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1418
+#: apt-pkg/acquire-item.cc:1435
 #, fuzzy, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "無法辨別 Release 檔 %s"
 
-#: apt-pkg/acquire-item.cc:1460
+#: apt-pkg/acquire-item.cc:1477
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "無法取得以下的密鑰 ID 的公鑰：\n"
 
-#: apt-pkg/acquire-item.cc:1498
+#: apt-pkg/acquire-item.cc:1515
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
 "repository will not be applied."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1520
+#: apt-pkg/acquire-item.cc:1537
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "發行版本衝突：%s（應當是 %s 但卻得到 %s）"
 
-#: apt-pkg/acquire-item.cc:1550
+#: apt-pkg/acquire-item.cc:1567
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -2983,12 +2971,12 @@ msgid ""
 msgstr ""
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1560 apt-pkg/acquire-item.cc:1565
+#: apt-pkg/acquire-item.cc:1577 apt-pkg/acquire-item.cc:1582
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc:1688
+#: apt-pkg/acquire-item.cc:1705
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -2997,22 +2985,16 @@ msgstr ""
 "找不到 %s 套件的某個檔案。這意味著您可能要手動修復這個套件。（因為找不到平"
 "台）"
 
-#: apt-pkg/acquire-item.cc:1747
+#: apt-pkg/acquire-item.cc:1771
 #, c-format
-msgid ""
-"I wasn't able to locate a file for the %s package. This might mean you need "
-"to manually fix this package."
-msgstr "找不到 %s 套件的某個檔案。這意味著您可能要手動修復這個套件。"
+msgid "Can't find a source to download version '%s' of '%s'"
+msgstr ""
 
-#: apt-pkg/acquire-item.cc:1806
+#: apt-pkg/acquire-item.cc:1829
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "這個套件的索引檔損壞了。沒有套件 %s 的 Filename: 欄位。"
-
-#: apt-pkg/acquire-item.cc:1904
-msgid "Size mismatch"
-msgstr "大小不符"
 
 #: apt-pkg/indexrecords.cc:68
 #, c-format
@@ -3227,136 +3209,136 @@ msgstr ""
 msgid "Execute external solver"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:73
+#: apt-pkg/deb/dpkgpm.cc:85
 #, c-format
 msgid "Installing %s"
 msgstr "正在安裝 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
+#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1078
 #, c-format
 msgid "Configuring %s"
 msgstr "正在設定 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
+#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1085
 #, c-format
 msgid "Removing %s"
 msgstr "正在移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:76
+#: apt-pkg/deb/dpkgpm.cc:88
 #, fuzzy, c-format
 msgid "Completely removing %s"
 msgstr "已完整移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:77
+#: apt-pkg/deb/dpkgpm.cc:89
 #, c-format
 msgid "Noting disappearance of %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:78
+#: apt-pkg/deb/dpkgpm.cc:90
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr "正在執行安裝後套件後續處理程式 %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:749
+#: apt-pkg/deb/dpkgpm.cc:761
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "找不到 '%s' 目錄"
 
-#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
+#: apt-pkg/deb/dpkgpm.cc:776 apt-pkg/deb/dpkgpm.cc:798
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "無法開啟檔案 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1071
 #, c-format
 msgid "Preparing %s"
 msgstr "正在準備 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1004
+#: apt-pkg/deb/dpkgpm.cc:1072
 #, c-format
 msgid "Unpacking %s"
 msgstr "正在解開 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1077
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "正在準備設定 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1011
+#: apt-pkg/deb/dpkgpm.cc:1079
 #, c-format
 msgid "Installed %s"
 msgstr "已安裝 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1016
+#: apt-pkg/deb/dpkgpm.cc:1084
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "正在準備移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1018
+#: apt-pkg/deb/dpkgpm.cc:1086
 #, c-format
 msgid "Removed %s"
 msgstr "已移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1023
+#: apt-pkg/deb/dpkgpm.cc:1091
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "正在準備完整移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1024
+#: apt-pkg/deb/dpkgpm.cc:1092
 #, c-format
 msgid "Completely removed %s"
 msgstr "已完整移除 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1341 apt-pkg/deb/dpkgpm.cc:1362
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "無法寫入 %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1272
+#: apt-pkg/deb/dpkgpm.cc:1341
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1362
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1307
+#: apt-pkg/deb/dpkgpm.cc:1376
 msgid "Running dpkg"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1479
+#: apt-pkg/deb/dpkgpm.cc:1563
 msgid "Operation was interrupted before it could finish"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1541
+#: apt-pkg/deb/dpkgpm.cc:1625
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1546
+#: apt-pkg/deb/dpkgpm.cc:1630
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1548
+#: apt-pkg/deb/dpkgpm.cc:1632
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1554
+#: apt-pkg/deb/dpkgpm.cc:1638
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1560
+#: apt-pkg/deb/dpkgpm.cc:1644
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1567
+#: apt-pkg/deb/dpkgpm.cc:1651
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3450,6 +3432,17 @@ msgstr ""
 #, fuzzy
 #~ msgid "Selected version '%s' (%s) for '%s' because of '%s'\n"
 #~ msgstr "選定的版本為 %3$s 的 %1$s (%2$s)\n"
+
+#~ msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
+#~ msgstr "這是個不正確的 DEB 套件檔，沒有 '%s', '%s' 或 '%s' 成員"
+
+#~ msgid "MD5Sum mismatch"
+#~ msgstr "MD5Sum 不符"
+
+#~ msgid ""
+#~ "I wasn't able to locate a file for the %s package. This might mean you "
+#~ "need to manually fix this package."
+#~ msgstr "找不到 %s 套件的某個檔案。這意味著您可能要手動修復這個套件。"
 
 #~ msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 #~ msgstr "無法寫入記錄檔，openpty() 失敗（/dev/pts 未掛載？）\n"

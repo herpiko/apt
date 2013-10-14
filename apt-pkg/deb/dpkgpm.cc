@@ -37,6 +37,7 @@
 #include <map>
 #include <pwd.h>
 #include <grp.h>
+#include <iomanip>
 
 #include <termios.h>
 #include <unistd.h>
@@ -52,9 +53,16 @@ class pkgDPkgPMPrivate
 {
 public:
    pkgDPkgPMPrivate() : stdin_is_dev_null(false), dpkgbuf_pos(0),
-			term_out(NULL), history_out(NULL)
+			term_out(NULL), history_out(NULL), 
+                        last_reported_progress(0.0), nr_terminal_rows(0),
+                        fancy_progress_output(false)
    {
       dpkgbuf[0] = '\0';
+      if(_config->FindB("Dpkg::Progress-Fancy", false) == true)
+      {
+         fancy_progress_output = true;
+         _config->Set("DpkgPM::Progress", true);
+      }
    }
    bool stdin_is_dev_null;
    // the buffer we use for the dpkg status-fd reading
@@ -63,6 +71,10 @@ public:
    FILE *term_out;
    FILE *history_out;
    string dpkg_error;
+
+   float last_reported_progress;
+   int nr_terminal_rows;
+   bool fancy_progress_output;
 };
 
 namespace
@@ -512,7 +524,8 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 
 
    /* dpkg sends strings like this:
-      'status:   <pkg>:  <pkg  qstate>'
+      'status:   <pkg>: <pkg  qstate>'
+      'status:   <pkg>:<arch>: <pkg  qstate>'
       errors look like this:
       'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data 
       and conffile-prompt like this
@@ -527,29 +540,36 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       'processing: trigproc: trigger'
 	    
    */
-   char* list[6];
-   //        dpkg sends multiline error messages sometimes (see
-   //        #374195 for a example. we should support this by
-   //        either patching dpkg to not send multiline over the
-   //        statusfd or by rewriting the code here to deal with
-   //        it. for now we just ignore it and not crash
-   TokSplitString(':', line, list, sizeof(list)/sizeof(list[0]));
-   if( list[0] == NULL || list[1] == NULL || list[2] == NULL) 
+   // we need to split on ": " (note the appended space) as the ':' is
+   // part of the pkgname:arch information that dpkg sends
+   // 
+   // A dpkg error message may contain additional ":" (like
+   //  "failed in buffer_write(fd) (10, ret=-1): backend dpkg-deb ..."
+   // so we need to ensure to not split too much
+   std::vector<std::string> list = StringSplit(line, ": ", 3);
+   if(list.size() != 3)
    {
       if (Debug == true)
 	 std::clog << "ignoring line: not enough ':'" << std::endl;
       return;
    }
-   const char* const pkg = list[1];
-   const char* action = _strstrip(list[2]);
+   // dpkg does not send always send "pkgname:arch" so we add it here if needed
+   std::string pkgname = list[1];
+   if (pkgname.find(":") == std::string::npos)
+   {
+      string const nativeArch = _config->Find("APT::Architecture");
+      pkgname = pkgname + ":" + nativeArch;
+   }
+   const char* const pkg = pkgname.c_str();
+   const char* action = list[2].c_str();
 
    // 'processing' from dpkg looks like
    // 'processing: action: pkg'
-   if(strncmp(list[0], "processing", strlen("processing")) == 0)
+   if(strncmp(list[0].c_str(), "processing", strlen("processing")) == 0)
    {
       char s[200];
-      const char* const pkg_or_trigger = _strstrip(list[2]);
-      action = _strstrip( list[1]);
+      const char* const pkg_or_trigger = list[2].c_str();
+      action =  list[1].c_str();
       const std::pair<const char *, const char *> * const iter =
 	std::find_if(PackageProcessingOpsBegin,
 		     PackageProcessingOpsEnd,
@@ -578,14 +598,6 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 
    if(strncmp(action,"error",strlen("error")) == 0)
    {
-      // urgs, sometime has ":" in its error string so that we
-      // end up with the error message split between list[3]
-      // and list[4], e.g. the message: 
-      // "failed in buffer_write(fd) (10, ret=-1): backend dpkg-deb ..."
-      // concat them again
-      if( list[4] != NULL )
-	 list[3][strlen(list[3])] = ':';
-
       status << "pmerror:" << list[1]
 	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
 	     << ":" << list[3]
@@ -595,7 +607,7 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       if (Debug == true)
 	 std::clog << "send: '" << status.str() << "'" << endl;
       pkgFailures++;
-      WriteApportReport(list[1], list[3]);
+      WriteApportReport(list[1].c_str(), list[3].c_str());
       return;
    }
    else if(strncmp(action,"conffile",strlen("conffile")) == 0)
@@ -883,10 +895,43 @@ bool pkgDPkgPM::CloseLog()
  */
 void pkgDPkgPM::SendTerminalProgress(float percentage)
 {
-   // FIXME: use colors too
-   std::cout << "\r\n"
-             << "Progress: [" << percentage << "%]"
-             << "\r\n";
+   int reporting_steps = _config->FindI("DpkgPM::Reporting-Steps", 1);
+
+   if(percentage < (d->last_reported_progress + reporting_steps))
+      return;
+
+   std::string progress_str;
+   strprintf(progress_str, "Progress: [%3i%%]", (int)percentage);
+   if (d->fancy_progress_output)
+   {
+         int row = d->nr_terminal_rows;
+
+         static string save_cursor = "\033[s";
+         static string restore_cursor = "\033[u";
+
+         static string set_bg_color = "\033[42m"; // green
+         static string set_fg_color = "\033[30m"; // black
+
+         static string restore_bg =  "\033[49m";
+         static string restore_fg = "\033[39m";
+
+         std::cout << save_cursor
+            // move cursor position to last row
+                   << "\033[" << row << ";0f" 
+                   << set_bg_color
+                   << set_fg_color
+                   << progress_str
+                   << restore_cursor
+                   << restore_bg
+                   << restore_fg;
+   }
+   else
+   {
+         std::cout << progress_str << "\r\n";
+   }
+   std::flush(std::cout);
+                   
+   d->last_reported_progress = percentage;
 }
 									/*}}}*/
 /*{{{*/
@@ -910,6 +955,29 @@ static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
    return retval;
 }
 /*}}}*/
+
+void pkgDPkgPM::SetupTerminalScrollArea(int nr_rows)
+{
+     if(!d->fancy_progress_output)
+        return;
+
+     // scroll down a bit to avoid visual glitch when the screen
+     // area shrinks by one row
+     std::cout << "\n";
+         
+     // save cursor
+     std::cout << "\033[s";
+         
+     // set scroll region (this will place the cursor in the top left)
+     std::cout << "\033[1;" << nr_rows - 1 << "r";
+            
+     // restore cursor but ensure its inside the scrolling area
+     std::cout << "\033[u";
+     static const char *move_cursor_up = "\033[1A";
+     std::cout << move_cursor_up;
+     std::flush(std::cout);
+}
+
 // DPkgPM::Go - Run the sequence					/*{{{*/
 // ---------------------------------------------------------------------
 /* This globs the operations and calls dpkg 
@@ -1035,7 +1103,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       if((*I).Pkg.end() == true)
 	 continue;
 
-      string const name = (*I).Pkg.Name();
+      string const name = (*I).Pkg.FullName();
       PackageOpsDone[name] = 0;
       for(int i=0; (DpkgStatesOpMap[(*I).Op][i]).state != NULL; ++i)
       {
@@ -1266,7 +1334,8 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       _error->PushToStack();
       if (tcgetattr(STDOUT_FILENO, &tt) == 0)
       {
-	 ioctl(0, TIOCGWINSZ, (char *)&win);
+	 ioctl(1, TIOCGWINSZ, (char *)&win);
+         d->nr_terminal_rows = win.ws_row;
 	 if (openpty(&master, &slave, NULL, &tt, &win) < 0)
 	 {
 	    _error->Errno("openpty", _("Can not write log (%s)"), _("Is /dev/pts mounted?"));
@@ -1308,11 +1377,12 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 		<< endl;
 	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
       }
+
       Child = ExecFork();
-      
       // This is the child
       if (Child == 0)
       {
+
 	 if(slave >= 0 && master >= 0) 
 	 {
 	    setsid();
@@ -1329,7 +1399,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
 	 if (chdir(_config->FindDir("DPkg::Run-Directory","/").c_str()) != 0)
 	    _exit(100);
-	 
+
 	 if (_config->FindB("DPkg::FlushSTDIN",true) == true && isatty(STDIN_FILENO))
 	 {
 	    int Flags,dummy;
@@ -1345,6 +1415,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    if (fcntl(STDIN_FILENO,F_SETFL,Flags & (~(long)O_NONBLOCK)) < 0)
 	       _exit(100);
 	 }
+         SetupTerminalScrollArea(d->nr_terminal_rows);
 
 	 /* No Job Control Stop Env is a magic dpkg var that prevents it
 	    from using sigstop */
@@ -1439,12 +1510,21 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       
       signal(SIGHUP,old_SIGHUP);
 
+      // reset scroll area
+      SetupTerminalScrollArea(d->nr_terminal_rows + 1);
+      if(d->fancy_progress_output)
+      {
+         // override the progress line (sledgehammer)
+         static const char* clear_screen_below_cursor = "\033[J";
+         std::cout << clear_screen_below_cursor;
+      }
+
       if(master >= 0) 
       {
 	 tcsetattr(0, TCSAFLUSH, &tt);
 	 close(master);
       }
-       
+
       // Check for an error code.
       if (WIFEXITED(Status) == 0 || WEXITSTATUS(Status) != 0)
       {
@@ -1474,7 +1554,11 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       }      
    }
    CloseLog();
-   
+
+   // dpkg is done at this point
+   if(_config->FindB("DPkgPM::Progress", false) == true)
+      SendTerminalProgress(100);
+
    if (pkgPackageManager::SigINTStop)
        _error->Warning(_("Operation was interrupted before it could finish"));
 

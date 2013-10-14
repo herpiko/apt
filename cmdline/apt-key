@@ -32,9 +32,9 @@ ARCHIVE_KEYRING_URI=""
 #ARCHIVE_KEYRING_URI=http://ftp.debian.org/debian/debian-archive-keyring.gpg
 eval $(apt-config shell ARCHIVE_KEYRING_URI APT::Key::ArchiveKeyringURI)
 
-ARCHIVE_KEYRING=/usr/share/keyrings/blankon-archive-keyring.gpg
+ARCHIVE_KEYRING=/usr/share/keyrings/debian-archive-keyring.gpg
 eval $(apt-config shell ARCHIVE_KEYRING APT::Key::ArchiveKeyring)
-REMOVED_KEYS=/usr/share/keyrings/blankon-archive-removed-keys.gpg
+REMOVED_KEYS=/usr/share/keyrings/debian-archive-removed-keys.gpg
 eval $(apt-config shell REMOVED_KEYS APT::Key::RemovedKeys)
 
 requires_root() {

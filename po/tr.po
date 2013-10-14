@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-09-20 16:13+0200\n"
+"POT-Creation-Date: 2013-10-09 22:40+0200\n"
 "PO-Revision-Date: 2013-02-18 03:41+0200\n"
 "Last-Translator: Mert Dirik <mertdirik@gmail.com>\n"
 "Language-Team: Debian l10n Turkish\n"
@@ -160,7 +160,7 @@ msgid "  Version table:"
 msgstr "  Sürüm çizelgesi:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1494 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -297,38 +297,38 @@ msgstr ""
 "  -o=? İsteğe bağlı ayar seçeneği belirtmenizi sağlar, örneğin -o dir::"
 "cache=/tmp\n"
 
-#: cmdline/apt-get.cc:222
+#: cmdline/apt-get.cc:223
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr "Mevcut olmayan hedef '%s' sürüm '%s' paketini ihmal et"
 
-#: cmdline/apt-get.cc:254
+#: cmdline/apt-get.cc:255
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Kaynak paket olarak '%s' yerine '%s' kullanılacak\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:292
+#: cmdline/apt-get.cc:293
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "'%2$s' paketinin mevcut olmayan '%1$s' sürümünü görmezden gel"
 
-#: cmdline/apt-get.cc:323
+#: cmdline/apt-get.cc:324
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "%s paketi bulunamadı"
 
-#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:329 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s elle kurulmuş olarak ayarlı.\n"
 
-#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s otomatik olarak kurulmuş şekilde ayarlandı.\n"
 
-#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:339 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -336,46 +336,36 @@ msgstr ""
 "Bu komut artık kullanılmamaktadır. Bunun yerine 'apt-mark auto' ve 'apt-mark "
 "manual' kullanın."
 
-#: cmdline/apt-get.cc:354
+#: cmdline/apt-get.cc:355
 msgid "Calculating upgrade... "
 msgstr "Yükseltme hesaplanıyor... "
 
-#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:358 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "Başarısız"
 
-#: cmdline/apt-get.cc:366
+#: cmdline/apt-get.cc:367
 msgid "Done"
 msgstr "Bitti"
 
-#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
+#: cmdline/apt-get.cc:434 cmdline/apt-get.cc:442
 msgid "Internal error, problem resolver broke stuff"
 msgstr "İç hata, sorun çözücü nesneyi bozdu"
 
-#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
+#: cmdline/apt-get.cc:470 cmdline/apt-get.cc:507
 msgid "Unable to lock the download directory"
 msgstr "İndirme dizini kilitlenemiyor"
 
-#: cmdline/apt-get.cc:563
-#, c-format
-msgid "Can't find a source to download version '%s' of '%s'"
-msgstr "'%2$s' paketinin '%1$s' sürümü hiçbir kaynakta bulunamadı"
-
-#: cmdline/apt-get.cc:568
-#, c-format
-msgid "Downloading %s %s"
-msgstr "İndiriliyor %s %s"
-
-#: cmdline/apt-get.cc:628
+#: cmdline/apt-get.cc:619
 msgid "Must specify at least one package to fetch source for"
 msgstr "Kaynağının indirileceği en az bir paket seçilmeli"
 
-#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
+#: cmdline/apt-get.cc:659 cmdline/apt-get.cc:954
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "%s paketinin kaynak paketi bulunamadı"
 
-#: cmdline/apt-get.cc:685
+#: cmdline/apt-get.cc:676
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -385,7 +375,7 @@ msgstr ""
 "yapılmaktadır:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:690
+#: cmdline/apt-get.cc:681
 #, c-format
 msgid ""
 "Please use:\n"
@@ -397,84 +387,78 @@ msgstr ""
 "bzr branch %s\n"
 "komutunu kullanın.\n"
 
-#: cmdline/apt-get.cc:743
+#: cmdline/apt-get.cc:734
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Zaten indirilmiş olan '%s' dosyası atlanıyor\n"
 
-#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
-#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
+#: cmdline/apt-get.cc:757 cmdline/apt-get.cc:760
+#: apt-private/private-install.cc:188 apt-private/private-install.cc:191
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "%s içindeki boş alan miktarı belirlenemedi"
 
-#: cmdline/apt-get.cc:780
+#: cmdline/apt-get.cc:771
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "%s üzerinde yeterli boş alan yok"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:789
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "%sB/%sB kaynak arşivi indirilecek.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:794
+#: cmdline/apt-get.cc:785
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "%sB kaynak arşivi indirilecek.\n"
 
-#: cmdline/apt-get.cc:800
+#: cmdline/apt-get.cc:791
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "%s kaynağını al\n"
 
-#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
-#: apt-pkg/algorithms.cc:1607
-#, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "%s ağdan alınamadı. %s\n"
-
-#: cmdline/apt-get.cc:838
+#: cmdline/apt-get.cc:812
 msgid "Failed to fetch some archives."
 msgstr "Bazı arşivler alınamadı."
 
-#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
+#: cmdline/apt-get.cc:817 apt-private/private-install.cc:315
 msgid "Download complete and in download only mode"
 msgstr "İndirme işlemi tamamlandı ve sadece indirme kipinde"
 
-#: cmdline/apt-get.cc:869
+#: cmdline/apt-get.cc:843
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "%s için zaten açılmış bazı paketlerin açılması atlanıyor.\n"
 
-#: cmdline/apt-get.cc:881
+#: cmdline/apt-get.cc:855
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Paket açma komutu '%s' başarısız.\n"
 
-#: cmdline/apt-get.cc:882
+#: cmdline/apt-get.cc:856
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "'dpkg-dev' paketinin kurulu olduğundan emin olun.\n"
 
-#: cmdline/apt-get.cc:904
+#: cmdline/apt-get.cc:878
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "İnşa komutu '%s' başarısız oldu.\n"
 
-#: cmdline/apt-get.cc:924
+#: cmdline/apt-get.cc:898
 msgid "Child process failed"
 msgstr "Alt süreç başarısız"
 
-#: cmdline/apt-get.cc:943
+#: cmdline/apt-get.cc:917
 msgid "Must specify at least one package to check builddeps for"
 msgstr "İnşa bağımlılıklarının denetleneceği en az bir paket belirtilmedilir"
 
-#: cmdline/apt-get.cc:968
+#: cmdline/apt-get.cc:942
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -483,17 +467,17 @@ msgstr ""
 "%s mimarisine uygun mimari bilgileri mevcut değil. Kurulumu için apt.conf(5) "
 "rehber sayfasındaki APT::Architectures kısmına göz atın."
 
-#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
+#: cmdline/apt-get.cc:966 cmdline/apt-get.cc:969
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "%s paketinin inşa-bağımlılığı bilgisi alınamıyor"
 
-#: cmdline/apt-get.cc:1015
+#: cmdline/apt-get.cc:989
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s paketinin hiç inşa bağımlılığı yok.\n"
 
-#: cmdline/apt-get.cc:1185
+#: cmdline/apt-get.cc:1159
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -502,7 +486,7 @@ msgstr ""
 "'%4$s' paketlerinde %3$s paketine izin verilmediği için %2$s kaynağının %1$s "
 "bağımlılığı karşılanamıyor."
 
-#: cmdline/apt-get.cc:1203
+#: cmdline/apt-get.cc:1177
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -510,12 +494,12 @@ msgid ""
 msgstr ""
 "%2$s için %1$s bağımlılığı, %3$s paketi bulunamadığı için karşılanamadı."
 
-#: cmdline/apt-get.cc:1226
+#: cmdline/apt-get.cc:1200
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr "%2$s için %1$s bağımlılığı karşılanamadı: Kurulu %3$s paketi çok yeni."
 
-#: cmdline/apt-get.cc:1265
+#: cmdline/apt-get.cc:1239
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -524,7 +508,7 @@ msgstr ""
 "%2$s için %1$s bağımlılığı sağlanamıyor, çünkü %3$s paketinin aday sürümü "
 "gerekli sürüm şartlarını karşılamıyor"
 
-#: cmdline/apt-get.cc:1271
+#: cmdline/apt-get.cc:1245
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -532,30 +516,30 @@ msgid ""
 msgstr ""
 "%2$s için %1$s bağımlılığı sağlanamıyor, çünkü %3$s paketinin aday sürümü yok"
 
-#: cmdline/apt-get.cc:1294
+#: cmdline/apt-get.cc:1268
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%2$s için %1$s bağımlılığı karşılanamadı: %3$s"
 
-#: cmdline/apt-get.cc:1309
+#: cmdline/apt-get.cc:1283
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "%s için inşa bağımlılıkları karşılanamadı."
 
-#: cmdline/apt-get.cc:1314
+#: cmdline/apt-get.cc:1288
 msgid "Failed to process build dependencies"
 msgstr "İnşa bağımlılıklarını işleme başarısız oldu"
 
-#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
+#: cmdline/apt-get.cc:1381 cmdline/apt-get.cc:1393
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "%s (%s) paketinin değişim günlüğü"
 
-#: cmdline/apt-get.cc:1525
+#: cmdline/apt-get.cc:1499
 msgid "Supported modules:"
 msgstr "Desteklenen birimler:"
 
-#: cmdline/apt-get.cc:1566
+#: cmdline/apt-get.cc:1540
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -672,7 +656,7 @@ msgstr "%s zaten tutulmayacak şekilde ayarlanmış.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1060
+#: apt-pkg/deb/dpkgpm.cc:1128
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "%s için beklenildi ama o gelmedi"
@@ -913,7 +897,7 @@ msgstr "Veri soketi bağlantısı zaman aşımına uğradı"
 msgid "Unable to accept connection"
 msgstr "Bağlantı kabul edilemiyor"
 
-#: methods/ftp.cc:873 methods/http.cc:1038 methods/rsh.cc:313
+#: methods/ftp.cc:873 methods/server.cc:353 methods/rsh.cc:313
 msgid "Problem hashing file"
 msgstr "Dosya sağlaması yapılamadı"
 
@@ -1041,71 +1025,71 @@ msgstr "Aşağıdaki imzalar doğrulanamadı, çünkü genel anahtar mevcut değ
 msgid "Empty files can't be valid archives"
 msgstr "Boş dosyalar geçerli birer arşiv dosyası olamazlar"
 
-#: methods/http.cc:394
-msgid "Waiting for headers"
-msgstr "Başlıklar bekleniyor"
-
-#: methods/http.cc:544
-msgid "Bad header line"
-msgstr "Kötü başlık satırı"
-
-#: methods/http.cc:569 methods/http.cc:576
-msgid "The HTTP server sent an invalid reply header"
-msgstr "HTTP sunucusu geçersiz bir cevap başlığı gönderdi"
-
-#: methods/http.cc:606
-msgid "The HTTP server sent an invalid Content-Length header"
-msgstr "HTTP sunucusu geçersiz bir Content-Length başlığı gönderdi"
-
-#: methods/http.cc:621
-msgid "The HTTP server sent an invalid Content-Range header"
-msgstr "HTTP sunucusu geçersiz bir Content-Range başlığı gönderdi"
-
-#: methods/http.cc:623
-msgid "This HTTP server has broken range support"
-msgstr "HTTP sunucusunun aralık desteği bozuk"
-
-#: methods/http.cc:647
-msgid "Unknown date format"
-msgstr "Bilinmeyen tarih biçimi"
-
-#: methods/http.cc:826
-msgid "Select failed"
-msgstr "Seçme başarısız"
-
-#: methods/http.cc:831
-msgid "Connection timed out"
-msgstr "Bağlantı zaman aşımına uğradı"
-
-#: methods/http.cc:854
-msgid "Error writing to output file"
-msgstr "Çıktı dosyasına yazılırken hata"
-
-#: methods/http.cc:885
-msgid "Error writing to file"
-msgstr "Dosyaya yazılamadı"
-
-#: methods/http.cc:913
+#: methods/http.cc:519
 msgid "Error writing to the file"
 msgstr "Dosyaya yazılamadı"
 
-#: methods/http.cc:927
+#: methods/http.cc:533
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Sunucundan okunurken hata. Uzak sonlu kapalı bağlantı"
 
-#: methods/http.cc:929
+#: methods/http.cc:535
 msgid "Error reading from server"
 msgstr "Sunucundan okunurken hata"
 
-#: methods/http.cc:1197
+#: methods/http.cc:571
+msgid "Error writing to file"
+msgstr "Dosyaya yazılamadı"
+
+#: methods/http.cc:631
+msgid "Select failed"
+msgstr "Seçme başarısız"
+
+#: methods/http.cc:636
+msgid "Connection timed out"
+msgstr "Bağlantı zaman aşımına uğradı"
+
+#: methods/http.cc:659
+msgid "Error writing to output file"
+msgstr "Çıktı dosyasına yazılırken hata"
+
+#: methods/server.cc:56
+msgid "Waiting for headers"
+msgstr "Başlıklar bekleniyor"
+
+#: methods/server.cc:114
+msgid "Bad header line"
+msgstr "Kötü başlık satırı"
+
+#: methods/server.cc:139 methods/server.cc:146
+msgid "The HTTP server sent an invalid reply header"
+msgstr "HTTP sunucusu geçersiz bir cevap başlığı gönderdi"
+
+#: methods/server.cc:176
+msgid "The HTTP server sent an invalid Content-Length header"
+msgstr "HTTP sunucusu geçersiz bir Content-Length başlığı gönderdi"
+
+#: methods/server.cc:199
+msgid "The HTTP server sent an invalid Content-Range header"
+msgstr "HTTP sunucusu geçersiz bir Content-Range başlığı gönderdi"
+
+#: methods/server.cc:201
+msgid "This HTTP server has broken range support"
+msgstr "HTTP sunucusunun aralık desteği bozuk"
+
+#: methods/server.cc:225
+msgid "Unknown date format"
+msgstr "Bilinmeyen tarih biçimi"
+
+#: methods/server.cc:490
 msgid "Bad header data"
 msgstr "Kötü başlık verisi"
 
-#: methods/http.cc:1214 methods/http.cc:1269
+#: methods/server.cc:507 methods/server.cc:564
 msgid "Connection failed"
 msgstr "Bağlantı başarısız"
 
-#: methods/http.cc:1361
+#: methods/server.cc:656
 msgid "Internal error"
 msgstr "İç hata"
 
@@ -1113,41 +1097,21 @@ msgstr "İç hata"
 msgid "Listing"
 msgstr ""
 
-#: apt-private/private-install.cc:72
-msgid "WARNING: The following packages cannot be authenticated!"
-msgstr "UYARI: Aşağıdaki paketler doğrulanamıyor!"
-
-#: apt-private/private-install.cc:76
-msgid "Authentication warning overridden.\n"
-msgstr "Kimlik denetimi uyarısı görmezden geliniyor.\n"
-
-#: apt-private/private-install.cc:83
-msgid "Install these packages without verification?"
-msgstr "Paketler doğrulanmadan kurulsun mu?"
-
-#: apt-private/private-install.cc:85
-msgid "Some packages could not be authenticated"
-msgstr "Bazı paketlerin kimlik denetimi yapılamadı"
-
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
-msgid "There are problems and -y was used without --force-yes"
-msgstr "Bazı sorunlar çıktı ve -y seçeneği, --force-yes olmadan kullanıldı"
-
-#: apt-private/private-install.cc:134
+#: apt-private/private-install.cc:91
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "İç hata, InstallPackages bozuk paketler ile çağrıldı!"
 
-#: apt-private/private-install.cc:143
+#: apt-private/private-install.cc:100
 msgid "Packages need to be removed but remove is disabled."
 msgstr ""
 "Paketlerin kaldırılması gerekiyor ancak kaldırma işlemi devre dışı "
 "bırakılmış."
 
-#: apt-private/private-install.cc:154
+#: apt-private/private-install.cc:111
 msgid "Internal error, Ordering didn't finish"
 msgstr "İç hata, Sıralama tamamlanamadı"
 
-#: apt-private/private-install.cc:192
+#: apt-private/private-install.cc:149
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "Ne kadar ilginç.. Boyutlar eşleşmedi, apt@packages.debian.org adresine "
@@ -1155,49 +1119,53 @@ msgstr ""
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:199
+#: apt-private/private-install.cc:156
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "%sB/%sB arşiv dosyası indirilecek.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:204
+#: apt-private/private-install.cc:161
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "%sB arşiv dosyası indirilecek.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:211
+#: apt-private/private-install.cc:168
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "Bu işlem tamamlandıktan sonra %sB ek disk alanı kullanılacak.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:216
+#: apt-private/private-install.cc:173
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "Bu işlem tamamlandıktan sonra %sB disk alanı boşalacak.\n"
 
-#: apt-private/private-install.cc:244
+#: apt-private/private-install.cc:201
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "%s içinde yeterli boş alanınız yok."
 
-#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
+#: apt-private/private-install.cc:211 apt-private/private-download.cc:55
+msgid "There are problems and -y was used without --force-yes"
+msgstr "Bazı sorunlar çıktı ve -y seçeneği, --force-yes olmadan kullanıldı"
+
+#: apt-private/private-install.cc:217 apt-private/private-install.cc:239
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr ""
 "Yalnızca Önemsiz seçeneği ayarlandı, fakat bu önemsiz bir işlem bir değil."
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:264
+#: apt-private/private-install.cc:221
 msgid "Yes, do as I say!"
 msgstr "Evet, söylediğim şekilde yap!"
 
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:223
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1208,19 +1176,19 @@ msgstr ""
 "Devam etmek için '%s' ifadesini yazınız\n"
 " ?] "
 
-#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
+#: apt-private/private-install.cc:229 apt-private/private-install.cc:247
 msgid "Abort."
 msgstr "Vazgeç."
 
-#: apt-private/private-install.cc:287
+#: apt-private/private-install.cc:244
 msgid "Do you want to continue?"
 msgstr "Devam etmek istiyor musunuz?"
 
-#: apt-private/private-install.cc:376
+#: apt-private/private-install.cc:314
 msgid "Some files failed to download"
 msgstr "Bazı dosyalar indirilemedi"
 
-#: apt-private/private-install.cc:383
+#: apt-private/private-install.cc:321
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1228,19 +1196,19 @@ msgstr ""
 "Bazı arşivler alınamıyor, apt-get update'i çalıştırmayı ya da --fix-missing "
 "seçeneğini ekleyerek düzeltmeyi deneyin."
 
-#: apt-private/private-install.cc:387
+#: apt-private/private-install.cc:325
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "--fix-missing seçeneği ve ortam takası şu an için desteklenmiyor"
 
-#: apt-private/private-install.cc:392
+#: apt-private/private-install.cc:330
 msgid "Unable to correct missing packages."
 msgstr "Eksik paketler düzeltilemedi."
 
-#: apt-private/private-install.cc:393
+#: apt-private/private-install.cc:331
 msgid "Aborting install."
 msgstr "Kurulum iptal ediliyor."
 
-#: apt-private/private-install.cc:421
+#: apt-private/private-install.cc:359
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1254,15 +1222,15 @@ msgstr[1] ""
 "Tüm dosyalarının üzerine yazıldığı için aşağıdaki paketler\n"
 "sisteminizden kayboldu:"
 
-#: apt-private/private-install.cc:425
+#: apt-private/private-install.cc:363
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "Not: Bu eylem dpkg tarafından otomatik ve kasıtlı olarak yapılmıştır."
 
-#: apt-private/private-install.cc:446
+#: apt-private/private-install.cc:384
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "Nesneleri silmemiz beklenemez, AutoRemover çalıştırılamıyor"
 
-#: apt-private/private-install.cc:550
+#: apt-private/private-install.cc:492
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1280,15 +1248,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
+#: apt-private/private-install.cc:495 apt-private/private-install.cc:636
 msgid "The following information may help to resolve the situation:"
 msgstr "Aşağıdaki bilgiler durumu çözmenize yardımcı olabilir:"
 
-#: apt-private/private-install.cc:557
+#: apt-private/private-install.cc:499
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "İç hata, AutoRemover bazı şeyleri bozdu"
 
-#: apt-private/private-install.cc:564
+#: apt-private/private-install.cc:506
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1300,7 +1268,7 @@ msgstr[1] ""
 "Aşağıdaki paketler otomatik olarak kurulmuş ve artık bu paketlere gerek "
 "duyulmuyor:"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:510
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1308,19 +1276,19 @@ msgid_plural ""
 msgstr[0] "%lu paket otomatik olarak kurulmuş ve artık gerekli değil.\n"
 msgstr[1] "%lu paket otomatik olarak kurulmuş ve artık gerekli değil.\n"
 
-#: apt-private/private-install.cc:570
+#: apt-private/private-install.cc:512
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "Bu paketi kaldırmak için 'apt-get autoremove' komutunu kullanın."
 msgstr[1] "Bu paketleri kaldırmak için 'apt-get autoremove' komutunu kullanın."
 
-#: apt-private/private-install.cc:664
+#: apt-private/private-install.cc:606
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr ""
 "Bunları düzeltmek için 'apt-get -f install' komutunu çalıştırmanız "
 "gerekebilir:"
 
-#: apt-private/private-install.cc:666
+#: apt-private/private-install.cc:608
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1328,7 +1296,7 @@ msgstr ""
 "Karşılanmamış bağımlılıklar. 'apt-get -f install' komutunu paket seçeneği "
 "vermeden deneyin (ya da bir çözüm belirtin)."
 
-#: apt-private/private-install.cc:679
+#: apt-private/private-install.cc:621
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1340,21 +1308,42 @@ msgstr ""
 "bazı paketlerin henüz oluşturulamamış  ya da oluşturulmakta\n"
 "olduğunu gösterir."
 
-#: apt-private/private-install.cc:700
+#: apt-private/private-install.cc:642
 msgid "Broken packages"
 msgstr "Bozuk paketler"
 
-#: apt-private/private-install.cc:753
+#: apt-private/private-install.cc:695
 msgid "The following extra packages will be installed:"
 msgstr "Aşağıdaki ek paketler de kurulacak:"
 
-#: apt-private/private-install.cc:843
+#: apt-private/private-install.cc:785
 msgid "Suggested packages:"
 msgstr "Önerilen paketler:"
 
-#: apt-private/private-install.cc:844
+#: apt-private/private-install.cc:786
 msgid "Recommended packages:"
 msgstr "Tavsiye edilen paketler:"
+
+#: apt-private/private-download.cc:32
+msgid "WARNING: The following packages cannot be authenticated!"
+msgstr "UYARI: Aşağıdaki paketler doğrulanamıyor!"
+
+#: apt-private/private-download.cc:36
+msgid "Authentication warning overridden.\n"
+msgstr "Kimlik denetimi uyarısı görmezden geliniyor.\n"
+
+#: apt-private/private-download.cc:41 apt-private/private-download.cc:48
+msgid "Some packages could not be authenticated"
+msgstr "Bazı paketlerin kimlik denetimi yapılamadı"
+
+#: apt-private/private-download.cc:46
+msgid "Install these packages without verification?"
+msgstr "Paketler doğrulanmadan kurulsun mu?"
+
+#: apt-private/private-download.cc:87 apt-pkg/algorithms.cc:1607
+#, c-format
+msgid "Failed to fetch %s  %s\n"
+msgstr "%s ağdan alınamadı. %s\n"
 
 #: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
@@ -1561,7 +1550,7 @@ msgid "Full Text Search"
 msgstr ""
 
 #: apt-private/private-show.cc:106
-msgid "not a real pacakge (virtual)"
+msgid "not a real package (virtual)"
 msgstr ""
 
 #: apt-private/private-main.cc:19
@@ -2264,22 +2253,17 @@ msgid "Unable to stat %s"
 msgstr "%s durum bilgisi alınamadı"
 
 #: apt-inst/deb/debfile.cc:41 apt-inst/deb/debfile.cc:46
+#: apt-inst/deb/debfile.cc:54
 #, c-format
 msgid "This is not a valid DEB archive, missing '%s' member"
 msgstr "Bu dosya geçerli bir DEB arşivi değil, '%s' üyesi eksik"
 
-#. FIXME: add data.tar.xz here - adding it now would require a Translation round for a very small gain
-#: apt-inst/deb/debfile.cc:55
-#, c-format
-msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
-msgstr "Bu dosya geçerli bir DEB arşivi değil, '%s', '%s' ya da '%s' üyesi yok"
-
-#: apt-inst/deb/debfile.cc:120
+#: apt-inst/deb/debfile.cc:119
 #, c-format
 msgid "Internal error, could not locate member %s"
 msgstr "İç hata, %s üyesi bulunamadı"
 
-#: apt-inst/deb/debfile.cc:214
+#: apt-inst/deb/debfile.cc:213
 msgid "Unparsable control file"
 msgstr "Ayrıştırılamayan 'control' dosyası"
 
@@ -2362,7 +2346,7 @@ msgstr "%li dk. %li sn."
 msgid "%lis"
 msgstr "%li sn."
 
-#: apt-pkg/contrib/strutl.cc:1175
+#: apt-pkg/contrib/strutl.cc:1206
 #, c-format
 msgid "Selection %s not found"
 msgstr "%s seçimi bulunamadı"
@@ -3042,16 +3026,20 @@ msgstr "Kaynak önbelleği kaydedilirken GÇ Hatası"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "yeniden adlandırma başarısız, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:599
-msgid "MD5Sum mismatch"
-msgstr "MD5 toplamı eşleşmiyor"
-
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1912
-#: apt-pkg/acquire-item.cc:2055
+#: apt-pkg/acquire-item.cc:154
 msgid "Hash Sum mismatch"
 msgstr "Sağlama toplamları eşleşmiyor"
 
-#: apt-pkg/acquire-item.cc:1402
+#: apt-pkg/acquire-item.cc:159
+msgid "Size mismatch"
+msgstr "Boyutlar eşleşmiyor"
+
+#: apt-pkg/acquire-item.cc:164
+#, fuzzy
+msgid "Invalid file format"
+msgstr "Geçersiz işlem: %s"
+
+#: apt-pkg/acquire-item.cc:1419
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3060,17 +3048,17 @@ msgstr ""
 "'Release' dosyasında olması beklenilen '%s' girdisi bulunamadı (sources.list "
 "dosyasındaki girdi ya da satır hatalı)"
 
-#: apt-pkg/acquire-item.cc:1418
+#: apt-pkg/acquire-item.cc:1435
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "'Release' dosyasında '%s' için uygun bir sağlama toplamı bulunamadı"
 
-#: apt-pkg/acquire-item.cc:1460
+#: apt-pkg/acquire-item.cc:1477
 msgid "There is no public key available for the following key IDs:\n"
 msgstr ""
 "Aşağıdaki anahtar kimlikleri için kullanılır hiçbir genel anahtar yok:\n"
 
-#: apt-pkg/acquire-item.cc:1498
+#: apt-pkg/acquire-item.cc:1515
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
@@ -3079,12 +3067,12 @@ msgstr ""
 "%s konumundaki 'Release' dosyasının vâdesi dolmuş (%s önce). Bu deponun "
 "güncelleştirmeleri uygulanmayacak."
 
-#: apt-pkg/acquire-item.cc:1520
+#: apt-pkg/acquire-item.cc:1537
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Dağıtım çakışması: %s (beklenen %s ama eldeki %s)"
 
-#: apt-pkg/acquire-item.cc:1550
+#: apt-pkg/acquire-item.cc:1567
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3094,12 +3082,12 @@ msgstr ""
 "indeks dosyaları kullanılacak. GPG hatası: %s:%s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1560 apt-pkg/acquire-item.cc:1565
+#: apt-pkg/acquire-item.cc:1577 apt-pkg/acquire-item.cc:1582
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG hatası: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1688
+#: apt-pkg/acquire-item.cc:1705
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3108,24 +3096,16 @@ msgstr ""
 "%s paketindeki dosyalardan biri konumlandırılamadı. Bu durum, bu paketi elle "
 "düzeltmeniz gerektiği anlamına gelebilir. (eksik mimariden dolayı)"
 
-#: apt-pkg/acquire-item.cc:1747
+#: apt-pkg/acquire-item.cc:1771
 #, c-format
-msgid ""
-"I wasn't able to locate a file for the %s package. This might mean you need "
-"to manually fix this package."
-msgstr ""
-"%s paketindeki dosyalardan biri konumlandırılamadı. Bu durum, bu paketi elle "
-"düzeltmeniz gerektiği anlamına gelebilir."
+msgid "Can't find a source to download version '%s' of '%s'"
+msgstr "'%2$s' paketinin '%1$s' sürümü hiçbir kaynakta bulunamadı"
 
-#: apt-pkg/acquire-item.cc:1806
+#: apt-pkg/acquire-item.cc:1829
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "Paket indeks dosyaları bozuk. %s paketinin 'Filename:' alanı yok."
-
-#: apt-pkg/acquire-item.cc:1904
-msgid "Size mismatch"
-msgstr "Boyutlar eşleşmiyor"
 
 #: apt-pkg/indexrecords.cc:68
 #, c-format
@@ -3346,119 +3326,119 @@ msgstr "Harici çözücü düzgün bir hata iletisi göstermeden başarısız ol
 msgid "Execute external solver"
 msgstr "Harici çözücüyü çalıştır"
 
-#: apt-pkg/deb/dpkgpm.cc:73
+#: apt-pkg/deb/dpkgpm.cc:85
 #, c-format
 msgid "Installing %s"
 msgstr "%s kuruluyor"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
+#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1078
 #, c-format
 msgid "Configuring %s"
 msgstr "%s yapılandırılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
+#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1085
 #, c-format
 msgid "Removing %s"
 msgstr "%s kaldırılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:76
+#: apt-pkg/deb/dpkgpm.cc:88
 #, c-format
 msgid "Completely removing %s"
 msgstr "%s tamamen kaldırılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:77
+#: apt-pkg/deb/dpkgpm.cc:89
 #, c-format
 msgid "Noting disappearance of %s"
 msgstr "%s paketinin kaybolduğu not ediliyor"
 
-#: apt-pkg/deb/dpkgpm.cc:78
+#: apt-pkg/deb/dpkgpm.cc:90
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr "Kurulum sonrası tetikleyicisi %s çalıştırılıyor"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:749
+#: apt-pkg/deb/dpkgpm.cc:761
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "'%s' dizini bulunamadı"
 
-#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
+#: apt-pkg/deb/dpkgpm.cc:776 apt-pkg/deb/dpkgpm.cc:798
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "'%s' dosyası açılamadı"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1071
 #, c-format
 msgid "Preparing %s"
 msgstr "%s hazırlanıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1004
+#: apt-pkg/deb/dpkgpm.cc:1072
 #, c-format
 msgid "Unpacking %s"
 msgstr "%s paketi açılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1077
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s paketini yapılandırmaya hazırlanılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1011
+#: apt-pkg/deb/dpkgpm.cc:1079
 #, c-format
 msgid "Installed %s"
 msgstr "%s kuruldu"
 
-#: apt-pkg/deb/dpkgpm.cc:1016
+#: apt-pkg/deb/dpkgpm.cc:1084
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s paketinin kaldırılmasına hazırlanılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1018
+#: apt-pkg/deb/dpkgpm.cc:1086
 #, c-format
 msgid "Removed %s"
 msgstr "%s kaldırıldı"
 
-#: apt-pkg/deb/dpkgpm.cc:1023
+#: apt-pkg/deb/dpkgpm.cc:1091
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s paketinin tamamen kaldırılmasına hazırlanılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1024
+#: apt-pkg/deb/dpkgpm.cc:1092
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s tamamen kaldırıldı"
 
-#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1341 apt-pkg/deb/dpkgpm.cc:1362
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "%s dosyasına yazılamıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1272
+#: apt-pkg/deb/dpkgpm.cc:1341
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1362
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1307
+#: apt-pkg/deb/dpkgpm.cc:1376
 msgid "Running dpkg"
 msgstr "dpkg çalıştırılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1479
+#: apt-pkg/deb/dpkgpm.cc:1563
 msgid "Operation was interrupted before it could finish"
 msgstr "İşlem yarıda kesildi"
 
-#: apt-pkg/deb/dpkgpm.cc:1541
+#: apt-pkg/deb/dpkgpm.cc:1625
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 "En fazla rapor miktarına (MaxReports) ulaşıldığı için apport raporu yazılmadı"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1546
+#: apt-pkg/deb/dpkgpm.cc:1630
 msgid "dependency problems - leaving unconfigured"
 msgstr "bağımlılık sorunları - yapılandırılmamış durumda bırakılıyor"
 
-#: apt-pkg/deb/dpkgpm.cc:1548
+#: apt-pkg/deb/dpkgpm.cc:1632
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3466,14 +3446,14 @@ msgstr ""
 "Apport raporu yazılmadı çünkü hata iletisi bu durumun bir önceki hatadan "
 "kaynaklanan bir hata olduğunu belirtiyor."
 
-#: apt-pkg/deb/dpkgpm.cc:1554
+#: apt-pkg/deb/dpkgpm.cc:1638
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 "Hata iletisi diskin dolu olduğunu belirttiği için apport raporu yazılamadı"
 
-#: apt-pkg/deb/dpkgpm.cc:1560
+#: apt-pkg/deb/dpkgpm.cc:1644
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3481,7 +3461,7 @@ msgstr ""
 "Hata iletisi bir bellek yetersizliği hatasına işaret ettiği için apport "
 "raporu yazılamadı"
 
-#: apt-pkg/deb/dpkgpm.cc:1567
+#: apt-pkg/deb/dpkgpm.cc:1651
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3579,6 +3559,23 @@ msgstr "Kilitlenmemiş"
 
 #~ msgid "Selected version '%s' (%s) for '%s' because of '%s'\n"
 #~ msgstr "'%4$s' nedeniyle '%3$s' paketinin '%1$s' (%2$s) sürümü seçildi\n"
+
+#~ msgid "Downloading %s %s"
+#~ msgstr "İndiriliyor %s %s"
+
+#~ msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
+#~ msgstr ""
+#~ "Bu dosya geçerli bir DEB arşivi değil, '%s', '%s' ya da '%s' üyesi yok"
+
+#~ msgid "MD5Sum mismatch"
+#~ msgstr "MD5 toplamı eşleşmiyor"
+
+#~ msgid ""
+#~ "I wasn't able to locate a file for the %s package. This might mean you "
+#~ "need to manually fix this package."
+#~ msgstr ""
+#~ "%s paketindeki dosyalardan biri konumlandırılamadı. Bu durum, bu paketi "
+#~ "elle düzeltmeniz gerektiği anlamına gelebilir."
 
 #~ msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 #~ msgstr ""

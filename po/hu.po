@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt trunk\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-09-20 16:13+0200\n"
+"POT-Creation-Date: 2013-10-09 22:40+0200\n"
 "PO-Revision-Date: 2012-06-25 17:09+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng at gnome dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
@@ -160,7 +160,7 @@ msgid "  Version table:"
 msgstr "  Verziótáblázat:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1520 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1494 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -294,41 +294,41 @@ msgstr ""
 "  -c=? Ezt a konfigurációs fájlt olvassa be\n"
 "  -o=? Beállít egy tetszőleges konfigurációs opciót, pl -o dir::cache=/tmp\n"
 
-#: cmdline/apt-get.cc:222
+#: cmdline/apt-get.cc:223
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr ""
 "A(z) „%2$s” csomag el nem érhető „%1$s” cél kiadásának figyelmen kívül "
 "hagyása"
 
-#: cmdline/apt-get.cc:254
+#: cmdline/apt-get.cc:255
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "„%s” kiválasztása forráscsomagként „%s” helyett\n"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:292
+#: cmdline/apt-get.cc:293
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr ""
 "A(z) „%2$s” csomag el nem érhető „%1$s” verziójának figyelmen kívül hagyása"
 
-#: cmdline/apt-get.cc:323
+#: cmdline/apt-get.cc:324
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Az alábbi csomag nem található: %s"
 
-#: cmdline/apt-get.cc:328 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:329 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s kézi telepítésűre állítva.\n"
 
-#: cmdline/apt-get.cc:330 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s megjelölve automatikusan telepítettként.\n"
 
-#: cmdline/apt-get.cc:338 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:339 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -336,47 +336,37 @@ msgstr ""
 "Ez a parancs elavult. Használja helyette az „apt-mark auto” és az „apt-mark "
 "auto” parancsokat."
 
-#: cmdline/apt-get.cc:354
+#: cmdline/apt-get.cc:355
 msgid "Calculating upgrade... "
 msgstr "Frissítés kiszámítása... "
 
-#: cmdline/apt-get.cc:357 methods/ftp.cc:712 methods/connect.cc:116
+#: cmdline/apt-get.cc:358 methods/ftp.cc:712 methods/connect.cc:116
 msgid "Failed"
 msgstr "Sikertelen"
 
-#: cmdline/apt-get.cc:366
+#: cmdline/apt-get.cc:367
 msgid "Done"
 msgstr "Kész"
 
-#: cmdline/apt-get.cc:433 cmdline/apt-get.cc:441
+#: cmdline/apt-get.cc:434 cmdline/apt-get.cc:442
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Belső hiba, a problémamegoldó hibát okozott"
 
-#: cmdline/apt-get.cc:469 cmdline/apt-get.cc:506
+#: cmdline/apt-get.cc:470 cmdline/apt-get.cc:507
 msgid "Unable to lock the download directory"
 msgstr "Nem lehet zárolni a letöltési könyvtárat"
 
-#: cmdline/apt-get.cc:563
-#, c-format
-msgid "Can't find a source to download version '%s' of '%s'"
-msgstr "Nem található forrás a(z) „%2$s” „%1$s” verziójának letöltéséhez"
-
-#: cmdline/apt-get.cc:568
-#, c-format
-msgid "Downloading %s %s"
-msgstr "Letöltés: %s %s"
-
-#: cmdline/apt-get.cc:628
+#: cmdline/apt-get.cc:619
 msgid "Must specify at least one package to fetch source for"
 msgstr ""
 "Legalább egy csomagot meg kell adni, amelynek a forrását le kell tölteni"
 
-#: cmdline/apt-get.cc:668 cmdline/apt-get.cc:980
+#: cmdline/apt-get.cc:659 cmdline/apt-get.cc:954
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Nem található forráscsomag ehhez: %s"
 
-#: cmdline/apt-get.cc:685
+#: cmdline/apt-get.cc:676
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -386,7 +376,7 @@ msgstr ""
 "karbantartva:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:690
+#: cmdline/apt-get.cc:681
 #, c-format
 msgid ""
 "Please use:\n"
@@ -397,86 +387,80 @@ msgstr ""
 "bzr branch %s\n"
 "a csomag legújabb (esetleg kiadatlan) frissítéseinek letöltéséhez.\n"
 
-#: cmdline/apt-get.cc:743
+#: cmdline/apt-get.cc:734
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "A már letöltött „%s” fájl kihagyása\n"
 
-#: cmdline/apt-get.cc:766 cmdline/apt-get.cc:769
-#: apt-private/private-install.cc:231 apt-private/private-install.cc:234
+#: cmdline/apt-get.cc:757 cmdline/apt-get.cc:760
+#: apt-private/private-install.cc:188 apt-private/private-install.cc:191
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Nem határozható meg a szabad hely mennyisége itt: %s"
 
-#: cmdline/apt-get.cc:780
+#: cmdline/apt-get.cc:771
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Nincs elég szabad hely itt: %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:789
+#: cmdline/apt-get.cc:780
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Letöltendő forrásadat-mennyiség: %sB/%sB.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:794
+#: cmdline/apt-get.cc:785
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Letöltendő forrásadat-mennyiség: %sB.\n"
 
-#: cmdline/apt-get.cc:800
+#: cmdline/apt-get.cc:791
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Forrás letöltése: %s\n"
 
-#: cmdline/apt-get.cc:831 apt-private/private-install.cc:358
-#: apt-pkg/algorithms.cc:1607
-#, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Sikertelen letöltés: %s  %s\n"
-
-#: cmdline/apt-get.cc:838
+#: cmdline/apt-get.cc:812
 msgid "Failed to fetch some archives."
 msgstr "Nem sikerült néhány archívumot letölteni."
 
-#: cmdline/apt-get.cc:843 apt-private/private-install.cc:377
+#: cmdline/apt-get.cc:817 apt-private/private-install.cc:315
 msgid "Download complete and in download only mode"
 msgstr "A letöltés befejeződött a „csak letöltés” módban"
 
-#: cmdline/apt-get.cc:869
+#: cmdline/apt-get.cc:843
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Egy már kibontott forrás kibontásának kihagyása itt: %s\n"
 
-#: cmdline/apt-get.cc:881
+#: cmdline/apt-get.cc:855
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "„%s” kibontási parancs nem sikerült.\n"
 
-#: cmdline/apt-get.cc:882
+#: cmdline/apt-get.cc:856
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Ellenőrizze, hogy a „dpkg-dev” csomag telepítve van-e.\n"
 
-#: cmdline/apt-get.cc:904
+#: cmdline/apt-get.cc:878
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "„%s” elkészítési parancs nem sikerült.\n"
 
-#: cmdline/apt-get.cc:924
+#: cmdline/apt-get.cc:898
 msgid "Child process failed"
 msgstr "Hiba a gyermekfolyamatnál"
 
-#: cmdline/apt-get.cc:943
+#: cmdline/apt-get.cc:917
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Legalább egy csomagot adjon meg, amelynek fordítási függőségeit ellenőrizni "
 "kell"
 
-#: cmdline/apt-get.cc:968
+#: cmdline/apt-get.cc:942
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -485,17 +469,17 @@ msgstr ""
 "Nem érhetők el architektúrainformációk ehhez: %s. A beállításokkal "
 "kapcsolatban lásd az apt.conf(5) APT::Architectures részét."
 
-#: cmdline/apt-get.cc:992 cmdline/apt-get.cc:995
+#: cmdline/apt-get.cc:966 cmdline/apt-get.cc:969
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Nem lehet %s fordítási függőségeinek információit letölteni"
 
-#: cmdline/apt-get.cc:1015
+#: cmdline/apt-get.cc:989
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "Nincs fordítási függősége a következőnek: %s.\n"
 
-#: cmdline/apt-get.cc:1185
+#: cmdline/apt-get.cc:1159
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -504,7 +488,7 @@ msgstr ""
 "%2$s csomag %1$s függősége nem elégíthető ki, mert a(z) %3$s nem "
 "engedélyezett a(z) „%4$s” csomagokon"
 
-#: cmdline/apt-get.cc:1203
+#: cmdline/apt-get.cc:1177
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -513,14 +497,14 @@ msgstr ""
 "%2$s csomag %1$s függősége nem elégíthető ki, mert a(z) %3$s csomag nem "
 "található"
 
-#: cmdline/apt-get.cc:1226
+#: cmdline/apt-get.cc:1200
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "%2$s csomag %1$s függősége nem elégíthető ki: a telepített %3$s csomag túl "
 "friss"
 
-#: cmdline/apt-get.cc:1265
+#: cmdline/apt-get.cc:1239
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -529,7 +513,7 @@ msgstr ""
 "%2$s csomag %1$s függősége nem elégíthető ki, mert a(z) %3$s csomag elérhető "
 "verziója nem elégíti ki a verziókövetelményeket"
 
-#: cmdline/apt-get.cc:1271
+#: cmdline/apt-get.cc:1245
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -538,30 +522,30 @@ msgstr ""
 "%2$s csomag %1$s függősége nem elégíthető ki, mert a(z) %3$s csomagnak nincs "
 "jelölt verziója"
 
-#: cmdline/apt-get.cc:1294
+#: cmdline/apt-get.cc:1268
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%2$s csomag %1$s függősége nem elégíthető ki: %3$s"
 
-#: cmdline/apt-get.cc:1309
+#: cmdline/apt-get.cc:1283
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "%s építési függőségei nem elégíthetők ki."
 
-#: cmdline/apt-get.cc:1314
+#: cmdline/apt-get.cc:1288
 msgid "Failed to process build dependencies"
 msgstr "Nem sikerült az építési függőségeket feldolgozni"
 
-#: cmdline/apt-get.cc:1407 cmdline/apt-get.cc:1419
+#: cmdline/apt-get.cc:1381 cmdline/apt-get.cc:1393
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Változási napló ehhez: %s (%s)"
 
-#: cmdline/apt-get.cc:1525
+#: cmdline/apt-get.cc:1499
 msgid "Supported modules:"
 msgstr "Támogatott modulok:"
 
-#: cmdline/apt-get.cc:1566
+#: cmdline/apt-get.cc:1540
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -677,7 +661,7 @@ msgstr "%s eddig sem volt visszafogva.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1060
+#: apt-pkg/deb/dpkgpm.cc:1128
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Nem található a(z) %s, a várakozás után sem"
@@ -923,7 +907,7 @@ msgstr "Az adatfoglalathoz kapcsolódás túllépte az időkorlátot"
 msgid "Unable to accept connection"
 msgstr "Nem lehet elfogadni a kapcsolatot"
 
-#: methods/ftp.cc:873 methods/http.cc:1038 methods/rsh.cc:313
+#: methods/ftp.cc:873 methods/server.cc:353 methods/rsh.cc:313
 msgid "Problem hashing file"
 msgstr "Probléma a fájl hash értékének meghatározásakor"
 
@@ -1054,71 +1038,71 @@ msgstr ""
 msgid "Empty files can't be valid archives"
 msgstr "Az üres fájlok biztosan nem érvényes csomagok"
 
-#: methods/http.cc:394
-msgid "Waiting for headers"
-msgstr "Várakozás a fejlécekre"
-
-#: methods/http.cc:544
-msgid "Bad header line"
-msgstr "Rossz fejlécsor"
-
-#: methods/http.cc:569 methods/http.cc:576
-msgid "The HTTP server sent an invalid reply header"
-msgstr "A HTTP-kiszolgáló érvénytelen válaszfejlécet küldött"
-
-#: methods/http.cc:606
-msgid "The HTTP server sent an invalid Content-Length header"
-msgstr "A HTTP-kiszolgáló érvénytelen Content-Length fejlécet küldött"
-
-#: methods/http.cc:621
-msgid "The HTTP server sent an invalid Content-Range header"
-msgstr "A HTTP-kiszolgáló érvénytelen Content-Range fejlécet küldött"
-
-#: methods/http.cc:623
-msgid "This HTTP server has broken range support"
-msgstr "A HTTP-kiszolgáló tartománytámogatása sérült"
-
-#: methods/http.cc:647
-msgid "Unknown date format"
-msgstr "Ismeretlen dátumformátum"
-
-#: methods/http.cc:826
-msgid "Select failed"
-msgstr "A kiválasztás sikertelen"
-
-#: methods/http.cc:831
-msgid "Connection timed out"
-msgstr "Időtúllépés a kapcsolatban"
-
-#: methods/http.cc:854
-msgid "Error writing to output file"
-msgstr "Hiba a kimeneti fájl írásakor"
-
-#: methods/http.cc:885
-msgid "Error writing to file"
-msgstr "Hiba a fájl írásakor"
-
-#: methods/http.cc:913
+#: methods/http.cc:519
 msgid "Error writing to the file"
 msgstr "Hiba a fájl írásakor"
 
-#: methods/http.cc:927
+#: methods/http.cc:533
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Hiba a kiszolgálóról olvasáskor, a túloldal lezárta a kapcsolatot"
 
-#: methods/http.cc:929
+#: methods/http.cc:535
 msgid "Error reading from server"
 msgstr "Hiba a kiszolgálóról olvasáskor"
 
-#: methods/http.cc:1197
+#: methods/http.cc:571
+msgid "Error writing to file"
+msgstr "Hiba a fájl írásakor"
+
+#: methods/http.cc:631
+msgid "Select failed"
+msgstr "A kiválasztás sikertelen"
+
+#: methods/http.cc:636
+msgid "Connection timed out"
+msgstr "Időtúllépés a kapcsolatban"
+
+#: methods/http.cc:659
+msgid "Error writing to output file"
+msgstr "Hiba a kimeneti fájl írásakor"
+
+#: methods/server.cc:56
+msgid "Waiting for headers"
+msgstr "Várakozás a fejlécekre"
+
+#: methods/server.cc:114
+msgid "Bad header line"
+msgstr "Rossz fejlécsor"
+
+#: methods/server.cc:139 methods/server.cc:146
+msgid "The HTTP server sent an invalid reply header"
+msgstr "A HTTP-kiszolgáló érvénytelen válaszfejlécet küldött"
+
+#: methods/server.cc:176
+msgid "The HTTP server sent an invalid Content-Length header"
+msgstr "A HTTP-kiszolgáló érvénytelen Content-Length fejlécet küldött"
+
+#: methods/server.cc:199
+msgid "The HTTP server sent an invalid Content-Range header"
+msgstr "A HTTP-kiszolgáló érvénytelen Content-Range fejlécet küldött"
+
+#: methods/server.cc:201
+msgid "This HTTP server has broken range support"
+msgstr "A HTTP-kiszolgáló tartománytámogatása sérült"
+
+#: methods/server.cc:225
+msgid "Unknown date format"
+msgstr "Ismeretlen dátumformátum"
+
+#: methods/server.cc:490
 msgid "Bad header data"
 msgstr "Rossz fejlécadatok"
 
-#: methods/http.cc:1214 methods/http.cc:1269
+#: methods/server.cc:507 methods/server.cc:564
 msgid "Connection failed"
 msgstr "Sikertelen kapcsolódás"
 
-#: methods/http.cc:1361
+#: methods/server.cc:656
 msgid "Internal error"
 msgstr "Belső hiba"
 
@@ -1126,86 +1110,70 @@ msgstr "Belső hiba"
 msgid "Listing"
 msgstr ""
 
-#: apt-private/private-install.cc:72
-msgid "WARNING: The following packages cannot be authenticated!"
-msgstr "FIGYELMEZTETÉS: Az alábbi csomagok nem hitelesíthetők!"
-
-#: apt-private/private-install.cc:76
-msgid "Authentication warning overridden.\n"
-msgstr "A hitelesítési figyelmeztetés felülbírálva.\n"
-
-#: apt-private/private-install.cc:83
-msgid "Install these packages without verification?"
-msgstr "Valóban ellenőrzés nélkül telepíti a csomagokat?"
-
-#: apt-private/private-install.cc:85
-msgid "Some packages could not be authenticated"
-msgstr "Néhány csomag nem hitelesíthető"
-
-#: apt-private/private-install.cc:94 apt-private/private-install.cc:254
-msgid "There are problems and -y was used without --force-yes"
-msgstr "Problémák vannak, és a -y kapcsolót használta --force-yes nélkül"
-
-#: apt-private/private-install.cc:134
+#: apt-private/private-install.cc:91
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr "Belső hiba, az InstallPackages törött csomagokkal lett meghívva!"
 
-#: apt-private/private-install.cc:143
+#: apt-private/private-install.cc:100
 msgid "Packages need to be removed but remove is disabled."
 msgstr "Csomagokat kellene eltávolítani, de az eltávolítás nem engedélyezett."
 
-#: apt-private/private-install.cc:154
+#: apt-private/private-install.cc:111
 msgid "Internal error, Ordering didn't finish"
 msgstr "Belső hiba, a rendezés nem fejeződött be"
 
-#: apt-private/private-install.cc:192
+#: apt-private/private-install.cc:149
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr "A méretek nem egyeznek, írjon az apt@packages.debian.org címre"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:199
+#: apt-private/private-install.cc:156
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Letöltendő adatmennyiség: %sB/%sB.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:204
+#: apt-private/private-install.cc:161
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "Letöltendő adatmennyiség: %sB.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:211
+#: apt-private/private-install.cc:168
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "A művelet után %sB lemezterület kerül felhasználásra.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:216
+#: apt-private/private-install.cc:173
 #, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "A művelet után %sB lemezterület szabadul fel.\n"
 
-#: apt-private/private-install.cc:244
+#: apt-private/private-install.cc:201
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "Nincs elég szabad hely itt: %s."
 
-#: apt-private/private-install.cc:260 apt-private/private-install.cc:282
+#: apt-private/private-install.cc:211 apt-private/private-download.cc:55
+msgid "There are problems and -y was used without --force-yes"
+msgstr "Problémák vannak, és a -y kapcsolót használta --force-yes nélkül"
+
+#: apt-private/private-install.cc:217 apt-private/private-install.cc:239
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr "A „Trivial Only” meg van adva, de ez nem egy triviális művelet."
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:264
+#: apt-private/private-install.cc:221
 msgid "Yes, do as I say!"
 msgstr "Igen, tedd amit mondok!"
 
-#: apt-private/private-install.cc:266
+#: apt-private/private-install.cc:223
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1216,19 +1184,19 @@ msgstr ""
 "A folytatáshoz írja be ezt a mondatot: „%s”\n"
 " ?] "
 
-#: apt-private/private-install.cc:272 apt-private/private-install.cc:290
+#: apt-private/private-install.cc:229 apt-private/private-install.cc:247
 msgid "Abort."
 msgstr "Megszakítva."
 
-#: apt-private/private-install.cc:287
+#: apt-private/private-install.cc:244
 msgid "Do you want to continue?"
 msgstr "Folytatni akarja?"
 
-#: apt-private/private-install.cc:376
+#: apt-private/private-install.cc:314
 msgid "Some files failed to download"
 msgstr "Néhány fájlt nem sikerült letölteni"
 
-#: apt-private/private-install.cc:383
+#: apt-private/private-install.cc:321
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1236,19 +1204,19 @@ msgstr ""
 "Nem lehet letölteni néhány archívumot. Próbálja futtatni az „apt-get update” "
 "parancsot, vagy használja a --fix-missing kapcsolót."
 
-#: apt-private/private-install.cc:387
+#: apt-private/private-install.cc:325
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "A --fix-missing és az adathordozó-csere jelenleg nem támogatott"
 
-#: apt-private/private-install.cc:392
+#: apt-private/private-install.cc:330
 msgid "Unable to correct missing packages."
 msgstr "Nem lehet javítani a hiányzó csomagokat."
 
-#: apt-private/private-install.cc:393
+#: apt-private/private-install.cc:331
 msgid "Aborting install."
 msgstr "Telepítés megszakítása."
 
-#: apt-private/private-install.cc:421
+#: apt-private/private-install.cc:359
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1262,15 +1230,15 @@ msgstr[1] ""
 "A következő csomagok eltűntek a rendszerből, mivel\n"
 "az összes fájlt más csomagok fölülírták:"
 
-#: apt-private/private-install.cc:425
+#: apt-private/private-install.cc:363
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr "Megjegyzés: ezt a dpkg automatikusan és szándékosan hajtja végre."
 
-#: apt-private/private-install.cc:446
+#: apt-private/private-install.cc:384
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr "Nem kellene semmit törölni, az AutoRemover nem indítható"
 
-#: apt-private/private-install.cc:550
+#: apt-private/private-install.cc:492
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1288,15 +1256,15 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:553 apt-private/private-install.cc:694
+#: apt-private/private-install.cc:495 apt-private/private-install.cc:636
 msgid "The following information may help to resolve the situation:"
 msgstr "Az alábbi információk segíthetnek megoldani a problémát:"
 
-#: apt-private/private-install.cc:557
+#: apt-private/private-install.cc:499
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Belső hiba, az AutoRemover sérült"
 
-#: apt-private/private-install.cc:564
+#: apt-private/private-install.cc:506
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1308,7 +1276,7 @@ msgstr[1] ""
 "A következő csomagok automatikusan lettek telepítve, és már nincs rájuk "
 "szükség:"
 
-#: apt-private/private-install.cc:568
+#: apt-private/private-install.cc:510
 #, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1317,18 +1285,18 @@ msgstr[0] "%lu csomag automatikusan lett telepítve, és már nincs rá szüksé
 msgstr[1] ""
 "%lu csomag automatikusan lett telepítve, és már nincs rájuk szükség.\n"
 
-#: apt-private/private-install.cc:570
+#: apt-private/private-install.cc:512
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] "Ezt az „apt-get autoremove” paranccsal törölheti."
 msgstr[1] "Ezeket az „apt-get autoremove” paranccsal törölheti."
 
-#: apt-private/private-install.cc:664
+#: apt-private/private-install.cc:606
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr ""
 "Próbálja futtatni az „apt-get -f install” parancsot az alábbiak javításához:"
 
-#: apt-private/private-install.cc:666
+#: apt-private/private-install.cc:608
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1336,7 +1304,7 @@ msgstr ""
 "Teljesítetlen függőségek. Próbálja kiadni az „apt-get -f install” parancsot "
 "csomagok nélkül (vagy telepítse a függőségeket is!)."
 
-#: apt-private/private-install.cc:679
+#: apt-private/private-install.cc:621
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1348,21 +1316,42 @@ msgstr ""
 "használja, akkor néhány igényelt csomag még nem készült el vagy ki\n"
 "lett mozdítva az Incoming-ból."
 
-#: apt-private/private-install.cc:700
+#: apt-private/private-install.cc:642
 msgid "Broken packages"
 msgstr "Törött csomagok"
 
-#: apt-private/private-install.cc:753
+#: apt-private/private-install.cc:695
 msgid "The following extra packages will be installed:"
 msgstr "Az alábbi extra csomagok kerülnek telepítésre:"
 
-#: apt-private/private-install.cc:843
+#: apt-private/private-install.cc:785
 msgid "Suggested packages:"
 msgstr "Javasolt csomagok:"
 
-#: apt-private/private-install.cc:844
+#: apt-private/private-install.cc:786
 msgid "Recommended packages:"
 msgstr "Ajánlott csomagok:"
+
+#: apt-private/private-download.cc:32
+msgid "WARNING: The following packages cannot be authenticated!"
+msgstr "FIGYELMEZTETÉS: Az alábbi csomagok nem hitelesíthetők!"
+
+#: apt-private/private-download.cc:36
+msgid "Authentication warning overridden.\n"
+msgstr "A hitelesítési figyelmeztetés felülbírálva.\n"
+
+#: apt-private/private-download.cc:41 apt-private/private-download.cc:48
+msgid "Some packages could not be authenticated"
+msgstr "Néhány csomag nem hitelesíthető"
+
+#: apt-private/private-download.cc:46
+msgid "Install these packages without verification?"
+msgstr "Valóban ellenőrzés nélkül telepíti a csomagokat?"
+
+#: apt-private/private-download.cc:87 apt-pkg/algorithms.cc:1607
+#, c-format
+msgid "Failed to fetch %s  %s\n"
+msgstr "Sikertelen letöltés: %s  %s\n"
 
 #: apt-private/private-output.cc:197
 msgid "installed,upgradable to: "
@@ -1567,7 +1556,7 @@ msgid "Full Text Search"
 msgstr ""
 
 #: apt-private/private-show.cc:106
-msgid "not a real pacakge (virtual)"
+msgid "not a real package (virtual)"
 msgstr ""
 
 #: apt-private/private-main.cc:19
@@ -2268,22 +2257,17 @@ msgid "Unable to stat %s"
 msgstr "%s nem érhető el"
 
 #: apt-inst/deb/debfile.cc:41 apt-inst/deb/debfile.cc:46
+#: apt-inst/deb/debfile.cc:54
 #, c-format
 msgid "This is not a valid DEB archive, missing '%s' member"
 msgstr "Ez nem egy érvényes DEB archívum, hiányzik a(z) „%s” tag"
 
-#. FIXME: add data.tar.xz here - adding it now would require a Translation round for a very small gain
-#: apt-inst/deb/debfile.cc:55
-#, c-format
-msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
-msgstr "Érvénytelen DEB archívum, nincs „%s”, „%s” vagy „%s” tagja"
-
-#: apt-inst/deb/debfile.cc:120
+#: apt-inst/deb/debfile.cc:119
 #, c-format
 msgid "Internal error, could not locate member %s"
 msgstr "Belső hiba, %s tag nem található"
 
-#: apt-inst/deb/debfile.cc:214
+#: apt-inst/deb/debfile.cc:213
 msgid "Unparsable control file"
 msgstr "Értelmezhetetlen control fájl"
 
@@ -2367,7 +2351,7 @@ msgstr "%lip %limp"
 msgid "%lis"
 msgstr "%limp"
 
-#: apt-pkg/contrib/strutl.cc:1175
+#: apt-pkg/contrib/strutl.cc:1206
 #, c-format
 msgid "Selection %s not found"
 msgstr "%s kiválasztás nem található"
@@ -3048,16 +3032,20 @@ msgstr "IO hiba a forrás-gyorsítótár mentésekor"
 msgid "rename failed, %s (%s -> %s)."
 msgstr "sikertelen átnevezés, %s (%s -> %s)."
 
-#: apt-pkg/acquire-item.cc:599
-msgid "MD5Sum mismatch"
-msgstr "Az MD5Sum nem megfelelő"
-
-#: apt-pkg/acquire-item.cc:870 apt-pkg/acquire-item.cc:1912
-#: apt-pkg/acquire-item.cc:2055
+#: apt-pkg/acquire-item.cc:154
 msgid "Hash Sum mismatch"
 msgstr "A Hash Sum nem megfelelő"
 
-#: apt-pkg/acquire-item.cc:1402
+#: apt-pkg/acquire-item.cc:159
+msgid "Size mismatch"
+msgstr "A méret nem megfelelő"
+
+#: apt-pkg/acquire-item.cc:164
+#, fuzzy
+msgid "Invalid file format"
+msgstr "%s érvénytelen művelet"
+
+#: apt-pkg/acquire-item.cc:1419
 #, c-format
 msgid ""
 "Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
@@ -3066,16 +3054,16 @@ msgstr ""
 "A várt „%s” bejegyzés nem található a Release fájlban (Rossz sources.list "
 "bejegyzés vagy helytelenül formázott fájl)"
 
-#: apt-pkg/acquire-item.cc:1418
+#: apt-pkg/acquire-item.cc:1435
 #, c-format
 msgid "Unable to find hash sum for '%s' in Release file"
 msgstr "Nem található a(z) „%s” ellenőrzőösszege a Release fájlban"
 
-#: apt-pkg/acquire-item.cc:1460
+#: apt-pkg/acquire-item.cc:1477
 msgid "There is no public key available for the following key IDs:\n"
 msgstr "Nem érhető el nyilvános kulcs az alábbi kulcsazonosítókhoz:\n"
 
-#: apt-pkg/acquire-item.cc:1498
+#: apt-pkg/acquire-item.cc:1515
 #, c-format
 msgid ""
 "Release file for %s is expired (invalid since %s). Updates for this "
@@ -3084,12 +3072,12 @@ msgstr ""
 "A Release fájl elavult ehhez: %s (érvénytelen ez óta: %s). A tároló "
 "frissítései nem kerülnek alkalmazásra."
 
-#: apt-pkg/acquire-item.cc:1520
+#: apt-pkg/acquire-item.cc:1537
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Ütköző disztribúció: %s (a várt %s helyett %s érkezett)"
 
-#: apt-pkg/acquire-item.cc:1550
+#: apt-pkg/acquire-item.cc:1567
 #, c-format
 msgid ""
 "An error occurred during the signature verification. The repository is not "
@@ -3099,12 +3087,12 @@ msgstr ""
 "előző indexfájl lesz használva. GPG hiba: %s: %s\n"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
-#: apt-pkg/acquire-item.cc:1560 apt-pkg/acquire-item.cc:1565
+#: apt-pkg/acquire-item.cc:1577 apt-pkg/acquire-item.cc:1582
 #, c-format
 msgid "GPG error: %s: %s"
 msgstr "GPG hiba: %s: %s"
 
-#: apt-pkg/acquire-item.cc:1688
+#: apt-pkg/acquire-item.cc:1705
 #, c-format
 msgid ""
 "I wasn't able to locate a file for the %s package. This might mean you need "
@@ -3113,25 +3101,17 @@ msgstr ""
 "Egy fájl nem található a(z) %s csomaghoz. Ez azt jelentheti, hogy kézzel "
 "kell kijavítani a csomagot. (hiányzó arch. miatt)"
 
-#: apt-pkg/acquire-item.cc:1747
+#: apt-pkg/acquire-item.cc:1771
 #, c-format
-msgid ""
-"I wasn't able to locate a file for the %s package. This might mean you need "
-"to manually fix this package."
-msgstr ""
-"Egy fájl nem található a(z) %s csomaghoz. Ez azt jelentheti, hogy kézzel "
-"kell kijavítani a csomagot."
+msgid "Can't find a source to download version '%s' of '%s'"
+msgstr "Nem található forrás a(z) „%2$s” „%1$s” verziójának letöltéséhez"
 
-#: apt-pkg/acquire-item.cc:1806
+#: apt-pkg/acquire-item.cc:1829
 #, c-format
 msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr ""
 "A csomagindexfájlok megsérültek. Nincs Filename: mező a(z) %s csomaghoz."
-
-#: apt-pkg/acquire-item.cc:1904
-msgid "Size mismatch"
-msgstr "A méret nem megfelelő"
 
 #: apt-pkg/indexrecords.cc:68
 #, c-format
@@ -3355,118 +3335,118 @@ msgstr "A külső solver megfelelő hibaüzenet nélkül hibázott"
 msgid "Execute external solver"
 msgstr "Külső solver végrehajtása"
 
-#: apt-pkg/deb/dpkgpm.cc:73
+#: apt-pkg/deb/dpkgpm.cc:85
 #, c-format
 msgid "Installing %s"
 msgstr "%s telepítése"
 
-#: apt-pkg/deb/dpkgpm.cc:74 apt-pkg/deb/dpkgpm.cc:1010
+#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1078
 #, c-format
 msgid "Configuring %s"
 msgstr "%s konfigurálása"
 
-#: apt-pkg/deb/dpkgpm.cc:75 apt-pkg/deb/dpkgpm.cc:1017
+#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1085
 #, c-format
 msgid "Removing %s"
 msgstr "%s eltávolítása"
 
-#: apt-pkg/deb/dpkgpm.cc:76
+#: apt-pkg/deb/dpkgpm.cc:88
 #, c-format
 msgid "Completely removing %s"
 msgstr "%s teljes eltávolítása"
 
-#: apt-pkg/deb/dpkgpm.cc:77
+#: apt-pkg/deb/dpkgpm.cc:89
 #, c-format
 msgid "Noting disappearance of %s"
 msgstr "„%s” eltűnése feljegyezve"
 
-#: apt-pkg/deb/dpkgpm.cc:78
+#: apt-pkg/deb/dpkgpm.cc:90
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr "A(z) %s telepítés utáni trigger futtatása"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:749
+#: apt-pkg/deb/dpkgpm.cc:761
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "A(z) „%s” könyvtár hiányzik"
 
-#: apt-pkg/deb/dpkgpm.cc:764 apt-pkg/deb/dpkgpm.cc:786
+#: apt-pkg/deb/dpkgpm.cc:776 apt-pkg/deb/dpkgpm.cc:798
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "A(z) „%s” fájl megnyitása sikertelen"
 
-#: apt-pkg/deb/dpkgpm.cc:1003
+#: apt-pkg/deb/dpkgpm.cc:1071
 #, c-format
 msgid "Preparing %s"
 msgstr "%s előkészítése"
 
-#: apt-pkg/deb/dpkgpm.cc:1004
+#: apt-pkg/deb/dpkgpm.cc:1072
 #, c-format
 msgid "Unpacking %s"
 msgstr "%s kicsomagolása"
 
-#: apt-pkg/deb/dpkgpm.cc:1009
+#: apt-pkg/deb/dpkgpm.cc:1077
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s konfigurálásának előkészítése"
 
-#: apt-pkg/deb/dpkgpm.cc:1011
+#: apt-pkg/deb/dpkgpm.cc:1079
 #, c-format
 msgid "Installed %s"
 msgstr "%s telepítve"
 
-#: apt-pkg/deb/dpkgpm.cc:1016
+#: apt-pkg/deb/dpkgpm.cc:1084
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s eltávolításának előkészítése"
 
-#: apt-pkg/deb/dpkgpm.cc:1018
+#: apt-pkg/deb/dpkgpm.cc:1086
 #, c-format
 msgid "Removed %s"
 msgstr "%s eltávolítva"
 
-#: apt-pkg/deb/dpkgpm.cc:1023
+#: apt-pkg/deb/dpkgpm.cc:1091
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s teljes eltávolításának előkészítése"
 
-#: apt-pkg/deb/dpkgpm.cc:1024
+#: apt-pkg/deb/dpkgpm.cc:1092
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s teljesen eltávolítva"
 
-#: apt-pkg/deb/dpkgpm.cc:1272 apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1341 apt-pkg/deb/dpkgpm.cc:1362
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Nem lehet írni ebbe: %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1272
+#: apt-pkg/deb/dpkgpm.cc:1341
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1293
+#: apt-pkg/deb/dpkgpm.cc:1362
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1307
+#: apt-pkg/deb/dpkgpm.cc:1376
 msgid "Running dpkg"
 msgstr "A dpkg futtatása"
 
-#: apt-pkg/deb/dpkgpm.cc:1479
+#: apt-pkg/deb/dpkgpm.cc:1563
 msgid "Operation was interrupted before it could finish"
 msgstr "A művelet megszakadt, mielőtt befejeződhetett volna"
 
-#: apt-pkg/deb/dpkgpm.cc:1541
+#: apt-pkg/deb/dpkgpm.cc:1625
 msgid "No apport report written because MaxReports is reached already"
 msgstr "Nem került írásra apport jelentés, mivel a MaxReports már elérve"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1546
+#: apt-pkg/deb/dpkgpm.cc:1630
 msgid "dependency problems - leaving unconfigured"
 msgstr "függőségi hibák - a csomag beállítatlan maradt"
 
-#: apt-pkg/deb/dpkgpm.cc:1548
+#: apt-pkg/deb/dpkgpm.cc:1632
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3474,7 +3454,7 @@ msgstr ""
 "Nem került kiírásra apport jelentés, mivel a hibaüzenet szerint ez a hiba "
 "egy korábbi hiba következménye."
 
-#: apt-pkg/deb/dpkgpm.cc:1554
+#: apt-pkg/deb/dpkgpm.cc:1638
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3482,7 +3462,7 @@ msgstr ""
 "Nem került kiírásra apport jelentés, mivel a hibaüzenet szerint megtelt a "
 "lemez"
 
-#: apt-pkg/deb/dpkgpm.cc:1560
+#: apt-pkg/deb/dpkgpm.cc:1644
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3490,7 +3470,7 @@ msgstr ""
 "Nem került kiírásra apport jelentés, mivel a hibaüzenet memóriaelfogyási "
 "hibát jelez"
 
-#: apt-pkg/deb/dpkgpm.cc:1567
+#: apt-pkg/deb/dpkgpm.cc:1651
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3587,6 +3567,22 @@ msgstr "Nincs zárolva"
 
 #~ msgid "Selected version '%s' (%s) for '%s' because of '%s'\n"
 #~ msgstr "„%s” (%s) verzió lett kijelölve ehhez: „%s”, a(z) „%s” miatt\n"
+
+#~ msgid "Downloading %s %s"
+#~ msgstr "Letöltés: %s %s"
+
+#~ msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
+#~ msgstr "Érvénytelen DEB archívum, nincs „%s”, „%s” vagy „%s” tagja"
+
+#~ msgid "MD5Sum mismatch"
+#~ msgstr "Az MD5Sum nem megfelelő"
+
+#~ msgid ""
+#~ "I wasn't able to locate a file for the %s package. This might mean you "
+#~ "need to manually fix this package."
+#~ msgstr ""
+#~ "Egy fájl nem található a(z) %s csomaghoz. Ez azt jelentheti, hogy kézzel "
+#~ "kell kijavítani a csomagot."
 
 #~ msgid "Can not write log, openpty() failed (/dev/pts not mounted?)\n"
 #~ msgstr ""

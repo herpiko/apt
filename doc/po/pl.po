@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.9.7.3\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-09-20 16:13+0200\n"
+"POT-Creation-Date: 2013-10-09 22:40+0200\n"
 "PO-Revision-Date: 2012-07-28 21:59+0200\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <manpages-pl-list@lists.sourceforge.net>\n"
@@ -1383,9 +1383,21 @@ msgstr ""
 "dużej liczby niepożądanych wstrzymań.  Pozycja w pliku konfiguracyjnym: "
 "<literal>APT::Ignore-Hold</literal>."
 
-#
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-get.8.xml:393
+msgid ""
+"Allow installing new packages when used in conjunction with "
+"<literal>upgrade</literal>.  This is useful if the update of a installed "
+"package requires new dependencies to be installed. Instead of holding the "
+"package back <literal>upgrade</literal> will upgrade the package and install "
+"the new dependencies. Note that <literal>upgrade</literal> with this option "
+"will never remove packages, only allow adding new ones.  Configuration Item: "
+"<literal>APT::Get::Upgrade-Allow-New</literal>."
+msgstr ""
+
+#
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt-get.8.xml:405
 msgid ""
 "Do not upgrade packages; when used in conjunction with <literal>install</"
 "literal>, <literal>no-upgrade</literal> will prevent packages on the command "
@@ -1398,7 +1410,7 @@ msgstr ""
 "<literal>APT::Get::Upgrade</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:400
+#: apt-get.8.xml:412
 msgid ""
 "Do not install new packages; when used in conjunction with <literal>install</"
 "literal>, <literal>only-upgrade</literal> will install upgrades for already "
@@ -1412,7 +1424,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:408
+#: apt-get.8.xml:420
 msgid ""
 "Force yes; this is a dangerous option that will cause apt to continue "
 "without prompting if it is doing something potentially harmful. It should "
@@ -1429,7 +1441,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:416
+#: apt-get.8.xml:428
 msgid ""
 "Instead of fetching the files to install their URIs are printed. Each URI "
 "will have the path, the destination file name, the size and the expected MD5 "
@@ -1452,7 +1464,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:427
+#: apt-get.8.xml:439
 msgid ""
 "Use purge instead of remove for anything that would be removed.  An asterisk "
 "(\"*\") will be displayed next to packages which are scheduled to be purged. "
@@ -1467,7 +1479,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:435
+#: apt-get.8.xml:447
 msgid ""
 "Re-install packages that are already installed and at the newest version.  "
 "Configuration Item: <literal>APT::Get::ReInstall</literal>."
@@ -1476,7 +1488,7 @@ msgstr ""
 "Pozycja w pliku konfiguracyjnym: <literal>APT::Get::ReInstall</literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:440
+#: apt-get.8.xml:452
 msgid ""
 "This option is on by default; use <literal>--no-list-cleanup</literal> to "
 "turn it off. When it is on, <command>apt-get</command> will automatically "
@@ -1494,7 +1506,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:450
+#: apt-get.8.xml:462
 msgid ""
 "This option controls the default input to the policy engine; it creates a "
 "default pin at priority 990 using the specified release string.  This "
@@ -1518,7 +1530,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:465
+#: apt-get.8.xml:477
 msgid ""
 "Only perform operations that are 'trivial'. Logically this can be considered "
 "related to <option>--assume-yes</option>; where <option>--assume-yes</"
@@ -1533,7 +1545,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:472
+#: apt-get.8.xml:484
 msgid ""
 "If any packages are to be removed apt-get immediately aborts without "
 "prompting.  Configuration Item: <literal>APT::Get::Remove</literal>."
@@ -1543,7 +1555,7 @@ msgstr ""
 "literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:478
+#: apt-get.8.xml:490
 msgid ""
 "If the command is either <literal>install</literal> or <literal>remove</"
 "literal>, then this option acts like running the <literal>autoremove</"
@@ -1558,7 +1570,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:485
+#: apt-get.8.xml:497
 msgid ""
 "Only has meaning for the <literal>source</literal> and <literal>build-dep</"
 "literal> commands.  Indicates that the given source names are not to be "
@@ -1578,7 +1590,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:496
+#: apt-get.8.xml:508
 msgid ""
 "Download only the diff, dsc, or tar file of a source archive.  Configuration "
 "Item: <literal>APT::Get::Diff-Only</literal>, <literal>APT::Get::Dsc-Only</"
@@ -1590,7 +1602,7 @@ msgstr ""
 
 #
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:502
+#: apt-get.8.xml:514
 msgid ""
 "Only process architecture-dependent build-dependencies.  Configuration Item: "
 "<literal>APT::Get::Arch-Only</literal>."
@@ -1601,7 +1613,7 @@ msgstr ""
 "literal>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-get.8.xml:507
+#: apt-get.8.xml:519
 msgid ""
 "Ignore if packages can't be authenticated and don't prompt about it.  This "
 "is useful for tools like pbuilder.  Configuration Item: <literal>APT::Get::"
@@ -1611,14 +1623,23 @@ msgstr ""
 "nieostrzeganie o tym. Jest to użyteczne dla programów typu pbuilder. Pozycja "
 "w pliku konfiguracyjnym: <literal>APT::Get::AllowUnauthenticated</literal>."
 
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt-get.8.xml:525
+msgid ""
+"Show user friendly progress information in the terminal window when packages "
+"are installed, upgraded or removed. For a machine parsable version of this "
+"data see README.progress-reporting in the apt doc directory.  "
+"<literal>DpkgPM::Progress</literal>."
+msgstr ""
+
 #. type: Content of: <refentry><refsect1><title>
-#: apt-get.8.xml:518 apt-cache.8.xml:343 apt-key.8.xml:174 apt-mark.8.xml:125
+#: apt-get.8.xml:538 apt-cache.8.xml:343 apt-key.8.xml:174 apt-mark.8.xml:125
 #: apt.conf.5.xml:1184 apt_preferences.5.xml:698
 msgid "Files"
 msgstr "Pliki"
 
 #. type: Content of: <refentry><refsect1><title>
-#: apt-get.8.xml:528 apt-cache.8.xml:350 apt-key.8.xml:195 apt-mark.8.xml:131
+#: apt-get.8.xml:548 apt-cache.8.xml:350 apt-key.8.xml:195 apt-mark.8.xml:131
 #: apt-secure.8.xml:191 apt-cdrom.8.xml:152 apt-config.8.xml:109
 #: apt.conf.5.xml:1190 apt_preferences.5.xml:705 sources.list.5.xml:256
 #: apt-extracttemplates.1.xml:70 apt-sortpkgs.1.xml:63
@@ -1628,7 +1649,7 @@ msgstr "Zobacz także"
 
 #
 #. type: Content of: <refentry><refsect1><para>
-#: apt-get.8.xml:529
+#: apt-get.8.xml:549
 msgid ""
 "&apt-cache;, &apt-cdrom;, &dpkg;, &dselect;, &sources-list;, &apt-conf;, "
 "&apt-config;, &apt-secure;, The APT User's guide in &guidesdir;, &apt-"
@@ -1639,7 +1660,7 @@ msgstr ""
 "&apt-preferences;, APT Howto."
 
 #. type: Content of: <refentry><refsect1><title>
-#: apt-get.8.xml:534 apt-cache.8.xml:355 apt-mark.8.xml:135
+#: apt-get.8.xml:554 apt-cache.8.xml:355 apt-mark.8.xml:135
 #: apt-cdrom.8.xml:157 apt-config.8.xml:114 apt-extracttemplates.1.xml:74
 #: apt-sortpkgs.1.xml:67 apt-ftparchive.1.xml:611
 msgid "Diagnostics"
@@ -1647,7 +1668,7 @@ msgstr "Diagnostyka"
 
 #
 #. type: Content of: <refentry><refsect1><para>
-#: apt-get.8.xml:535
+#: apt-get.8.xml:555
 msgid ""
 "<command>apt-get</command> returns zero on normal operation, decimal 100 on "
 "error."
@@ -7858,9 +7879,18 @@ msgstr ""
 
 #. type: <p></p>
 #: guide.sgml:163
+#, fuzzy
+#| msgid ""
+#| "<prgn>apt-get</prgn> has several command line options that are detailed "
+#| "in its man page, <manref section=\"8\" name=\"apt-get\">. The most useful "
+#| "option is <tt>-d</tt> which does not install the fetched files. If the "
+#| "system has to download a large number of package it would be undesired to "
+#| "start installing them in case something goes wrong. When <tt>-d</tt> is "
+#| "used the downloaded archives can be installed by simply running the "
+#| "command that caused them to be downloaded again without <tt>-d</tt>."
 msgid ""
 "<prgn>apt-get</prgn> has several command line options that are detailed in "
-"its man page, <manref section=\"8\" name=\"apt-get\">. The most useful "
+"its man page, <manref name=\"apt-get\" section=\"8\">. The most useful "
 "option is <tt>-d</tt> which does not install the fetched files. If the "
 "system has to download a large number of package it would be undesired to "
 "start installing them in case something goes wrong. When <tt>-d</tt> is used "
