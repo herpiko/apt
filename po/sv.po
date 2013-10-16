@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-10-09 22:40+0200\n"
+"POT-Creation-Date: 2013-10-15 21:22+0200\n"
 "PO-Revision-Date: 2010-08-24 21:18+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <debian-l10n-swedish@debian.org>\n"
@@ -653,7 +653,7 @@ msgstr "%s är redan den senaste versionen.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1128
+#: apt-pkg/deb/dpkgpm.cc:1143
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Väntade på %s men den fanns inte där"
@@ -3315,12 +3315,12 @@ msgstr ""
 msgid "Installing %s"
 msgstr "Installerar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1078
+#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1093
 #, c-format
 msgid "Configuring %s"
 msgstr "Konfigurerar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1085
+#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1100
 #, c-format
 msgid "Removing %s"
 msgstr "Tar bort %s"
@@ -3341,87 +3341,92 @@ msgid "Running post-installation trigger %s"
 msgstr "Kör efterinstallationsutlösare %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:776
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Katalogen \"%s\" saknas"
 
-#: apt-pkg/deb/dpkgpm.cc:776 apt-pkg/deb/dpkgpm.cc:798
+#: apt-pkg/deb/dpkgpm.cc:791 apt-pkg/deb/dpkgpm.cc:813
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Kunde inte öppna filen \"%s\""
 
-#: apt-pkg/deb/dpkgpm.cc:1071
+#: apt-pkg/deb/dpkgpm.cc:919
+#, c-format
+msgid "Progress: [%3i%%]"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1086
 #, c-format
 msgid "Preparing %s"
 msgstr "Förbereder %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1072
+#: apt-pkg/deb/dpkgpm.cc:1087
 #, c-format
 msgid "Unpacking %s"
 msgstr "Packar upp %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1077
+#: apt-pkg/deb/dpkgpm.cc:1092
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Förbereder konfigurering av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1079
+#: apt-pkg/deb/dpkgpm.cc:1094
 #, c-format
 msgid "Installed %s"
 msgstr "Installerade %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1084
+#: apt-pkg/deb/dpkgpm.cc:1099
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Förbereder borttagning av %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1086
+#: apt-pkg/deb/dpkgpm.cc:1101
 #, c-format
 msgid "Removed %s"
 msgstr "Tog bort %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1091
+#: apt-pkg/deb/dpkgpm.cc:1106
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Förbereder borttagning av hela %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1092
+#: apt-pkg/deb/dpkgpm.cc:1107
 #, c-format
 msgid "Completely removed %s"
 msgstr "Tog bort hela %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1341 apt-pkg/deb/dpkgpm.cc:1362
+#: apt-pkg/deb/dpkgpm.cc:1356 apt-pkg/deb/dpkgpm.cc:1377
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Kunde inte skriva till %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1341
+#: apt-pkg/deb/dpkgpm.cc:1356
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1362
+#: apt-pkg/deb/dpkgpm.cc:1377
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1376
+#: apt-pkg/deb/dpkgpm.cc:1391
 msgid "Running dpkg"
 msgstr "Kör dpkg"
 
-#: apt-pkg/deb/dpkgpm.cc:1563
+#: apt-pkg/deb/dpkgpm.cc:1578
 msgid "Operation was interrupted before it could finish"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1625
+#: apt-pkg/deb/dpkgpm.cc:1640
 msgid "No apport report written because MaxReports is reached already"
 msgstr "Ingen apport-rapport skrevs därför att MaxReports redan har uppnåtts"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1630
+#: apt-pkg/deb/dpkgpm.cc:1645
 msgid "dependency problems - leaving unconfigured"
 msgstr "beroendeproblem - lämnar okonfigurerad"
 
-#: apt-pkg/deb/dpkgpm.cc:1632
+#: apt-pkg/deb/dpkgpm.cc:1647
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3429,7 +3434,7 @@ msgstr ""
 "Ingen apport-rapport skrevs därför att felmeddelandet indikerar att det är "
 "ett efterföljande fel från ett tidigare problem."
 
-#: apt-pkg/deb/dpkgpm.cc:1638
+#: apt-pkg/deb/dpkgpm.cc:1653
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3437,7 +3442,7 @@ msgstr ""
 "Ingen apport-rapport skrevs därför att felmeddelandet indikerar att "
 "diskutrymmet är slut"
 
-#: apt-pkg/deb/dpkgpm.cc:1644
+#: apt-pkg/deb/dpkgpm.cc:1659
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3445,7 +3450,7 @@ msgstr ""
 "Ingen apport-rapport skrevs därför att felmeddelandet indikerar att minnet "
 "är slut"
 
-#: apt-pkg/deb/dpkgpm.cc:1651
+#: apt-pkg/deb/dpkgpm.cc:1666
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""

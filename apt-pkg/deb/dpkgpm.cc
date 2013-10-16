@@ -546,8 +546,8 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
    // A dpkg error message may contain additional ":" (like
    //  "failed in buffer_write(fd) (10, ret=-1): backend dpkg-deb ..."
    // so we need to ensure to not split too much
-   std::vector<std::string> list = StringSplit(line, ": ", 3);
-   if(list.size() != 3)
+   std::vector<std::string> list = StringSplit(line, ": ", 4);
+   if(list.size() < 3)
    {
       if (Debug == true)
 	 std::clog << "ignoring line: not enough ':'" << std::endl;
@@ -557,11 +557,26 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
    std::string pkgname = list[1];
    if (pkgname.find(":") == std::string::npos)
    {
-      string const nativeArch = _config->Find("APT::Architecture");
-      pkgname = pkgname + ":" + nativeArch;
+      // find the package in the group that is in a touched by dpkg
+      // if there are multiple dpkg will send us a full pkgname:arch
+      pkgCache::GrpIterator Grp = Cache.FindGrp(pkgname);
+      if (Grp.end() == false) 
+      {
+          pkgCache::PkgIterator P = Grp.PackageList();
+          for (; P.end() != true; P = Grp.NextPkg(P))
+          {
+              if(Cache[P].Mode != pkgDepCache::ModeKeep)
+              {
+                  pkgname = P.FullName();
+                  break;
+              }
+          }
+      }
    }
    const char* const pkg = pkgname.c_str();
    const char* action = list[2].c_str();
+   
+   std::string short_pkgname = StringSplit(pkgname, ":")[0];
 
    // 'processing' from dpkg looks like
    // 'processing: action: pkg'
@@ -634,13 +649,13 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       // action
       const char *translation = _(states[PackageOpsDone[pkg]].str);
       char s[200];
-      snprintf(s, sizeof(s), translation, pkg);
+      snprintf(s, sizeof(s), translation, short_pkgname.c_str());
 
       // we moved from one dpkg state to a new one, report that
       PackageOpsDone[pkg]++;
       PackagesDone++;
       // build the status str
-      status << "pmstatus:" << pkg 
+      status << "pmstatus:" << short_pkgname
 	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
 	     << ":" << s
 	     << endl;
@@ -653,7 +668,7 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 	 std::clog << "send: '" << status.str() << "'" << endl;
    }
    if (Debug == true) 
-      std::clog << "(parsed from dpkg) pkg: " << pkg 
+      std::clog << "(parsed from dpkg) pkg: " << short_pkgname
 		<< " action: " << action << endl;
 }
 									/*}}}*/
@@ -901,7 +916,7 @@ void pkgDPkgPM::SendTerminalProgress(float percentage)
       return;
 
    std::string progress_str;
-   strprintf(progress_str, "Progress: [%3i%%]", (int)percentage);
+   strprintf(progress_str, _("Progress: [%3i%%]"), (int)percentage);
    if (d->fancy_progress_output)
    {
          int row = d->nr_terminal_rows;

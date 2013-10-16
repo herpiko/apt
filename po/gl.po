@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po_gl\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-10-09 22:40+0200\n"
+"POT-Creation-Date: 2013-10-15 21:22+0200\n"
 "PO-Revision-Date: 2011-05-12 15:28+0100\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: galician <proxecto@trasno.net>\n"
@@ -664,7 +664,7 @@ msgstr "%s xa é a versión máis recente.\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
 #: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1128
+#: apt-pkg/deb/dpkgpm.cc:1143
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "Agardouse por %s pero non estaba alí"
@@ -3340,12 +3340,12 @@ msgstr ""
 msgid "Installing %s"
 msgstr "Instalando %s"
 
-#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1078
+#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1093
 #, c-format
 msgid "Configuring %s"
 msgstr "Configurando %s"
 
-#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1085
+#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1100
 #, c-format
 msgid "Removing %s"
 msgstr "Retirando %s"
@@ -3366,89 +3366,94 @@ msgid "Running post-installation trigger %s"
 msgstr "Executando o disparador de post-instalación %s"
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:761
+#: apt-pkg/deb/dpkgpm.cc:776
 #, c-format
 msgid "Directory '%s' missing"
 msgstr "Falta o directorio «%s»"
 
-#: apt-pkg/deb/dpkgpm.cc:776 apt-pkg/deb/dpkgpm.cc:798
+#: apt-pkg/deb/dpkgpm.cc:791 apt-pkg/deb/dpkgpm.cc:813
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Non foi posíbel abrir o ficheiro «%s»"
 
-#: apt-pkg/deb/dpkgpm.cc:1071
+#: apt-pkg/deb/dpkgpm.cc:919
+#, c-format
+msgid "Progress: [%3i%%]"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc:1086
 #, c-format
 msgid "Preparing %s"
 msgstr "Preparando %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1072
+#: apt-pkg/deb/dpkgpm.cc:1087
 #, c-format
 msgid "Unpacking %s"
 msgstr "Desempaquetando %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1077
+#: apt-pkg/deb/dpkgpm.cc:1092
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "Preparandose para configurar %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1079
+#: apt-pkg/deb/dpkgpm.cc:1094
 #, c-format
 msgid "Installed %s"
 msgstr "Instalouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1084
+#: apt-pkg/deb/dpkgpm.cc:1099
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "Preparándose para o retirado de %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1086
+#: apt-pkg/deb/dpkgpm.cc:1101
 #, c-format
 msgid "Removed %s"
 msgstr "Retirouse %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1091
+#: apt-pkg/deb/dpkgpm.cc:1106
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "Preparándose para retirar %s completamente"
 
-#: apt-pkg/deb/dpkgpm.cc:1092
+#: apt-pkg/deb/dpkgpm.cc:1107
 #, c-format
 msgid "Completely removed %s"
 msgstr "Retirouse %s completamente"
 
-#: apt-pkg/deb/dpkgpm.cc:1341 apt-pkg/deb/dpkgpm.cc:1362
+#: apt-pkg/deb/dpkgpm.cc:1356 apt-pkg/deb/dpkgpm.cc:1377
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr "Non é posíbel escribir en %s"
 
-#: apt-pkg/deb/dpkgpm.cc:1341
+#: apt-pkg/deb/dpkgpm.cc:1356
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1362
+#: apt-pkg/deb/dpkgpm.cc:1377
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1376
+#: apt-pkg/deb/dpkgpm.cc:1391
 msgid "Running dpkg"
 msgstr "Executando dpkg"
 
-#: apt-pkg/deb/dpkgpm.cc:1563
+#: apt-pkg/deb/dpkgpm.cc:1578
 msgid "Operation was interrupted before it could finish"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1625
+#: apt-pkg/deb/dpkgpm.cc:1640
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 "Non se escribiu ningún informe de Apport porque xa se acadou o nivel "
 "MaxReports"
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1630
+#: apt-pkg/deb/dpkgpm.cc:1645
 msgid "dependency problems - leaving unconfigured"
 msgstr "problemas de dependencias - déixase sen configurar"
 
-#: apt-pkg/deb/dpkgpm.cc:1632
+#: apt-pkg/deb/dpkgpm.cc:1647
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
@@ -3456,7 +3461,7 @@ msgstr ""
 "Non se escribiu ningún informe de Apport porque a mensaxe de erro indica que "
 "é un error provinte dun fallo anterior."
 
-#: apt-pkg/deb/dpkgpm.cc:1638
+#: apt-pkg/deb/dpkgpm.cc:1653
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
@@ -3464,7 +3469,7 @@ msgstr ""
 "Non se escribiu ningún informe de Apport porque a mensaxe de erro indica un "
 "erro de disco cheo."
 
-#: apt-pkg/deb/dpkgpm.cc:1644
+#: apt-pkg/deb/dpkgpm.cc:1659
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3472,7 +3477,7 @@ msgstr ""
 "Non se escribiu un informe de contribución porque a mensaxe de erro indica "
 "un erro de falta de memoria"
 
-#: apt-pkg/deb/dpkgpm.cc:1651
+#: apt-pkg/deb/dpkgpm.cc:1666
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
