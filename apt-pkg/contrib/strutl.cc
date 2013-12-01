@@ -36,7 +36,30 @@
 
 using namespace std;
 									/*}}}*/
+// Strip - Remove white space from the front and back of a string       /*{{{*/
+// ---------------------------------------------------------------------
+namespace APT {
+   namespace String {
+std::string Strip(const std::string &s)
+{
+   size_t start = s.find_first_not_of(" \t\n");
+   // only whitespace
+   if (start == string::npos)
+      return "";
+   size_t end = s.find_last_not_of(" \t\n");
+   return s.substr(start, end-start+1);
+}
 
+bool Endswith(const std::string &s, const std::string &end)
+{
+   if (end.size() > s.size())
+      return false;
+   return (s.substr(s.size() - end.size(), s.size()) == end);
+}
+
+}
+}
+									/*}}}*/
 // UTF8ToCodeset - Convert some UTF-8 string for some codeset   	/*{{{*/
 // ---------------------------------------------------------------------
 /* This is handy to use before display some information for enduser  */

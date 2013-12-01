@@ -19,6 +19,7 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/packagemanager.h>
+#include <apt-pkg/install-progress.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -54,15 +55,12 @@ class pkgDPkgPMPrivate
 public:
    pkgDPkgPMPrivate() : stdin_is_dev_null(false), dpkgbuf_pos(0),
 			term_out(NULL), history_out(NULL), 
-                        last_reported_progress(0.0), nr_terminal_rows(0),
-                        fancy_progress_output(false)
+                        progress(NULL), master(-1), slave(-1)
    {
       dpkgbuf[0] = '\0';
-      if(_config->FindB("Dpkg::Progress-Fancy", false) == true)
-      {
-         fancy_progress_output = true;
-         _config->Set("DpkgPM::Progress", true);
-      }
+   }
+   ~pkgDPkgPMPrivate()
+   {
    }
    bool stdin_is_dev_null;
    // the buffer we use for the dpkg status-fd reading
@@ -71,10 +69,17 @@ public:
    FILE *term_out;
    FILE *history_out;
    string dpkg_error;
+   APT::Progress::PackageManager *progress;
 
-   float last_reported_progress;
-   int nr_terminal_rows;
-   bool fancy_progress_output;
+   // pty stuff
+   struct	termios tt;
+   int master;
+   int slave;
+
+   // signals
+   sigset_t sigmask;
+   sigset_t original_sigmask;
+
 };
 
 namespace
@@ -137,6 +142,20 @@ ionice(int PID)
    return ExecWait(Process, "ionice");
 }
 
+static std::string getDpkgExecutable()
+{
+   string Tmp = _config->Find("Dir::Bin::dpkg","dpkg");
+   string const dpkgChrootDir = _config->FindDir("DPkg::Chroot-Directory", "/");
+   size_t dpkgChrootLen = dpkgChrootDir.length();
+   if (dpkgChrootDir != "/" && Tmp.find(dpkgChrootDir) == 0)
+   {
+      if (dpkgChrootDir[dpkgChrootLen - 1] == '/')
+         --dpkgChrootLen;
+      Tmp = Tmp.substr(dpkgChrootLen);
+   }
+   return Tmp;
+}
+
 // dpkgChrootDirectory - chrooting for dpkg if needed			/*{{{*/
 static void dpkgChrootDirectory()
 {
@@ -182,7 +201,7 @@ pkgCache::VerIterator FindNowVersion(const pkgCache::PkgIterator &Pkg)
 // ---------------------------------------------------------------------
 /* */
 pkgDPkgPM::pkgDPkgPM(pkgDepCache *Cache) 
-   : pkgPackageManager(Cache), PackagesDone(0), PackagesTotal(0)
+   : pkgPackageManager(Cache), pkgFailures(0), PackagesDone(0), PackagesTotal(0)
 {
    d = new pkgDPkgPMPrivate();
 }
@@ -397,17 +416,21 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
       unsigned int InfoFD = _config->FindI(OptSec + "::InfoFD", STDIN_FILENO);
       
       // Create the pipes
+      std::set<int> KeepFDs;
+      MergeKeepFdsFromConfiguration(KeepFDs);
       int Pipes[2];
       if (pipe(Pipes) != 0)
 	 return _error->Errno("pipe","Failed to create IPC pipe to subprocess");
       if (InfoFD != (unsigned)Pipes[0])
 	 SetCloseExec(Pipes[0],true);
       else
-	 _config->Set("APT::Keep-Fds::", Pipes[0]);
+         KeepFDs.insert(Pipes[0]);
+
+
       SetCloseExec(Pipes[1],true);
 
       // Purified Fork for running the script
-      pid_t Process = ExecFork();
+      pid_t Process = ExecFork(KeepFDs);
       if (Process == 0)
       {
 	 // Setup the FDs
@@ -429,8 +452,6 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 	 execv(Args[0],(char **)Args);
 	 _exit(100);
       }
-      if (InfoFD == (unsigned)Pipes[0])
-	 _config->Clear("APT::Keep-Fds", Pipes[0]);
       close(Pipes[0]);
       FILE *F = fdopen(Pipes[1],"w");
       if (F == 0)
@@ -513,33 +534,20 @@ void pkgDPkgPM::DoTerminalPty(int master)
 // ---------------------------------------------------------------------
 /*
  */
-void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
+void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
 {
    bool const Debug = _config->FindB("Debug::pkgDPkgProgressReporting",false);
-   // the status we output
-   ostringstream status;
-
    if (Debug == true)
       std::clog << "got from dpkg '" << line << "'" << std::endl;
-
 
    /* dpkg sends strings like this:
       'status:   <pkg>: <pkg  qstate>'
       'status:   <pkg>:<arch>: <pkg  qstate>'
-      errors look like this:
-      'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data 
-      and conffile-prompt like this
-      'status: conffile-prompt: conffile : 'current-conffile' 'new-conffile' useredited distedited
       
-      Newer versions of dpkg sent also:
-      'processing: install: pkg'
-      'processing: configure: pkg'
-      'processing: remove: pkg'
-      'processing: purge: pkg'
-      'processing: disappear: pkg'
-      'processing: trigproc: trigger'
-	    
+      'processing: {install,configure,remove,purge,disappear,trigproc}: pkg'
+      'processing: {install,configure,remove,purge,disappear,trigproc}: trigger'
    */
+
    // we need to split on ": " (note the appended space) as the ':' is
    // part of the pkgname:arch information that dpkg sends
    // 
@@ -553,8 +561,66 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 	 std::clog << "ignoring line: not enough ':'" << std::endl;
       return;
    }
-   // dpkg does not send always send "pkgname:arch" so we add it here if needed
-   std::string pkgname = list[1];
+
+   // build the (prefix, pkgname, action) tuple, position of this
+   // is different for "processing" or "status" messages
+   std::string prefix = APT::String::Strip(list[0]);
+   std::string pkgname;
+   std::string action;
+   ostringstream status;
+
+   // "processing" has the form "processing: action: pkg or trigger"
+   // with action = ["install", "configure", "remove", "purge", "disappear",
+   //                "trigproc"]
+   if (prefix == "processing")
+   {
+      pkgname = APT::String::Strip(list[2]);
+      action = APT::String::Strip(list[1]);
+   }
+   // "status" has the form: "status: pkg: state"
+   // with state in ["half-installed", "unpacked", "half-configured", 
+   //                "installed", "config-files", "not-installed"]
+   else if (prefix == "status")
+   {
+      pkgname = APT::String::Strip(list[1]);
+      action = APT::String::Strip(list[2]);
+   } else {
+      if (Debug == true)
+	 std::clog << "unknown prefix '" << prefix << "'" << std::endl;
+      return;
+   }
+
+
+   /* handle the special cases first:
+
+      errors look like this:
+      'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data 
+      and conffile-prompt like this
+      'status: conffile-prompt: conffile : 'current-conffile' 'new-conffile' useredited distedited
+   */
+   if (prefix == "status")
+   {
+      if(action == "error")
+      {
+         d->progress->Error(list[1], PackagesDone, PackagesTotal,
+                            list[3]);
+         pkgFailures++;
+         WriteApportReport(list[1].c_str(), list[3].c_str());
+         return;
+      }
+      else if(action == "conffile")
+      {
+         d->progress->ConffilePrompt(list[1], PackagesDone, PackagesTotal,
+                                     list[3]);
+         return;
+      }
+   }
+
+   // at this point we know that we should have a valid pkgname, so build all 
+   // the info from it
+
+   // dpkg does not send always send "pkgname:arch" so we add it here 
+   // if needed
    if (pkgname.find(":") == std::string::npos)
    {
       // find the package in the group that is in a touched by dpkg
@@ -573,114 +639,80 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
           }
       }
    }
-   const char* const pkg = pkgname.c_str();
-   const char* action = list[2].c_str();
    
+   const char* const pkg = pkgname.c_str();
    std::string short_pkgname = StringSplit(pkgname, ":")[0];
+   std::string arch = "";
+   if (pkgname.find(":") != string::npos)
+      arch = StringSplit(pkgname, ":")[1];
+   std::string i18n_pkgname = pkgname;
+   if (arch.size() != 0)
+      strprintf(i18n_pkgname, "%s (%s)", short_pkgname.c_str(), arch.c_str());
 
    // 'processing' from dpkg looks like
    // 'processing: action: pkg'
-   if(strncmp(list[0].c_str(), "processing", strlen("processing")) == 0)
+   if(prefix == "processing")
    {
-      char s[200];
-      const char* const pkg_or_trigger = list[2].c_str();
-      action =  list[1].c_str();
       const std::pair<const char *, const char *> * const iter =
 	std::find_if(PackageProcessingOpsBegin,
 		     PackageProcessingOpsEnd,
-		     MatchProcessingOp(action));
+		     MatchProcessingOp(action.c_str()));
       if(iter == PackageProcessingOpsEnd)
       {
 	 if (Debug == true)
 	    std::clog << "ignoring unknown action: " << action << std::endl;
 	 return;
       }
-      snprintf(s, sizeof(s), _(iter->second), pkg_or_trigger);
+      std::string msg;
+      strprintf(msg, _(iter->second), i18n_pkgname.c_str());
+      d->progress->StatusChanged(pkgname, PackagesDone, PackagesTotal, msg);
 
-      status << "pmstatus:" << pkg_or_trigger
-	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
-	     << ":" << s
-	     << endl;
-      if(OutStatusFd > 0)
-	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (Debug == true)
-	 std::clog << "send: '" << status.str() << "'" << endl;
-
-      if (strncmp(action, "disappear", strlen("disappear")) == 0)
-	 handleDisappearAction(pkg_or_trigger);
+      // FIXME: this needs a muliarch testcase
+      // FIXME2: is "pkgname" here reliable with dpkg only sending us 
+      //         short pkgnames?
+      if (action == "disappear")
+	 handleDisappearAction(pkgname);
       return;
-   }
+   } 
 
-   if(strncmp(action,"error",strlen("error")) == 0)
+   if (prefix == "status")
    {
-      status << "pmerror:" << list[1]
-	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
-	     << ":" << list[3]
-	     << endl;
-      if(OutStatusFd > 0)
-	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (Debug == true)
-	 std::clog << "send: '" << status.str() << "'" << endl;
-      pkgFailures++;
-      WriteApportReport(list[1].c_str(), list[3].c_str());
-      return;
-   }
-   else if(strncmp(action,"conffile",strlen("conffile")) == 0)
-   {
-      status << "pmconffile:" << list[1]
-	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
-	     << ":" << list[3]
-	     << endl;
-      if(OutStatusFd > 0)
-	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (Debug == true)
-	 std::clog << "send: '" << status.str() << "'" << endl;
-      return;
-   }
+      vector<struct DpkgState> const &states = PackageOps[pkg];
+      const char *next_action = NULL;
+      if(PackageOpsDone[pkg] < states.size())
+         next_action = states[PackageOpsDone[pkg]].state;
+      // check if the package moved to the next dpkg state
+      if(next_action && (action == next_action))
+      {
+         // only read the translation if there is actually a next
+         // action
+         const char *translation = _(states[PackageOpsDone[pkg]].str);
+         std::string msg;
 
-   vector<struct DpkgState> const &states = PackageOps[pkg];
-   const char *next_action = NULL;
-   if(PackageOpsDone[pkg] < states.size())
-      next_action = states[PackageOpsDone[pkg]].state;
-   // check if the package moved to the next dpkg state
-   if(next_action && (strcmp(action, next_action) == 0)) 
-   {
-      // only read the translation if there is actually a next
-      // action
-      const char *translation = _(states[PackageOpsDone[pkg]].str);
-      char s[200];
-      snprintf(s, sizeof(s), translation, short_pkgname.c_str());
+         // we moved from one dpkg state to a new one, report that
+         PackageOpsDone[pkg]++;
+         PackagesDone++;
 
-      // we moved from one dpkg state to a new one, report that
-      PackageOpsDone[pkg]++;
-      PackagesDone++;
-      // build the status str
-      status << "pmstatus:" << short_pkgname
-	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
-	     << ":" << s
-	     << endl;
-      if(_config->FindB("DPkgPM::Progress", false) == true)
-         SendTerminalProgress(PackagesDone/float(PackagesTotal)*100.0);
-
-      if(OutStatusFd > 0)
-	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (Debug == true)
-	 std::clog << "send: '" << status.str() << "'" << endl;
+         strprintf(msg, translation, i18n_pkgname.c_str());
+         d->progress->StatusChanged(pkgname, PackagesDone, PackagesTotal, msg);
+         
+      }
+      if (Debug == true) 
+         std::clog << "(parsed from dpkg) pkg: " << short_pkgname
+                   << " action: " << action << endl;
    }
-   if (Debug == true) 
-      std::clog << "(parsed from dpkg) pkg: " << short_pkgname
-		<< " action: " << action << endl;
 }
 									/*}}}*/
 // DPkgPM::handleDisappearAction					/*{{{*/
 void pkgDPkgPM::handleDisappearAction(string const &pkgname)
 {
-   // record the package name for display and stuff later
-   disappearedPkgs.insert(pkgname);
-
    pkgCache::PkgIterator Pkg = Cache.FindPkg(pkgname);
    if (unlikely(Pkg.end() == true))
       return;
+
+   // record the package name for display and stuff later
+   disappearedPkgs.insert(Pkg.FullName(true));
+
    // the disappeared package was auto-installed - nothing to do
    if ((Cache[Pkg].Flags & pkgCache::Flag::Auto) == pkgCache::Flag::Auto)
       return;
@@ -723,7 +755,7 @@ void pkgDPkgPM::handleDisappearAction(string const &pkgname)
 // ---------------------------------------------------------------------
 /*
  */
-void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
+void pkgDPkgPM::DoDpkgStatusFd(int statusfd)
 {
    char *p, *q;
    int len;
@@ -738,7 +770,7 @@ void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
    while((q=(char*)memchr(p, '\n', d->dpkgbuf+d->dpkgbuf_pos-p)) != NULL)
    {
       *q = 0;
-      ProcessDpkgStatusLine(OutStatusFd, p);
+      ProcessDpkgStatusLine(p);
       p=q+1; // continue with next line
    }
 
@@ -904,50 +936,6 @@ bool pkgDPkgPM::CloseLog()
    return true;
 }
 									/*}}}*/
-// DPkgPM::SendTerminalProgress 					/*{{{*/
-// ---------------------------------------------------------------------
-/* Send progress info to the terminal
- */
-void pkgDPkgPM::SendTerminalProgress(float percentage)
-{
-   int reporting_steps = _config->FindI("DpkgPM::Reporting-Steps", 1);
-
-   if(percentage < (d->last_reported_progress + reporting_steps))
-      return;
-
-   std::string progress_str;
-   strprintf(progress_str, _("Progress: [%3i%%]"), (int)percentage);
-   if (d->fancy_progress_output)
-   {
-         int row = d->nr_terminal_rows;
-
-         static string save_cursor = "\033[s";
-         static string restore_cursor = "\033[u";
-
-         static string set_bg_color = "\033[42m"; // green
-         static string set_fg_color = "\033[30m"; // black
-
-         static string restore_bg =  "\033[49m";
-         static string restore_fg = "\033[39m";
-
-         std::cout << save_cursor
-            // move cursor position to last row
-                   << "\033[" << row << ";0f" 
-                   << set_bg_color
-                   << set_fg_color
-                   << progress_str
-                   << restore_cursor
-                   << restore_bg
-                   << restore_fg;
-   }
-   else
-   {
-         std::cout << progress_str << "\r\n";
-   }
-   std::flush(std::cout);
-                   
-   d->last_reported_progress = percentage;
-}
 									/*}}}*/
 /*{{{*/
 // This implements a racy version of pselect for those architectures
@@ -969,115 +957,11 @@ static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
    sigprocmask(SIG_SETMASK, &origmask, 0);
    return retval;
 }
-/*}}}*/
+                                                                        /*}}}*/
 
-void pkgDPkgPM::SetupTerminalScrollArea(int nr_rows)
+// DPkgPM::BuildPackagesProgressMap					/*{{{*/
+void pkgDPkgPM::BuildPackagesProgressMap()
 {
-     if(!d->fancy_progress_output)
-        return;
-
-     // scroll down a bit to avoid visual glitch when the screen
-     // area shrinks by one row
-     std::cout << "\n";
-         
-     // save cursor
-     std::cout << "\033[s";
-         
-     // set scroll region (this will place the cursor in the top left)
-     std::cout << "\033[1;" << nr_rows - 1 << "r";
-            
-     // restore cursor but ensure its inside the scrolling area
-     std::cout << "\033[u";
-     static const char *move_cursor_up = "\033[1A";
-     std::cout << move_cursor_up;
-     std::flush(std::cout);
-}
-
-// DPkgPM::Go - Run the sequence					/*{{{*/
-// ---------------------------------------------------------------------
-/* This globs the operations and calls dpkg 
- *   
- * If it is called with "OutStatusFd" set to a valid file descriptor
- * apt will report the install progress over this fd. It maps the
- * dpkg states a package goes through to human readable (and i10n-able)
- * names and calculates a percentage for each step.
-*/
-bool pkgDPkgPM::Go(int OutStatusFd)
-{
-   pkgPackageManager::SigINTStop = false;
-
-   // Generate the base argument list for dpkg
-   std::vector<const char *> Args;
-   unsigned long StartSize = 0;
-   string Tmp = _config->Find("Dir::Bin::dpkg","dpkg");
-   {
-      string const dpkgChrootDir = _config->FindDir("DPkg::Chroot-Directory", "/");
-      size_t dpkgChrootLen = dpkgChrootDir.length();
-      if (dpkgChrootDir != "/" && Tmp.find(dpkgChrootDir) == 0)
-      {
-	 if (dpkgChrootDir[dpkgChrootLen - 1] == '/')
-	    --dpkgChrootLen;
-	 Tmp = Tmp.substr(dpkgChrootLen);
-      }
-   }
-   Args.push_back(Tmp.c_str());
-   StartSize += Tmp.length();
-
-   // Stick in any custom dpkg options
-   Configuration::Item const *Opts = _config->Tree("DPkg::Options");
-   if (Opts != 0)
-   {
-      Opts = Opts->Child;
-      for (; Opts != 0; Opts = Opts->Next)
-      {
-	 if (Opts->Value.empty() == true)
-	    continue;
-	 Args.push_back(Opts->Value.c_str());
-	 StartSize += Opts->Value.length();
-      }
-   }
-
-   size_t const BaseArgs = Args.size();
-   // we need to detect if we can qualify packages with the architecture or not
-   Args.push_back("--assert-multi-arch");
-   Args.push_back(NULL);
-
-   pid_t dpkgAssertMultiArch = ExecFork();
-   if (dpkgAssertMultiArch == 0)
-   {
-      dpkgChrootDirectory();
-      // redirect everything to the ultimate sink as we only need the exit-status
-      int const nullfd = open("/dev/null", O_RDONLY);
-      dup2(nullfd, STDIN_FILENO);
-      dup2(nullfd, STDOUT_FILENO);
-      dup2(nullfd, STDERR_FILENO);
-      execvp(Args[0], (char**) &Args[0]);
-      _error->WarningE("dpkgGo", "Can't detect if dpkg supports multi-arch!");
-      _exit(2);
-   }
-
-   fd_set rfds;
-   struct timespec tv;
-   sigset_t sigmask;
-   sigset_t original_sigmask;
-
-   unsigned int const MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);
-   unsigned int const MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
-   bool const NoTriggers = _config->FindB("DPkg::NoTriggers", false);
-
-   if (RunScripts("DPkg::Pre-Invoke") == false)
-      return false;
-
-   if (RunScriptsWithPkgs("DPkg::Pre-Install-Pkgs") == false)
-      return false;
-
-   // support subpressing of triggers processing for special
-   // cases like d-i that runs the triggers handling manually
-   bool const SmartConf = (_config->Find("PackageManager::Configure", "all") != "all");
-   bool const TriggersPending = _config->FindB("DPkg::TriggersPending", false);
-   if (_config->FindB("DPkg::ConfigurePending", SmartConf) == true)
-      List.push_back(Item(Item::ConfigurePending, PkgIterator()));
-
    // map the dpkg states to the operations that are performed
    // (this is sorted in the same way as Item::Ops)
    static const struct DpkgState DpkgStatesOpMap[][7] = {
@@ -1126,6 +1010,153 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 PackagesTotal++;
       }
    }
+}
+                                                                        /*}}}*/
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 13)
+bool pkgDPkgPM::Go(int StatusFd)
+{
+   APT::Progress::PackageManager *progress = NULL;
+   if (StatusFd == -1)
+      progress = APT::Progress::PackageManagerProgressFactory();
+   else
+      progress = new APT::Progress::PackageManagerProgressFd(StatusFd);
+   
+   return GoNoABIBreak(progress);
+}
+#endif
+
+void pkgDPkgPM::StartPtyMagic()
+{
+   // setup the pty and stuff
+   struct	winsize win;
+
+   // if tcgetattr does not return zero there was a error
+   // and we do not do any pty magic
+   _error->PushToStack();
+   if (tcgetattr(STDOUT_FILENO, &d->tt) == 0)
+   {
+       ioctl(1, TIOCGWINSZ, (char *)&win);
+       if (openpty(&d->master, &d->slave, NULL, &d->tt, &win) < 0)
+       {
+           _error->Errno("openpty", _("Can not write log (%s)"), _("Is /dev/pts mounted?"));
+           d->master = d->slave = -1;
+        } else {
+	    struct termios rtt;
+	    rtt = d->tt;
+	    cfmakeraw(&rtt);
+	    rtt.c_lflag &= ~ECHO;
+	    rtt.c_lflag |= ISIG;
+	    // block SIGTTOU during tcsetattr to prevent a hang if
+	    // the process is a member of the background process group
+	    // http://www.opengroup.org/onlinepubs/000095399/functions/tcsetattr.html
+	    sigemptyset(&d->sigmask);
+	    sigaddset(&d->sigmask, SIGTTOU);
+	    sigprocmask(SIG_BLOCK,&d->sigmask, &d->original_sigmask);
+	    tcsetattr(0, TCSAFLUSH, &rtt);
+	    sigprocmask(SIG_SETMASK, &d->original_sigmask, 0);
+        }
+      }
+   // complain only if stdout is either a terminal (but still failed) or is an invalid
+      // descriptor otherwise we would complain about redirection to e.g. /dev/null as well.
+      else if (isatty(STDOUT_FILENO) == 1 || errno == EBADF)
+         _error->Errno("tcgetattr", _("Can not write log (%s)"), _("Is stdout a terminal?"));
+
+      if (_error->PendingError() == true)
+	 _error->DumpErrors(std::cerr);
+      _error->RevertToStack();
+}
+
+void pkgDPkgPM::StopPtyMagic()
+{
+   if(d->slave > 0)
+      close(d->slave);
+   if(d->master >= 0) 
+   {
+      tcsetattr(0, TCSAFLUSH, &d->tt);
+      close(d->master);
+   }
+}
+
+// DPkgPM::Go - Run the sequence					/*{{{*/
+// ---------------------------------------------------------------------
+/* This globs the operations and calls dpkg 
+ *
+ * If it is called with a progress object apt will report the install
+ * progress to this object. It maps the dpkg states a package goes
+ * through to human readable (and i10n-able)
+ * names and calculates a percentage for each step.
+ */
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 13)
+bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
+#else
+bool pkgDPkgPM::GoNoABIBreak(APT::Progress::PackageManager *progress)
+#endif
+{
+   pkgPackageManager::SigINTStop = false;
+   d->progress = progress;
+
+   // Generate the base argument list for dpkg
+   unsigned long StartSize = 0;
+   std::vector<const char *> Args;
+   std::string DpkgExecutable = getDpkgExecutable();
+   Args.push_back(DpkgExecutable.c_str());
+   StartSize += DpkgExecutable.length();
+
+   // Stick in any custom dpkg options
+   Configuration::Item const *Opts = _config->Tree("DPkg::Options");
+   if (Opts != 0)
+   {
+      Opts = Opts->Child;
+      for (; Opts != 0; Opts = Opts->Next)
+      {
+	 if (Opts->Value.empty() == true)
+	    continue;
+	 Args.push_back(Opts->Value.c_str());
+	 StartSize += Opts->Value.length();
+      }
+   }
+
+   size_t const BaseArgs = Args.size();
+   // we need to detect if we can qualify packages with the architecture or not
+   Args.push_back("--assert-multi-arch");
+   Args.push_back(NULL);
+
+   pid_t dpkgAssertMultiArch = ExecFork();
+   if (dpkgAssertMultiArch == 0)
+   {
+      dpkgChrootDirectory();
+      // redirect everything to the ultimate sink as we only need the exit-status
+      int const nullfd = open("/dev/null", O_RDONLY);
+      dup2(nullfd, STDIN_FILENO);
+      dup2(nullfd, STDOUT_FILENO);
+      dup2(nullfd, STDERR_FILENO);
+      execvp(Args[0], (char**) &Args[0]);
+      _error->WarningE("dpkgGo", "Can't detect if dpkg supports multi-arch!");
+      _exit(2);
+   }
+
+   fd_set rfds;
+   struct timespec tv;
+
+   unsigned int const MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);
+   unsigned int const MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
+   bool const NoTriggers = _config->FindB("DPkg::NoTriggers", false);
+
+   if (RunScripts("DPkg::Pre-Invoke") == false)
+      return false;
+
+   if (RunScriptsWithPkgs("DPkg::Pre-Install-Pkgs") == false)
+      return false;
+
+   // support subpressing of triggers processing for special
+   // cases like d-i that runs the triggers handling manually
+   bool const SmartConf = (_config->Find("PackageManager::Configure", "all") != "all");
+   bool const TriggersPending = _config->FindB("DPkg::TriggersPending", false);
+   if (_config->FindB("DPkg::ConfigurePending", SmartConf) == true)
+      List.push_back(Item(Item::ConfigurePending, PkgIterator()));
+
+   // for the progress
+   BuildPackagesProgressMap();
 
    d->stdin_is_dev_null = false;
 
@@ -1147,8 +1178,15 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 dpkgMultiArch = true;
    }
 
-   // this loop is runs once per operation
-   for (vector<Item>::const_iterator I = List.begin(); I != List.end();)
+   // start pty magic before the loop
+   StartPtyMagic();
+
+   // Tell the progress that its starting and fork dpkg 
+   d->progress->Start();
+
+   // this loop is runs once per dpkg operation
+   vector<Item>::const_iterator I = List.begin();
+   while (I != List.end())
    {
       // Do all actions with the same Op in one run
       vector<Item>::const_iterator J = I;
@@ -1269,7 +1307,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 {
 	    if((*I).Pkg.end() == true)
 	       continue;
-	    if (I->Op == Item::Configure && disappearedPkgs.find(I->Pkg.Name()) != disappearedPkgs.end())
+	    if (I->Op == Item::Configure && disappearedPkgs.find(I->Pkg.FullName(true)) != disappearedPkgs.end())
 	       continue;
 	    // We keep this here to allow "smooth" transitions from e.g. multiarch dpkg/ubuntu to dpkg/debian
 	    if (dpkgMultiArch == false && (I->Pkg.Arch() == nativeArch ||
@@ -1339,74 +1377,24 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       // ignore SIGHUP as well (debian #463030)
       sighandler_t old_SIGHUP = signal(SIGHUP,SIG_IGN);
 
-      struct	termios tt;
-      struct	winsize win;
-      int	master = -1;
-      int	slave = -1;
-
-      // if tcgetattr does not return zero there was a error
-      // and we do not do any pty magic
-      _error->PushToStack();
-      if (tcgetattr(STDOUT_FILENO, &tt) == 0)
-      {
-	 ioctl(1, TIOCGWINSZ, (char *)&win);
-         d->nr_terminal_rows = win.ws_row;
-	 if (openpty(&master, &slave, NULL, &tt, &win) < 0)
-	 {
-	    _error->Errno("openpty", _("Can not write log (%s)"), _("Is /dev/pts mounted?"));
-	    master = slave = -1;
-	 }  else {
-	    struct termios rtt;
-	    rtt = tt;
-	    cfmakeraw(&rtt);
-	    rtt.c_lflag &= ~ECHO;
-	    rtt.c_lflag |= ISIG;
-	    // block SIGTTOU during tcsetattr to prevent a hang if
-	    // the process is a member of the background process group
-	    // http://www.opengroup.org/onlinepubs/000095399/functions/tcsetattr.html
-	    sigemptyset(&sigmask);
-	    sigaddset(&sigmask, SIGTTOU);
-	    sigprocmask(SIG_BLOCK,&sigmask, &original_sigmask);
-	    tcsetattr(0, TCSAFLUSH, &rtt);
-	    sigprocmask(SIG_SETMASK, &original_sigmask, 0);
-	 }
-      }
-      // complain only if stdout is either a terminal (but still failed) or is an invalid
-      // descriptor otherwise we would complain about redirection to e.g. /dev/null as well.
-      else if (isatty(STDOUT_FILENO) == 1 || errno == EBADF)
-         _error->Errno("tcgetattr", _("Can not write log (%s)"), _("Is stdout a terminal?"));
-
-      if (_error->PendingError() == true)
-	 _error->DumpErrors(std::cerr);
-      _error->RevertToStack();
-
-       // Fork dpkg
-      pid_t Child;
-      _config->Set("APT::Keep-Fds::",fd[1]);
-      // send status information that we are about to fork dpkg
-      if(OutStatusFd > 0) {
-	 ostringstream status;
-	 status << "pmstatus:dpkg-exec:" 
-		<< (PackagesDone/float(PackagesTotal)*100.0) 
-		<< ":" << _("Running dpkg")
-		<< endl;
-	 FileFd::Write(OutStatusFd, status.str().c_str(), status.str().size());
-      }
-
-      Child = ExecFork();
-      // This is the child
+      // now run dpkg
+      d->progress->StartDpkg();
+      std::set<int> KeepFDs;
+      KeepFDs.insert(fd[1]);
+      MergeKeepFdsFromConfiguration(KeepFDs);
+      pid_t Child = ExecFork(KeepFDs);
       if (Child == 0)
       {
-
-	 if(slave >= 0 && master >= 0) 
+         // This is the child
+	 if(d->slave >= 0 && d->master >= 0) 
 	 {
 	    setsid();
-	    ioctl(slave, TIOCSCTTY, 0);
-	    close(master);
-	    dup2(slave, 0);
-	    dup2(slave, 1);
-	    dup2(slave, 2);
-	    close(slave);
+	    ioctl(d->slave, TIOCSCTTY, 0);
+	    close(d->master);
+	    dup2(d->slave, 0);
+	    dup2(d->slave, 1);
+	    dup2(d->slave, 2);
+	    close(d->slave);
 	 }
 	 close(fd[0]); // close the read end of the pipe
 
@@ -1430,7 +1418,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	    if (fcntl(STDIN_FILENO,F_SETFL,Flags & (~(long)O_NONBLOCK)) < 0)
 	       _exit(100);
 	 }
-         SetupTerminalScrollArea(d->nr_terminal_rows);
 
 	 /* No Job Control Stop Env is a magic dpkg var that prevents it
 	    from using sigstop */
@@ -1444,9 +1431,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       if (_config->FindB("DPkg::UseIoNice", false) == true)
 	 ionice(Child);
 
-      // clear the Keep-Fd again
-      _config->Clear("APT::Keep-Fds",fd[1]);
-
       // Wait for dpkg
       int Status = 0;
 
@@ -1454,12 +1438,9 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       int const _dpkgin = fd[0];
       close(fd[1]);                        // close the write end of the pipe
 
-      if(slave > 0)
-	 close(slave);
-
       // setups fds
-      sigemptyset(&sigmask);
-      sigprocmask(SIG_BLOCK,&sigmask,&original_sigmask);
+      sigemptyset(&d->sigmask);
+      sigprocmask(SIG_BLOCK,&d->sigmask,&d->original_sigmask);
 
       /* free vectors (and therefore memory) as we don't need the included data anymore */
       for (std::vector<char *>::const_iterator p = Packages.begin();
@@ -1488,18 +1469,19 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 
 	 // wait for input or output here
 	 FD_ZERO(&rfds);
-	 if (master >= 0 && !d->stdin_is_dev_null)
+	 if (d->master >= 0 && !d->stdin_is_dev_null)
 	    FD_SET(0, &rfds); 
 	 FD_SET(_dpkgin, &rfds);
-	 if(master >= 0)
-	    FD_SET(master, &rfds);
-	 tv.tv_sec = 1;
-	 tv.tv_nsec = 0;
-	 select_ret = pselect(max(master, _dpkgin)+1, &rfds, NULL, NULL, 
-			      &tv, &original_sigmask);
+	 if(d->master >= 0)
+	    FD_SET(d->master, &rfds);
+         tv.tv_sec = 0;
+         tv.tv_nsec = d->progress->GetPulseInterval();
+	 select_ret = pselect(max(d->master, _dpkgin)+1, &rfds, NULL, NULL, 
+			      &tv, &d->original_sigmask);
 	 if (select_ret < 0 && (errno == EINVAL || errno == ENOSYS))
-	    select_ret = racy_pselect(max(master, _dpkgin)+1, &rfds, NULL,
-				      NULL, &tv, &original_sigmask);
+	    select_ret = racy_pselect(max(d->master, _dpkgin)+1, &rfds, NULL,
+				      NULL, &tv, &d->original_sigmask);
+         d->progress->Pulse();
 	 if (select_ret == 0) 
   	    continue;
   	 else if (select_ret < 0 && errno == EINTR)
@@ -1510,12 +1492,12 @@ bool pkgDPkgPM::Go(int OutStatusFd)
   	    continue;
   	 } 
 	 
-	 if(master >= 0 && FD_ISSET(master, &rfds))
-	    DoTerminalPty(master);
-	 if(master >= 0 && FD_ISSET(0, &rfds))
-	    DoStdin(master);
+	 if(d->master >= 0 && FD_ISSET(d->master, &rfds))
+	    DoTerminalPty(d->master);
+	 if(d->master >= 0 && FD_ISSET(0, &rfds))
+	    DoStdin(d->master);
 	 if(FD_ISSET(_dpkgin, &rfds))
-	    DoDpkgStatusFd(_dpkgin, OutStatusFd);
+	    DoDpkgStatusFd(_dpkgin);
       }
       close(_dpkgin);
 
@@ -1524,22 +1506,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       signal(SIGINT,old_SIGINT);
       
       signal(SIGHUP,old_SIGHUP);
-
-      // reset scroll area
-      SetupTerminalScrollArea(d->nr_terminal_rows + 1);
-      if(d->fancy_progress_output)
-      {
-         // override the progress line (sledgehammer)
-         static const char* clear_screen_below_cursor = "\033[J";
-         std::cout << clear_screen_below_cursor;
-      }
-
-      if(master >= 0) 
-      {
-	 tcsetattr(0, TCSAFLUSH, &tt);
-	 close(master);
-      }
-
       // Check for an error code.
       if (WIFEXITED(Status) == 0 || WEXITSTATUS(Status) != 0)
       {
@@ -1564,15 +1530,16 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 if(stopOnError) 
 	 {
 	    CloseLog();
+            StopPtyMagic();
+            d->progress->Stop();
 	    return false;
 	 }
       }      
    }
-   CloseLog();
-
    // dpkg is done at this point
-   if(_config->FindB("DPkgPM::Progress", false) == true)
-      SendTerminalProgress(100);
+   d->progress->Stop();
+   StopPtyMagic();
+   CloseLog();
 
    if (pkgPackageManager::SigINTStop)
        _error->Warning(_("Operation was interrupted before it could finish"));

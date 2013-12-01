@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt_po.pot\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-10-15 21:22+0200\n"
+"POT-Creation-Date: 2013-11-29 21:27+0100\n"
 "PO-Revision-Date: 2006-09-19 09:49+0530\n"
 "Last-Translator: Kinley Tshering <gasepkuenden2k3@hotmail.com>\n"
 "Language-Team: Dzongkha <pgeyleg@dit.gov.bt>\n"
@@ -162,9 +162,9 @@ msgid "  Version table:"
 msgstr "ཐོན་རིམ་ཐིག་ཁྲམ།:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1494 cmdline/apt-mark.cc:377 cmdline/apt.cc:61
+#: cmdline/apt-get.cc:1452 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
-#: cmdline/apt-internal-solver.cc:33 cmdline/apt-sortpkgs.cc:147
+#: cmdline/apt-internal-solver.cc:34 cmdline/apt-sortpkgs.cc:147
 #, fuzzy, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s་གི་དོན་ལུ་%s %sགུར་ཕྱོགས་སྒྲིག་འབད་ཡོད་པའི་%s %s\n"
@@ -302,80 +302,68 @@ msgstr ""
 "  -c=? འདི་གིས་འ་ནི་རིམ་སྒྲིག་ཡིག་སྣོད་འདི་ལྷགཔ་ཨིན།\n"
 "  -o=? མཐུན་སྒྲིག་གི་རིམ་སྒྲིག་འདི་གཞི་སྒྲིག་འབདཝ་ཨིན་  དཔེར་ན་-o dir::cache=/tmp་བཟུམ།\n"
 
-#: cmdline/apt-get.cc:223
+#: cmdline/apt-get.cc:225
 #, c-format
 msgid "Ignore unavailable target release '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:255
+#: cmdline/apt-get.cc:257
 #, fuzzy, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "འབྱུང་ཁུངས་ཐུམ་སྒྲིལ་གྱི་ཐོ་ཡིག་%s་དེ་ངོ་བཤུས་འབད་མ་ཚུགས།"
 
 #. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:293
+#: cmdline/apt-get.cc:295
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr ""
 
-#: cmdline/apt-get.cc:324
+#: cmdline/apt-get.cc:326
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "%s་ཐུམ་སྒྲིལ་འཚོལ་མ་ཐོབ།"
 
-#: cmdline/apt-get.cc:329 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
 #, fuzzy, c-format
 msgid "%s set to manually installed.\n"
 msgstr "འདི་འབདཝ་ད་%sའདི་གཞི་བཙུགས་འབད་ནི་ཨིན།"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
 #, fuzzy, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "འདི་འབདཝ་ད་%sའདི་གཞི་བཙུགས་འབད་ནི་ཨིན།"
 
-#: cmdline/apt-get.cc:339 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
 msgstr ""
 
-#: cmdline/apt-get.cc:355
-msgid "Calculating upgrade... "
-msgstr "ཡར་བསྐྱེད་རྩིས་བཏོན་དོ་... "
-
-#: cmdline/apt-get.cc:358 methods/ftp.cc:712 methods/connect.cc:116
-msgid "Failed"
-msgstr "འཐུས་ཤོར་བྱུང་ཡོད།"
-
-#: cmdline/apt-get.cc:367
-msgid "Done"
-msgstr "འབད་ཚར་ཡི།"
-
-#: cmdline/apt-get.cc:434 cmdline/apt-get.cc:442
+#: cmdline/apt-get.cc:410 cmdline/apt-get.cc:418
 msgid "Internal error, problem resolver broke stuff"
 msgstr "ནང་འཁོད་འཛོལ་བ་ དཀའ་ངལ་མོས་མཐུན་འབད་མི་ཅ་ཆས་ཚུ་མེདཔ་ཐལ་ཡོད།"
 
-#: cmdline/apt-get.cc:470 cmdline/apt-get.cc:507
+#: cmdline/apt-get.cc:446 cmdline/apt-get.cc:483
 msgid "Unable to lock the download directory"
 msgstr "ཕབ་ལེན་འབད་ནིའི་སྣོད་ཡིག་འདི་ལྡེ་མིག་རྐྱབས་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:619
+#: cmdline/apt-get.cc:595
 msgid "Must specify at least one package to fetch source for"
 msgstr "གི་དོན་ལུ་འབྱུང་ཁུངས་ལེན་ནི་ལུ་ཉུང་མཐའ་རང་ཐུམ་སྒྲིལ་གཅིག་ལེན་དགོ"
 
-#: cmdline/apt-get.cc:659 cmdline/apt-get.cc:954
+#: cmdline/apt-get.cc:635 cmdline/apt-get.cc:930
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "%s་གི་དོན་ལུ་འབྱུང་ཁུངས་ཐུམ་སྒྲིལ་ཅིག་འཚོལ་མ་འཐོབ"
 
-#: cmdline/apt-get.cc:676
+#: cmdline/apt-get.cc:652
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
 "%s\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:681
+#: cmdline/apt-get.cc:657
 #, c-format
 msgid ""
 "Please use:\n"
@@ -383,116 +371,116 @@ msgid ""
 "to retrieve the latest (possibly unreleased) updates to the package.\n"
 msgstr ""
 
-#: cmdline/apt-get.cc:734
+#: cmdline/apt-get.cc:710
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "གོམ་འགྱོ་གིས་ཧེ་མ་ལས་རང་'%s'་ཡིག་སྣོད་དེ་ཕབ་ལེན་འབད་ནུག\n"
 
-#: cmdline/apt-get.cc:757 cmdline/apt-get.cc:760
-#: apt-private/private-install.cc:188 apt-private/private-install.cc:191
+#: cmdline/apt-get.cc:733 cmdline/apt-get.cc:736
+#: apt-private/private-install.cc:198 apt-private/private-install.cc:201
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "%s་ནང་བར་སྟོང་"
 
-#: cmdline/apt-get.cc:771
+#: cmdline/apt-get.cc:747
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr " %s་ནང་ཁྱོད་ལུ་བར་སྟོང་ཚུ་ལངམ་སྦེ་མིན་འདུག་"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:780
+#: cmdline/apt-get.cc:756
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "%sB་ལེན་དགོཔ་འདུག་  འབྱུང་ཁུངས་ཡིག་མཛོད་ཀྱི་%sB།\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:785
+#: cmdline/apt-get.cc:761
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "འབྱུང་ཁུངས་ཡིག་མཛོད་ཚུ་ཀྱི་%sB་ལེན་དགོ་པསས།\n"
 
-#: cmdline/apt-get.cc:791
+#: cmdline/apt-get.cc:767
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "%s་འབྱུང་ཁུངས་ལེན།\n"
 
-#: cmdline/apt-get.cc:812
+#: cmdline/apt-get.cc:788
 msgid "Failed to fetch some archives."
 msgstr "ཡིག་མཛོད་ལ་ལུ་ཅིག་ལེན་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: cmdline/apt-get.cc:817 apt-private/private-install.cc:315
+#: cmdline/apt-get.cc:793 apt-private/private-install.cc:325
 msgid "Download complete and in download only mode"
 msgstr "ཕབ་ལེན་ཐབས་ལམ་རྐྱངམ་གཅིག་ནང་མཇུག་བསྡུཝ་སྦེ་རང་ཕབ་ལེན་འབད།"
 
-#: cmdline/apt-get.cc:843
+#: cmdline/apt-get.cc:819
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "%s་ནང་ཧེ་མ་ལས་སྦུང་ཚན་བཟོ་བཤོལ་ཨིན་མའི་སྦུང་ཚན་བཟོ་བཤོལ་གོམ་འགྱོ་འབད་དོ།\n"
 
-#: cmdline/apt-get.cc:855
+#: cmdline/apt-get.cc:831
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "'%s'སྦུང་ཚན་བཟོ་བཤོལ་འཐུས་ཤོར་བྱུང་ཡོད།\n"
 
-#: cmdline/apt-get.cc:856
+#: cmdline/apt-get.cc:832
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "'dpkg-dev'་ཐུམ་སྒྲིལ་དེ་གཞི་བཙུགས་འབད་ཡོད་པ་ཅིན་ཨེབ་གཏང་འབད།\n"
 
-#: cmdline/apt-get.cc:878
+#: cmdline/apt-get.cc:854
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "'%s'་བཟོ་བརྩིགས་བརྡ་བཀོད་འཐུས་ཤོར་བྱུང་ཡོད།\n"
 
-#: cmdline/apt-get.cc:898
+#: cmdline/apt-get.cc:874
 msgid "Child process failed"
 msgstr "ཆ་ལག་ལས་སྦྱོར་དེ་འཐུས་ཤོར་བྱུང་ནུག"
 
-#: cmdline/apt-get.cc:917
+#: cmdline/apt-get.cc:893
 msgid "Must specify at least one package to check builddeps for"
 msgstr "builddeps ཞིབ་དཔྱད་འབད་ནིའི་དོན་ལུ་ཉུང་མཐའ་རང་ཐུམ་སྒྲིལ་གཅིག་གསལ་བཀོད་འབད་དགོ"
 
-#: cmdline/apt-get.cc:942
+#: cmdline/apt-get.cc:918
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
 "Architectures for setup"
 msgstr ""
 
-#: cmdline/apt-get.cc:966 cmdline/apt-get.cc:969
+#: cmdline/apt-get.cc:942 cmdline/apt-get.cc:945
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "%s་གི་དོན་ལུ་བཟོ་བརྩིགས་-རྟེན་འབྲེལ་བརྡ་དོན་དེ་ལེན་མ་ཚུགས།"
 
-#: cmdline/apt-get.cc:989
+#: cmdline/apt-get.cc:965
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s ལུ་བཟོ་བརྩིགས་རྟེན་འབྲེལ་མིན་འདུག\n"
 
-#: cmdline/apt-get.cc:1159
+#: cmdline/apt-get.cc:1135
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
 "packages"
 msgstr "%sཐུམ་སྒྲིལ་འདི་འཐོབ་མ་ཚུགསཔ་ལས་བརྟེན་ %sགི་དོན་ལུ་%s རྟེན་འབྲེལ་དེ་ངལ་རང་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:1177
+#: cmdline/apt-get.cc:1153
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
 "found"
 msgstr "%sཐུམ་སྒྲིལ་འདི་འཐོབ་མ་ཚུགསཔ་ལས་བརྟེན་ %sགི་དོན་ལུ་%s རྟེན་འབྲེལ་དེ་ངལ་རང་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:1200
+#: cmdline/apt-get.cc:1176
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "%s:གི་དོན་ལུ་%s་རྟེན་འབྲེལ་དེ་གི་རེ་བ་སྐོང་ནི་འདི་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན་  གཞི་བཙུགས་འབད་ཡོད་པའི་ཐུམ་"
 "སྒྲིལ་%s་དེ་གནམ་མེད་ས་མེད་གསརཔ་ཨིན་པས།"
 
-#: cmdline/apt-get.cc:1239
+#: cmdline/apt-get.cc:1215
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -501,37 +489,37 @@ msgstr ""
 "%s གི་དོན་ལུ་%s་རྟེན་འབྲེལ་འདི་གི་རེ་བ་སྐོང་མི་ཚུགས་ནུག་ག་ཅི་འབད་ཟེར་བ་ཅིན་ཐུམ་སྒརིལ་%s་གི་འཐོན་རིམ་"
 "ཚུ་འཐོབ་མ་ཚུགསཔ་ལས་བརྟེན་འཐོན་རིམ་དགོས་མཁོ་ཚུ་གི་རེ་བ་དོ་སྐོང་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:1245
+#: cmdline/apt-get.cc:1221
 #, fuzzy, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
 "version"
 msgstr "%sཐུམ་སྒྲིལ་འདི་འཐོབ་མ་ཚུགསཔ་ལས་བརྟེན་ %sགི་དོན་ལུ་%s རྟེན་འབྲེལ་དེ་ངལ་རང་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:1268
+#: cmdline/apt-get.cc:1244
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "%s: %s་གི་དོན་ལུ་་%s་རྟེན་འབྲེལ་འདི་ངལ་རངས་འབད་ནི་འཐུས་ཤོར་བྱུང་ནུག"
 
-#: cmdline/apt-get.cc:1283
+#: cmdline/apt-get.cc:1259
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr " %s་གི་དོན་ལུ་བཟོ་བརྩིགས་-རྟེན་འབྲེལ་འདི་ངལ་རངས་མ་ཚུགས་པས།"
 
-#: cmdline/apt-get.cc:1288
+#: cmdline/apt-get.cc:1264
 msgid "Failed to process build dependencies"
 msgstr "བཟོ་བརྩིགས་རྟེན་འབྲེལ་འདི་ལས་སྦྱོར་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན།"
 
-#: cmdline/apt-get.cc:1381 cmdline/apt-get.cc:1393
+#: cmdline/apt-get.cc:1357 cmdline/apt-get.cc:1369
 #, fuzzy, c-format
 msgid "Changelog for %s (%s)"
 msgstr "%s (%s)་ལུ་མཐུད་དོ།"
 
-#: cmdline/apt-get.cc:1499
+#: cmdline/apt-get.cc:1457
 msgid "Supported modules:"
 msgstr "རྒྱབ་སྐྱོར་འབད་ཡོད་པའི་ཚད་གཞི་ཚུ:"
 
-#: cmdline/apt-get.cc:1540
+#: cmdline/apt-get.cc:1498
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -646,8 +634,8 @@ msgid "%s was already not hold.\n"
 msgstr "%s ་འདི་ཧེ་མ་ལས་རང་འཐོན་རིམ་གསར་ཤོས་ཅིག་ཨིན།\n"
 
 #: cmdline/apt-mark.cc:247 cmdline/apt-mark.cc:328
-#: apt-pkg/contrib/fileutl.cc:834 apt-pkg/contrib/gpgv.cc:223
-#: apt-pkg/deb/dpkgpm.cc:1143
+#: apt-pkg/contrib/fileutl.cc:850 apt-pkg/contrib/gpgv.cc:223
+#: apt-pkg/deb/dpkgpm.cc:1174
 #, c-format
 msgid "Waited for %s but it wasn't there"
 msgstr "%s་གི་དོན་ལུ་བསྒུག་སྡོད་ཅི་ འདི་འབདཝ་ད་ཕར་མིན་འདུག"
@@ -688,7 +676,7 @@ msgid ""
 "See the apt-mark(8) and apt.conf(5) manual pages for more information."
 msgstr ""
 
-#: cmdline/apt.cc:66
+#: cmdline/apt.cc:71
 msgid ""
 "Usage: apt [options] command\n"
 "\n"
@@ -701,6 +689,8 @@ msgid ""
 " update - update list of available packages\n"
 " install - install packages\n"
 " upgrade - upgrade the systems packages\n"
+"\n"
+" edit-sources - edit the source information file\n"
 msgstr ""
 
 #: methods/cdrom.cc:203
@@ -801,8 +791,8 @@ msgstr "མཐུད་ལམ་ངལ་མཚམས"
 msgid "Server closed the connection"
 msgstr "སར་བར་གྱིས་མཐུད་ལམ་འདི་ཁ་བསྡམས་ཏེ་ཡོདཔ་ཨིན།"
 
-#: methods/ftp.cc:349 methods/rsh.cc:199 apt-pkg/contrib/fileutl.cc:1276
-#: apt-pkg/contrib/fileutl.cc:1285 apt-pkg/contrib/fileutl.cc:1288
+#: methods/ftp.cc:349 methods/rsh.cc:199 apt-pkg/contrib/fileutl.cc:1292
+#: apt-pkg/contrib/fileutl.cc:1301 apt-pkg/contrib/fileutl.cc:1304
 msgid "Read error"
 msgstr "འཛོལ་བ་ལྷབ།"
 
@@ -815,8 +805,8 @@ msgid "Protocol corruption"
 msgstr "གནད་སྤེལ་ལམ་ལུགས་ ངན་ཅན།"
 
 #: methods/ftp.cc:458 methods/rred.cc:238 methods/rsh.cc:243
-#: apt-pkg/contrib/fileutl.cc:1372 apt-pkg/contrib/fileutl.cc:1381
-#: apt-pkg/contrib/fileutl.cc:1384 apt-pkg/contrib/fileutl.cc:1409
+#: apt-pkg/contrib/fileutl.cc:1388 apt-pkg/contrib/fileutl.cc:1397
+#: apt-pkg/contrib/fileutl.cc:1400 apt-pkg/contrib/fileutl.cc:1425
 msgid "Write error"
 msgstr "འཛོལ་བ་འབྲི།"
 
@@ -827,6 +817,10 @@ msgstr "སོ་ཀེཊི་ཅིག་གསར་བསྐྲུན་འ
 #: methods/ftp.cc:708
 msgid "Could not connect data socket, connection timed out"
 msgstr "གནད་སྡུད་སོ་ཀེཊི་མཐུད་མ་ཚུགས་པར་ཡོདཔ་ཨིན་  མཐུད་ལམ་ངལ་མཚམས།"
+
+#: methods/ftp.cc:712 methods/connect.cc:116 apt-private/private-upgrade.cc:21
+msgid "Failed"
+msgstr "འཐུས་ཤོར་བྱུང་ཡོད།"
 
 #: methods/ftp.cc:714
 msgid "Could not connect passive socket."
@@ -1071,25 +1065,25 @@ msgstr "བཐུད་ལམ་འཐུས་ཤོར་བྱུང་ཡོ
 msgid "Internal error"
 msgstr "ནང་འཁོད་འཛོལ་བ།"
 
-#: apt-private/private-list.cc:141
+#: apt-private/private-list.cc:143
 msgid "Listing"
 msgstr ""
 
-#: apt-private/private-install.cc:91
+#: apt-private/private-install.cc:93
 msgid "Internal error, InstallPackages was called with broken packages!"
 msgstr ""
 "ནང་འཁོད་ཀྱི་འཛོལ་བ་  གཞི་བཙུགས་ཐུམ་སྒྲིལ་ཚུ་ ཆད་པ་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ་དང་གཅིག་ཁར་བོད་བརྡ་འབད་འདི་"
 "ཡོད!"
 
-#: apt-private/private-install.cc:100
+#: apt-private/private-install.cc:102
 msgid "Packages need to be removed but remove is disabled."
 msgstr "ཐུམ་སྒྲིལ་ཚུ་རྩ་བསྐྲད་བཏང་དགོཔ་འདུག་འདི་འབདགཝ་ད་རྩ་བསྐྲད་གཏང་ནི་འདི་ལྕོགས་མིན་ཐལ་ཏེ་འདུག"
 
-#: apt-private/private-install.cc:111
+#: apt-private/private-install.cc:121
 msgid "Internal error, Ordering didn't finish"
 msgstr "ནང་འཁོད་འཛོལ་བ་  གོ་རིམ་བཟོ་ནི་ཚུ་མཇུག་མ་བསྡུ་བས།"
 
-#: apt-private/private-install.cc:149
+#: apt-private/private-install.cc:159
 msgid "How odd.. The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "ག་ཅི་གི་ཡ་མཚན་ཆེ་མི་ཆེ་  ཚད་འདི་གིས་ email apt@packages.debian.org་ལུ་མཐུན་སྒྲིག་མི་འབད་"
@@ -1097,52 +1091,52 @@ msgstr ""
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:156
+#: apt-private/private-install.cc:166
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "%sBལེན་ནི་ལུ་དགོཔ་པས། ཡིག་མཛོད་ཚི་གི་%sB་\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:161
+#: apt-private/private-install.cc:171
 #, c-format
 msgid "Need to get %sB of archives.\n"
 msgstr "ཡིག་མཛོད་ཀྱི་%sB་འདི་ལེན་དགོ་པས།\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:168
+#: apt-private/private-install.cc:178
 #, fuzzy, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "ཁ་སྐོང་གི་%sB་འདི་བཤུབ་པའི་ཤུལ་ལས་ཌིཀསི་གི་བར་སྟོང་དེ་ལག་ལེན་འཐབ་འོང་།\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: apt-private/private-install.cc:173
+#: apt-private/private-install.cc:183
 #, fuzzy, c-format
 msgid "After this operation, %sB disk space will be freed.\n"
 msgstr "%sB་འདི་ཤུབ་པའི་ཤུལ་ལས་ཀྱི་བར་སྟོང་དེ་དལཝ་སྦེ་ལུས་འོང་།\n"
 
-#: apt-private/private-install.cc:201
+#: apt-private/private-install.cc:211
 #, c-format
 msgid "You don't have enough free space in %s."
 msgstr "%s ནང་ཁྱོད་ལུ་བར་སྟོང་དལཝ་ལངམ་སྦེ་མིན་འདུག"
 
-#: apt-private/private-install.cc:211 apt-private/private-download.cc:55
+#: apt-private/private-install.cc:221 apt-private/private-download.cc:55
 msgid "There are problems and -y was used without --force-yes"
 msgstr "དཀའ་ངལ་ཚུ་ཡོདཔ་ལས་-y ་འདི་ --force-yes་མེདཐོག་ལས་ལག་ལེན་འཐབ་སྟེ་ཡོད།"
 
-#: apt-private/private-install.cc:217 apt-private/private-install.cc:239
+#: apt-private/private-install.cc:227 apt-private/private-install.cc:249
 msgid "Trivial Only specified but this is not a trivial operation."
 msgstr "གལ་ཆུང་རྐྱངམ་ཅིག་ཁསལ་བཀོད་འབད་ནུག་ འདི་འབདཝ་ད་འ་ནི་འདི་གལ་ཆུང་གི་བཀོལ་སྤྱོད་མེན།"
 
 #. TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
 #. careful with hard to type or special characters (like non-breaking spaces)
-#: apt-private/private-install.cc:221
+#: apt-private/private-install.cc:231
 msgid "Yes, do as I say!"
 msgstr "ཨིན་ ང་གིས་སླབ་དོ་བཟུམ་སྦེ་རང་འབད!"
 
-#: apt-private/private-install.cc:223
+#: apt-private/private-install.cc:233
 #, c-format
 msgid ""
 "You are about to do something potentially harmful.\n"
@@ -1153,20 +1147,20 @@ msgstr ""
 "འཕྲོ་མཐུད་འབད་ནིའི་དོན་ལུ་'%s'ཚིག་ཚན་ནང་ལུ་ཡིག་དཔར་རྐྱབས།\n"
 " ?] "
 
-#: apt-private/private-install.cc:229 apt-private/private-install.cc:247
+#: apt-private/private-install.cc:239 apt-private/private-install.cc:257
 msgid "Abort."
 msgstr "བར་བཤོལ་འབད།"
 
-#: apt-private/private-install.cc:244
+#: apt-private/private-install.cc:254
 #, fuzzy
 msgid "Do you want to continue?"
 msgstr "ཁྱོན་ཀྱི་འཕྲོ་མཐུད་ནི་འབད་ནི་ཨིན་ན་"
 
-#: apt-private/private-install.cc:314
+#: apt-private/private-install.cc:324
 msgid "Some files failed to download"
 msgstr "ཡིག་སྣོད་ལ་ལུ་ཅིག་ཕབ་ལེན་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: apt-private/private-install.cc:321
+#: apt-private/private-install.cc:331
 msgid ""
 "Unable to fetch some archives, maybe run apt-get update or try with --fix-"
 "missing?"
@@ -1174,19 +1168,19 @@ msgstr ""
 "ཡིག་མཛོད་ལ་ལུ་ཅིག་ལེན་མི་ཚུགས་པས་  apt-get་དུས་མཐུན་བཟོ་ནི་གཡོག་བཀོལ་ནི་ཨིན་ན་ཡང་ན་--fix-"
 "missing་དང་གཅིག་ཁར་འབད་རྩོལ་བསྐྱེད་ནི་ཨིན་ན་?"
 
-#: apt-private/private-install.cc:325
+#: apt-private/private-install.cc:335
 msgid "--fix-missing and media swapping is not currently supported"
 msgstr "--fix-missing་དང་བརྡ་ལམ་བརྗེ་སོར་འབད་ནི་འདི་ད་ལྟོ་ལས་རང་རྒྱབ་སྐྱོར་མི་འབད་བས།"
 
-#: apt-private/private-install.cc:330
+#: apt-private/private-install.cc:340
 msgid "Unable to correct missing packages."
 msgstr "བརླག་སྟོར་ཞུགས་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ་ནོར་བཅོས་འབད་མི་ཚུགས་པས།"
 
-#: apt-private/private-install.cc:331
+#: apt-private/private-install.cc:341
 msgid "Aborting install."
 msgstr "གཞི་བཙུགས་བར་བཤོལ་འབད་དོ།"
 
-#: apt-private/private-install.cc:359
+#: apt-private/private-install.cc:377
 msgid ""
 "The following package disappeared from your system as\n"
 "all files have been overwritten by other packages:"
@@ -1196,15 +1190,15 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: apt-private/private-install.cc:363
+#: apt-private/private-install.cc:381
 msgid "Note: This is done automatically and on purpose by dpkg."
 msgstr ""
 
-#: apt-private/private-install.cc:384
+#: apt-private/private-install.cc:402
 msgid "We are not supposed to delete stuff, can't start AutoRemover"
 msgstr ""
 
-#: apt-private/private-install.cc:492
+#: apt-private/private-install.cc:510
 msgid ""
 "Hmm, seems like the AutoRemover destroyed something which really\n"
 "shouldn't happen. Please file a bug report against apt."
@@ -1220,16 +1214,16 @@ msgstr ""
 #. "that package should be filed.") << std::endl;
 #. }
 #.
-#: apt-private/private-install.cc:495 apt-private/private-install.cc:636
+#: apt-private/private-install.cc:513 apt-private/private-install.cc:654
 msgid "The following information may help to resolve the situation:"
 msgstr "འོག་གི་བརྡ་དོན་དེ་གིས་དུས་སྐབས་འདི་མོས་མཐུན་བཟོ་ནི་ལུ་གྲོགས་རམ་འབད་འོང་:"
 
-#: apt-private/private-install.cc:499
+#: apt-private/private-install.cc:517
 #, fuzzy
 msgid "Internal Error, AutoRemover broke stuff"
 msgstr "ནང་འཁོད་འཛོལ་བ་ དཀའ་ངལ་མོས་མཐུན་འབད་མི་ཅ་ཆས་ཚུ་མེདཔ་ཐལ་ཡོད།"
 
-#: apt-private/private-install.cc:506
+#: apt-private/private-install.cc:524
 #, fuzzy
 msgid ""
 "The following package was automatically installed and is no longer required:"
@@ -1239,7 +1233,7 @@ msgid_plural ""
 msgstr[0] "འོག་གི་ཐུམ་སྒྲིས་གསརཔ་འདི་ཚུ་ཁཞི་བཙུགས་འབད་འོང་:"
 msgstr[1] "འོག་གི་ཐུམ་སྒྲིས་གསརཔ་འདི་ཚུ་ཁཞི་བཙུགས་འབད་འོང་:"
 
-#: apt-private/private-install.cc:510
+#: apt-private/private-install.cc:528
 #, fuzzy, c-format
 msgid "%lu package was automatically installed and is no longer required.\n"
 msgid_plural ""
@@ -1247,17 +1241,17 @@ msgid_plural ""
 msgstr[0] "འོག་གི་ཐུམ་སྒྲིས་གསརཔ་འདི་ཚུ་ཁཞི་བཙུགས་འབད་འོང་:"
 msgstr[1] "འོག་གི་ཐུམ་སྒྲིས་གསརཔ་འདི་ཚུ་ཁཞི་བཙུགས་འབད་འོང་:"
 
-#: apt-private/private-install.cc:512
+#: apt-private/private-install.cc:530
 msgid "Use 'apt-get autoremove' to remove it."
 msgid_plural "Use 'apt-get autoremove' to remove them."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apt-private/private-install.cc:606
+#: apt-private/private-install.cc:624
 msgid "You might want to run 'apt-get -f install' to correct these:"
 msgstr "འདི་ཚུ་ནོར་བཅོས་འབད་ནིའི་དོན་ལུ་ཁྱོད་ཀྱི་'apt-get -f install'དེ་གཡོག་བཀོལ་དགོཔ་འོང་:"
 
-#: apt-private/private-install.cc:608
+#: apt-private/private-install.cc:626
 msgid ""
 "Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
 "solution)."
@@ -1265,7 +1259,7 @@ msgstr ""
 "མ་ཚང་བའི་རྟེན་འབྲེལ་  ཐུས་སྒྲིལ་མེད་མི་ཚུ་དང་གཅིག་ཁར་ 'apt-get -f install'དེ་འབཐ་རྩོལ་བསྐྱེདཔ།"
 "(ཡང་ན་ཐབས་ཤེས་ཅིག་གསལ་བཀོད་འབད།)"
 
-#: apt-private/private-install.cc:621
+#: apt-private/private-install.cc:639
 msgid ""
 "Some packages could not be installed. This may mean that you have\n"
 "requested an impossible situation or if you are using the unstable\n"
@@ -1276,19 +1270,19 @@ msgstr ""
 "འབད་འབདཝ་འོང་ནི་མས་ ཡང་ན་ད་ལྟོ་ཡང་གསར་བསྐྲུན་མ་འབད་བར་ཡོད་པའི་ཐུམ་སྒྲིལ་ལ་ལུ་ཅིག་ཡང་ན་ནང་"
 "འབྱོར་གྱི་ཕྱི་ཁར་རྩ་བསྐྲད་བཏང་ཡོད་པའི་རྩ་བརྟན་མེད་པའི་བགོ་འགྲེམ་ཚུ་ལག་ལེན་འཐབ་དོ་ཡོདཔ་འོང་ནི་ཨིན་པས།"
 
-#: apt-private/private-install.cc:642
+#: apt-private/private-install.cc:660
 msgid "Broken packages"
 msgstr "ཆད་པ་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ།"
 
-#: apt-private/private-install.cc:695
+#: apt-private/private-install.cc:713
 msgid "The following extra packages will be installed:"
 msgstr "འོག་གི་ཐུམ་སྒྲིལ་ཐེབས་ཚུ་གཞི་བཙུགས་འབད་འོང་:"
 
-#: apt-private/private-install.cc:785
+#: apt-private/private-install.cc:803
 msgid "Suggested packages:"
 msgstr "བསམ་འཆར་བཀོད་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ:"
 
-#: apt-private/private-install.cc:786
+#: apt-private/private-install.cc:804
 msgid "Recommended packages:"
 msgstr "འོས་སྦྱོར་འབད་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ:"
 
@@ -1309,106 +1303,106 @@ msgstr "ཐུམ་སྒྲིལ་ལ་ལུ་ཅིག་བདེན་
 msgid "Install these packages without verification?"
 msgstr "བདེན་སྦྱོར་མ་འབད་བར་འ་ནི་ཐུམ་སྒྲིལ་འདི་ཚུ་གཞི་བཙུགས་འབད་ནི་ཨིན་ན་"
 
-#: apt-private/private-download.cc:87 apt-pkg/algorithms.cc:1607
+#: apt-private/private-download.cc:87 apt-pkg/update.cc:84
 #, c-format
 msgid "Failed to fetch %s  %s\n"
 msgstr "%s  %s་ ལེན་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།\n"
 
-#: apt-private/private-output.cc:197
+#: apt-private/private-output.cc:198
 msgid "installed,upgradable to: "
 msgstr ""
 
-#: apt-private/private-output.cc:203
+#: apt-private/private-output.cc:204
 #, fuzzy
 msgid "[installed,local]"
 msgstr " [གཞི་བཙུགས་འབད་ཡོད།]"
 
-#: apt-private/private-output.cc:206
+#: apt-private/private-output.cc:207
 msgid "[installed,auto-removable]"
 msgstr ""
 
-#: apt-private/private-output.cc:208
+#: apt-private/private-output.cc:209
 #, fuzzy
 msgid "[installed,automatic]"
 msgstr " [གཞི་བཙུགས་འབད་ཡོད།]"
 
-#: apt-private/private-output.cc:210
+#: apt-private/private-output.cc:211
 #, fuzzy
 msgid "[installed]"
 msgstr " [གཞི་བཙུགས་འབད་ཡོད།]"
 
-#: apt-private/private-output.cc:216
+#: apt-private/private-output.cc:217
 msgid "[upgradable from: "
 msgstr ""
 
-#: apt-private/private-output.cc:222
+#: apt-private/private-output.cc:223
 msgid "[residual-config]"
 msgstr ""
 
-#: apt-private/private-output.cc:310
+#: apt-private/private-output.cc:314
 msgid "The following packages have unmet dependencies:"
 msgstr "འོག་གི་ཐུམ་སྒྲིལ་ཚུ་ལུ་རྟེན་འབྲེལ་མ་ཚང་པས:"
 
-#: apt-private/private-output.cc:400
+#: apt-private/private-output.cc:404
 #, c-format
 msgid "but %s is installed"
 msgstr "འདི་འབདཝ་ད་%s་འདི་གཞི་བཙུགས་འབད་ཡོད།"
 
-#: apt-private/private-output.cc:402
+#: apt-private/private-output.cc:406
 #, c-format
 msgid "but %s is to be installed"
 msgstr "འདི་འབདཝ་ད་%sའདི་གཞི་བཙུགས་འབད་ནི་ཨིན།"
 
-#: apt-private/private-output.cc:409
+#: apt-private/private-output.cc:413
 msgid "but it is not installable"
 msgstr "འདི་འབདཝ་ད་%s་འདི་གཟི་བཙུགས་འབད་མི་བཏུབ་པས།"
 
-#: apt-private/private-output.cc:411
+#: apt-private/private-output.cc:415
 msgid "but it is a virtual package"
 msgstr "འདི་འབདཝ་ད་ འདི་བར་ཅུ་ཡལ་ཐུམ་སྒྲིལ་ཅིག་ཨིན་པས།"
 
-#: apt-private/private-output.cc:414
+#: apt-private/private-output.cc:418
 msgid "but it is not installed"
 msgstr "འདི་འབདཝ་ད་འདི་གཞི་བཙུགས་མ་འབད་བས།"
 
-#: apt-private/private-output.cc:414
+#: apt-private/private-output.cc:418
 msgid "but it is not going to be installed"
 msgstr "འདི་འབདཝ་ད་འདི་གཞི་བཙུགས་མི་འབད་ནི་ཨིན་པས།"
 
-#: apt-private/private-output.cc:419
+#: apt-private/private-output.cc:423
 msgid " or"
 msgstr "ཡང་ན།"
 
-#: apt-private/private-output.cc:448
+#: apt-private/private-output.cc:452
 msgid "The following NEW packages will be installed:"
 msgstr "འོག་གི་ཐུམ་སྒྲིས་གསརཔ་འདི་ཚུ་ཁཞི་བཙུགས་འབད་འོང་:"
 
-#: apt-private/private-output.cc:474
+#: apt-private/private-output.cc:478
 msgid "The following packages will be REMOVED:"
 msgstr "འོག་གི་ཐུམ་སྒྲིལ་འདི་ཚུ་རྩ བསྐྲད་གཏང་འོང་:"
 
-#: apt-private/private-output.cc:496
+#: apt-private/private-output.cc:500
 msgid "The following packages have been kept back:"
 msgstr "འོག་གི་ཐུམ་སྒྲིལ་འདི་ཚུ་ལོག་སྟེ་རང་བཞག་ནུག:"
 
-#: apt-private/private-output.cc:517
+#: apt-private/private-output.cc:521
 msgid "The following packages will be upgraded:"
 msgstr "འོག་གི་ཐུམ་སྒྲིལ་འདི་ཚུ་ཡར་བསྐྱེད་འབད་འོང་:"
 
-#: apt-private/private-output.cc:538
+#: apt-private/private-output.cc:542
 msgid "The following packages will be DOWNGRADED:"
 msgstr "འོག་གི་ཐུམ་སྒྲལ་འདི་ཚུ་མར་ཕབ་འབད་འོང་:"
 
-#: apt-private/private-output.cc:558
+#: apt-private/private-output.cc:562
 msgid "The following held packages will be changed:"
 msgstr "འོག་གི་འཆང་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ་བསྒྱུར་བཅོས་འབད་འོང་:"
 
-#: apt-private/private-output.cc:613
+#: apt-private/private-output.cc:617
 #, c-format
 msgid "%s (due to %s) "
 msgstr "%s( %s་གིས་སྦེ)"
 
-#: apt-private/private-output.cc:621
+#: apt-private/private-output.cc:625
 msgid ""
 "WARNING: The following essential packages will be removed.\n"
 "This should NOT be done unless you know exactly what you are doing!"
@@ -1416,27 +1410,27 @@ msgstr ""
 "ཉེན་བརྡ:འོག་གི་ཉོ་མཁོ་བའི་ཐུམ་སྒྲིལ་ཚུ་རྩ་བསྐྲད་གཏང་འོང་།\n"
 "ཁྱོད་ཀྱིས་ཁྱོད་རང་ག་ཅི་འབདཝ་ཨིན་ན་ངེས་སྦེ་མ་ཤེས་ཚུན་འདི་འབད་ནི་མི་འོང་།!"
 
-#: apt-private/private-output.cc:652
+#: apt-private/private-output.cc:656
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu་ཡར་བསྐྱེད་འབད་ཡོད་ %lu་འདི་གསརཔ་སྦེ་གཞི་བཙུགས་འབད་ཡོད།"
 
-#: apt-private/private-output.cc:656
+#: apt-private/private-output.cc:660
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu་འདི་ལོག་གཞི་བཙུགས་འབད་ཡོད།"
 
-#: apt-private/private-output.cc:658
+#: apt-private/private-output.cc:662
 #, c-format
 msgid "%lu downgraded, "
 msgstr "%lu་འདི་མར་ཕབ་འབད་ཡོད།"
 
-#: apt-private/private-output.cc:660
+#: apt-private/private-output.cc:664
 #, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "རྩ་བསྐྲད་འབད་ནི་ལུ་%lu་དང་%lu་ཡར་བསྐྱེད་མ་འབད་བས།\n"
 
-#: apt-private/private-output.cc:664
+#: apt-private/private-output.cc:668
 #, c-format
 msgid "%lu not fully installed or removed.\n"
 msgstr "%lu་འདི་ཆ་ཚང་སྦེ་གཞི་བཙུགས་མ་འབད་ཡང་ན་རྩ་བསྐྲད་མ་གཏང་པས།\n"
@@ -1445,7 +1439,7 @@ msgstr "%lu་འདི་ཆ་ཚང་སྦེ་གཞི་བཙུགས
 #. e.g. "Do you want to continue? [Y/n] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:686
+#: apt-private/private-output.cc:690
 msgid "[Y/n]"
 msgstr ""
 
@@ -1453,50 +1447,50 @@ msgstr ""
 #. e.g. "Should this file be removed? [y/N] "
 #. The user has to answer with an input matching the
 #. YESEXPR/NOEXPR defined in your l10n.
-#: apt-private/private-output.cc:692
+#: apt-private/private-output.cc:696
 msgid "[y/N]"
 msgstr ""
 
 #. TRANSLATOR: "Yes" answer printed for a yes/no question if --assume-yes is set
-#: apt-private/private-output.cc:703
+#: apt-private/private-output.cc:707
 msgid "Y"
 msgstr "ཝའི།"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc:709
+#: apt-private/private-output.cc:713
 msgid "N"
 msgstr ""
 
-#: apt-private/private-output.cc:731 apt-pkg/cachefilter.cc:33
+#: apt-private/private-output.cc:735 apt-pkg/cachefilter.cc:33
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "རི་ཇེགསི་ཕྱོགས་སྒྲིག་འཛོལ་བ་- %s"
 
-#: apt-private/private-cachefile.cc:86
+#: apt-private/private-cachefile.cc:87
 msgid "Correcting dependencies..."
 msgstr "རྟེན་འབྲེལ་ནོར་བཅོས་འབད་དོ།"
 
-#: apt-private/private-cachefile.cc:89
+#: apt-private/private-cachefile.cc:90
 msgid " failed."
 msgstr "འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: apt-private/private-cachefile.cc:92
+#: apt-private/private-cachefile.cc:93
 msgid "Unable to correct dependencies"
 msgstr "རྟེན་འབྲེལ་འདི་ནོར་བཅོས་འབད་མི་ཚུགས་པས།"
 
-#: apt-private/private-cachefile.cc:95
+#: apt-private/private-cachefile.cc:96
 msgid "Unable to minimize the upgrade set"
 msgstr "ཡར་བསྐྱེད་འབད་ཡོད་པའི་ཆ་ཚན་འདི་ཆུང་ཀུ་བཟོ་མི་ཚུགས་པས།"
 
-#: apt-private/private-cachefile.cc:97
+#: apt-private/private-cachefile.cc:98
 msgid " Done"
 msgstr "འབད་ཚར་ཡི།"
 
-#: apt-private/private-cachefile.cc:101
+#: apt-private/private-cachefile.cc:102
 msgid "You might want to run 'apt-get -f install' to correct these."
 msgstr "འ་ནི་འདི་ཚུ་ནོར་བཅོས་འབད་ནི་ལུ་ཁྱོད་ཀྱི་'apt-get -f install'དེ་གཡོག་བཀོལ་དགོཔ་འོང་།"
 
-#: apt-private/private-cachefile.cc:104
+#: apt-private/private-cachefile.cc:105
 msgid "Unmet dependencies. Try using -f."
 msgstr "མ་ཚང་པའི་རྟེན་འབྲེལ་ཚུ། -f ལག་ལེན་འཐབ་སྟེ་འབད་རྩོལ་བསྐྱེད།"
 
@@ -1504,13 +1498,22 @@ msgstr "མ་ཚང་པའི་རྟེན་འབྲེལ་ཚུ། -f
 msgid "Sorting"
 msgstr ""
 
-#: apt-private/private-update.cc:44
+#: apt-private/private-update.cc:45
 msgid "The update command takes no arguments"
 msgstr "དུས་མཐུན་བཟོ་བའི་བརྡ་བཀོད་འདི་གིས་སྒྲུབ་རྟགས་ཚུ་མི་འབག་འབད།"
 
-#: apt-private/private-upgrade.cc:24 apt-private/private-upgrade.cc:45
-msgid "Internal error, AllUpgrade broke stuff"
+#: apt-private/private-upgrade.cc:18
+msgid "Calculating upgrade... "
+msgstr "ཡར་བསྐྱེད་རྩིས་བཏོན་དོ་... "
+
+#: apt-private/private-upgrade.cc:23
+#, fuzzy
+msgid "Internal error, Upgrade broke stuff"
 msgstr "ནང་འགོད་འཛོལ་བ་  ཡར་བསྐྱེད་ཀྱི་ཅ་ཆས་ཆ་མཉམ་མེདཔ་ཐལ་ཡོད།"
+
+#: apt-private/private-upgrade.cc:25
+msgid "Done"
+msgstr "འབད་ཚར་ཡི།"
 
 #: apt-private/private-search.cc:61
 msgid "Full Text Search"
@@ -1526,6 +1529,16 @@ msgid ""
 "      apt-get needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
 "      so don't depend on the relevance to the real current situation!"
+msgstr ""
+
+#: apt-private/private-sources.cc:41
+#, fuzzy, c-format
+msgid "Failed to parse %s. Edit again? "
+msgstr "%s་ལུ་%s་བསྐྱར་མིང་བཏགས་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
+
+#: apt-private/private-sources.cc:52
+#, c-format
+msgid "Your '%s' file changed, please run 'apt-get update'."
 msgstr ""
 
 #: apt-private/acqprogress.cc:60
@@ -2022,7 +2035,7 @@ msgstr "%s་འབྲེལ་འཐུད་མེདཔ་བཟོ་ནི�
 msgid "Failed to rename %s to %s"
 msgstr "%s་ལུ་%s་བསྐྱར་མིང་བཏགས་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: cmdline/apt-internal-solver.cc:37
+#: cmdline/apt-internal-solver.cc:38
 #, fuzzy
 msgid ""
 "Usage: apt-internal-solver\n"
@@ -2285,30 +2298,30 @@ msgid ""
 msgstr ""
 
 #. d means days, h means hours, min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:378
+#: apt-pkg/contrib/strutl.cc:401
 #, c-format
 msgid "%lid %lih %limin %lis"
 msgstr ""
 
 #. h means hours, min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:385
+#: apt-pkg/contrib/strutl.cc:408
 #, c-format
 msgid "%lih %limin %lis"
 msgstr ""
 
 #. min means minutes, s means seconds
-#: apt-pkg/contrib/strutl.cc:392
+#: apt-pkg/contrib/strutl.cc:415
 #, c-format
 msgid "%limin %lis"
 msgstr ""
 
 #. s means seconds
-#: apt-pkg/contrib/strutl.cc:397
+#: apt-pkg/contrib/strutl.cc:420
 #, c-format
 msgid "%lis"
 msgstr ""
 
-#: apt-pkg/contrib/strutl.cc:1206
+#: apt-pkg/contrib/strutl.cc:1229
 #, c-format
 msgid "Selection %s not found"
 msgstr "སེལ་འཐུ་%s ་མ་འཐོབ།"
@@ -2490,70 +2503,70 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc:846
+#: apt-pkg/contrib/fileutl.cc:862
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
 msgstr "ཡན་ལག་ལས་སྦྱོར་%s་ལུ་ཆ་བགོས་ཀྱི་སྐྱོན་ཅིག་ཐོབ་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/contrib/fileutl.cc:848
+#: apt-pkg/contrib/fileutl.cc:864
 #, fuzzy, c-format
 msgid "Sub-process %s received signal %u."
 msgstr "ཡན་ལག་ལས་སྦྱོར་%s་ལུ་ཆ་བགོས་ཀྱི་སྐྱོན་ཅིག་ཐོབ་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/contrib/fileutl.cc:852 apt-pkg/contrib/gpgv.cc:243
+#: apt-pkg/contrib/fileutl.cc:868 apt-pkg/contrib/gpgv.cc:243
 #, c-format
 msgid "Sub-process %s returned an error code (%u)"
 msgstr "ཡན་ལག་ལས་སྦྱོར་%s་གིས་འཛོལ་བའི་ཨང་རྟགས་(%u)ཅིག་སླར་ལོག་འབད་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/contrib/fileutl.cc:854 apt-pkg/contrib/gpgv.cc:236
+#: apt-pkg/contrib/fileutl.cc:870 apt-pkg/contrib/gpgv.cc:236
 #, c-format
 msgid "Sub-process %s exited unexpectedly"
 msgstr "ཡན་ལག་ལས་སྦྱོར་་%s་གིས་རེ་བ་མེད་པར་ཕྱིར་ཐོན་ཡོདཔ་ཨིན།"
 
-#: apt-pkg/contrib/fileutl.cc:1000
+#: apt-pkg/contrib/fileutl.cc:1016
 #, c-format
 msgid "Could not open file %s"
 msgstr "%s་ཡིག་སྣོད་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: apt-pkg/contrib/fileutl.cc:1077
+#: apt-pkg/contrib/fileutl.cc:1093
 #, fuzzy, c-format
 msgid "Could not open file descriptor %d"
 msgstr "%s་གི་དོན་ལུ་རྒྱུད་དུང་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: apt-pkg/contrib/fileutl.cc:1162
+#: apt-pkg/contrib/fileutl.cc:1178
 msgid "Failed to create subprocess IPC"
 msgstr "ཡན་ལག་ལས་སྦྱོར་ ཨའི་པི་སི་ གསར་བསྐྲུན་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: apt-pkg/contrib/fileutl.cc:1217
+#: apt-pkg/contrib/fileutl.cc:1233
 msgid "Failed to exec compressor "
 msgstr "ཨེབ་འཕྲུལ་ལག་ལེན་འཐབ་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
-#: apt-pkg/contrib/fileutl.cc:1310
+#: apt-pkg/contrib/fileutl.cc:1326
 #, fuzzy, c-format
 msgid "read, still have %llu to read but none left"
 msgstr "ལྷག་  ད་ལྟོ་ཡང་ལྷག་ནི་ལུ་%lu་ཡོད་འདི་འབདཝ་ད་ཅི་ཡང་ལྷག་ལུས་མིན་འདུག"
 
-#: apt-pkg/contrib/fileutl.cc:1397 apt-pkg/contrib/fileutl.cc:1419
+#: apt-pkg/contrib/fileutl.cc:1413 apt-pkg/contrib/fileutl.cc:1435
 #, fuzzy, c-format
 msgid "write, still have %llu to write but couldn't"
 msgstr "འབྲི་  ད་ལྟོ་ཡང་འབྲི་ནི་ལུ་%lu་ཡོད་འདི་འདབཝ་ད་འབད་མ་ཚུགས།"
 
-#: apt-pkg/contrib/fileutl.cc:1707
+#: apt-pkg/contrib/fileutl.cc:1723
 #, fuzzy, c-format
 msgid "Problem closing the file %s"
 msgstr "ཡིག་སྣོད་འདི་ཁ་བསྡམས་པའི་བསྒང་དཀའ་ངལ།"
 
-#: apt-pkg/contrib/fileutl.cc:1719
+#: apt-pkg/contrib/fileutl.cc:1735
 #, fuzzy, c-format
 msgid "Problem renaming the file %s to %s"
 msgstr "ཡིག་སྣོད་མཉམ་བྱུང་འབདཝ་ད་དཀའ་ངལ།"
 
-#: apt-pkg/contrib/fileutl.cc:1730
+#: apt-pkg/contrib/fileutl.cc:1746
 #, fuzzy, c-format
 msgid "Problem unlinking the file %s"
 msgstr "ཡིག་སྣོད་འདི་འབྲེལལམ་མེདཔ་བཟོ་བའི་བསྒང་དཀའ་ངལ།"
 
-#: apt-pkg/contrib/fileutl.cc:1743
+#: apt-pkg/contrib/fileutl.cc:1759
 msgid "Problem syncing the file"
 msgstr "ཡིག་སྣོད་མཉམ་བྱུང་འབདཝ་ད་དཀའ་ངལ།"
 
@@ -2752,19 +2765,19 @@ msgstr "བཟོ་ཉེས་འགྱུར་བའི་གྲལ་ཐི
 msgid "Type '%s' is not known on line %u in source list %s"
 msgstr "དབྱེ་བ་'%s'་འདི་གྲལ་ཐིག་%u་གུར་ལུ་ཡོདཔ་འབྱུང་ཁུངས་ཐོ་ཡིག་%s་གི་ནང་ན་མ་ཤེས་པས།"
 
-#: apt-pkg/packagemanager.cc:297 apt-pkg/packagemanager.cc:923
+#: apt-pkg/packagemanager.cc:296 apt-pkg/packagemanager.cc:922
 #, c-format
 msgid ""
 "Could not perform immediate configuration on '%s'. Please see man 5 apt.conf "
 "under APT::Immediate-Configure for details. (%d)"
 msgstr ""
 
-#: apt-pkg/packagemanager.cc:498 apt-pkg/packagemanager.cc:529
+#: apt-pkg/packagemanager.cc:497 apt-pkg/packagemanager.cc:528
 #, fuzzy, c-format
 msgid "Could not configure '%s'. "
 msgstr "%s་ཡིག་སྣོད་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: apt-pkg/packagemanager.cc:571
+#: apt-pkg/packagemanager.cc:570
 #, c-format
 msgid ""
 "This installation run will require temporarily removing the essential "
@@ -2789,7 +2802,7 @@ msgstr ""
 "ཐུམ་སྒྲིལ་%s་འདི་ལོག་འདི་རང་གཞི་བཙུགས་འབད་དགོཔ་འདུག་ འདི་འབདཝ་ད་འདི་གི་དོན་ལུ་ཡིག་མཛོད་ཅིག་འཚོལ་"
 "མ་ཐོབ།"
 
-#: apt-pkg/algorithms.cc:1279
+#: apt-pkg/algorithms.cc:1068
 msgid ""
 "Error, pkgProblemResolver::Resolve generated breaks, this may be caused by "
 "held packages."
@@ -2797,18 +2810,9 @@ msgstr ""
 "འཛོལ་བ་ pkgProblemResolver::གིས་བཟོ་བཏོན་འབད་ཡོད་པའི་མཚམས་དེ་ཚུ་མོས་མཐུན་བཟོཝ་ཨིན འ་ནི་ཐུམ་"
 "སྒྲིལ་ཚུ་འཛིན་པའི་རྒྱུ་རྐྱེན་ལས་བརྟེན་ཨིན་པས།"
 
-#: apt-pkg/algorithms.cc:1281
+#: apt-pkg/algorithms.cc:1070
 msgid "Unable to correct problems, you have held broken packages."
 msgstr "དཀའ་ངལ་འདི་ནོར་བཅོས་འབད་མ་ཚུགས་ ཁྱོད་ཀྱི་ཐུམ་སྒྲིལ་ཆད་པ་ཚུ་འཆང་འདི་འདུག"
-
-#: apt-pkg/algorithms.cc:1633 apt-pkg/algorithms.cc:1635
-#, fuzzy
-msgid ""
-"Some index files failed to download. They have been ignored, or old ones "
-"used instead."
-msgstr ""
-"ཟུར་ཐོ་ཡིག་སྣོད་ལ་ལུ་ཅིག་ཕབ་ལེན་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ནུག་  འདི་ཚུ་སྣང་མེད་སྦེ་བཞགཔ་མ་ཚད་ ཚབ་ལུ་"
-"རྙིངམ་འདི་ཚུ་ལག་ལེན་འཐབ་ནུག"
 
 #: apt-pkg/acquire.cc:81 apt-pkg/cdrom.cc:838
 #, fuzzy, c-format
@@ -3260,141 +3264,150 @@ msgstr ""
 msgid "Execute external solver"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:85
+#: apt-pkg/install-progress.cc:49
+#, c-format
+msgid "Progress: [%3i%%]"
+msgstr ""
+
+#: apt-pkg/install-progress.cc:83 apt-pkg/install-progress.cc:166
+msgid "Running dpkg"
+msgstr ""
+
+#: apt-pkg/update.cc:110 apt-pkg/update.cc:112
+#, fuzzy
+msgid ""
+"Some index files failed to download. They have been ignored, or old ones "
+"used instead."
+msgstr ""
+"ཟུར་ཐོ་ཡིག་སྣོད་ལ་ལུ་ཅིག་ཕབ་ལེན་འབད་ནི་ལུ་འཐུས་ཤོར་བྱུང་ནུག་  འདི་ཚུ་སྣང་མེད་སྦེ་བཞགཔ་མ་ཚད་ ཚབ་ལུ་"
+"རྙིངམ་འདི་ཚུ་ལག་ལེན་འཐབ་ནུག"
+
+#: apt-pkg/deb/dpkgpm.cc:90
 #, fuzzy, c-format
 msgid "Installing %s"
 msgstr "གཞི་བཙུགས་འབད་ཡོད་པའི་%s།"
 
-#: apt-pkg/deb/dpkgpm.cc:86 apt-pkg/deb/dpkgpm.cc:1093
+#: apt-pkg/deb/dpkgpm.cc:91 apt-pkg/deb/dpkgpm.cc:977
 #, c-format
 msgid "Configuring %s"
 msgstr "%s་རིམ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:87 apt-pkg/deb/dpkgpm.cc:1100
+#: apt-pkg/deb/dpkgpm.cc:92 apt-pkg/deb/dpkgpm.cc:984
 #, c-format
 msgid "Removing %s"
 msgstr "%s་རྩ་བསྐྲད་གཏང་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:88
+#: apt-pkg/deb/dpkgpm.cc:93
 #, fuzzy, c-format
 msgid "Completely removing %s"
 msgstr "%s མཇུག་བསྡུཝ་སྦེ་རང་རྩ་བསྐྲད་བཏང་ཡོད།"
 
-#: apt-pkg/deb/dpkgpm.cc:89
+#: apt-pkg/deb/dpkgpm.cc:94
 #, c-format
 msgid "Noting disappearance of %s"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:90
+#: apt-pkg/deb/dpkgpm.cc:95
 #, c-format
 msgid "Running post-installation trigger %s"
 msgstr ""
 
 #. FIXME: use a better string after freeze
-#: apt-pkg/deb/dpkgpm.cc:776
+#: apt-pkg/deb/dpkgpm.cc:808
 #, fuzzy, c-format
 msgid "Directory '%s' missing"
 msgstr "ཐོ་བཀོད་འབད་མི་སྣོད་ཐོ་%s་ཆ་ཤས་འདི་བརླག་སྟོར་ཟུགས་ཏེ་འདུག"
 
-#: apt-pkg/deb/dpkgpm.cc:791 apt-pkg/deb/dpkgpm.cc:813
+#: apt-pkg/deb/dpkgpm.cc:823 apt-pkg/deb/dpkgpm.cc:845
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "%s་ཡིག་སྣོད་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
 
-#: apt-pkg/deb/dpkgpm.cc:919
-#, c-format
-msgid "Progress: [%3i%%]"
-msgstr ""
-
-#: apt-pkg/deb/dpkgpm.cc:1086
+#: apt-pkg/deb/dpkgpm.cc:970
 #, c-format
 msgid "Preparing %s"
 msgstr "%s་ གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:1087
+#: apt-pkg/deb/dpkgpm.cc:971
 #, c-format
 msgid "Unpacking %s"
 msgstr " %s་ གི་སྦུང་ཚན་བཟོ་བཤོལ་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:1092
+#: apt-pkg/deb/dpkgpm.cc:976
 #, c-format
 msgid "Preparing to configure %s"
 msgstr "%s་ རིམ་སྒྲིག་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:1094
+#: apt-pkg/deb/dpkgpm.cc:978
 #, c-format
 msgid "Installed %s"
 msgstr "གཞི་བཙུགས་འབད་ཡོད་པའི་%s།"
 
-#: apt-pkg/deb/dpkgpm.cc:1099
+#: apt-pkg/deb/dpkgpm.cc:983
 #, c-format
 msgid "Preparing for removal of %s"
 msgstr "%s་ རྩ་བསྐྲད་གཏང་ནིའི་དོན་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:1101
+#: apt-pkg/deb/dpkgpm.cc:985
 #, c-format
 msgid "Removed %s"
 msgstr "རྩ་བསྐྲད་བཏང་ཡོད་པའི་%s"
 
-#: apt-pkg/deb/dpkgpm.cc:1106
+#: apt-pkg/deb/dpkgpm.cc:990
 #, c-format
 msgid "Preparing to completely remove %s"
 msgstr "%s མཇུག་བསྡུཝ་སྦེ་རང་རྩ་བསྐྲད་གཏང་ནིའི་དོན་ལུ་གྲ་སྒྲིག་འབད་དོ།"
 
-#: apt-pkg/deb/dpkgpm.cc:1107
+#: apt-pkg/deb/dpkgpm.cc:991
 #, c-format
 msgid "Completely removed %s"
 msgstr "%s མཇུག་བསྡུཝ་སྦེ་རང་རྩ་བསྐྲད་བཏང་ཡོད།"
 
-#: apt-pkg/deb/dpkgpm.cc:1356 apt-pkg/deb/dpkgpm.cc:1377
+#: apt-pkg/deb/dpkgpm.cc:1041 apt-pkg/deb/dpkgpm.cc:1062
 #, fuzzy, c-format
 msgid "Can not write log (%s)"
 msgstr " %sལུ་འབྲི་མ་ཚུགས།"
 
-#: apt-pkg/deb/dpkgpm.cc:1356
+#: apt-pkg/deb/dpkgpm.cc:1041
 msgid "Is /dev/pts mounted?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1377
+#: apt-pkg/deb/dpkgpm.cc:1062
 msgid "Is stdout a terminal?"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1391
-msgid "Running dpkg"
-msgstr ""
-
-#: apt-pkg/deb/dpkgpm.cc:1578
+#: apt-pkg/deb/dpkgpm.cc:1545
 msgid "Operation was interrupted before it could finish"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1640
+#: apt-pkg/deb/dpkgpm.cc:1607
 msgid "No apport report written because MaxReports is reached already"
 msgstr ""
 
 #. check if its not a follow up error
-#: apt-pkg/deb/dpkgpm.cc:1645
+#: apt-pkg/deb/dpkgpm.cc:1612
 msgid "dependency problems - leaving unconfigured"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1647
+#: apt-pkg/deb/dpkgpm.cc:1614
 msgid ""
 "No apport report written because the error message indicates its a followup "
 "error from a previous failure."
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1653
+#: apt-pkg/deb/dpkgpm.cc:1620
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1659
+#: apt-pkg/deb/dpkgpm.cc:1626
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
 msgstr ""
 
-#: apt-pkg/deb/dpkgpm.cc:1666
+#: apt-pkg/deb/dpkgpm.cc:1633
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
