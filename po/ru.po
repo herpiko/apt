@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt rev2227.1.3\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-11-29 21:27+0100\n"
+"POT-Creation-Date: 2013-12-07 14:55+0100\n"
 "PO-Revision-Date: 2012-06-30 08:47+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
@@ -164,7 +164,7 @@ msgid "  Version table:"
 msgstr "  Таблица версий:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1452 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
+#: cmdline/apt-get.cc:1524 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:34 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -299,38 +299,32 @@ msgstr ""
 "   -o=? Задать значение произвольной настройке, например, -o dir::cache=/"
 "tmp\n"
 
-#: cmdline/apt-get.cc:225
-#, c-format
-msgid "Ignore unavailable target release '%s' of package '%s'"
-msgstr "Игнорируется недоступный выпуск «%s» пакета «%s»"
-
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:313
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "Используется «%s» в качестве исходного пакета вместо «%s»\n"
 
-#. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:367
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "Игнорируется недоступная версия «%s» пакета «%s»"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:398
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "Не удалось найти пакет %s"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:403 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "%s установлен вручную.\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:405 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "%s выбран для автоматической установки.\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:413 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -338,25 +332,25 @@ msgstr ""
 "Эта команда устарела. Используйте вместо неё «apt-mark auto» и «apt-mark "
 "manual»."
 
-#: cmdline/apt-get.cc:410 cmdline/apt-get.cc:418
+#: cmdline/apt-get.cc:482 cmdline/apt-get.cc:490
 msgid "Internal error, problem resolver broke stuff"
 msgstr "Внутренняя ошибка, решатель проблем всё поломал"
 
-#: cmdline/apt-get.cc:446 cmdline/apt-get.cc:483
+#: cmdline/apt-get.cc:518 cmdline/apt-get.cc:555
 msgid "Unable to lock the download directory"
 msgstr "Невозможно заблокировать каталог, куда складываются скачиваемые файлы"
 
-#: cmdline/apt-get.cc:595
+#: cmdline/apt-get.cc:667
 msgid "Must specify at least one package to fetch source for"
 msgstr ""
 "Укажите как минимум один пакет, исходный код которого необходимо получить"
 
-#: cmdline/apt-get.cc:635 cmdline/apt-get.cc:930
+#: cmdline/apt-get.cc:707 cmdline/apt-get.cc:1002
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "Невозможно найти пакет с исходным кодом для %s"
 
-#: cmdline/apt-get.cc:652
+#: cmdline/apt-get.cc:724
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -365,7 +359,7 @@ msgstr ""
 "ВНИМАНИЕ: упаковка «%s» поддерживается в системе контроля версий «%s»:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:657
+#: cmdline/apt-get.cc:729
 #, c-format
 msgid ""
 "Please use:\n"
@@ -376,80 +370,80 @@ msgstr ""
 "bzr branch %s\n"
 "для получения последних (возможно не выпущенных) обновлений пакета.\n"
 
-#: cmdline/apt-get.cc:710
+#: cmdline/apt-get.cc:782
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "Пропускаем уже скачанный файл «%s»\n"
 
-#: cmdline/apt-get.cc:733 cmdline/apt-get.cc:736
+#: cmdline/apt-get.cc:805 cmdline/apt-get.cc:808
 #: apt-private/private-install.cc:198 apt-private/private-install.cc:201
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "Не удалось определить количество свободного места в %s"
 
-#: cmdline/apt-get.cc:747
+#: cmdline/apt-get.cc:819
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "Недостаточно места в %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:756
+#: cmdline/apt-get.cc:828
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Необходимо получить %sб/%sб архивов исходного кода.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:761
+#: cmdline/apt-get.cc:833
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Необходимо получить %sб архивов исходного кода.\n"
 
-#: cmdline/apt-get.cc:767
+#: cmdline/apt-get.cc:839
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Получение исходного кода %s\n"
 
-#: cmdline/apt-get.cc:788
+#: cmdline/apt-get.cc:860
 msgid "Failed to fetch some archives."
 msgstr "Некоторые архивы не удалось получить."
 
-#: cmdline/apt-get.cc:793 apt-private/private-install.cc:325
+#: cmdline/apt-get.cc:865 apt-private/private-install.cc:325
 msgid "Download complete and in download only mode"
 msgstr "Указан режим «только скачивание», и скачивание завершено"
 
-#: cmdline/apt-get.cc:819
+#: cmdline/apt-get.cc:891
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr "Пропускается распаковка уже распакованного исходного кода в %s\n"
 
-#: cmdline/apt-get.cc:831
+#: cmdline/apt-get.cc:903
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "Команда распаковки «%s» завершилась неудачно.\n"
 
-#: cmdline/apt-get.cc:832
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Проверьте, установлен ли пакет «dpkg-dev».\n"
 
-#: cmdline/apt-get.cc:854
+#: cmdline/apt-get.cc:926
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "Команда сборки «%s» завершилась неудачно.\n"
 
-#: cmdline/apt-get.cc:874
+#: cmdline/apt-get.cc:946
 msgid "Child process failed"
 msgstr "Порождённый процесс завершился неудачно"
 
-#: cmdline/apt-get.cc:893
+#: cmdline/apt-get.cc:965
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "Для проверки зависимостей для сборки необходимо указать как минимум один "
 "пакет"
 
-#: cmdline/apt-get.cc:918
+#: cmdline/apt-get.cc:990
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -458,17 +452,17 @@ msgstr ""
 "У %s отсутствует информация об архитектуре. Для её настройки смотрите apt."
 "conf(5) APT::Architectures"
 
-#: cmdline/apt-get.cc:942 cmdline/apt-get.cc:945
+#: cmdline/apt-get.cc:1014 cmdline/apt-get.cc:1017
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr "Невозможно получить информацию о зависимостях для сборки %s"
 
-#: cmdline/apt-get.cc:965
+#: cmdline/apt-get.cc:1037
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s не имеет зависимостей для сборки.\n"
 
-#: cmdline/apt-get.cc:1135
+#: cmdline/apt-get.cc:1207
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -477,7 +471,7 @@ msgstr ""
 "Зависимость типа %s для %s не может быть удовлетворена, так как %s не "
 "разрешён для пакетов «%s»"
 
-#: cmdline/apt-get.cc:1153
+#: cmdline/apt-get.cc:1225
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -486,14 +480,14 @@ msgstr ""
 "Зависимость типа %s для %s не может быть удовлетворена, так как пакет %s не "
 "найден"
 
-#: cmdline/apt-get.cc:1176
+#: cmdline/apt-get.cc:1248
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "Не удалось удовлетворить зависимость типа %s для пакета %s: Установленный "
 "пакет %s новее, чем надо"
 
-#: cmdline/apt-get.cc:1215
+#: cmdline/apt-get.cc:1287
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -502,7 +496,7 @@ msgstr ""
 "Зависимость типа %s для %s не может быть удовлетворена, так как версия-"
 "кандидат пакета %s не может удовлетворить требованиям по версии"
 
-#: cmdline/apt-get.cc:1221
+#: cmdline/apt-get.cc:1293
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -511,30 +505,30 @@ msgstr ""
 "Зависимость типа %s для %s не может быть удовлетворена, так как пакет %s не "
 "имеет версии-кандидата"
 
-#: cmdline/apt-get.cc:1244
+#: cmdline/apt-get.cc:1316
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "Невозможно удовлетворить зависимость типа %s для пакета %s: %s"
 
-#: cmdline/apt-get.cc:1259
+#: cmdline/apt-get.cc:1331
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "Зависимости для сборки %s не могут быть удовлетворены."
 
-#: cmdline/apt-get.cc:1264
+#: cmdline/apt-get.cc:1336
 msgid "Failed to process build dependencies"
 msgstr "Обработка зависимостей для сборки завершилась неудачно"
 
-#: cmdline/apt-get.cc:1357 cmdline/apt-get.cc:1369
+#: cmdline/apt-get.cc:1429 cmdline/apt-get.cc:1441
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Changelog для %s (%s)"
 
-#: cmdline/apt-get.cc:1457
+#: cmdline/apt-get.cc:1529
 msgid "Supported modules:"
 msgstr "Поддерживаемые модули:"
 
-#: cmdline/apt-get.cc:1498
+#: cmdline/apt-get.cc:1570
 msgid ""
 "Usage: apt-get [options] command\n"
 "       apt-get [options] install|remove pkg1 [pkg2 ...]\n"
@@ -1648,8 +1642,8 @@ msgstr ""
 #: methods/mirror.cc:95 apt-inst/extract.cc:464
 #: apt-pkg/contrib/cdromutl.cc:184 apt-pkg/contrib/fileutl.cc:406
 #: apt-pkg/contrib/fileutl.cc:519 apt-pkg/sourcelist.cc:208
-#: apt-pkg/sourcelist.cc:214 apt-pkg/acquire.cc:485 apt-pkg/init.cc:108
-#: apt-pkg/init.cc:116 apt-pkg/clean.cc:36 apt-pkg/policy.cc:373
+#: apt-pkg/sourcelist.cc:214 apt-pkg/acquire.cc:485 apt-pkg/init.cc:100
+#: apt-pkg/init.cc:108 apt-pkg/clean.cc:36 apt-pkg/policy.cc:373
 #, c-format
 msgid "Unable to read %s"
 msgstr "Невозможно прочитать %s"
@@ -2631,22 +2625,22 @@ msgstr ""
 msgid "write, still have %llu to write but couldn't"
 msgstr "ошибка при записи; собирались записать ещё %llu байт, но не смогли"
 
-#: apt-pkg/contrib/fileutl.cc:1723
+#: apt-pkg/contrib/fileutl.cc:1726
 #, c-format
 msgid "Problem closing the file %s"
 msgstr "Проблема закрытия файла %s"
 
-#: apt-pkg/contrib/fileutl.cc:1735
+#: apt-pkg/contrib/fileutl.cc:1738
 #, c-format
 msgid "Problem renaming the file %s to %s"
 msgstr "Проблема при переименовании файла %s в %s"
 
-#: apt-pkg/contrib/fileutl.cc:1746
+#: apt-pkg/contrib/fileutl.cc:1749
 #, c-format
 msgid "Problem unlinking the file %s"
 msgstr "Проблема при удалении файла %s"
 
-#: apt-pkg/contrib/fileutl.cc:1759
+#: apt-pkg/contrib/fileutl.cc:1762
 msgid "Problem syncing the file"
 msgstr "Проблема при синхронизации файла"
 
@@ -2940,12 +2934,12 @@ msgstr "Метод %s запустился не корректно"
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Вставьте диск с меткой «%s» в устройство «%s» и нажмите ввод."
 
-#: apt-pkg/init.cc:151
+#: apt-pkg/init.cc:143
 #, c-format
 msgid "Packaging system '%s' is not supported"
 msgstr "Система пакетирования «%s» не поддерживается"
 
-#: apt-pkg/init.cc:167
+#: apt-pkg/init.cc:159
 msgid "Unable to determine a suitable packaging system type"
 msgstr "Невозможно определить подходящий тип системы пакетирования"
 
@@ -3142,27 +3136,27 @@ msgid ""
 "The package index files are corrupted. No Filename: field for package %s."
 msgstr "Некорректный перечень пакетов. Нет поля Filename: для пакета %s."
 
-#: apt-pkg/indexrecords.cc:68
+#: apt-pkg/indexrecords.cc:73
 #, c-format
 msgid "Unable to parse Release file %s"
 msgstr "Невозможно разобрать содержимое файла Release (%s)"
 
-#: apt-pkg/indexrecords.cc:76
+#: apt-pkg/indexrecords.cc:81
 #, c-format
 msgid "No sections in Release file %s"
 msgstr "Отсутствуют разделы в файле Release (%s)"
 
-#: apt-pkg/indexrecords.cc:107
+#: apt-pkg/indexrecords.cc:112
 #, c-format
 msgid "No Hash entry in Release file %s"
 msgstr "Отсутствуют элементы Hash в файле Release (%s)"
 
-#: apt-pkg/indexrecords.cc:120
+#: apt-pkg/indexrecords.cc:125
 #, c-format
 msgid "Invalid 'Valid-Until' entry in Release file %s"
 msgstr "Неправильный элемент «Valid-Until» в файле Release %s"
 
-#: apt-pkg/indexrecords.cc:139
+#: apt-pkg/indexrecords.cc:144
 #, c-format
 msgid "Invalid 'Date' entry in Release file %s"
 msgstr "Неправильный элемент «Date» в файле Release %s"
@@ -3370,12 +3364,12 @@ msgstr "Внешний решатель завершился с ошибкой �
 msgid "Execute external solver"
 msgstr "Запустить внешний решатель"
 
-#: apt-pkg/install-progress.cc:49
+#: apt-pkg/install-progress.cc:50
 #, c-format
 msgid "Progress: [%3i%%]"
 msgstr ""
 
-#: apt-pkg/install-progress.cc:83 apt-pkg/install-progress.cc:166
+#: apt-pkg/install-progress.cc:84 apt-pkg/install-progress.cc:167
 msgid "Running dpkg"
 msgstr "Запускается dpkg"
 
@@ -3510,7 +3504,7 @@ msgstr ""
 "Отчёты apport не записаны, так как получено сообщение об ошибке о нехватке "
 "места на диске"
 
-#: apt-pkg/deb/dpkgpm.cc:1626
+#: apt-pkg/deb/dpkgpm.cc:1627
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3518,7 +3512,16 @@ msgstr ""
 "Отчёты apport не записаны, так как получено сообщение об ошибке о нехватке "
 "памяти"
 
-#: apt-pkg/deb/dpkgpm.cc:1633
+#: apt-pkg/deb/dpkgpm.cc:1634 apt-pkg/deb/dpkgpm.cc:1640
+#, fuzzy
+msgid ""
+"No apport report written because the error message indicates an issue on the "
+"local system"
+msgstr ""
+"Отчёты apport не записаны, так как получено сообщение об ошибке о нехватке "
+"места на диске"
+
+#: apt-pkg/deb/dpkgpm.cc:1661
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3617,6 +3620,9 @@ msgstr "Не заблокирован"
 
 #~ msgid "Selected version '%s' (%s) for '%s' because of '%s'\n"
 #~ msgstr "Выбрана версия «%s» (%s) для «%s» из-за «%s»\n"
+
+#~ msgid "Ignore unavailable target release '%s' of package '%s'"
+#~ msgstr "Игнорируется недоступный выпуск «%s» пакета «%s»"
 
 #~ msgid "Downloading %s %s"
 #~ msgstr "Выполняется загрузка %s %s"

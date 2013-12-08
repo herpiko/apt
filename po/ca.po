@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.9.7.6\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2013-11-29 21:27+0100\n"
+"POT-Creation-Date: 2013-12-07 14:55+0100\n"
 "PO-Revision-Date: 2012-10-19 13:30+0200\n"
 "Last-Translator: Jordi Mallach <jordi@debian.org>\n"
 "Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
@@ -158,7 +158,7 @@ msgid "  Version table:"
 msgstr "  Taula de versió:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:210 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1452 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
+#: cmdline/apt-get.cc:1524 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
 #: cmdline/apt-extracttemplates.cc:229 ftparchive/apt-ftparchive.cc:591
 #: cmdline/apt-internal-solver.cc:34 cmdline/apt-sortpkgs.cc:147
 #, c-format
@@ -296,38 +296,32 @@ msgstr ""
 "  -c=? Llegeix aquest fitxer de configuració\n"
 "  -o=? Estableix una opció de conf arbitrària, p. ex. -o dir::cache=/tmp\n"
 
-#: cmdline/apt-get.cc:225
-#, c-format
-msgid "Ignore unavailable target release '%s' of package '%s'"
-msgstr "Ignora la versió objectiu «%s» no disponible del paquet «%s»"
-
-#: cmdline/apt-get.cc:257
+#: cmdline/apt-get.cc:313
 #, c-format
 msgid "Picking '%s' as source package instead of '%s'\n"
 msgstr "S'està agafant «%s» com a paquet font en lloc de '%s'\n"
 
-#. if (VerTag.empty() == false && Last == 0)
-#: cmdline/apt-get.cc:295
+#: cmdline/apt-get.cc:367
 #, c-format
 msgid "Ignore unavailable version '%s' of package '%s'"
 msgstr "Descarta la versió «%s» no disponible del paquet «%s»"
 
-#: cmdline/apt-get.cc:326
+#: cmdline/apt-get.cc:398
 #, c-format
 msgid "Couldn't find package %s"
 msgstr "No s'ha pogut trobar el paquet %s"
 
-#: cmdline/apt-get.cc:331 cmdline/apt-mark.cc:70
+#: cmdline/apt-get.cc:403 cmdline/apt-mark.cc:70
 #, c-format
 msgid "%s set to manually installed.\n"
 msgstr "S'ha marcat %s com instaŀlat manualment.\n"
 
-#: cmdline/apt-get.cc:333 cmdline/apt-mark.cc:72
+#: cmdline/apt-get.cc:405 cmdline/apt-mark.cc:72
 #, c-format
 msgid "%s set to automatically installed.\n"
 msgstr "S'ha marcat %s com instaŀlat automàticament.\n"
 
-#: cmdline/apt-get.cc:341 cmdline/apt-mark.cc:116
+#: cmdline/apt-get.cc:413 cmdline/apt-mark.cc:116
 msgid ""
 "This command is deprecated. Please use 'apt-mark auto' and 'apt-mark manual' "
 "instead."
@@ -335,25 +329,25 @@ msgstr ""
 "Aquesta ordre és desaconsellada. Empreu «apt-mark auto» i «apt-mark manual» "
 "en el seu lloc."
 
-#: cmdline/apt-get.cc:410 cmdline/apt-get.cc:418
+#: cmdline/apt-get.cc:482 cmdline/apt-get.cc:490
 msgid "Internal error, problem resolver broke stuff"
 msgstr ""
 "S'ha produït un error intern, el solucionador de problemes ha trencat coses"
 
-#: cmdline/apt-get.cc:446 cmdline/apt-get.cc:483
+#: cmdline/apt-get.cc:518 cmdline/apt-get.cc:555
 msgid "Unable to lock the download directory"
 msgstr "No és possible blocar el directori de descàrrega"
 
-#: cmdline/apt-get.cc:595
+#: cmdline/apt-get.cc:667
 msgid "Must specify at least one package to fetch source for"
 msgstr "Haureu d'especificar un paquet de codi font per a baixar"
 
-#: cmdline/apt-get.cc:635 cmdline/apt-get.cc:930
+#: cmdline/apt-get.cc:707 cmdline/apt-get.cc:1002
 #, c-format
 msgid "Unable to find a source package for %s"
 msgstr "No es pot trobar un paquet de fonts per a %s"
 
-#: cmdline/apt-get.cc:652
+#: cmdline/apt-get.cc:724
 #, c-format
 msgid ""
 "NOTICE: '%s' packaging is maintained in the '%s' version control system at:\n"
@@ -363,7 +357,7 @@ msgstr ""
 "versions «%s» a:\n"
 "%s\n"
 
-#: cmdline/apt-get.cc:657
+#: cmdline/apt-get.cc:729
 #, c-format
 msgid ""
 "Please use:\n"
@@ -375,81 +369,81 @@ msgstr ""
 "per obtenir les últimes actualitzacions (possiblement no publicades) del "
 "paquet.\n"
 
-#: cmdline/apt-get.cc:710
+#: cmdline/apt-get.cc:782
 #, c-format
 msgid "Skipping already downloaded file '%s'\n"
 msgstr "S'està ometent el fitxer ja baixat «%s»\n"
 
-#: cmdline/apt-get.cc:733 cmdline/apt-get.cc:736
+#: cmdline/apt-get.cc:805 cmdline/apt-get.cc:808
 #: apt-private/private-install.cc:198 apt-private/private-install.cc:201
 #, c-format
 msgid "Couldn't determine free space in %s"
 msgstr "No s'ha pogut determinar l'espai lliure en %s"
 
-#: cmdline/apt-get.cc:747
+#: cmdline/apt-get.cc:819
 #, c-format
 msgid "You don't have enough free space in %s"
 msgstr "No teniu prou espai lliure en %s"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:756
+#: cmdline/apt-get.cc:828
 #, c-format
 msgid "Need to get %sB/%sB of source archives.\n"
 msgstr "Es necessita baixar %sB/%sB d'arxius font.\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-#: cmdline/apt-get.cc:761
+#: cmdline/apt-get.cc:833
 #, c-format
 msgid "Need to get %sB of source archives.\n"
 msgstr "Es necessita baixar %sB d'arxius font.\n"
 
-#: cmdline/apt-get.cc:767
+#: cmdline/apt-get.cc:839
 #, c-format
 msgid "Fetch source %s\n"
 msgstr "Obtén el font %s\n"
 
-#: cmdline/apt-get.cc:788
+#: cmdline/apt-get.cc:860
 msgid "Failed to fetch some archives."
 msgstr "No s'ha pogut baixar alguns arxius."
 
-#: cmdline/apt-get.cc:793 apt-private/private-install.cc:325
+#: cmdline/apt-get.cc:865 apt-private/private-install.cc:325
 msgid "Download complete and in download only mode"
 msgstr "Baixada completa i en mode de només baixada"
 
-#: cmdline/apt-get.cc:819
+#: cmdline/apt-get.cc:891
 #, c-format
 msgid "Skipping unpack of already unpacked source in %s\n"
 msgstr ""
 "S'està ometent el desempaquetament de les fonts que ja ho estan en %s\n"
 
-#: cmdline/apt-get.cc:831
+#: cmdline/apt-get.cc:903
 #, c-format
 msgid "Unpack command '%s' failed.\n"
 msgstr "L'ordre de desempaquetar «%s» ha fallat.\n"
 
-#: cmdline/apt-get.cc:832
+#: cmdline/apt-get.cc:904
 #, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Comproveu si el paquet «dpkgdev» està instaŀlat.\n"
 
-#: cmdline/apt-get.cc:854
+#: cmdline/apt-get.cc:926
 #, c-format
 msgid "Build command '%s' failed.\n"
 msgstr "L'ordre de construir «%s» ha fallat.\n"
 
-#: cmdline/apt-get.cc:874
+#: cmdline/apt-get.cc:946
 msgid "Child process failed"
 msgstr "Ha fallat el procés fill"
 
-#: cmdline/apt-get.cc:893
+#: cmdline/apt-get.cc:965
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 "S'ha d'especificar un paquet per a verificar les dependències de construcció "
 "per a"
 
-#: cmdline/apt-get.cc:918
+#: cmdline/apt-get.cc:990
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -458,18 +452,18 @@ msgstr ""
 "No hi ha informació d'arquitectura disponible per a %s. Vegeu apt.conf(5) "
 "APT::Architectures per a configurar-ho"
 
-#: cmdline/apt-get.cc:942 cmdline/apt-get.cc:945
+#: cmdline/apt-get.cc:1014 cmdline/apt-get.cc:1017
 #, c-format
 msgid "Unable to get build-dependency information for %s"
 msgstr ""
 "No es pot obtenir informació sobre les dependències de construcció per a %s"
 
-#: cmdline/apt-get.cc:965
+#: cmdline/apt-get.cc:1037
 #, c-format
 msgid "%s has no build depends.\n"
 msgstr "%s no té dependències de construcció.\n"
 
-#: cmdline/apt-get.cc:1135
+#: cmdline/apt-get.cc:1207
 #, c-format
 msgid ""
 "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "
@@ -478,7 +472,7 @@ msgstr ""
 "La dependència %s en %s no es pot satisfer perquè %s no és permès als "
 "paquets «%s»"
 
-#: cmdline/apt-get.cc:1153
+#: cmdline/apt-get.cc:1225
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because the package %s cannot be "
@@ -487,14 +481,14 @@ msgstr ""
 "La dependència %s en %s no es pot satisfer perquè no es pot trobar el paquet "
 "%s"
 
-#: cmdline/apt-get.cc:1176
+#: cmdline/apt-get.cc:1248
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: Installed package %s is too new"
 msgstr ""
 "No s'ha pogut satisfer la dependència %s per a %s: El paquet instaŀlat %s és "
 "massa nou"
 
-#: cmdline/apt-get.cc:1215
+#: cmdline/apt-get.cc:1287
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because candidate version of "
@@ -503,7 +497,7 @@ msgstr ""
 "La dependència %s per a %s no es pot satisfer perquè la versió candidata del "
 "paquet %s no pot satisfer els requeriments de versions"
 
-#: cmdline/apt-get.cc:1221
+#: cmdline/apt-get.cc:1293
 #, c-format
 msgid ""
 "%s dependency for %s cannot be satisfied because package %s has no candidate "
@@ -512,30 +506,30 @@ msgstr ""
 "La dependència %s en %s no es pot satisfer perquè el paquet %s no té versió "
 "candidata"
 
-#: cmdline/apt-get.cc:1244
+#: cmdline/apt-get.cc:1316
 #, c-format
 msgid "Failed to satisfy %s dependency for %s: %s"
 msgstr "No s'ha pogut satisfer la dependència %s per a %s: %s"
 
-#: cmdline/apt-get.cc:1259
+#: cmdline/apt-get.cc:1331
 #, c-format
 msgid "Build-dependencies for %s could not be satisfied."
 msgstr "No s'han pogut satisfer les dependències de construcció per a %s"
 
-#: cmdline/apt-get.cc:1264
+#: cmdline/apt-get.cc:1336
 msgid "Failed to process build dependencies"
 msgstr "No es poden processar les dependències de construcció"
 
-#: cmdline/apt-get.cc:1357 cmdline/apt-get.cc:1369
+#: cmdline/apt-get.cc:1429 cmdline/apt-get.cc:1441
 #, c-format
 msgid "Changelog for %s (%s)"
 msgstr "Registre de canvis per a %s (%s)"
 
-#: cmdline/apt-get.cc:1457
+#: cmdline/apt-get.cc:1529
 msgid "Supported modules:"
 msgstr "Mòduls suportats:"
 
-#: cmdline/apt-get.cc:1498
+#: cmdline/apt-get.cc:1570
 #, fuzzy
 msgid ""
 "Usage: apt-get [options] command\n"
@@ -1618,8 +1612,8 @@ msgstr ""
 #: methods/mirror.cc:95 apt-inst/extract.cc:464
 #: apt-pkg/contrib/cdromutl.cc:184 apt-pkg/contrib/fileutl.cc:406
 #: apt-pkg/contrib/fileutl.cc:519 apt-pkg/sourcelist.cc:208
-#: apt-pkg/sourcelist.cc:214 apt-pkg/acquire.cc:485 apt-pkg/init.cc:108
-#: apt-pkg/init.cc:116 apt-pkg/clean.cc:36 apt-pkg/policy.cc:373
+#: apt-pkg/sourcelist.cc:214 apt-pkg/acquire.cc:485 apt-pkg/init.cc:100
+#: apt-pkg/init.cc:108 apt-pkg/clean.cc:36 apt-pkg/policy.cc:373
 #, c-format
 msgid "Unable to read %s"
 msgstr "No es pot llegir %s"
@@ -2592,22 +2586,22 @@ msgstr "llegits, falten %llu per llegir, però no queda res"
 msgid "write, still have %llu to write but couldn't"
 msgstr "escrits, falten %llu per escriure però no s'ha pogut"
 
-#: apt-pkg/contrib/fileutl.cc:1723
+#: apt-pkg/contrib/fileutl.cc:1726
 #, c-format
 msgid "Problem closing the file %s"
 msgstr "Ha hagut un problema en tancar el fitxer %s"
 
-#: apt-pkg/contrib/fileutl.cc:1735
+#: apt-pkg/contrib/fileutl.cc:1738
 #, c-format
 msgid "Problem renaming the file %s to %s"
 msgstr "Ha hagut un problema en reanomenar el fitxer %s a %s"
 
-#: apt-pkg/contrib/fileutl.cc:1746
+#: apt-pkg/contrib/fileutl.cc:1749
 #, c-format
 msgid "Problem unlinking the file %s"
 msgstr "Ha hagut un problema en desenllaçar el fitxer %s"
 
-#: apt-pkg/contrib/fileutl.cc:1759
+#: apt-pkg/contrib/fileutl.cc:1762
 msgid "Problem syncing the file"
 msgstr "Ha hagut un problema en sincronitzar el fitxer"
 
@@ -2901,12 +2895,12 @@ msgstr "El mètode %s no s'ha iniciat correctament"
 msgid "Please insert the disc labeled: '%s' in the drive '%s' and press enter."
 msgstr "Inseriu el disc amb l'etiqueta: «%s» en la unitat «%s» i premeu Intro."
 
-#: apt-pkg/init.cc:151
+#: apt-pkg/init.cc:143
 #, c-format
 msgid "Packaging system '%s' is not supported"
 msgstr "El sistema d'empaquetament «%s» no està suportat"
 
-#: apt-pkg/init.cc:167
+#: apt-pkg/init.cc:159
 msgid "Unable to determine a suitable packaging system type"
 msgstr "No es pot determinar un tipus de sistema d'empaquetament adequat."
 
@@ -3110,27 +3104,27 @@ msgstr ""
 "L'índex dels fitxers en el paquet està corromput. Fitxer no existent: camp "
 "per al paquet %s."
 
-#: apt-pkg/indexrecords.cc:68
+#: apt-pkg/indexrecords.cc:73
 #, c-format
 msgid "Unable to parse Release file %s"
 msgstr "No es pot analitzar el fitxer Release %s"
 
-#: apt-pkg/indexrecords.cc:76
+#: apt-pkg/indexrecords.cc:81
 #, c-format
 msgid "No sections in Release file %s"
 msgstr "No hi ha seccions al fitxer Release %s"
 
-#: apt-pkg/indexrecords.cc:107
+#: apt-pkg/indexrecords.cc:112
 #, c-format
 msgid "No Hash entry in Release file %s"
 msgstr "No hi ha una entrada Hash al fitxer Release %s"
 
-#: apt-pkg/indexrecords.cc:120
+#: apt-pkg/indexrecords.cc:125
 #, c-format
 msgid "Invalid 'Valid-Until' entry in Release file %s"
 msgstr "El camp «Valid-Until» al fitxer Release %s és invàlid"
 
-#: apt-pkg/indexrecords.cc:139
+#: apt-pkg/indexrecords.cc:144
 #, c-format
 msgid "Invalid 'Date' entry in Release file %s"
 msgstr "El camp «Date» al fitxer Release %s és invàlid"
@@ -3339,12 +3333,12 @@ msgstr "El resoledor extern ha fallat sense un missatge d'error adient"
 msgid "Execute external solver"
 msgstr "Executa un resoledor extern"
 
-#: apt-pkg/install-progress.cc:49
+#: apt-pkg/install-progress.cc:50
 #, c-format
 msgid "Progress: [%3i%%]"
 msgstr ""
 
-#: apt-pkg/install-progress.cc:83 apt-pkg/install-progress.cc:166
+#: apt-pkg/install-progress.cc:84 apt-pkg/install-progress.cc:167
 msgid "Running dpkg"
 msgstr "S'està executant dpkg"
 
@@ -3479,7 +3473,7 @@ msgstr ""
 "No s'ha escrit cap informe perquè el missatge d'error indica una fallida per "
 "disc ple"
 
-#: apt-pkg/deb/dpkgpm.cc:1626
+#: apt-pkg/deb/dpkgpm.cc:1627
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
@@ -3487,7 +3481,16 @@ msgstr ""
 "No s'ha escrit cap informe perquè el missatge d'error indica una fallida per "
 "falta de memòria"
 
-#: apt-pkg/deb/dpkgpm.cc:1633
+#: apt-pkg/deb/dpkgpm.cc:1634 apt-pkg/deb/dpkgpm.cc:1640
+#, fuzzy
+msgid ""
+"No apport report written because the error message indicates an issue on the "
+"local system"
+msgstr ""
+"No s'ha escrit cap informe perquè el missatge d'error indica una fallida per "
+"disc ple"
+
+#: apt-pkg/deb/dpkgpm.cc:1661
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
 msgstr ""
@@ -3587,6 +3590,9 @@ msgstr "No blocat"
 
 #~ msgid "Selected version '%s' (%s) for '%s' because of '%s'\n"
 #~ msgstr "Versió seleccionada «%s» (%s) per a «%s» degut a «%s»\n"
+
+#~ msgid "Ignore unavailable target release '%s' of package '%s'"
+#~ msgstr "Ignora la versió objectiu «%s» no disponible del paquet «%s»"
 
 #~ msgid "Downloading %s %s"
 #~ msgstr "S'està baixant %s %s"
