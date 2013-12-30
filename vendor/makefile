@@ -32,7 +32,7 @@ current:
 	# if we haven't found a specific, look for a deriving in hardcoded order
 	test -e $@ || \
 		(dpkg-vendor --derives-from blankon && cp ln -s blankon $@ ) || \
-		ln -s debian $@
+		ln -s blankon $@
 
 .PHONY: clean veryclean all binary vendor
 
