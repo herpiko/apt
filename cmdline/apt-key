@@ -80,7 +80,6 @@ add_keys_with_verify_against_master_keyring() {
     for all_add_key in $all_add_keys; do
 	for master_key in $master_keys; do
             if [ "$all_add_key" = "$master_key" ]; then
-                echo >&2 "Keyid collision for '$all_add_key' detected, operation aborted"
                 return 1
             fi
         done
