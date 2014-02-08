@@ -20,11 +20,11 @@ getfield() {
 }
 
 case "$1" in
-blankon-stable-codename)
-	getrawfield 'blankon-codename' "${BASEDIR}/../doc/apt-verbatim.ent"
+debian-stable-codename)
+	getrawfield 'stable-codename' "${BASEDIR}/../doc/apt-verbatim.ent"
 	;;
-blankon-codename)
-	getrawfield 'blankon-codename' "${BASEDIR}/../doc/apt-verbatim.ent"
+ubuntu-codename)
+	getrawfield 'ubuntu-codename' "${BASEDIR}/../doc/apt-verbatim.ent"
 	;;
 keyring-package|keyring-filename|keyring-master-filename|keyring-removed-filename|keyring-uri|current-distro-codename)
 	getfield "$1"
