@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2014-02-20 14:43+0100\n"
+"POT-Creation-Date: 2014-02-28 10:56+0100\n"
 "PO-Revision-Date: 2012-06-28 20:49+0100\n"
 "Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -160,9 +160,10 @@ msgid "  Version table:"
 msgstr "  Tabuľka verzií:"
 
 #: cmdline/apt-cache.cc:1733 cmdline/apt-cdrom.cc:252 cmdline/apt-config.cc:83
-#: cmdline/apt-get.cc:1580 cmdline/apt-mark.cc:377 cmdline/apt.cc:66
-#: cmdline/apt-extracttemplates.cc:227 ftparchive/apt-ftparchive.cc:591
-#: cmdline/apt-internal-solver.cc:34 cmdline/apt-sortpkgs.cc:147
+#: cmdline/apt-get.cc:1580 cmdline/apt-helper.cc:60 cmdline/apt-mark.cc:377
+#: cmdline/apt.cc:66 cmdline/apt-extracttemplates.cc:217
+#: ftparchive/apt-ftparchive.cc:591 cmdline/apt-internal-solver.cc:34
+#: cmdline/apt-sortpkgs.cc:147
 #, c-format
 msgid "%s %s for %s compiled on %s %s\n"
 msgstr "%s %s pre %s skompilovaný %s %s\n"
@@ -623,6 +624,28 @@ msgstr ""
 "Viac volieb nájdete v manuálových stránkach apt-get(8), sources.list(5)\n"
 "a apt.conf(5).\n"
 "                       Tento APT má schopnosti posvätnej kravy.\n"
+
+#: cmdline/apt-helper.cc:39
+#, fuzzy
+msgid "Must specify at least one pair url/filename"
+msgstr "Musíte zadať aspoň jeden balík, pre ktorý sa stiahnu zdrojové texty"
+
+#: cmdline/apt-helper.cc:52
+msgid "Download Failed"
+msgstr ""
+
+#: cmdline/apt-helper.cc:67
+msgid ""
+"Usage: apt-helper [options] command\n"
+"       apt-helper [options] download-file uri target-path\n"
+"\n"
+"apt-helper is a internal helper for apt\n"
+"\n"
+"Commands:\n"
+"   download-file - download the given uri to the target-path\n"
+"\n"
+"                       This APT helper has Super Meep Powers.\n"
+msgstr ""
 
 #: cmdline/apt-mark.cc:57
 #, c-format
@@ -1740,12 +1763,7 @@ msgstr ""
 msgid "Merging available information"
 msgstr "Zlučujú sa dostupné informácie"
 
-#: cmdline/apt-extracttemplates.cc:100
-#, c-format
-msgid "%s not a valid DEB package."
-msgstr "%s nie je platný balík DEB."
-
-#: cmdline/apt-extracttemplates.cc:234
+#: cmdline/apt-extracttemplates.cc:224
 msgid ""
 "Usage: apt-extracttemplates file1 [file2 ...]\n"
 "\n"
@@ -1769,12 +1787,12 @@ msgstr ""
 "  -c=? Načíta tento konfiguračný súbor\n"
 "  -o=? Nastaví ľubovoľnú voľbu, napr. -o dir::cache=/tmp\n"
 
-#: cmdline/apt-extracttemplates.cc:266 apt-pkg/pkgcachegen.cc:1388
+#: cmdline/apt-extracttemplates.cc:256 apt-pkg/pkgcachegen.cc:1388
 #, c-format
 msgid "Unable to write to %s"
 msgstr "Do %s sa nedá zapisovať"
 
-#: cmdline/apt-extracttemplates.cc:308
+#: cmdline/apt-extracttemplates.cc:298
 msgid "Cannot get debconf version. Is debconf installed?"
 msgstr "Nedá sa určiť verzia programu debconf. Je debconf nainštalovaný?"
 
@@ -2146,23 +2164,23 @@ msgstr ""
 "  -c=? Načíta tento konfiguračný súbor\n"
 "  -o=? Nastaví ľubovoľnú voľbu, napr. -o dir::cache=/tmp\n"
 
-#: apt-inst/contrib/extracttar.cc:116
+#: apt-inst/contrib/extracttar.cc:122
 msgid "Failed to create pipes"
 msgstr "Vytvorenie rúry zlyhalo"
 
-#: apt-inst/contrib/extracttar.cc:143
+#: apt-inst/contrib/extracttar.cc:149
 msgid "Failed to exec gzip "
 msgstr "Spustenie gzip zlyhalo "
 
-#: apt-inst/contrib/extracttar.cc:180 apt-inst/contrib/extracttar.cc:210
+#: apt-inst/contrib/extracttar.cc:186 apt-inst/contrib/extracttar.cc:216
 msgid "Corrupted archive"
 msgstr "Porušený archív"
 
-#: apt-inst/contrib/extracttar.cc:195
+#: apt-inst/contrib/extracttar.cc:201
 msgid "Tar checksum failed, archive corrupted"
 msgstr "Kontrolný súčet pre tar zlyhal, archív je poškodený"
 
-#: apt-inst/contrib/extracttar.cc:300
+#: apt-inst/contrib/extracttar.cc:306
 #, c-format
 msgid "Unknown TAR header type %u, member %s"
 msgstr "Neznáma TAR hlavička typu %u, člen %s"
@@ -2285,18 +2303,18 @@ msgstr "Súbor %s/%s prepisuje ten z balíka %s"
 msgid "Unable to stat %s"
 msgstr "Nedá sa vyhodnotiť %s"
 
-#: apt-inst/deb/debfile.cc:41 apt-inst/deb/debfile.cc:46
-#: apt-inst/deb/debfile.cc:54
+#: apt-inst/deb/debfile.cc:41 apt-inst/deb/debfile.cc:48
+#: apt-inst/deb/debfile.cc:57
 #, c-format
 msgid "This is not a valid DEB archive, missing '%s' member"
 msgstr "Toto nie je platný DEB archív, chýba časť „%s“"
 
-#: apt-inst/deb/debfile.cc:119
+#: apt-inst/deb/debfile.cc:124
 #, c-format
 msgid "Internal error, could not locate member %s"
 msgstr "Vnútorná chyba, nedá sa nájsť časť %s"
 
-#: apt-inst/deb/debfile.cc:213
+#: apt-inst/deb/debfile.cc:219
 msgid "Unparsable control file"
 msgstr "Nespracovateľný riadiaci súbor"
 
@@ -3537,6 +3555,9 @@ msgstr "dpkg bol prerušený, musíte ručne opraviť problém spustením „%s�
 #: apt-pkg/deb/debsystem.cc:121
 msgid "Not locked"
 msgstr "Nie je zamknuté"
+
+#~ msgid "%s not a valid DEB package."
+#~ msgstr "%s nie je platný balík DEB."
 
 #~ msgid ""
 #~ "Using CD-ROM mount point %s\n"

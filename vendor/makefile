@@ -32,9 +32,11 @@ current:
 	# if we haven't found a specific, look for a deriving in hardcoded order
 	test -e $@ || \
 		(dpkg-vendor --derives-from blankon && cp ln -s blankon $@ ) || \
+		(dpkg-vendor --derives-from blankon && cp ln -s blankon $@ ) || \
 		ln -s blankon $@
 
 .PHONY: clean veryclean all binary vendor
+.NOPARALLEL:
 
 clean: clean/current
 

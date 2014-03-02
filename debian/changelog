@@ -1,3 +1,40 @@
+apt (0.9.15.5blankon1) tambora; urgency=low
+
+  * New Upstream Release 
+
+ -- Rahman Yusri Aftian <aftian@di.blankon.in>  Sun, 02 Mar 2014 21:41:41 +0700
+
+apt (0.9.15.5) unstable; urgency=medium
+
+  [ Michael Vogt ]
+  * vendor/tanglu/makefile: add missing clean/sources.list
+  * run the acquire tests with the new apt-helper binary, this
+    fixes the autopkgtest failures
+
+  [ Martin Pitt ]
+  * Fix autopkgtest missing dependencies and locale (closes: #739988)
+
+ -- Michael Vogt <mvo@debian.org>  Fri, 28 Feb 2014 08:44:25 +0100
+
+apt (0.9.15.4) unstable; urgency=low
+
+  [ Michael Vogt ]
+  * remove auto-generated apt-key and sources.list on clean (closes: 739749)
+  * add testcase for Bug#718329
+  * various fixes for ADT failures
+  
+  [ Jon Severinsson ]
+  * add apt-vendor information for tanglu
+
+  [ Guillem Jover ]
+  * ExtractTar: Allow an empty decompressor program
+  * DebFile: Refactor ExtractTarMember() out from ExtractArchive()
+  * Add support for data.tar, control.tar and control.tar.xz
+  * debian: Add debDebFile::ExtractTarMember to the symbols file
+  * Fix typos in documentation (codespell)
+
+ -- Michael Vogt <mvo@debian.org>  Sun, 23 Feb 2014 00:27:12 +0100
+
 apt (0.9.15.3blankon0.9.0.1) suroboyo-updates; urgency=low
 
   * New Upstream Release 
