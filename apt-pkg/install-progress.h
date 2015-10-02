@@ -1,6 +1,8 @@
 #ifndef PKGLIB_IPROGRESS_H
 #define PKGLIB_IPROGRESS_H
 
+#include <apt-pkg/macros.h>
+
 #include <string>
 #include <unistd.h>
 #include <signal.h>
@@ -120,12 +122,18 @@ namespace Progress {
  private:
     static void staticSIGWINCH(int);
     static std::vector<PackageManagerFancy*> instances;
+    APT_HIDDEN bool DrawStatusLine();
 
  protected:
     void SetupTerminalScrollArea(int nr_rows);
     void HandleSIGWINCH(int);
 
-    int GetNumberTerminalRows();
+    typedef struct {
+       int rows;
+       int columns;
+    } TermSize;
+    TermSize GetTerminalSize();
+
     sighandler_t old_SIGWINCH;
     int child_pty;
 
@@ -138,6 +146,10 @@ namespace Progress {
                                unsigned int StepsDone,
                                unsigned int TotalSteps,
                                std::string HumanReadableAction);
+
+    // return a progress bar of the given size for the given progress 
+    // percent between 0.0 and 1.0 in the form "[####...]"
+    static std::string GetTextProgressStr(float percent, int OutputSize);
  };
 
  class PackageManagerText : public PackageManager

@@ -70,7 +70,7 @@ int main(int argc, const char *argv[])					/*{{{*/
 {
    CommandLine::Dispatch Cmds[] = {
                                    // query
-                                   {"list",&List},
+                                   {"list",&DoList},
                                    {"search", &FullTextSearch},
                                    {"show", &APT::Cmd::ShowPackage},
 
@@ -96,6 +96,10 @@ int main(int argc, const char *argv[])					/*{{{*/
 
    std::vector<CommandLine::Args> Args = getCommandArgs("apt", CommandLine::GetCommand(Cmds, argc, argv));
 
+   // Init the signals
+   InitSignals();
+
+   // Init the output
    InitOutput();
 
    // Set up gettext support
@@ -109,9 +113,10 @@ int main(int argc, const char *argv[])					/*{{{*/
     }
 
     // some different defaults
-   _config->CndSet("DPkgPM::Progress", "1");
+   _config->CndSet("DPkg::Progress-Fancy", "1");
    _config->CndSet("Apt::Color", "1");
    _config->CndSet("APT::Get::Upgrade-Allow-New", true);
+   _config->CndSet("APT::Cmd::Show-Update-Stats", true);
 
    // Parse the command line and initialize the package library
    CommandLine CmdL(Args.data(), _config);

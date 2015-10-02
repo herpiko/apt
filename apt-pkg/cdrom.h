@@ -1,6 +1,8 @@
 #ifndef PKGLIB_CDROM_H
 #define PKGLIB_CDROM_H
 
+#include <apt-pkg/macros.h>
+
 #include<string>
 #include<vector>
 
@@ -73,8 +75,9 @@ class pkgCdrom								/*{{{*/
    bool Add(pkgCdromStatus *log);
 
  private:
-   bool MountAndIdentCDROM(Configuration &Database, std::string &CDROM,
+   APT_HIDDEN bool MountAndIdentCDROM(Configuration &Database, std::string &CDROM,
 	 std::string &ident, pkgCdromStatus * const log, bool const interactive);
+   APT_HIDDEN bool UnmountCDROM(std::string const &CDROM, pkgCdromStatus * const log);
 };
 									/*}}}*/
 

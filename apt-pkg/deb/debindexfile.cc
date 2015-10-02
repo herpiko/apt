@@ -80,14 +80,18 @@ pkgSrcRecords::Parser *debSourcesIndex::CreateSrcParser() const
 {
    string SourcesURI = _config->FindDir("Dir::State::lists") + 
       URItoFileName(IndexURI("Sources"));
-   string SourcesURIgzip = SourcesURI + ".gz";
 
-   if (!FileExists(SourcesURI) && !FileExists(SourcesURIgzip))
-      return NULL;
-   else if (!FileExists(SourcesURI) && FileExists(SourcesURIgzip))
-      SourcesURI = SourcesURIgzip;
-
-   return new debSrcRecordParser(SourcesURI,this);
+   std::vector<std::string> types = APT::Configuration::getCompressionTypes();
+   for (std::vector<std::string>::const_iterator t = types.begin(); t != types.end(); ++t)
+   {
+      string p;
+      p = SourcesURI + '.' + *t;
+      if (FileExists(p))
+         return new debSrcRecordParser(p, this);
+   }
+   if (FileExists(SourcesURI))
+      return new debSrcRecordParser(SourcesURI, this);
+   return NULL;
 }
 									/*}}}*/
 // SourcesIndex::Describe - Give a descriptive path to the index	/*{{{*/
@@ -129,11 +133,15 @@ string debSourcesIndex::Info(const char *Type) const
 inline string debSourcesIndex::IndexFile(const char *Type) const
 {
    string s = URItoFileName(IndexURI(Type));
-   string sgzip = s + ".gz";
-   if (!FileExists(s) && FileExists(sgzip))
-       return sgzip;
-   else
-       return s;
+
+   std::vector<std::string> types = APT::Configuration::getCompressionTypes();
+   for (std::vector<std::string>::const_iterator t = types.begin(); t != types.end(); ++t)
+   {
+      string p = s + '.' + *t;
+      if (FileExists(p))
+         return p;
+   }
+   return s;
 }
 
 string debSourcesIndex::IndexURI(const char *Type) const
@@ -259,11 +267,15 @@ string debPackagesIndex::Info(const char *Type) const
 inline string debPackagesIndex::IndexFile(const char *Type) const
 {
    string s =_config->FindDir("Dir::State::lists") + URItoFileName(IndexURI(Type));
-   string sgzip = s + ".gz";
-   if (!FileExists(s) && FileExists(sgzip))
-       return sgzip;
-   else
-       return s;
+
+   std::vector<std::string> types = APT::Configuration::getCompressionTypes();
+   for (std::vector<std::string>::const_iterator t = types.begin(); t != types.end(); ++t)
+   {
+      string p = s + '.' + *t;
+      if (FileExists(p))
+         return p;
+   }
+   return s;
 }
 string debPackagesIndex::IndexURI(const char *Type) const
 {
@@ -399,8 +411,8 @@ pkgCache::PkgFileIterator debPackagesIndex::FindInCache(pkgCache &Cache) const
 // TranslationsIndex::debTranslationsIndex - Contructor			/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-debTranslationsIndex::debTranslationsIndex(string URI,string Dist,string Section,
-						char const * const Translation) :
+debTranslationsIndex::debTranslationsIndex(std::string URI, std::string Dist,
+						std::string Section, std::string const &Translation) :
 			pkgIndexFile(true), URI(URI), Dist(Dist), Section(Section),
 				Language(Translation)
 {}
@@ -411,11 +423,15 @@ debTranslationsIndex::debTranslationsIndex(string URI,string Dist,string Section
 inline string debTranslationsIndex::IndexFile(const char *Type) const
 {
    string s =_config->FindDir("Dir::State::lists") + URItoFileName(IndexURI(Type));
-   string sgzip = s + ".gz";
-   if (!FileExists(s) && FileExists(sgzip))
-       return sgzip;
-   else
-       return s;
+
+   std::vector<std::string> types = APT::Configuration::getCompressionTypes();
+   for (std::vector<std::string>::const_iterator t = types.begin(); t != types.end(); ++t)
+   {
+      string p = s + '.' + *t;
+      if (FileExists(p))
+         return p;
+   }
+   return s;
 }
 string debTranslationsIndex::IndexURI(const char *Type) const
 {
@@ -441,7 +457,7 @@ string debTranslationsIndex::IndexURI(const char *Type) const
 bool debTranslationsIndex::GetIndexes(pkgAcquire *Owner) const
 {
    string const TranslationFile = string("Translation-").append(Language);
-   new pkgAcqIndexTrans(Owner, IndexURI(Language),
+   new pkgAcqIndexTrans(Owner, IndexURI(Language.c_str()),
                         Info(TranslationFile.c_str()),
                         TranslationFile);
 
@@ -453,13 +469,13 @@ bool debTranslationsIndex::GetIndexes(pkgAcquire *Owner) const
 /* This should help the user find the index in the sources.list and
    in the filesystem for problem solving */
 string debTranslationsIndex::Describe(bool Short) const
-{   
-   char S[300];
+{
+   std::string S;
    if (Short == true)
-      snprintf(S,sizeof(S),"%s",Info(TranslationFile().c_str()).c_str());
+      strprintf(S,"%s",Info(TranslationFile().c_str()).c_str());
    else
-      snprintf(S,sizeof(S),"%s (%s)",Info(TranslationFile().c_str()).c_str(),
-	       IndexFile(Language).c_str());
+      strprintf(S,"%s (%s)",Info(TranslationFile().c_str()).c_str(),
+	       IndexFile(Language.c_str()).c_str());
    return S;
 }
 									/*}}}*/
@@ -483,7 +499,7 @@ string debTranslationsIndex::Info(const char *Type) const
 									/*}}}*/
 bool debTranslationsIndex::HasPackages() const				/*{{{*/
 {
-   return FileExists(IndexFile(Language));
+   return FileExists(IndexFile(Language.c_str()));
 }
 									/*}}}*/
 // TranslationsIndex::Exists - Check if the index is available		/*{{{*/
@@ -491,7 +507,7 @@ bool debTranslationsIndex::HasPackages() const				/*{{{*/
 /* */
 bool debTranslationsIndex::Exists() const
 {
-   return FileExists(IndexFile(Language));
+   return FileExists(IndexFile(Language.c_str()));
 }
 									/*}}}*/
 // TranslationsIndex::Size - Return the size of the index		/*{{{*/
@@ -504,7 +520,7 @@ unsigned long debTranslationsIndex::Size() const
    /* we need to ignore errors here; if the lists are absent, just return 0 */
    _error->PushToStack();
 
-   FileFd f(IndexFile(Language), FileFd::ReadOnly, FileFd::Extension);
+   FileFd f(IndexFile(Language.c_str()), FileFd::ReadOnly, FileFd::Extension);
    if (!f.Failed())
       size = f.Size();
 
@@ -521,11 +537,11 @@ unsigned long debTranslationsIndex::Size() const
 bool debTranslationsIndex::Merge(pkgCacheGenerator &Gen,OpProgress *Prog) const
 {
    // Check the translation file, if in use
-   string TranslationFile = IndexFile(Language);
+   string TranslationFile = IndexFile(Language.c_str());
    if (FileExists(TranslationFile))
    {
      FileFd Trans(TranslationFile,FileFd::ReadOnly, FileFd::Extension);
-     debListParser TransParser(&Trans);
+     debTranslationsParser TransParser(&Trans);
      if (_error->PendingError() == true)
        return false;
      
@@ -551,7 +567,7 @@ bool debTranslationsIndex::Merge(pkgCacheGenerator &Gen,OpProgress *Prog) const
 /* */
 pkgCache::PkgFileIterator debTranslationsIndex::FindInCache(pkgCache &Cache) const
 {
-   string FileName = IndexFile(Language);
+   string FileName = IndexFile(Language.c_str());
    
    pkgCache::PkgFileIterator File = Cache.FileBegin();
    for (; File.end() == false; ++File)
@@ -605,7 +621,7 @@ bool debStatusIndex::Merge(pkgCacheGenerator &Gen,OpProgress *Prog) const
    FileFd Pkg(File,FileFd::ReadOnly, FileFd::Extension);
    if (_error->PendingError() == true)
       return false;
-   debListParser Parser(&Pkg);
+   debStatusListParser Parser(&Pkg);
    if (_error->PendingError() == true)
       return false;
 

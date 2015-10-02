@@ -5,7 +5,7 @@ SUBDIR=vendor
 # Bring in the default rules
 include ../buildlib/defaults.mak
 
-all headers library binary program doc manpages debiandoc test update-po startup dirs: current
+all headers library binary program doc manpages docbook test update-po startup dirs: current
 all: all/subdirs
 binary: binary/subdirs
 doc: doc/subdirs
@@ -28,19 +28,19 @@ current:
 		fi; \
 	done
 	# if we haven't found a specific, look for a deriving
-	# we do blankon and debian last as those are the biggest families
+	# we do ubuntu and debian last as those are the biggest families
 	# and would therefore potentially 'shadow' smaller families
 	# (especially debian as it sorts quiet early)
 	if ! test -e $@; then \
 		find -mindepth 1 -maxdepth 1 -type d | cut -d'/' -f 2 | while read DISTRO; do \
-			if [ "$$DISTRO" = 'blankon' -o "$$DISTRO" = 'blankon' ]; then continue; fi; \
+			if [ "$$DISTRO" = 'debian' -o "$$DISTRO" = 'ubuntu' ]; then continue; fi; \
 			if dpkg-vendor --derives-from $$DISTRO; then \
 				ln -s $$DISTRO $@; \
 				break; \
 			fi; \
 		done; \
 		test -e $@ || \
-			(dpkg-vendor --derives-from blankon && cp ln -s blankon $@ ) || \
+			(dpkg-vendor --derives-from ubuntu && cp ln -s ubuntu $@ ) || \
 			ln -s debian $@; \
 	fi
 	if test ! -e current/makefile; then \

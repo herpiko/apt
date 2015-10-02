@@ -12,6 +12,7 @@
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/cacheiterators.h>
+#include <apt-pkg/macros.h>
 
 #include <stdio.h>
 
@@ -32,15 +33,15 @@ class EDSP								/*{{{*/
 	static const char * const PrioMap[];
 	static const char * const DepMap[];
 
-	bool static ReadLine(int const input, std::string &line);
-	bool static StringToBool(char const *answer, bool const defValue);
+	APT_HIDDEN bool static ReadLine(int const input, std::string &line);
+	APT_HIDDEN bool static StringToBool(char const *answer, bool const defValue);
 
-	void static WriteScenarioVersion(pkgDepCache &Cache, FILE* output,
+	APT_HIDDEN void static WriteScenarioVersion(pkgDepCache &Cache, FILE* output,
 					 pkgCache::PkgIterator const &Pkg,
 					 pkgCache::VerIterator const &Ver);
-	void static WriteScenarioDependency(FILE* output,
+	APT_HIDDEN void static WriteScenarioDependency(FILE* output,
 					    pkgCache::VerIterator const &Ver);
-	void static WriteScenarioLimitedDependency(FILE* output,
+	APT_HIDDEN void static WriteScenarioLimitedDependency(FILE* output,
 						   pkgCache::VerIterator const &Ver,
 						   APT::PackageSet const &pkgset);
 public:
@@ -204,10 +205,10 @@ public:
 	 *  \param[out] solver_in will be the stdin of the solver
 	 *  \param[out] solver_out will be the stdout of the solver
 	 *
-	 *  \return true if the solver could be started and the pipes
-	 *  are set up correctly, otherwise false and the pipes are invalid
+	 *  \return PID of the started solver or 0 if failure occurred
 	 */
-	bool static ExecuteSolver(const char* const solver, int *solver_in, int *solver_out);
+	pid_t static ExecuteSolver(const char* const solver, int * const solver_in, int * const solver_out, bool /*overload*/);
+	APT_DEPRECATED bool static ExecuteSolver(const char* const solver, int *solver_in, int *solver_out);
 
 	/** \brief call an external resolver to handle the request
 	 *

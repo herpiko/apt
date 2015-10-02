@@ -20,6 +20,7 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/strutl.h>
+#include <apt-pkg/proxy.h>
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -54,16 +55,21 @@ HttpsMethod::parse_header(void *buffer, size_t size, size_t nmemb, void *userp)
    {
       if (me->Server->Result != 416 && me->Server->StartPos != 0)
 	 ;
-      else if (me->Server->Result == 416 && me->Server->Size == me->File->FileSize())
+      else if (me->Server->Result == 416 && me->Server->TotalFileSize == me->File->FileSize())
       {
          me->Server->Result = 200;
-	 me->Server->StartPos = me->Server->Size;
+	 me->Server->StartPos = me->Server->TotalFileSize;
+	 // the actual size is not important for https as curl will deal with it
+	 // by itself and e.g. doesn't bother us with transport-encoding…
+	 me->Server->JunkSize = std::numeric_limits<unsigned long long>::max();
       }
       else
 	 me->Server->StartPos = 0;
 
       me->File->Truncate(me->Server->StartPos);
       me->File->Seek(me->Server->StartPos);
+
+      me->Res.Size = me->Server->TotalFileSize;
    }
    else if (me->Server->HeaderLine(line) == false)
       return 0;
@@ -75,24 +81,22 @@ size_t
 HttpsMethod::write_data(void *buffer, size_t size, size_t nmemb, void *userp)
 {
    HttpsMethod *me = (HttpsMethod *)userp;
+   size_t buffer_size = size * nmemb;
+   // we don't need to count the junk here, just drop anything we get as
+   // we don't always know how long it would be, e.g. in chunked encoding.
+   if (me->Server->JunkSize != 0)
+      return buffer_size;
 
-   if (me->Res.Size == 0)
+   if (me->ReceivedData == false)
+   {
       me->URIStart(me->Res);
-   if(me->File->Write(buffer, size*nmemb) != true)
+      me->ReceivedData = true;
+   }
+
+   if(me->File->Write(buffer, buffer_size) != true)
       return false;
 
-   return size*nmemb;
-}
-
-int
-HttpsMethod::progress_callback(void *clientp, double dltotal, double /*dlnow*/,
-			      double /*ultotal*/, double /*ulnow*/)
-{
-   HttpsMethod *me = (HttpsMethod *)clientp;
-   if(dltotal > 0 && me->Res.Size == 0) {
-      me->Res.Size = (unsigned long long)dltotal;
-   }
-   return 0;
+   return buffer_size;
 }
 
 // HttpsServerState::HttpsServerState - Constructor			/*{{{*/
@@ -106,6 +110,9 @@ HttpsServerState::HttpsServerState(URI Srv,HttpsMethod * /*Owner*/) : ServerStat
 void HttpsMethod::SetupProxy()  					/*{{{*/
 {
    URI ServerName = Queue->Uri;
+
+   // Determine the proxy setting
+   AutoDetectProxy(ServerName);
 
    // Curl should never read proxy settings from the environment, as
    // we determine which proxy to use.  Do this for consistency among
@@ -167,6 +174,7 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    char curl_errorstr[CURL_ERROR_SIZE];
    URI Uri = Itm->Uri;
    string remotehost = Uri.Host;
+   ReceivedData = false;
 
    // TODO:
    //       - http::Pipeline-Depth
@@ -184,10 +192,8 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    curl_easy_setopt(curl, CURLOPT_WRITEHEADER, this);
    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
-   curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
-   curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, this);
    // options
-   curl_easy_setopt(curl, CURLOPT_NOPROGRESS, false);
+   curl_easy_setopt(curl, CURLOPT_NOPROGRESS, true);
    curl_easy_setopt(curl, CURLOPT_FILETIME, true);
    // only allow curl to handle https, not the other stuff it supports
    curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
@@ -325,11 +331,11 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    // if we have the file send an if-range query with a range header
    if (stat(Itm->DestFile.c_str(),&SBuf) >= 0 && SBuf.st_size > 0)
    {
-      char Buf[1000];
-      sprintf(Buf, "Range: bytes=%li-", (long) SBuf.st_size);
-      headers = curl_slist_append(headers, Buf);
-      sprintf(Buf, "If-Range: %s", TimeRFC1123(SBuf.st_mtime).c_str());
-      headers = curl_slist_append(headers, Buf);
+      std::string Buf;
+      strprintf(Buf, "Range: bytes=%lli-", (long long) SBuf.st_size);
+      headers = curl_slist_append(headers, Buf.c_str());
+      strprintf(Buf, "If-Range: %s", TimeRFC1123(SBuf.st_mtime).c_str());
+      headers = curl_slist_append(headers, Buf.c_str());
    }
    else if(Itm->LastModified > 0)
    {
@@ -340,6 +346,7 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    // go for it - if the file exists, append on it
    File = new FileFd(Itm->DestFile, FileFd::WriteAny);
    Server = new HttpsServerState(Itm->Uri, this);
+   Res = FetchResult();
 
    // keep apt updated
    Res.Filename = Itm->DestFile;

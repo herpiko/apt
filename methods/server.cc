@@ -44,7 +44,8 @@ time_t ServerMethod::FailTime = 0;
 // ---------------------------------------------------------------------
 /* Returns 0 if things are OK, 1 if an IO error occurred and 2 if a header
    parse error occurred */
-ServerState::RunHeadersResult ServerState::RunHeaders(FileFd * const File)
+ServerState::RunHeadersResult ServerState::RunHeaders(FileFd * const File,
+                                                      const std::string &Uri)
 {
    State = Header;
    
@@ -53,7 +54,8 @@ ServerState::RunHeadersResult ServerState::RunHeaders(FileFd * const File)
    Major = 0; 
    Minor = 0; 
    Result = 0; 
-   Size = 0; 
+   TotalFileSize = 0;
+   JunkSize = 0;
    StartPos = 0;
    Encoding = Closes;
    HaveContent = false;
@@ -66,7 +68,7 @@ ServerState::RunHeadersResult ServerState::RunHeaders(FileFd * const File)
 	 continue;
 
       if (Owner->Debug == true)
-	 clog << Data;
+	 clog << "Answer for: " << Uri << endl << Data;
       
       for (string::const_iterator I = Data.begin(); I < Data.end(); ++I)
       {
@@ -127,7 +129,7 @@ bool ServerState::HeaderLine(string Line)
 	 if (elements == 3)
 	 {
 	    Code[0] = '\0';
-	    if (Owner->Debug == true)
+	    if (Owner != NULL && Owner->Debug == true)
 	       clog << "HTTP server doesn't give Reason-Phrase for " << Result << std::endl;
 	 }
 	 else if (elements != 4)
@@ -162,15 +164,22 @@ bool ServerState::HeaderLine(string Line)
 	 Encoding = Stream;
       HaveContent = true;
 
-      // The length is already set from the Content-Range header
-      if (StartPos != 0)
-	 return true;
+      unsigned long long * DownloadSizePtr = &DownloadSize;
+      if (Result == 416)
+	 DownloadSizePtr = &JunkSize;
 
-      Size = strtoull(Val.c_str(), NULL, 10);
-      if (Size >= std::numeric_limits<unsigned long long>::max())
+      *DownloadSizePtr = strtoull(Val.c_str(), NULL, 10);
+      if (*DownloadSizePtr >= std::numeric_limits<unsigned long long>::max())
 	 return _error->Errno("HeaderLine", _("The HTTP server sent an invalid Content-Length header"));
-      else if (Size == 0)
+      else if (*DownloadSizePtr == 0)
 	 HaveContent = false;
+
+      // On partial content (206) the Content-Length less than the real
+      // size, so do not set it here but leave that to the Content-Range
+      // header instead
+      if(Result != 206 && TotalFileSize == 0)
+         TotalFileSize = DownloadSize;
+
       return true;
    }
 
@@ -185,15 +194,15 @@ bool ServerState::HeaderLine(string Line)
       HaveContent = true;
 
       // §14.16 says 'byte-range-resp-spec' should be a '*' in case of 416
-      if (Result == 416 && sscanf(Val.c_str(), "bytes */%llu",&Size) == 1)
-      {
-	 StartPos = 1; // ignore Content-Length, it would override Size
-	 HaveContent = false;
-      }
-      else if (sscanf(Val.c_str(),"bytes %llu-%*u/%llu",&StartPos,&Size) != 2)
+      if (Result == 416 && sscanf(Val.c_str(), "bytes */%llu",&TotalFileSize) == 1)
+	 ; // we got the expected filesize which is all we wanted
+      else if (sscanf(Val.c_str(),"bytes %llu-%*u/%llu",&StartPos,&TotalFileSize) != 2)
 	 return _error->Error(_("The HTTP server sent an invalid Content-Range header"));
-      if ((unsigned long long)StartPos > Size)
+      if ((unsigned long long)StartPos > TotalFileSize)
 	 return _error->Error(_("This HTTP server has broken range support"));
+
+      // figure out what we will download
+      DownloadSize = TotalFileSize - StartPos;
       return true;
    }
 
@@ -304,12 +313,18 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
       struct stat SBuf;
       if (stat(Queue->DestFile.c_str(),&SBuf) >= 0 && SBuf.st_size > 0)
       {
-	 if ((unsigned long long)SBuf.st_size == Server->Size)
+	 if ((unsigned long long)SBuf.st_size == Server->TotalFileSize)
 	 {
 	    // the file is completely downloaded, but was not moved
-	    Server->StartPos = Server->Size;
-	    Server->Result = 200;
+	    if (Server->HaveContent == true)
+	    {
+	       // Send to error page to dev/null
+	       FileFd DevNull("/dev/null",FileFd::WriteExists);
+	       Server->RunData(&DevNull);
+	    }
 	    Server->HaveContent = false;
+	    Server->StartPos = Server->TotalFileSize;
+	    Server->Result = 200;
 	 }
 	 else if (unlink(Queue->DestFile.c_str()) == 0)
 	 {
@@ -334,7 +349,7 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
 
    // This is some sort of 2xx 'data follows' reply
    Res.LastModified = Server->Date;
-   Res.Size = Server->Size;
+   Res.Size = Server->TotalFileSize;
    
    // Open the file
    delete File;
@@ -478,7 +493,7 @@ int ServerMethod::Loop()
       Fetch(0);
       
       // Fetch the next URL header data from the server.
-      switch (Server->RunHeaders(File))
+      switch (Server->RunHeaders(File, Queue->Uri))
       {
 	 case ServerState::RUN_HEADERS_OK:
 	 break;

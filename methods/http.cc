@@ -34,6 +34,7 @@
 #include <apt-pkg/hashes.h>
 #include <apt-pkg/netrc.h>
 #include <apt-pkg/strutl.h>
+#include <apt-pkg/proxy.h>
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -45,6 +46,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <iostream>
+#include <sstream>
 
 #include "config.h"
 #include "connect.h"
@@ -303,6 +305,7 @@ bool HttpServerState::Open()
    Persistent = true;
    
    // Determine the proxy setting
+   AutoDetectProxy(ServerName);
    string SpecificProxy = _config->Find("Acquire::http::Proxy::" + ServerName.Host);
    if (!SpecificProxy.empty())
    {
@@ -437,8 +440,10 @@ bool HttpServerState::RunData(FileFd * const File)
          loss of the connection means we are done */
       if (Encoding == Closes)
 	 In.Limit(-1);
+      else if (JunkSize != 0)
+	 In.Limit(JunkSize);
       else
-	 In.Limit(Size - StartPos);
+	 In.Limit(DownloadSize);
       
       // Just transfer the whole block.
       do
@@ -667,22 +672,13 @@ void HttpMethod::SendReq(FetchItem *Itm)
    URI Uri = Itm->Uri;
 
    // The HTTP server expects a hostname with a trailing :port
-   char Buf[1000];
+   std::stringstream Req;
    string ProperHost;
 
    if (Uri.Host.find(':') != string::npos)
       ProperHost = '[' + Uri.Host + ']';
    else
       ProperHost = Uri.Host;
-   if (Uri.Port != 0)
-   {
-      sprintf(Buf,":%u",Uri.Port);
-      ProperHost += Buf;
-   }   
-      
-   // Just in case.
-   if (Itm->Uri.length() >= sizeof(Buf))
-       abort();
 
    /* RFC 2616 §5.1.2 requires absolute URIs for requests to proxies,
       but while its a must for all servers to accept absolute URIs,
@@ -701,27 +697,20 @@ void HttpMethod::SendReq(FetchItem *Itm)
       in 1.1, can cause problems with proxies, and we are an HTTP/1.1
       client anyway.
       C.f. https://tools.ietf.org/wg/httpbis/trac/ticket/158 */
-   sprintf(Buf,"GET %s HTTP/1.1\r\nHost: %s\r\n",
-	   requesturi.c_str(),ProperHost.c_str());
+   Req << "GET " << requesturi << " HTTP/1.1\r\n";
+   if (Uri.Port != 0)
+      Req << "Host: " << ProperHost << ":" << Uri.Port << "\r\n";
+   else
+      Req << "Host: " << ProperHost << "\r\n";
 
    // generate a cache control header (if needed)
-   if (_config->FindB("Acquire::http::No-Cache",false) == true) 
-   {
-      strcat(Buf,"Cache-Control: no-cache\r\nPragma: no-cache\r\n");
-   }
-   else
-   {
-      if (Itm->IndexFile == true) 
-      {
-	 sprintf(Buf+strlen(Buf),"Cache-Control: max-age=%u\r\n",
-		 _config->FindI("Acquire::http::Max-Age",0));
-      }
-      else
-      {
-	 if (_config->FindB("Acquire::http::No-Store",false) == true)
-	    strcat(Buf,"Cache-Control: no-store\r\n");
-      }
-   }
+   if (_config->FindB("Acquire::http::No-Cache",false) == true)
+      Req << "Cache-Control: no-cache\r\n"
+	 << "Pragma: no-cache\r\n";
+   else if (Itm->IndexFile == true)
+      Req << "Cache-Control: max-age=" << _config->FindI("Acquire::http::Max-Age",0) << "\r\n";
+   else if (_config->FindB("Acquire::http::No-Store",false) == true)
+      Req << "Cache-Control: no-store\r\n";
 
    // If we ask for uncompressed files servers might respond with content-
    // negotiation which lets us end up with compressed files we do not support,
@@ -733,46 +722,35 @@ void HttpMethod::SendReq(FetchItem *Itm)
       size_t const filepos = Itm->Uri.find_last_of('/');
       string const file = Itm->Uri.substr(filepos + 1);
       if (flExtension(file) == file)
-	 strcat(Buf,"Accept: text/*\r\n");
+	 Req << "Accept: text/*\r\n";
    }
 
-   string Req = Buf;
-
-   // Check for a partial file
+   // Check for a partial file and send if-queries accordingly
    struct stat SBuf;
    if (stat(Itm->DestFile.c_str(),&SBuf) >= 0 && SBuf.st_size > 0)
-   {
-      // In this case we send an if-range query with a range header
-      sprintf(Buf,"Range: bytes=%lli-\r\nIf-Range: %s\r\n",(long long)SBuf.st_size,
-	      TimeRFC1123(SBuf.st_mtime).c_str());
-      Req += Buf;
-   }
-   else
-   {
-      if (Itm->LastModified != 0)
-      {
-	 sprintf(Buf,"If-Modified-Since: %s\r\n",TimeRFC1123(Itm->LastModified).c_str());
-	 Req += Buf;
-      }
-   }
+      Req << "Range: bytes=" << SBuf.st_size << "-\r\n"
+	 << "If-Range: " << TimeRFC1123(SBuf.st_mtime) << "\r\n";
+   else if (Itm->LastModified != 0)
+      Req << "If-Modified-Since: " << TimeRFC1123(Itm->LastModified).c_str() << "\r\n";
 
    if (Server->Proxy.User.empty() == false || Server->Proxy.Password.empty() == false)
-      Req += string("Proxy-Authorization: Basic ") + 
-          Base64Encode(Server->Proxy.User + ":" + Server->Proxy.Password) + "\r\n";
+      Req << "Proxy-Authorization: Basic "
+	 << Base64Encode(Server->Proxy.User + ":" + Server->Proxy.Password) << "\r\n";
 
    maybe_add_auth (Uri, _config->FindFile("Dir::Etc::netrc"));
    if (Uri.User.empty() == false || Uri.Password.empty() == false)
-   {
-      Req += string("Authorization: Basic ") + 
-          Base64Encode(Uri.User + ":" + Uri.Password) + "\r\n";
-   }
-   Req += "User-Agent: " + _config->Find("Acquire::http::User-Agent",
-		"Debian APT-HTTP/1.3 (" PACKAGE_VERSION ")") + "\r\n\r\n";
-   
-   if (Debug == true)
-      cerr << Req << endl;
+      Req << "Authorization: Basic "
+	 << Base64Encode(Uri.User + ":" + Uri.Password) << "\r\n";
 
-   Server->WriteResponse(Req);
+   Req << "User-Agent: " << _config->Find("Acquire::http::User-Agent",
+		"Debian APT-HTTP/1.3 (" PACKAGE_VERSION ")") << "\r\n";
+
+   Req << "\r\n";
+
+   if (Debug == true)
+      cerr << Req.str() << endl;
+
+   Server->WriteResponse(Req.str());
 }
 									/*}}}*/
 // HttpMethod::Configuration - Handle a configuration message		/*{{{*/
@@ -787,66 +765,6 @@ bool HttpMethod::Configuration(string Message)
    PipelineDepth = _config->FindI("Acquire::http::Pipeline-Depth",
 				  PipelineDepth);
    Debug = _config->FindB("Debug::Acquire::http",false);
-
-   // Get the proxy to use
-   AutoDetectProxy();
-
-   return true;
-}
-									/*}}}*/
-// HttpMethod::AutoDetectProxy - auto detect proxy			/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-bool HttpMethod::AutoDetectProxy()
-{
-   // option is "Acquire::http::Proxy-Auto-Detect" but we allow the old
-   // name without the dash ("-")
-   AutoDetectProxyCmd = _config->Find("Acquire::http::Proxy-Auto-Detect",
-                                      _config->Find("Acquire::http::ProxyAutoDetect"));
-
-   if (AutoDetectProxyCmd.empty())
-      return true;
-
-   if (Debug)
-      clog << "Using auto proxy detect command: " << AutoDetectProxyCmd << endl;
-
-   int Pipes[2] = {-1,-1};
-   if (pipe(Pipes) != 0)
-      return _error->Errno("pipe", "Failed to create Pipe");
-
-   pid_t Process = ExecFork();
-   if (Process == 0)
-   {
-      close(Pipes[0]);
-      dup2(Pipes[1],STDOUT_FILENO);
-      SetCloseExec(STDOUT_FILENO,false);
-
-      const char *Args[2];
-      Args[0] = AutoDetectProxyCmd.c_str();
-      Args[1] = 0;
-      execv(Args[0],(char **)Args);
-      cerr << "Failed to exec method " << Args[0] << endl;
-      _exit(100);
-   }
-   char buf[512];
-   int InFd = Pipes[0];
-   close(Pipes[1]);
-   int res = read(InFd, buf, sizeof(buf)-1);
-   ExecWait(Process, "ProxyAutoDetect", true);
-
-   if (res < 0)
-      return _error->Errno("read", "Failed to read");
-   if (res == 0)
-      return _error->Warning("ProxyAutoDetect returned no data");
-
-   // add trailing \0
-   buf[res] = 0;
-
-   if (Debug)
-      clog << "auto detect command returned: '" << buf << "'" << endl;
-
-   if (strstr(buf, "http://") == buf)
-      _config->Set("Acquire::http::proxy", _strstrip(buf));
 
    return true;
 }

@@ -85,7 +85,9 @@ class FileFd
    bool Skip(unsigned long long To);
    bool Truncate(unsigned long long To);
    unsigned long long Tell();
+   // the size of the file content (compressed files will be uncompressed first)
    unsigned long long Size();
+   // the size of the file itself
    unsigned long long FileSize();
    time_t ModificationTime();
 
@@ -103,10 +105,10 @@ class FileFd
 	return T;
    }
 
-   bool Open(std::string FileName,unsigned int const Mode,CompressMode Compress,unsigned long const Perms = 0666);
-   bool Open(std::string FileName,unsigned int const Mode,APT::Configuration::Compressor const &compressor,unsigned long const Perms = 0666);
-   inline bool Open(std::string const &FileName,unsigned int const Mode, unsigned long const Perms = 0666) {
-      return Open(FileName, Mode, None, Perms);
+   bool Open(std::string FileName,unsigned int const Mode,CompressMode Compress,unsigned long const AccessMode = 0666);
+   bool Open(std::string FileName,unsigned int const Mode,APT::Configuration::Compressor const &compressor,unsigned long const AccessMode = 0666);
+   inline bool Open(std::string const &FileName,unsigned int const Mode, unsigned long const AccessMode = 0666) {
+      return Open(FileName, Mode, None, AccessMode);
    };
    bool OpenDescriptor(int Fd, unsigned int const Mode, CompressMode Compress, bool AutoClose=false);
    bool OpenDescriptor(int Fd, unsigned int const Mode, APT::Configuration::Compressor const &compressor, bool AutoClose=false);
@@ -129,13 +131,13 @@ class FileFd
    inline bool IsCompressed() {return (Flags & Compressed) == Compressed;};
    inline std::string &Name() {return FileName;};
    
-   FileFd(std::string FileName,unsigned int const Mode,unsigned long Perms = 0666) : iFd(-1), Flags(0), d(NULL)
+   FileFd(std::string FileName,unsigned int const Mode,unsigned long AccessMode = 0666) : iFd(-1), Flags(0), d(NULL)
    {
-      Open(FileName,Mode, None, Perms);
+      Open(FileName,Mode, None, AccessMode);
    };
-   FileFd(std::string FileName,unsigned int const Mode, CompressMode Compress, unsigned long Perms = 0666) : iFd(-1), Flags(0), d(NULL)
+   FileFd(std::string FileName,unsigned int const Mode, CompressMode Compress, unsigned long AccessMode = 0666) : iFd(-1), Flags(0), d(NULL)
    {
-      Open(FileName,Mode, Compress, Perms);
+      Open(FileName,Mode, Compress, AccessMode);
    };
    FileFd() : iFd(-1), Flags(AutoClose), d(NULL) {};
    FileFd(int const Fd, unsigned int const Mode = ReadWrite, CompressMode Compress = None) : iFd(-1), Flags(0), d(NULL)
@@ -150,11 +152,11 @@ class FileFd
 
    private:
    FileFdPrivate* d;
-   bool OpenInternDescriptor(unsigned int const Mode, APT::Configuration::Compressor const &compressor);
+   APT_HIDDEN bool OpenInternDescriptor(unsigned int const Mode, APT::Configuration::Compressor const &compressor);
 
    // private helpers to set Fail flag and call _error->Error
-   bool FileFdErrno(const char* Function, const char* Description,...) APT_PRINTF(3) APT_COLD;
-   bool FileFdError(const char* Description,...) APT_PRINTF(2) APT_COLD;
+   APT_HIDDEN bool FileFdErrno(const char* Function, const char* Description,...) APT_PRINTF(3) APT_COLD;
+   APT_HIDDEN bool FileFdError(const char* Description,...) APT_PRINTF(2) APT_COLD;
 };
 
 bool RunScripts(const char *Cnf);

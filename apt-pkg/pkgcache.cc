@@ -55,7 +55,7 @@ pkgCache::Header::Header()
    /* Whenever the structures change the major version should be bumped,
       whenever the generator changes the minor version should be bumped. */
    MajorVersion = 8;
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 13)
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 17)
    MinorVersion = 2;
 #else
    MinorVersion = 1;
@@ -230,12 +230,7 @@ pkgCache::PkgIterator pkgCache::SingleArchFindPkg(const string &Name)
 pkgCache::PkgIterator pkgCache::FindPkg(const string &Name) {
 	size_t const found = Name.find(':');
 	if (found == string::npos)
-	{
-		if (MultiArchCache() == false)
-			return SingleArchFindPkg(Name);
-		else
-			return FindPkg(Name, "native");
-	}
+	   return FindPkg(Name, "native");
 	string const Arch = Name.substr(found+1);
 	/* Beware: This is specialcased to handle pkg:any in dependencies as
 	   these are linked to virtual pkg:any named packages with all archs.
@@ -249,13 +244,6 @@ pkgCache::PkgIterator pkgCache::FindPkg(const string &Name) {
 // ---------------------------------------------------------------------
 /* Returns 0 on error, pointer to the package otherwise */
 pkgCache::PkgIterator pkgCache::FindPkg(const string &Name, string const &Arch) {
-	if (MultiArchCache() == false && Arch != "none") {
-		if (Arch == "native" || Arch == "all" || Arch == "any" ||
-		    Arch == NativeArch())
-			return SingleArchFindPkg(Name);
-		else
-			return PkgIterator(*this,0);
-	}
 	/* We make a detour via the GrpIterator here as
 	   on a multi-arch environment a group is easier to
 	   find than a package (less entries in the buckets) */
@@ -524,7 +512,10 @@ operator<<(std::ostream& out, pkgCache::PkgIterator Pkg)
       out << " -> " << candidate;
    if ( newest != "none" && candidate != newest)
       out << " | " << newest;
-   out << " > ( " << string(Pkg.Section()==0?"none":Pkg.Section()) << " )";
+   if (Pkg->VersionList == 0)
+      out << " > ( none )";
+   else
+      out << " > ( " << string(Pkg.VersionList().Section()==0?"unknown":Pkg.VersionList().Section()) << " )";
    return out;
 }
 									/*}}}*/
@@ -822,7 +813,7 @@ int pkgCache::VerIterator::CompareVer(const VerIterator &B) const
 // VerIterator::Downloadable - Checks if the version is downloadable	/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool pkgCache::VerIterator::Downloadable() const
+APT_PURE bool pkgCache::VerIterator::Downloadable() const
 {
    VerFileIterator Files = FileList();
    for (; Files.end() == false; ++Files)
@@ -835,7 +826,7 @@ bool pkgCache::VerIterator::Downloadable() const
 // ---------------------------------------------------------------------
 /* This checks to see if any of the versions files are not NotAutomatic. 
    True if this version is selectable for automatic installation. */
-bool pkgCache::VerIterator::Automatic() const
+APT_PURE bool pkgCache::VerIterator::Automatic() const
 {
    VerFileIterator Files = FileList();
    for (; Files.end() == false; ++Files)

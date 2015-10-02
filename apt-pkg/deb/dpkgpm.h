@@ -110,6 +110,7 @@ class pkgDPkgPM : public pkgPackageManager
    // helper
    void BuildPackagesProgressMap();
    void StartPtyMagic();
+   void SetupSlavePtyMagic();
    void StopPtyMagic();
    
    // input processing
@@ -117,7 +118,7 @@ class pkgDPkgPM : public pkgPackageManager
    void DoTerminalPty(int master);
    void DoDpkgStatusFd(int statusfd);
    void ProcessDpkgStatusLine(char *line);
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 13)
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 17)
    void DoDpkgStatusFd(int statusfd, int /*unused*/) {
       DoDpkgStatusFd(statusfd);
    }
@@ -132,8 +133,10 @@ class pkgDPkgPM : public pkgPackageManager
    virtual bool Configure(PkgIterator Pkg);
    virtual bool Remove(PkgIterator Pkg,bool Purge = false);
 
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 13)
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 17)
    virtual bool Go(APT::Progress::PackageManager *progress);
+   // compat
+   virtual bool Go(int StatusFd=-1);
 #else
    virtual bool Go(int StatusFd=-1);
    bool GoNoABIBreak(APT::Progress::PackageManager *progress);

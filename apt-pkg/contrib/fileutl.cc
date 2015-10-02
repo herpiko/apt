@@ -58,13 +58,10 @@
 	#include <bzlib.h>
 #endif
 #ifdef HAVE_LZMA
-	#include <stdint.h>
 	#include <lzma.h>
 #endif
-
-#ifdef WORDS_BIGENDIAN
-#include <inttypes.h>
-#endif
+#include <endian.h>
+#include <stdint.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -104,7 +101,11 @@ bool RunScripts(const char *Cnf)
       {
 	 if (Opts->Value.empty() == true)
 	    continue;
-	 
+
+         if(_config->FindB("Debug::RunScripts", false) == true)
+            std::clog << "Running external script: '"
+                      << Opts->Value << "'" << std::endl;
+
 	 if (system(Opts->Value.c_str()) != 0)
 	    _exit(100+Count);
       }
@@ -777,11 +778,26 @@ pid_t ExecFork(std::set<int> KeepFDs)
       signal(SIGCONT,SIG_DFL);
       signal(SIGTSTP,SIG_DFL);
 
-      // Close all of our FDs - just in case
-      for (int K = 3; K != sysconf(_SC_OPEN_MAX); K++)
+      DIR *dir = opendir("/proc/self/fd");
+      if (dir != NULL)
       {
-	 if(KeepFDs.find(K) == KeepFDs.end())
-	    fcntl(K,F_SETFD,FD_CLOEXEC);
+	 struct dirent *ent;
+	 while ((ent = readdir(dir)))
+	 {
+	    int fd = atoi(ent->d_name);
+	    // If fd > 0, it was a fd number and not . or ..
+	    if (fd >= 3 && KeepFDs.find(fd) == KeepFDs.end())
+	       fcntl(fd,F_SETFD,FD_CLOEXEC);
+	 }
+	 closedir(dir);
+      } else {
+	 long ScOpenMax = sysconf(_SC_OPEN_MAX);
+	 // Close all of our FDs - just in case
+	 for (int K = 3; K != ScOpenMax; K++)
+	 {
+	    if(KeepFDs.find(K) == KeepFDs.end())
+	       fcntl(K,F_SETFD,FD_CLOEXEC);
+	 }
       }
    }
    
@@ -954,10 +970,10 @@ class FileFdPrivate {							/*{{{*/
 // FileFd::Open - Open a file						/*{{{*/
 // ---------------------------------------------------------------------
 /* The most commonly used open mode combinations are given with Mode */
-bool FileFd::Open(string FileName,unsigned int const Mode,CompressMode Compress, unsigned long const Perms)
+bool FileFd::Open(string FileName,unsigned int const Mode,CompressMode Compress, unsigned long const AccessMode)
 {
    if (Mode == ReadOnlyGzip)
-      return Open(FileName, ReadOnly, Gzip, Perms);
+      return Open(FileName, ReadOnly, Gzip, AccessMode);
 
    if (Compress == Auto && (Mode & WriteOnly) == WriteOnly)
       return FileFdError("Autodetection on %s only works in ReadOnly openmode!", FileName.c_str());
@@ -1024,9 +1040,9 @@ bool FileFd::Open(string FileName,unsigned int const Mode,CompressMode Compress,
 
    if (compressor == compressors.end())
       return FileFdError("Can't find a match for specified compressor mode for file %s", FileName.c_str());
-   return Open(FileName, Mode, *compressor, Perms);
+   return Open(FileName, Mode, *compressor, AccessMode);
 }
-bool FileFd::Open(string FileName,unsigned int const Mode,APT::Configuration::Compressor const &compressor, unsigned long const Perms)
+bool FileFd::Open(string FileName,unsigned int const Mode,APT::Configuration::Compressor const &compressor, unsigned long const AccessMode)
 {
    Close();
    Flags = AutoClose;
@@ -1076,11 +1092,18 @@ bool FileFd::Open(string FileName,unsigned int const Mode,APT::Configuration::Co
       TemporaryFileName = string(name);
       free(name);
 
-      if(Perms != 600 && fchmod(iFd, Perms) == -1)
+      // umask() will always set the umask and return the previous value, so
+      // we first set the umask and then reset it to the old value
+      mode_t const CurrentUmask = umask(0);
+      umask(CurrentUmask);
+      // calculate the actual file permissions (just like open/creat)
+      mode_t const FilePermissions = (AccessMode & ~CurrentUmask);
+
+      if(fchmod(iFd, FilePermissions) == -1)
           return FileFdErrno("fchmod", "Could not change permissions for temporary file %s", TemporaryFileName.c_str());
    }
    else
-      iFd = open(FileName.c_str(), fileflags, Perms);
+      iFd = open(FileName.c_str(), fileflags, AccessMode);
 
    this->FileName = FileName;
    if (iFd == -1 || OpenInternDescriptor(Mode, compressor) == false)
@@ -1233,7 +1256,8 @@ bool FileFd::OpenInternDescriptor(unsigned int const Mode, APT::Configuration::C
 	 if (d->lzma == NULL)
 	    d->lzma = new FileFdPrivate::LZMAFILE;
 	 d->lzma->file = (FILE*) compress_struct;
-	 d->lzma->stream = LZMA_STREAM_INIT;
+         lzma_stream tmp_stream = LZMA_STREAM_INIT;
+	 d->lzma->stream = tmp_stream;
 
 	 if ((Mode & ReadWrite) == ReadWrite)
 	    return FileFdError("ReadWrite mode is not supported for file %s", FileName.c_str());
@@ -1349,7 +1373,10 @@ bool FileFd::OpenInternDescriptor(unsigned int const Mode, APT::Configuration::C
 	 Args.push_back(a->c_str());
       if (Comp == false && FileName.empty() == false)
       {
-	 Args.push_back("--stdout");
+	 // commands not needing arguments, do not need to be told about using standard output
+	 // in reality, only testcases with tools like cat, rev, rot13, … are able to trigger this
+	 if (compressor.CompressArgs.empty() == false && compressor.UncompressArgs.empty() == false)
+	    Args.push_back("--stdout");
 	 if (TemporaryFileName.empty() == false)
 	    Args.push_back(TemporaryFileName.c_str());
 	 else
@@ -1430,7 +1457,15 @@ bool FileFd::Read(void *To,unsigned long long Size,unsigned long long *Actual)
 	    errno = 0;
 	 }
 	 else
+	 {
 	    Res = Size - d->lzma->stream.avail_out;
+	    if (Res == 0)
+	    {
+	       // lzma run was okay, but produced no output…
+	       Res = -1;
+	       errno = EINTR;
+	    }
+	 }
       }
 #endif
       else
@@ -1439,7 +1474,12 @@ bool FileFd::Read(void *To,unsigned long long Size,unsigned long long *Actual)
       if (Res < 0)
       {
 	 if (errno == EINTR)
+	 {
+	    // trick the while-loop into running again
+	    Res = 1;
+	    errno = 0;
 	    continue;
+	 }
 	 if (false)
 	    /* dummy so that the rest can be 'else if's */;
 #ifdef HAVE_ZLIB
@@ -1629,6 +1669,8 @@ bool FileFd::Write(int Fd, const void *From, unsigned long long Size)
 /* */
 bool FileFd::Seek(unsigned long long To)
 {
+   Flags &= ~HitEof;
+
    if (d != NULL && (d->pipe == true || d->InternalStream() == true))
    {
       // Our poor man seeking in pipes is costly, so try to avoid it
@@ -1688,7 +1730,6 @@ bool FileFd::Skip(unsigned long long Over)
 {
    if (d != NULL && (d->pipe == true || d->InternalStream() == true))
    {
-      d->seekpos += Over;
       char buffer[1024];
       while (Over != 0)
       {
@@ -1772,7 +1813,8 @@ static bool StatFileFd(char const * const msg, int const iFd, std::string const 
 	 // higher-level code will generate more meaningful messages,
 	 // even translated this would be meaningless for users
 	 return _error->Errno("fstat", "Unable to determine %s for fd %i", msg, iFd);
-      ispipe = S_ISFIFO(Buf.st_mode);
+      if (FileName.empty() == false)
+	 ispipe = S_ISFIFO(Buf.st_mode);
    }
 
    // for compressor pipes st_size is undefined and at 'best' zero
@@ -1852,19 +1894,13 @@ unsigned long long FileFd::Size()
 	  FileFdErrno("lseek","Unable to seek to end of gzipped file");
 	  return 0;
        }
-       size = 0;
+       uint32_t size = 0;
        if (read(iFd, &size, 4) != 4)
        {
 	  FileFdErrno("read","Unable to read original size of gzipped file");
 	  return 0;
        }
-
-#ifdef WORDS_BIGENDIAN
-       uint32_t tmp_size = size;
-       uint8_t const * const p = (uint8_t const * const) &tmp_size;
-       tmp_size = (p[3] << 24) | (p[2] << 16) | (p[1] << 8) | p[0];
-       size = tmp_size;
-#endif
+       size = le32toh(size);
 
        if (lseek(iFd, oldPos, SEEK_SET) < 0)
        {

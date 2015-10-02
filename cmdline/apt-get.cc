@@ -138,7 +138,7 @@ static bool TryToInstallBuildDep(pkgCache::PkgIterator Pkg,pkgCacheFile &Cache,
 
 
 // helper that can go wit hthe next ABI break
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 13)
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 17)
 static std::string MetaIndexFileNameOnDisk(metaIndex *metaindex)
 {
    // FIXME: this cast is the horror, the horror
@@ -175,7 +175,7 @@ static std::string GetReleaseForSourceRecord(pkgSourceList *SrcList,
       {
          if (&CurrentIndexFile == (*IF))
          {
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 13)
+#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 17)
             std::string path = MetaIndexFileNameOnDisk(*S);
 #else
             std::string path = (*S)->LocalFileName();
@@ -630,7 +630,7 @@ static bool DoDownload(CommandLine &CmdL)
    if (Cache.ReadOnlyOpen() == false)
       return false;
 
-   APT::CacheSetHelper helper(c0out);
+   APT::CacheSetHelper helper;
    APT::VersionSet verset = APT::VersionSet::FromCommandLine(Cache,
 		CmdL.FileList + 1, APT::VersionSet::CANDIDATE, helper);
 
@@ -665,7 +665,7 @@ static bool DoDownload(CommandLine &CmdL)
    {
       pkgAcquire::UriIterator I = Fetcher.UriBegin();
       for (; I != Fetcher.UriEnd(); ++I)
-	 cout << '\'' << I->URI << "' " << flNotDir(I->Owner->DestFile) << ' ' <<
+	 cout << '\'' << I->URI << "' " << flNotDir(I->Owner->DestFile)  << ' ' <<
 	       I->Owner->FileSize << ' ' << I->Owner->HashSum() << endl;
       return true;
    }
@@ -756,6 +756,7 @@ static bool DoSource(CommandLine &CmdL)
 
    // Load the requestd sources into the fetcher
    unsigned J = 0;
+   std::string UntrustedList;
    for (const char **I = CmdL.FileList + 1; *I != 0; I++, J++)
    {
       string Src;
@@ -764,6 +765,9 @@ static bool DoSource(CommandLine &CmdL)
       if (Last == 0) {
 	 return _error->Error(_("Unable to find a source package for %s"),Src.c_str());
       }
+
+      if (Last->Index().IsTrusted() == false)
+         UntrustedList += Src + " ";
       
       string srec = Last->AsStr();
       string::size_type pos = srec.find("\nVcs-");
@@ -793,13 +797,13 @@ static bool DoSource(CommandLine &CmdL)
       }
 
       // Back track
-      vector<pkgSrcRecords::File> Lst;
-      if (Last->Files(Lst) == false) {
+      vector<pkgSrcRecords::File2> Lst;
+      if (Last->Files2(Lst) == false) {
 	 return false;
       }
 
       // Load them into the fetcher
-      for (vector<pkgSrcRecords::File>::const_iterator I = Lst.begin();
+      for (vector<pkgSrcRecords::File2>::const_iterator I = Lst.begin();
 	   I != Lst.end(); ++I)
       {
 	 // Try to guess what sort of file it is we are getting.
@@ -828,25 +832,33 @@ static bool DoSource(CommandLine &CmdL)
 	 queued.insert(Last->Index().ArchiveURI(I->Path));
 
 	 // check if we have a file with that md5 sum already localy
-	 if(!I->MD5Hash.empty() && FileExists(flNotDir(I->Path)))  
-	 {
-	    FileFd Fd(flNotDir(I->Path), FileFd::ReadOnly);
-	    MD5Summation sum;
-	    sum.AddFD(Fd.Fd(), Fd.Size());
-	    Fd.Close();
-	    if((string)sum.Result() == I->MD5Hash) 
+	 std::string localFile = flNotDir(I->Path);
+	 if (FileExists(localFile) == true)
+	    if(I->Hashes.VerifyFile(localFile) == true)
 	    {
 	       ioprintf(c1out,_("Skipping already downloaded file '%s'\n"),
-			flNotDir(I->Path).c_str());
+			localFile.c_str());
 	       continue;
 	    }
+
+	 // see if we have a hash (Acquire::ForceHash is the only way to have none)
+	 HashString const * const hs = I->Hashes.find(NULL);
+	 if (hs == NULL && _config->FindB("APT::Get::AllowUnauthenticated",false) == false)
+	 {
+	    ioprintf(c1out, "Skipping download of file '%s' as requested hashsum is not available for authentication\n",
+		     localFile.c_str());
+	    continue;
 	 }
 
 	 new pkgAcqFile(&Fetcher,Last->Index().ArchiveURI(I->Path),
-			I->MD5Hash,I->Size,
+			hs != NULL ? hs->toStr() : "", I->FileSize,
 			Last->Index().SourceInfo(*Last,*I),Src);
       }
    }
+
+   // check authentication status of the source as well
+   if (UntrustedList != "" && !AuthPrompt(UntrustedList, false))
+      return false;
    
    // Display statistics
    unsigned long long FetchBytes = Fetcher.FetchNeeded();
@@ -945,18 +957,19 @@ static bool DoSource(CommandLine &CmdL)
 	 else
 	 {
 	    // Call dpkg-source
-	    char S[500];
-	    snprintf(S,sizeof(S),"%s -x %s",
+	    std::string const sourceopts = _config->Find("DPkg::Source-Options", "-x");
+	    std::string S;
+	    strprintf(S, "%s %s %s",
 		     _config->Find("Dir::Bin::dpkg-source","dpkg-source").c_str(),
-		     Dsc[I].Dsc.c_str());
-	    if (system(S) != 0)
+		     sourceopts.c_str(), Dsc[I].Dsc.c_str());
+	    if (system(S.c_str()) != 0)
 	    {
-	       fprintf(stderr,_("Unpack command '%s' failed.\n"),S);
-	       fprintf(stderr,_("Check if the 'dpkg-dev' package is installed.\n"));
+	       fprintf(stderr, _("Unpack command '%s' failed.\n"), S.c_str());
+	       fprintf(stderr, _("Check if the 'dpkg-dev' package is installed.\n"));
 	       _exit(1);
-	    }	    
+	    }
 	 }
-	 
+
 	 // Try to compile it with dpkg-buildpackage
 	 if (_config->FindB("APT::Get::Compile",false) == true)
 	 {
@@ -972,20 +985,20 @@ static bool DoSource(CommandLine &CmdL)
 	    buildopts.append(_config->Find("DPkg::Build-Options","-b -uc"));
 
 	    // Call dpkg-buildpackage
-	    char S[500];
-	    snprintf(S,sizeof(S),"cd %s && %s %s",
+	    std::string S;
+	    strprintf(S, "cd %s && %s %s",
 		     Dir.c_str(),
 		     _config->Find("Dir::Bin::dpkg-buildpackage","dpkg-buildpackage").c_str(),
 		     buildopts.c_str());
-	    
-	    if (system(S) != 0)
+
+	    if (system(S.c_str()) != 0)
 	    {
-	       fprintf(stderr,_("Build command '%s' failed.\n"),S);
+	       fprintf(stderr, _("Build command '%s' failed.\n"), S.c_str());
 	       _exit(1);
-	    }	    
-	 }      
+	    }
+	 }
       }
-      
+
       _exit(0);
    }
 
@@ -1515,7 +1528,7 @@ static bool DoChangelog(CommandLine &CmdL)
    if (Cache.ReadOnlyOpen() == false)
       return false;
    
-   APT::CacheSetHelper helper(c0out);
+   APT::CacheSetHelper helper;
    APT::VersionList verset = APT::VersionList::FromCommandLine(Cache,
 		CmdL.FileList + 1, APT::VersionList::CANDIDATE, helper);
    if (verset.empty() == true)
@@ -1554,7 +1567,7 @@ static bool DoChangelog(CommandLine &CmdL)
    {
       string changelogfile;
       if (downOnly == false)
-	 changelogfile.append(tmpname).append("changelog");
+	 changelogfile.append(tmpname).append("/changelog");
       else
 	 changelogfile.append(Ver.ParentPkg().Name()).append(".changelog");
       if (DownloadChangelog(Cache, Fetcher, Ver, changelogfile) && downOnly == false)
@@ -1666,20 +1679,6 @@ static bool ShowHelp(CommandLine &)
    return true;
 }
 									/*}}}*/
-// SigWinch - Window size change signal handler				/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-static void SigWinch(int)
-{
-   // Riped from GNU ls
-#ifdef TIOCGWINSZ
-   struct winsize ws;
-  
-   if (ioctl(1, TIOCGWINSZ, &ws) != -1 && ws.ws_col >= 5)
-      ScreenWidth = ws.ws_col - 1;
-#endif
-}
-									/*}}}*/
 int main(int argc,const char *argv[])					/*{{{*/
 {
    CommandLine::Dispatch Cmds[] = {{"update",&DoUpdate},
@@ -1734,13 +1733,11 @@ int main(int argc,const char *argv[])					/*{{{*/
    // see if we are in simulate mode
    CheckSimulateMode(CmdL);
 
+   // Init the signals
+   InitSignals();
+
    // Setup the output streams
    InitOutput();
-
-   // Setup the signals
-   signal(SIGPIPE,SIG_IGN);
-   signal(SIGWINCH,SigWinch);
-   SigWinch(0);
 
    // Match the operation
    CmdL.DispatchArg(Cmds);
