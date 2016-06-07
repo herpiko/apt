@@ -1,11 +1,10 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: acquire.h,v 1.29.2.1 2003/12/24 23:09:17 mdz Exp $
 /* ######################################################################
 
    Acquire - File Acquiration
    
-   This module contians the Acquire system. It is responsible for bringing
+   This module contains the Acquire system. It is responsible for bringing
    files into the local pathname space. It deals with URIs for files and
    URI handlers responsible for downloading or finding the URIs.
    
@@ -68,9 +67,10 @@
 
 #include <apt-pkg/macros.h>
 #include <apt-pkg/weakptr.h>
+#include <apt-pkg/hashes.h>
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <stddef.h>
 #include <sys/time.h>
@@ -101,7 +101,7 @@ class pkgAcquire
    /** \brief FD of the Lock file we acquire in Setup (if any) */
    int LockFD;
    /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
+   void * const d;
 
    public:
    
@@ -111,6 +111,7 @@ class pkgAcquire
    struct MethodConfig;
    struct ItemDesc;
    friend class Item;
+   friend class pkgAcqMetaBase;
    friend class Queue;
 
    typedef std::vector<Item *>::iterator ItemIterator;
@@ -235,8 +236,15 @@ class pkgAcquire
     *
     *  \param WSet The set of file descriptors that are ready for
     *  output.
+    *
+    * \return false if there is an error condition on one of the fds
     */
-   virtual void RunFds(fd_set *RSet,fd_set *WSet);   
+   bool RunFdsSane(fd_set *RSet,fd_set *WSet);
+
+   // just here for compatbility, needs to be removed on the next
+   // ABI/API break. RunFdsSane() is what should be used as it
+   // returns if there is an error condition on one of the fds
+   virtual void RunFds(fd_set *RSet,fd_set *WSet);
 
    /** \brief Check for idle queues with ready-to-fetch items.
     *
@@ -302,9 +310,11 @@ class pkgAcquire
 
    /** \brief Get the head of the list of items. */
    inline ItemIterator ItemsBegin() {return Items.begin();};
+   inline ItemCIterator ItemsBegin() const {return Items.begin();};
 
    /** \brief Get the end iterator of the list of items. */
    inline ItemIterator ItemsEnd() {return Items.end();};
+   inline ItemCIterator ItemsEnd() const {return Items.end();};
    
    // Iterate over queued Item URIs
    class UriIterator;
@@ -351,14 +361,24 @@ class pkgAcquire
     *  long as the pkgAcquire object does.
     *  \param Lock defines a lock file that should be acquired to ensure
     *  only one Acquire class is in action at the time or an empty string
-    *  if no lock file should be used.
+    *  if no lock file should be used. If set also all needed directories
+    *  will be created.
     */
-   bool Setup(pkgAcquireStatus *Progress = NULL, std::string const &Lock = "");
+   APT_DEPRECATED_MSG("Use constructors, .SetLog and .GetLock as needed") bool Setup(pkgAcquireStatus *Progress = NULL, std::string const &Lock = "");
 
    void SetLog(pkgAcquireStatus *Progress) { Log = Progress; }
 
+   /** \brief acquire lock and perform directory setup
+    *
+    *  \param Lock defines a lock file that should be acquired to ensure
+    *  only one Acquire class is in action at the time or an empty string
+    *  if no lock file should be used. If set also all needed directories
+    *  will be created and setup.
+    */
+   bool GetLock(std::string const &Lock);
+
    /** \brief Construct a new pkgAcquire. */
-   pkgAcquire(pkgAcquireStatus *Log) APT_DEPRECATED;
+   explicit pkgAcquire(pkgAcquireStatus *Log);
    pkgAcquire();
 
    /** \brief Destroy this pkgAcquire object.
@@ -368,6 +388,8 @@ class pkgAcquire
     */
    virtual ~pkgAcquire();
 
+   private:
+   APT_HIDDEN void Initialize();
 };
 
 /** \brief Represents a single download source from which an item
@@ -377,13 +399,13 @@ class pkgAcquire
  */
 struct pkgAcquire::ItemDesc : public WeakPointable
 {
-   /** \brief The URI from which to download this item. */
+   /** \brief URI from which to download this item. */
    std::string URI;
-   /** brief A description of this item. */
+   /** \brief description of this item. */
    std::string Description;
-   /** brief A shorter description of this item. */
+   /** \brief shorter description of this item. */
    std::string ShortDesc;
-   /** brief The underlying item which is to be downloaded. */
+   /** \brief underlying item which is to be downloaded. */
    Item *Owner;
 };
 									/*}}}*/
@@ -398,7 +420,7 @@ class pkgAcquire::Queue
    friend class pkgAcquire::Worker;
 
    /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
+   void * const d;
 
    /** \brief The next queue in the pkgAcquire object's list of queues. */
    Queue *Next;
@@ -406,12 +428,17 @@ class pkgAcquire::Queue
    protected:
 
    /** \brief A single item placed in this queue. */
-   struct QItem : pkgAcquire::ItemDesc
+   struct QItem : public ItemDesc
    {
       /** \brief The next item in the queue. */
       QItem *Next;
       /** \brief The worker associated with this item, if any. */
       pkgAcquire::Worker *Worker;
+
+      /** \brief The underlying items interested in the download */
+      std::vector<Item*> Owners;
+
+      typedef std::vector<Item*>::const_iterator owner_iterator;
 
       /** \brief Assign the ItemDesc portion of this QItem from
        *  another ItemDesc
@@ -421,10 +448,24 @@ class pkgAcquire::Queue
 	 URI = I.URI;
 	 Description = I.Description;
 	 ShortDesc = I.ShortDesc;
+	 Owners.clear();
+	 Owners.push_back(I.Owner);
 	 Owner = I.Owner;
       };
+
+      /** @return the sum of all expected hashes by all owners */
+      HashStringList GetExpectedHashes() const;
+
+      /** @return smallest maximum size of all owners */
+      unsigned long long GetMaximumSize() const;
+
+      /** \brief get partial files in order */
+      void SyncDestinationFiles() const;
+
+      /** @return the custom headers to use for this item */
+      std::string Custom600Headers() const;
    };
-   
+
    /** \brief The name of this queue. */
    std::string Name;
 
@@ -544,7 +585,7 @@ class pkgAcquire::Queue
     *  \param Name The name of the new queue.
     *  \param Owner The download process that owns the new queue.
     */
-   Queue(std::string Name,pkgAcquire *Owner);
+   Queue(std::string const &Name,pkgAcquire * const Owner);
 
    /** Shut down all the worker processes associated with this queue
     *  and empty the queue.
@@ -556,7 +597,7 @@ class pkgAcquire::Queue
 class pkgAcquire::UriIterator
 {
    /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
+   void * const d;
 
    /** The next queue to iterate over. */
    pkgAcquire::Queue *CurQ;
@@ -577,7 +618,7 @@ class pkgAcquire::UriIterator
       }
    };
    
-   inline pkgAcquire::ItemDesc const *operator ->() const {return CurItem;};
+   inline pkgAcquire::Queue::QItem const *operator ->() const {return CurItem;};
    inline bool operator !=(UriIterator const &rhs) const {return rhs.CurQ != CurQ || rhs.CurItem != CurItem;};
    inline bool operator ==(UriIterator const &rhs) const {return rhs.CurQ == CurQ && rhs.CurItem == CurItem;};
    
@@ -585,22 +626,15 @@ class pkgAcquire::UriIterator
     *
     *  \param Q The queue over which this UriIterator should iterate.
     */
-   UriIterator(pkgAcquire::Queue *Q) : CurQ(Q), CurItem(0)
-   {
-      while (CurItem == 0 && CurQ != 0)
-      {
-	 CurItem = CurQ->Items;
-	 CurQ = CurQ->Next;
-      }
-   }   
-   virtual ~UriIterator() {};
+   explicit UriIterator(pkgAcquire::Queue *Q);
+   virtual ~UriIterator();
 };
 									/*}}}*/
 /** \brief Information about the properties of a single acquire method.	{{{*/
 struct pkgAcquire::MethodConfig
 {
    /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
+   void * const d;
    
    /** \brief The next link on the acquire method list.
     *
@@ -651,8 +685,7 @@ struct pkgAcquire::MethodConfig
     */
    MethodConfig();
 
-   /* \brief Destructor, empty currently */
-   virtual ~MethodConfig() {};
+   virtual ~MethodConfig();
 };
 									/*}}}*/
 /** \brief A monitor object for downloads controlled by the pkgAcquire class.	{{{
@@ -662,7 +695,7 @@ struct pkgAcquire::MethodConfig
 class pkgAcquireStatus
 {
    /** \brief dpointer placeholder (for later in case we need it) */
-   void *d;
+   void * const d;
 
    protected:
    
@@ -714,6 +747,10 @@ class pkgAcquireStatus
    /** \brief The number of items that have been successfully downloaded. */
    unsigned long CurrentItems;
    
+   /** \brief The estimated percentage of the download (0-100)
+    */
+   double Percent;
+
    public:
 
    /** \brief If \b true, the download scheduler should call Pulse()
@@ -794,7 +831,7 @@ class pkgAcquireStatus
    
    /** \brief Initialize all counters to 0 and the time to the current time. */
    pkgAcquireStatus();
-   virtual ~pkgAcquireStatus() {};
+   virtual ~pkgAcquireStatus();
 };
 									/*}}}*/
 /** @} */

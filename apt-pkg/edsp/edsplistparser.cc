@@ -11,19 +11,38 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
+#include <apt-pkg/configuration.h>
 #include <apt-pkg/edsplistparser.h>
 #include <apt-pkg/md5.h>
 #include <apt-pkg/deblistparser.h>
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/cacheiterators.h>
 #include <apt-pkg/tagfile.h>
+#include <apt-pkg/fileutl.h>
 
-#include <string>
 									/*}}}*/
 
+class edspListParserPrivate						/*{{{*/
+{
+public:
+   FileFd extendedstates;
+   FileFd preferences;
+
+   edspListParserPrivate()
+   {
+      std::string const states = _config->FindFile("Dir::State::extended_states");
+      RemoveFile("edspListParserPrivate", states);
+      extendedstates.Open(states, FileFd::WriteOnly | FileFd::Create | FileFd::Exclusive, 0600);
+      std::string const prefs = _config->FindFile("Dir::Etc::preferences");
+      RemoveFile("edspListParserPrivate", prefs);
+      preferences.Open(prefs, FileFd::WriteOnly | FileFd::Create | FileFd::Exclusive, 0600);
+   }
+};
+									/*}}}*/
 // ListParser::edspListParser - Constructor				/*{{{*/
-edspListParser::edspListParser(FileFd *File, std::string const &Arch) : debListParser(File, Arch)
-{}
+edspListParser::edspListParser(FileFd *File) : debListParser(File), d(new edspListParserPrivate())
+{
+}
 									/*}}}*/
 // ListParser::NewVersion - Fill in the version structure		/*{{{*/
 bool edspListParser::NewVersion(pkgCache::VerIterator &Ver)
@@ -35,13 +54,9 @@ bool edspListParser::NewVersion(pkgCache::VerIterator &Ver)
 // ListParser::Description - Return the description string		/*{{{*/
 // ---------------------------------------------------------------------
 /* Sorry, no description for the resolvers… */
-std::string edspListParser::Description()
+std::vector<std::string> edspListParser::AvailableDescriptionLanguages()
 {
-   return "";
-}
-std::string edspListParser::DescriptionLanguage()
-{
-   return "";
+   return {};
 }
 MD5SumValue edspListParser::Description_md5()
 {
@@ -82,13 +97,44 @@ bool edspListParser::ParseStatus(pkgCache::PkgIterator &Pkg,
       Pkg->CurrentVer = Ver.Index();
    }
 
+   if (Section.FindB("APT-Automatic", false))
+   {
+      std::string out;
+      strprintf(out, "Package: %s\nArchitecture: %s\nAuto-Installed: 1\n\n", Pkg.Name(), Pkg.Arch());
+      if (d->extendedstates.Write(out.c_str(), out.length()) == false)
+	 return false;
+   }
+
+   // FIXME: Using an overriding pin is wrong.
+   if (Section.FindB("APT-Candidate", false))
+   {
+      std::string out;
+      strprintf(out, "Package: %s\nPin: version %s\nPin-Priority: 9999\n\n", Pkg.FullName().c_str(), Ver.VerStr());
+      if (d->preferences.Write(out.c_str(), out.length()) == false)
+	 return false;
+   }
+
+   signed short const pinvalue = Section.FindI("APT-Pin", 500);
+   if (pinvalue != 500)
+   {
+      std::string out;
+      strprintf(out, "Package: %s\nPin: version %s\nPin-Priority: %d\n\n", Pkg.FullName().c_str(), Ver.VerStr(), pinvalue);
+      if (d->preferences.Write(out.c_str(), out.length()) == false)
+	 return false;
+   }
+
    return true;
 }
 									/*}}}*/
 // ListParser::LoadReleaseInfo - Load the release information		/*{{{*/
-APT_CONST bool edspListParser::LoadReleaseInfo(pkgCache::PkgFileIterator & /*FileI*/,
-				    FileFd & /*File*/, std::string /*component*/)
+APT_CONST bool edspListParser::LoadReleaseInfo(pkgCache::RlsFileIterator & /*FileI*/,
+				    FileFd & /*File*/, std::string const &/*component*/)
 {
    return true;
+}
+									/*}}}*/
+edspListParser::~edspListParser()					/*{{{*/
+{
+   delete d;
 }
 									/*}}}*/

@@ -1,14 +1,15 @@
 #!/bin/sh
 set -e
 
-TESTDIR=$(readlink -f $(dirname $0))
-. $TESTDIR/framework
+TESTDIR="$(readlink -f "$(dirname "$0")")"
+. "$TESTDIR/framework"
 setupenvironment
 configarchitecture "i386"
 setupaptarchive
 
-testequal "Reading package lists...
+testfailureequal "Reading package lists...
 Building dependency tree...
+Calculating upgrade...
 The following packages will be upgraded:
   php5 php5-cgi
 2 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.

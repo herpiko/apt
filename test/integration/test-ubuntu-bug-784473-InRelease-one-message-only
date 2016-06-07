@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-TESTDIR=$(readlink -f $(dirname $0))
-. $TESTDIR/framework
+TESTDIR="$(readlink -f "$(dirname "$0")")"
+. "$TESTDIR/framework"
 setupenvironment
 configarchitecture 'i386'
 
@@ -27,13 +27,12 @@ MD5Sum:
  1b895931853981ad8204d2439821b999     4144 Packages.gz'; echo; cat ${RELEASE}.old;) > ${RELEASE}
 done
 
-msgtest 'The unsigned garbage before signed block is' 'ignored'
-testsuccess --nomsg aptget update
+testfailure aptget update
+testsuccess grep '^E:.*Clearsigned file .*NOSPLIT.*' rootdir/tmp/testfailure.output
+
 
 ROOTDIR="$(readlink -f .)"
-testequal "Package files:
+testsuccessequal "Package files:
  100 ${ROOTDIR}/rootdir/var/lib/dpkg/status
      release a=now
- 500 file:${ROOTDIR}/aptarchive/ unstable/main i386 Packages
-     release a=unstable,n=sid,c=main
 Pinned packages:" aptcache policy

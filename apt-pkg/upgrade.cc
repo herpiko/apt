@@ -24,13 +24,14 @@
    
    The problem resolver is used to resolve the problems.
  */
-bool pkgDistUpgrade(pkgDepCache &Cache)
+static bool pkgDistUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, false, true, false, &Prog);
-   }
+   if (solver != "internal")
+      return EDSP::ResolveExternal(solver.c_str(), Cache, false, true, false, Progress);
+
+   if (Progress != NULL)
+      Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
 
    pkgDepCache::ActionGroup group(Cache);
 
@@ -41,11 +42,17 @@ bool pkgDistUpgrade(pkgDepCache &Cache)
       if (I->CurrentVer != 0)
 	 Cache.MarkInstall(I, false, 0, false);
 
+   if (Progress != NULL)
+      Progress->Progress(10);
+
    /* Auto upgrade all installed packages, this provides the basis 
       for the installation */
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       if (I->CurrentVer != 0)
 	 Cache.MarkInstall(I, true, 0, false);
+
+   if (Progress != NULL)
+      Progress->Progress(50);
 
    /* Now, install each essential package which is not installed
       (and not provided by another package in the same name group) */
@@ -77,14 +84,23 @@ bool pkgDistUpgrade(pkgDepCache &Cache)
       for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
 	 if ((I->Flags & pkgCache::Flag::Essential) == pkgCache::Flag::Essential)
 	    Cache.MarkInstall(I, true, 0, false);
-   
+
+   if (Progress != NULL)
+      Progress->Progress(55);
+
    /* We do it again over all previously installed packages to force 
       conflict resolution on them all. */
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       if (I->CurrentVer != 0)
 	 Cache.MarkInstall(I, false, 0, false);
 
+   if (Progress != NULL)
+      Progress->Progress(65);
+
    pkgProblemResolver Fix(&Cache);
+
+   if (Progress != NULL)
+      Progress->Progress(95);
 
    // Hold back held packages.
    if (_config->FindB("APT::Ignore-Hold",false) == false)
@@ -98,26 +114,30 @@ bool pkgDistUpgrade(pkgDepCache &Cache)
 	 }
       }
    }
-   
-   return Fix.Resolve();
+
+   bool const success = Fix.Resolve(false, Progress);
+   if (Progress != NULL)
+      Progress->Done();
+   return success;
+}
+bool pkgDistUpgrade(pkgDepCache &Cache)
+{
+   return pkgDistUpgrade(Cache, NULL);
 }
 									/*}}}*/
 // AllUpgradeNoNewPackages - Upgrade but no removals or new pkgs        /*{{{*/
-static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache)
+static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, &Prog);
-   }
+   if (solver != "internal")
+      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, Progress);
+
+   if (Progress != NULL)
+      Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
 
    pkgDepCache::ActionGroup group(Cache);
-
    pkgProblemResolver Fix(&Cache);
 
-   if (Cache.BrokenCount() != 0)
-      return false;
-   
    // Upgrade all installed packages
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
    {
@@ -131,8 +151,15 @@ static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache)
       if (I->CurrentVer != 0 && Cache[I].InstallVer != 0)
 	 Cache.MarkInstall(I, false, 0, false);
    }
-      
-   return Fix.ResolveByKeep();
+
+   if (Progress != NULL)
+      Progress->Progress(50);
+
+   // resolve remaining issues via keep
+   bool const success = Fix.ResolveByKeep(Progress);
+   if (Progress != NULL)
+      Progress->Done();
+   return success;
 }
 									/*}}}*/
 // AllUpgradeWithNewInstalls - Upgrade + install new packages as needed /*{{{*/
@@ -141,20 +168,17 @@ static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache)
  * Upgrade as much as possible without deleting anything (useful for
  * stable systems)
  */
-static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache)
+static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, &Prog);
-   }
+   if (solver != "internal")
+      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, Progress);
+
+   if (Progress != NULL)
+      Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
 
    pkgDepCache::ActionGroup group(Cache);
-
    pkgProblemResolver Fix(&Cache);
-
-   if (Cache.BrokenCount() != 0)
-      return false;
 
    // provide the initial set of stuff we want to upgrade by marking
    // all upgradable packages for upgrade
@@ -170,18 +194,30 @@ static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache)
       }
    }
 
+   if (Progress != NULL)
+      Progress->Progress(10);
+
    // then let auto-install loose
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       if (Cache[I].Install())
 	 Cache.MarkInstall(I, true, 0, false);
+
+   if (Progress != NULL)
+      Progress->Progress(50);
 
    // ... but it may remove stuff, we we need to clean up afterwards again
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       if (Cache[I].Delete() == true)
 	 Cache.MarkKeep(I, false, false);
 
+   if (Progress != NULL)
+      Progress->Progress(60);
+
    // resolve remaining issues via keep
-   return Fix.ResolveByKeep();
+   bool const success = Fix.ResolveByKeep(Progress);
+   if (Progress != NULL)
+      Progress->Done();
+   return success;
 }
 									/*}}}*/
 // AllUpgrade - Upgrade as many packages as possible			/*{{{*/
@@ -189,9 +225,13 @@ static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache)
 /* Right now the system must be consistent before this can be called.
    It also will not change packages marked for install, it only tries
    to install packages not marked for install */
+static bool pkgAllUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
+{
+   return pkgAllUpgradeNoNewPackages(Cache, Progress);
+}
 bool pkgAllUpgrade(pkgDepCache &Cache)
 {
-   return pkgAllUpgradeNoNewPackages(Cache);
+   return pkgAllUpgrade(Cache, NULL);
 }
 									/*}}}*/
 // MinimizeUpgrade - Minimizes the set of packages to be upgraded	/*{{{*/
@@ -239,24 +279,19 @@ bool pkgMinimizeUpgrade(pkgDepCache &Cache)
    return true;
 }
 									/*}}}*/
-// APT::Upgrade::Upgrade - Upgrade using a specific strategy     	/*{{{*/
-bool APT::Upgrade::Upgrade(pkgDepCache &Cache, int mode)
+// APT::Upgrade::Upgrade - Upgrade using a specific strategy		/*{{{*/
+bool APT::Upgrade::Upgrade(pkgDepCache &Cache, int mode, OpProgress * const Progress)
 {
-   if (mode == 0) 
-   {
-      return pkgDistUpgrade(Cache);
-   }
+APT_IGNORE_DEPRECATED_PUSH
+   if (mode == ALLOW_EVERYTHING)
+      return pkgDistUpgrade(Cache, Progress);
    else if ((mode & ~FORBID_REMOVE_PACKAGES) == 0)
-   {
-      return pkgAllUpgradeWithNewPackages(Cache);
-   } 
+      return pkgAllUpgradeWithNewPackages(Cache, Progress);
    else if ((mode & ~(FORBID_REMOVE_PACKAGES|FORBID_INSTALL_NEW_PACKAGES)) == 0)
-   {
-      return pkgAllUpgradeNoNewPackages(Cache);
-   }
+      return pkgAllUpgradeNoNewPackages(Cache, Progress);
    else
       _error->Error("pkgAllUpgrade called with unsupported mode %i", mode);
-
+APT_IGNORE_DEPRECATED_POP
    return false;
 }
 									/*}}}*/

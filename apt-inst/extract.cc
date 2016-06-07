@@ -279,7 +279,7 @@ bool pkgExtract::Aborted()
    map_ptrloc *Last = &FLPkg->Files;
    
    /* Loop over all files, restore those that have been unpacked from their
-      dpkg-tmp entires */
+      dpkg-tmp entries */
    while (Files.end() == false)
    {
       // Locate the hash bucket for the node and locate its group head
@@ -404,7 +404,7 @@ bool pkgExtract::HandleOverwrites(pkgFLCache::NodeIterator Nde,
       // Now see if this package matches one in a replace depends
       pkgCache::DepIterator Dep = Ver.DependsList();
       bool Ok = false;
-      for (; Dep.end() == false; Dep++)
+      for (; Dep.end() == false; ++Dep)
       {
 	 if (Dep->Type != pkgCache::Dep::Replaces)
 	    continue;

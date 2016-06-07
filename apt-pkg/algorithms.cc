@@ -19,9 +19,7 @@
 #include <apt-pkg/algorithms.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/configuration.h>
-#include <apt-pkg/sptr.h>
 #include <apt-pkg/edsp.h>
-#include <apt-pkg/progress.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/packagemanager.h>
 #include <apt-pkg/pkgcache.h>
@@ -36,14 +34,12 @@
 									/*}}}*/
 using namespace std;
 
-pkgProblemResolver *pkgProblemResolver::This = 0;
-
 // Simulate::Simulate - Constructor					/*{{{*/
 // ---------------------------------------------------------------------
 /* The legacy translations here of input Pkg iterators is obsolete, 
    this is not necessary since the pkgCaches are fully shared now. */
 pkgSimulate::pkgSimulate(pkgDepCache *Cache) : pkgPackageManager(Cache),
-		            iPolicy(Cache),
+		            d(NULL), iPolicy(Cache),
 			    Sim(&Cache->GetCache(),&iPolicy),
 			    group(Sim)
 {
@@ -362,13 +358,11 @@ pkgProblemResolver::~pkgProblemResolver()
 // ProblemResolver::ScoreSort - Sort the list by score			/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-int pkgProblemResolver::ScoreSort(const void *a,const void *b)
+int pkgProblemResolver::ScoreSort(Package const *A,Package const *B)
 {
-   Package const **A = (Package const **)a;
-   Package const **B = (Package const **)b;
-   if (This->Scores[(*A)->ID] > This->Scores[(*B)->ID])
+   if (Scores[A->ID] > Scores[B->ID])
       return -1;
-   if (This->Scores[(*A)->ID] < This->Scores[(*B)->ID])
+   if (Scores[A->ID] < Scores[B->ID])
       return 1;
    return 0;
 }
@@ -476,8 +470,8 @@ void pkgProblemResolver::MakeScores()
    }
 
    // Copy the scores to advoid additive looping
-   SPtrArray<int> OldScores = new int[Size];
-   memcpy(OldScores,Scores,sizeof(*Scores)*Size);
+   std::unique_ptr<int[]> OldScores(new int[Size]);
+   memcpy(OldScores.get(),Scores,sizeof(*Scores)*Size);
       
    /* Now we cause 1 level of dependency inheritance, that is we add the 
       score of the packages that depend on the target Package. This 
@@ -638,15 +632,11 @@ bool pkgProblemResolver::DoUpgrade(pkgCache::PkgIterator Pkg)
 }
 									/*}}}*/
 // ProblemResolver::Resolve - calls a resolver to fix the situation	/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-bool pkgProblemResolver::Resolve(bool BrokenFix)
+bool pkgProblemResolver::Resolve(bool BrokenFix, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, false, false, false, &Prog);
-   }
+   if (solver != "internal")
+      return EDSP::ResolveExternal(solver.c_str(), Cache, false, false, false, Progress);
    return ResolveInternal(BrokenFix);
 }
 									/*}}}*/
@@ -706,17 +696,17 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
       operates from highest score to lowest. This prevents problems when
       high score packages cause the removal of lower score packages that
       would cause the removal of even lower score packages. */
-   SPtrArray<pkgCache::Package *> PList = new pkgCache::Package *[Size];
-   pkgCache::Package **PEnd = PList;
+   std::unique_ptr<pkgCache::Package *[]> PList(new pkgCache::Package *[Size]);
+   pkgCache::Package **PEnd = PList.get();
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       *PEnd++ = I;
-   This = this;
-   qsort(PList,PEnd - PList,sizeof(*PList),&ScoreSort);
+
+   std::sort(PList.get(), PEnd, [this](Package *a, Package *b) { return ScoreSort(a, b) < 0; });
 
    if (_config->FindB("Debug::pkgProblemResolver::ShowScores",false) == true)
    {
       clog << "Show Scores" << endl;
-      for (pkgCache::Package **K = PList; K != PEnd; K++)
+      for (pkgCache::Package **K = PList.get(); K != PEnd; K++)
          if (Scores[(*K)->ID] != 0)
          {
            pkgCache::PkgIterator Pkg(Cache,*K);
@@ -735,10 +725,11 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
       changing a breaks c) */
    bool Change = true;
    bool const TryFixByInstall = _config->FindB("pkgProblemResolver::FixByInstall", true);
+   std::vector<PackageKill> KillList;
    for (int Counter = 0; Counter != 10 && Change == true; Counter++)
    {
       Change = false;
-      for (pkgCache::Package **K = PList; K != PEnd; K++)
+      for (pkgCache::Package **K = PList.get(); K != PEnd; K++)
       {
 	 pkgCache::PkgIterator I(Cache,*K);
 
@@ -777,12 +768,12 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 	    clog << "Investigating (" << Counter << ") " << I << endl;
 	 
 	 // Isolate the problem dependency
-	 PackageKill KillList[100];
-	 PackageKill *LEnd = KillList;
 	 bool InOr = false;
 	 pkgCache::DepIterator Start;
 	 pkgCache::DepIterator End;
-	 PackageKill *OldEnd = LEnd;
+	 size_t OldSize = 0;
+
+	 KillList.resize(0);
 	 
 	 enum {OrRemove,OrKeep} OrOp = OrRemove;
 	 for (pkgCache::DepIterator D = Cache[I].InstVerIter(Cache).DependsList();
@@ -792,7 +783,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 	    if (Start == End)
 	    {
 	       // Decide what to do
-	       if (InOr == true && OldEnd == LEnd)
+	       if (InOr == true && OldSize == KillList.size())
 	       {
 		  if (OrOp == OrRemove)
 		  {
@@ -826,7 +817,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		  continue;
 
 	       InOr = Start != End;
-	       OldEnd = LEnd;
+	       OldSize = KillList.size();
 	    }
 	    else
             {
@@ -849,8 +840,8 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 	    /* Look across the version list. If there are no possible
 	       targets then we keep the package and bail. This is necessary
 	       if a package has a dep on another package that can't be found */
-	    SPtrArray<pkgCache::Version *> VList = Start.AllTargets();
-	    if (*VList == 0 && (Flags[I->ID] & Protected) != Protected &&
+	    std::unique_ptr<pkgCache::Version *[]> VList(Start.AllTargets());
+	    if (VList[0] == 0 && (Flags[I->ID] & Protected) != Protected &&
 		Start.IsNegative() == false &&
 		Cache[I].NowBroken() == false)
 	    {	       
@@ -867,7 +858,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 	    }
 	    
 	    bool Done = false;
-	    for (pkgCache::Version **V = VList; *V != 0; V++)
+	    for (pkgCache::Version **V = VList.get(); *V != 0; V++)
 	    {
 	       pkgCache::VerIterator Ver(Cache,*V);
 	       pkgCache::PkgIterator Pkg = Ver.ParentPkg();
@@ -943,7 +934,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 				 Start.TargetPkg()->CurrentVer == 0 &&
 				 Cache[Start.TargetPkg()].Delete() == false &&
 				 (Flags[Start.TargetPkg()->ID] & ToRemove) != ToRemove &&
-				 Cache.GetCandidateVer(Start.TargetPkg()).end() == false)
+				 Cache.GetCandidateVersion(Start.TargetPkg()).end() == false)
 			{
 			   /* Before removing or keeping the package with the broken dependency
 			      try instead to install the first not previously installed package
@@ -989,10 +980,8 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 		
 		  if (Debug == true)
 		     clog << "  Added " << Pkg.FullName(false) << " to the remove list" << endl;
-		  
-		  LEnd->Pkg = Pkg;
-		  LEnd->Dep = End;
-		  LEnd++;
+
+		  KillList.push_back({Pkg, End});
 		  
 		  if (Start.IsNegative() == false)
 		     break;
@@ -1042,7 +1031,7 @@ bool pkgProblemResolver::ResolveInternal(bool const BrokenFix)
 	 // Apply the kill list now
 	 if (Cache[I].InstallVer != 0)
 	 {
-	    for (PackageKill *J = KillList; J != LEnd; J++)
+	    for (auto J = KillList.begin(); J != KillList.end(); J++)
 	    {
 	       Change = true;
 	       if ((Cache[J->Dep] & pkgDepCache::DepGNow) == 0)
@@ -1140,13 +1129,11 @@ bool pkgProblemResolver::InstOrNewPolicyBroken(pkgCache::PkgIterator I)
 /* This is the work horse of the soft upgrade routine. It is very gental 
    in that it does not install or remove any packages. It is assumed that the
    system was non-broken previously. */
-bool pkgProblemResolver::ResolveByKeep()
+bool pkgProblemResolver::ResolveByKeep(OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
-   if (solver != "internal") {
-      OpTextProgress Prog(*_config);
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, &Prog);
-   }
+   if (solver != "internal")
+      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, Progress);
    return ResolveByKeepInternal();
 }
 									/*}}}*/
@@ -1171,8 +1158,9 @@ bool pkgProblemResolver::ResolveByKeepInternal()
    pkgCache::Package **PEnd = PList;
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       *PEnd++ = I;
-   This = this;
-   qsort(PList,PEnd - PList,sizeof(*PList),&ScoreSort);
+
+   std::sort(PList,PEnd,[this](Package *a, Package *b) { return ScoreSort(a, b) < 0; });
+
 
    if (_config->FindB("Debug::pkgProblemResolver::ShowScores",false) == true)
    {
@@ -1239,8 +1227,8 @@ bool pkgProblemResolver::ResolveByKeepInternal()
 	       clog << "Package " << I.FullName(false) << " " << Start << endl;
 
 	    // Look at all the possible provides on this package
-	    SPtrArray<pkgCache::Version *> VList = Start.AllTargets();
-	    for (pkgCache::Version **V = VList; *V != 0; V++)
+	    std::unique_ptr<pkgCache::Version *[]> VList(Start.AllTargets());
+	    for (pkgCache::Version **V = VList.get(); *V != 0; V++)
 	    {
 	       pkgCache::VerIterator Ver(Cache,*V);
 	       pkgCache::PkgIterator Pkg = Ver.ParentPkg();
@@ -1322,36 +1310,46 @@ void pkgProblemResolver::InstallProtect()
 // ---------------------------------------------------------------------
 /* This is ment to be used in conjunction with AllTargets to get a list 
    of versions ordered by preference. */
-static pkgCache *PrioCache;
-static int PrioComp(const void *A,const void *B)
-{
-   pkgCache::VerIterator L(*PrioCache,*(pkgCache::Version **)A);
-   pkgCache::VerIterator R(*PrioCache,*(pkgCache::Version **)B);
-   
-   if ((L.ParentPkg()->Flags & pkgCache::Flag::Essential) == pkgCache::Flag::Essential &&
-       (R.ParentPkg()->Flags & pkgCache::Flag::Essential) != pkgCache::Flag::Essential)
-     return 1;
-   if ((L.ParentPkg()->Flags & pkgCache::Flag::Essential) != pkgCache::Flag::Essential &&
-       (R.ParentPkg()->Flags & pkgCache::Flag::Essential) == pkgCache::Flag::Essential)
-     return -1;
 
-   if ((L.ParentPkg()->Flags & pkgCache::Flag::Important) == pkgCache::Flag::Important &&
-       (R.ParentPkg()->Flags & pkgCache::Flag::Important) != pkgCache::Flag::Important)
-     return 1;
-   if ((L.ParentPkg()->Flags & pkgCache::Flag::Important) != pkgCache::Flag::Important &&
-       (R.ParentPkg()->Flags & pkgCache::Flag::Important) == pkgCache::Flag::Important)
-     return -1;
-   
-   if (L->Priority != R->Priority)
-      return R->Priority - L->Priority;
-   return strcmp(L.ParentPkg().Name(),R.ParentPkg().Name());
-}
+struct PrioComp {
+   pkgCache &PrioCache;
+
+   explicit PrioComp(pkgCache &PrioCache) : PrioCache(PrioCache) {
+   }
+
+   bool operator() (pkgCache::Version * const &A, pkgCache::Version * const &B) {
+      return compare(A, B) < 0;
+   }
+
+   int compare(pkgCache::Version * const &A, pkgCache::Version * const &B) {
+      pkgCache::VerIterator L(PrioCache,A);
+      pkgCache::VerIterator R(PrioCache,B);
+
+      if ((L.ParentPkg()->Flags & pkgCache::Flag::Essential) == pkgCache::Flag::Essential &&
+	  (R.ParentPkg()->Flags & pkgCache::Flag::Essential) != pkgCache::Flag::Essential)
+	return 1;
+      if ((L.ParentPkg()->Flags & pkgCache::Flag::Essential) != pkgCache::Flag::Essential &&
+	  (R.ParentPkg()->Flags & pkgCache::Flag::Essential) == pkgCache::Flag::Essential)
+	return -1;
+
+      if ((L.ParentPkg()->Flags & pkgCache::Flag::Important) == pkgCache::Flag::Important &&
+	  (R.ParentPkg()->Flags & pkgCache::Flag::Important) != pkgCache::Flag::Important)
+	return 1;
+      if ((L.ParentPkg()->Flags & pkgCache::Flag::Important) != pkgCache::Flag::Important &&
+	  (R.ParentPkg()->Flags & pkgCache::Flag::Important) == pkgCache::Flag::Important)
+	return -1;
+
+      if (L->Priority != R->Priority)
+	 return R->Priority - L->Priority;
+      return strcmp(L.ParentPkg().Name(),R.ParentPkg().Name());
+   }
+};
+
 void pkgPrioSortList(pkgCache &Cache,pkgCache::Version **List)
 {
    unsigned long Count = 0;
-   PrioCache = &Cache;
    for (pkgCache::Version **I = List; *I != 0; I++)
       Count++;
-   qsort(List,Count,sizeof(*List),PrioComp);
+   std::sort(List,List+Count,PrioComp(Cache));
 }
 									/*}}}*/

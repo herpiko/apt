@@ -8,19 +8,20 @@
 #include <signal.h>
 #include <unistd.h>
 #include <iostream>
-#include <string>
 #include <vector>
 #include <sys/ioctl.h>
-#include <sstream>
 #include <fcntl.h>
 #include <algorithm>
 #include <stdio.h>
+#include <sstream>
 
 #include <apti18n.h>
 
 namespace APT {
 namespace Progress {
 
+PackageManager::PackageManager() : d(NULL), percentage(0.0), last_reported_progress(-1) {}
+PackageManager::~PackageManager() {}
 
 /* Return a APT::Progress::PackageManager based on the global
  * apt configuration (i.e. APT::Status-Fd and APT::Status-deb822-Fd)
@@ -63,10 +64,11 @@ bool PackageManager::StatusChanged(std::string /*PackageName*/,
 }
 
 PackageManagerProgressFd::PackageManagerProgressFd(int progress_fd)
-   : StepsDone(0), StepsTotal(1)
+   : d(NULL), StepsDone(0), StepsTotal(1)
 {
    OutStatusFd = progress_fd;
 }
+PackageManagerProgressFd::~PackageManagerProgressFd() {}
 
 void PackageManagerProgressFd::WriteToStatusFd(std::string s)
 {
@@ -151,10 +153,11 @@ bool PackageManagerProgressFd::StatusChanged(std::string PackageName,
 
 
 PackageManagerProgressDeb822Fd::PackageManagerProgressDeb822Fd(int progress_fd)
-   : StepsDone(0), StepsTotal(1)
+   : d(NULL), StepsDone(0), StepsTotal(1)
 {
    OutStatusFd = progress_fd;
 }
+PackageManagerProgressDeb822Fd::~PackageManagerProgressDeb822Fd() {}
 
 void PackageManagerProgressDeb822Fd::WriteToStatusFd(std::string s)
 {
@@ -231,7 +234,7 @@ bool PackageManagerProgressDeb822Fd::StatusChanged(std::string PackageName,
 
 
 PackageManagerFancy::PackageManagerFancy()
-   : child_pty(-1)
+   : d(NULL), child_pty(-1)
 {
    // setup terminal size
    old_SIGWINCH = signal(SIGWINCH, PackageManagerFancy::staticSIGWINCH);
@@ -283,13 +286,13 @@ void PackageManagerFancy::SetupTerminalScrollArea(int nr_rows)
      std::cout << "\n";
          
      // save cursor
-     std::cout << "\033[s";
+     std::cout << "\0337";
          
      // set scroll region (this will place the cursor in the top left)
      std::cout << "\033[0;" << nr_rows - 1 << "r";
             
      // restore cursor but ensure its inside the scrolling area
-     std::cout << "\033[u";
+     std::cout << "\0338";
      static const char *move_cursor_up = "\033[1A";
      std::cout << move_cursor_up;
 
@@ -330,6 +333,7 @@ void PackageManagerFancy::Stop()
       // override the progress line (sledgehammer)
       static const char* clear_screen_below_cursor = "\033[J";
       std::cout << clear_screen_below_cursor;
+      std::flush(std::cout);
    }
    child_pty = -1;
 }
@@ -371,8 +375,8 @@ bool PackageManagerFancy::DrawStatusLine()
    if (unlikely(size.rows < 1 || size.columns < 1))
       return false;
 
-   static std::string save_cursor = "\033[s";
-   static std::string restore_cursor = "\033[u";
+   static std::string save_cursor = "\0337";
+   static std::string restore_cursor = "\0338";
 
    // green
    static std::string set_bg_color = DeQuoteString(
@@ -430,6 +434,10 @@ bool PackageManagerText::StatusChanged(std::string PackageName,
 
    return true;
 }
+
+PackageManagerText::PackageManagerText() : PackageManager(), d(NULL) {}
+PackageManagerText::~PackageManagerText() {}
+
 
 
 

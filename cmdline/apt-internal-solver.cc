@@ -24,7 +24,10 @@
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/cacheiterators.h>
+
 #include <apt-private/private-output.h>
+#include <apt-private/private-cmndline.h>
+#include <apt-private/private-main.h>
 
 #include <string.h>
 #include <iostream>
@@ -38,24 +41,14 @@
 #include <apti18n.h>
 									/*}}}*/
 
-// ShowHelp - Show a help screen					/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-static bool ShowHelp(CommandLine &) {
-	ioprintf(std::cout,_("%s %s for %s compiled on %s %s\n"),PACKAGE,PACKAGE_VERSION,
-		 COMMON_ARCH,__DATE__,__TIME__);
-
+static bool ShowHelp(CommandLine &)					/*{{{*/
+{
 	std::cout <<
 		_("Usage: apt-internal-solver\n"
 		"\n"
 		"apt-internal-solver is an interface to use the current internal\n"
-		"like an external resolver for the APT family for debugging or alike\n"
-		"\n"
-		"Options:\n"
-		"  -h  This help text.\n"
-		"  -q  Loggable output - no progress indicator\n"
-		"  -c=? Read this configuration file\n"
-		"  -o=? Set an arbitrary configuration option, eg -o dir::cache=/tmp\n");
+		"resolver for the APT family like an external one, for debugging or\n"
+		"the like.\n");
 	return true;
 }
 									/*}}}*/
@@ -65,30 +58,20 @@ APT_NORETURN static void DIE(std::string const &message) {		/*{{{*/
 	exit(EXIT_FAILURE);
 }
 									/*}}}*/
+static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
+{
+   return {};
+}
+									/*}}}*/
 int main(int argc,const char *argv[])					/*{{{*/
 {
-	CommandLine::Args Args[] = {
-		{'h',"help","help",0},
-		{'v',"version","version",0},
-		{'q',"quiet","quiet",CommandLine::IntLevel},
-		{'q',"silent","quiet",CommandLine::IntLevel},
-		{'c',"config-file",0,CommandLine::ConfigFile},
-		{'o',"option",0,CommandLine::ArbItem},
-		{0,0,0,0}};
+	InitLocale();
 
-	CommandLine CmdL(Args,_config);
-	if (pkgInitConfig(*_config) == false ||
-	    CmdL.Parse(argc,argv) == false) {
-		_error->DumpErrors();
-		return 2;
-	}
+	// we really don't need anything
+	DropPrivileges();
 
-	// See if the help should be shown
-	if (_config->FindB("help") == true ||
-	    _config->FindB("version") == true) {
-		ShowHelp(CmdL);
-		return 1;
-	}
+	CommandLine CmdL;
+	ParseCommandLine(CmdL, APT_CMD::APT_INTERNAL_SOLVER, &_config, NULL, argc, argv, &ShowHelp, &GetCommands);
 
 	if (CmdL.FileList[0] != 0 && strcmp(CmdL.FileList[0], "scenario") == 0)
 	{
@@ -116,8 +99,9 @@ int main(int argc,const char *argv[])					/*{{{*/
 	if (_config->FindI("quiet", 0) < 1)
 		_config->Set("Debug::EDSP::WriteSolution", true);
 
+	_config->Set("APT::System", "Debian APT solver interface");
 	_config->Set("APT::Solver", "internal");
-	_config->Set("edsp::scenario", "stdin");
+	_config->Set("edsp::scenario", "/nonexistent/stdin");
 	int input = STDIN_FILENO;
 	FILE* output = stdout;
 	SetNonBlock(input, false);
@@ -172,10 +156,10 @@ int main(int argc,const char *argv[])					/*{{{*/
 
 	std::string failure;
 	if (upgrade == true) {
-		if (pkgAllUpgrade(CacheFile) == false)
+		if (APT::Upgrade::Upgrade(CacheFile, APT::Upgrade::FORBID_REMOVE_PACKAGES | APT::Upgrade::FORBID_INSTALL_NEW_PACKAGES) == false)
 			failure = "ERR_UNSOLVABLE_UPGRADE";
 	} else if (distUpgrade == true) {
-		if (pkgDistUpgrade(CacheFile) == false)
+		if (APT::Upgrade::Upgrade(CacheFile, APT::Upgrade::ALLOW_EVERYTHING) == false)
 			failure = "ERR_UNSOLVABLE_DIST_UPGRADE";
 	} else if (Fix.Resolve() == false)
 		failure = "ERR_UNSOLVABLE";
@@ -194,11 +178,6 @@ int main(int argc,const char *argv[])					/*{{{*/
 
 	EDSP::WriteProgress(100, "Done", output);
 
-	bool const Errors = _error->PendingError();
-	if (_config->FindI("quiet",0) > 0)
-		_error->DumpErrors(std::cerr);
-	else
-		_error->DumpErrors(std::cerr, GlobalError::DEBUG);
-	return Errors == true ? 100 : 0;
+	return DispatchCommandLine(CmdL, {});
 }
 									/*}}}*/

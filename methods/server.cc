@@ -114,7 +114,7 @@ bool ServerState::HeaderLine(string Line)
 
    // Parse off any trailing spaces between the : and the next word.
    string::size_type Pos2 = Pos;
-   while (Pos2 < Line.length() && isspace(Line[Pos2]) != 0)
+   while (Pos2 < Line.length() && isspace_ascii(Line[Pos2]) != 0)
       Pos2++;
 
    string Tag = string(Line,0,Pos);
@@ -150,9 +150,15 @@ bool ServerState::HeaderLine(string Line)
       else
       {
 	 if (Major == 1 && Minor == 0)
+	 {
 	    Persistent = false;
+	 }
 	 else
+	 {
 	    Persistent = true;
+	    if (PipelineAllowed)
+	       Pipeline = true;
+	 }
       }
 
       return true;
@@ -240,15 +246,16 @@ bool ServerState::HeaderLine(string Line)
 }
 									/*}}}*/
 // ServerState::ServerState - Constructor				/*{{{*/
-ServerState::ServerState(URI Srv, ServerMethod *Owner) : ServerName(Srv), TimeOut(120), Owner(Owner)
+ServerState::ServerState(URI Srv, ServerMethod *Owner) :
+   DownloadSize(0), ServerName(Srv), TimeOut(120), Owner(Owner)
 {
    Reset();
 }
 									/*}}}*/
-
-bool ServerMethod::Configuration(string Message)			/*{{{*/
+bool ServerState::AddPartialFileToHashes(FileFd &File)			/*{{{*/
 {
-   return pkgAcqMethod::Configuration(Message);
+   File.Truncate(StartPos);
+   return GetHashes()->AddFD(File, StartPos);
 }
 									/*}}}*/
 
@@ -263,12 +270,12 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
    // Not Modified
    if (Server->Result == 304)
    {
-      unlink(Queue->DestFile.c_str());
+      RemoveFile("server", Queue->DestFile);
       Res.IMSHit = true;
       Res.LastModified = Queue->LastModified;
       return IMS_HIT;
    }
-   
+
    /* Redirect
     *
     * Note that it is only OK for us to treat all redirection the same
@@ -313,7 +320,20 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
       struct stat SBuf;
       if (stat(Queue->DestFile.c_str(),&SBuf) >= 0 && SBuf.st_size > 0)
       {
-	 if ((unsigned long long)SBuf.st_size == Server->TotalFileSize)
+	 bool partialHit = false;
+	 if (Queue->ExpectedHashes.usable() == true)
+	 {
+	    Hashes resultHashes(Queue->ExpectedHashes);
+	    FileFd file(Queue->DestFile, FileFd::ReadOnly);
+	    Server->TotalFileSize = file.FileSize();
+	    Server->Date = file.ModificationTime();
+	    resultHashes.AddFD(file);
+	    HashStringList const hashList = resultHashes.GetHashStringList();
+	    partialHit = (Queue->ExpectedHashes == hashList);
+	 }
+	 else if ((unsigned long long)SBuf.st_size == Server->TotalFileSize)
+	    partialHit = true;
+	 if (partialHit == true)
 	 {
 	    // the file is completely downloaded, but was not moved
 	    if (Server->HaveContent == true)
@@ -326,7 +346,7 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
 	    Server->StartPos = Server->TotalFileSize;
 	    Server->Result = 200;
 	 }
-	 else if (unlink(Queue->DestFile.c_str()) == 0)
+	 else if (RemoveFile("server", Queue->DestFile))
 	 {
 	    NextURI = Queue->Uri;
 	    return TRY_AGAIN_OR_REDIRECT;
@@ -334,14 +354,14 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
       }
    }
 
-   /* We have a reply we dont handle. This should indicate a perm server
+   /* We have a reply we don't handle. This should indicate a perm server
       failure */
    if (Server->Result < 200 || Server->Result >= 300)
    {
-      char err[255];
-      snprintf(err,sizeof(err)-1,"HttpError%i",Server->Result);
+      std::string err;
+      strprintf(err, "HttpError%u", Server->Result);
       SetFailReason(err);
-      _error->Error("%u %s",Server->Result,Server->Code);
+      _error->Error("%u %s", Server->Result, Server->Code);
       if (Server->HaveContent == true)
 	 return ERROR_WITH_CONTENT_PAGE;
       return ERROR_UNRECOVERABLE;
@@ -358,11 +378,11 @@ ServerMethod::DealWithHeaders(FetchResult &Res)
       return ERROR_NOT_FROM_SERVER;
 
    FailFile = Queue->DestFile;
-   FailFile.c_str();   // Make sure we dont do a malloc in the signal handler
+   FailFile.c_str();   // Make sure we don't do a malloc in the signal handler
    FailFd = File->Fd();
    FailTime = Server->Date;
 
-   if (Server->InitHashes(*File) == false)
+   if (Server->InitHashes(Queue->ExpectedHashes) == false || Server->AddPartialFileToHashes(*File) == false)
    {
       _error->Errno("read",_("Problem hashing file"));
       return ERROR_NOT_FROM_SERVER;
@@ -407,9 +427,16 @@ bool ServerMethod::Fetch(FetchItem *)
    for (FetchItem *I = Queue; I != 0 && Depth < (signed)PipelineDepth; 
 	I = I->Next, Depth++)
    {
-      // If pipelining is disabled, we only queue 1 request
-      if (Server->Pipeline == false && Depth >= 0)
-	 break;
+      if (Depth >= 0)
+      {
+	 // If pipelining is disabled, we only queue 1 request
+	 if (Server->Pipeline == false)
+	    break;
+	 // if we have no hashes, do at most one such request
+	 // as we can't fixup pipeling misbehaviors otherwise
+	 else if (I->ExpectedHashes.usable() == false)
+	    break;
+      }
       
       // Make sure we stick with the same server
       if (Server->Comp(I->Uri) == false)
@@ -464,10 +491,8 @@ int ServerMethod::Loop()
       
       // Connect to the server
       if (Server == 0 || Server->Comp(Queue->Uri) == false)
-      {
-	 delete Server;
 	 Server = CreateServerState(Queue->Uri);
-      }
+
       /* If the server has explicitly said this is the last connection
          then we pre-emptively shut down the pipeline and tear down 
 	 the connection. This will speed up HTTP/1.0 servers a tad
@@ -484,8 +509,7 @@ int ServerMethod::Loop()
       if (Server->Open() == false)
       {
 	 Fail(true);
-	 delete Server;
-	 Server = 0;
+	 Server = nullptr;
 	 continue;
       }
 
@@ -515,6 +539,7 @@ int ServerMethod::Loop()
 	    _error->Discard();
 	    Server->Close();
 	    Server->Pipeline = false;
+	    Server->PipelineAllowed = false;
 	    
 	    if (FailCounter >= 2)
 	    {
@@ -539,6 +564,13 @@ int ServerMethod::Loop()
 
 	    // Run the data
 	    bool Result = true;
+
+            // ensure we don't fetch too much
+            // we could do "Server->MaximumSize = Queue->MaximumSize" here
+            // but that would break the clever pipeline messup detection
+            // so instead we use the size of the biggest item in the queue
+            Server->MaximumSize = FindMaximumObjectSizeInQueue();
+
             if (Server->HaveContent)
 	       Result = Server->RunData(File);
 
@@ -561,7 +593,39 @@ int ServerMethod::Loop()
 	    // Send status to APT
 	    if (Result == true)
 	    {
-	       Res.TakeHashes(*Server->GetHashes());
+	       Hashes * const resultHashes = Server->GetHashes();
+	       HashStringList const hashList = resultHashes->GetHashStringList();
+	       if (PipelineDepth != 0 && Queue->ExpectedHashes.usable() == true && Queue->ExpectedHashes != hashList)
+	       {
+		  // we did not get the expected hash… mhhh:
+		  // could it be that server/proxy messed up pipelining?
+		  FetchItem * BeforeI = Queue;
+		  for (FetchItem *I = Queue->Next; I != 0 && I != QueueBack; I = I->Next)
+		  {
+		     if (I->ExpectedHashes.usable() == true && I->ExpectedHashes == hashList)
+		     {
+			// yes, he did! Disable pipelining and rewrite queue
+			if (Server->Pipeline == true)
+			{
+			   // FIXME: fake a warning message as we have no proper way of communicating here
+			   std::string out;
+			   strprintf(out, _("Automatically disabled %s due to incorrect response from server/proxy. (man 5 apt.conf)"), "Acquire::http::PipelineDepth");
+			   std::cerr << "W: " << out << std::endl;
+			   Server->Pipeline = false;
+			   Server->PipelineAllowed = false;
+			   // we keep the PipelineDepth value so that the rest of the queue can be fixed up as well
+			}
+			Rename(Res.Filename, I->DestFile);
+			Res.Filename = I->DestFile;
+			BeforeI->Next = I->Next;
+			I->Next = Queue;
+			Queue = I;
+			break;
+		     }
+		     BeforeI = I;
+		  }
+	       }
+	       Res.TakeHashes(*resultHashes);
 	       URIDone(Res);
 	    }
 	    else
@@ -581,7 +645,10 @@ int ServerMethod::Loop()
 		  QueueBack = Queue;
 	       }
 	       else
+               {
+                  Server->Close();
 		  Fail(true);
+               }
 	    }
 	    break;
 	 }
@@ -674,5 +741,19 @@ int ServerMethod::Loop()
    }
    
    return 0;
+}
+									/*}}}*/
+unsigned long long ServerMethod::FindMaximumObjectSizeInQueue() const	/*{{{*/
+{
+   unsigned long long MaxSizeInQueue = 0;
+   for (FetchItem *I = Queue; I != 0 && I != QueueBack; I = I->Next)
+      MaxSizeInQueue = std::max(MaxSizeInQueue, I->MaximumSize);
+   return MaxSizeInQueue;
+}
+									/*}}}*/
+ServerMethod::ServerMethod(char const * const Binary, char const * const Ver,unsigned long const Flags) :/*{{{*/
+   aptMethod(Binary, Ver, Flags), Server(nullptr), File(NULL), PipelineDepth(10),
+   AllowRedirect(false), Debug(false)
+{
 }
 									/*}}}*/

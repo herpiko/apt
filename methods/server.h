@@ -13,10 +13,12 @@
 
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/acquire-method.h>
+#include "aptmethod.h"
 
 #include <time.h>
 #include <iostream>
 #include <string>
+#include <memory>
 
 using std::cout;
 using std::endl;
@@ -49,6 +51,7 @@ struct ServerState
    enum {Chunked,Stream,Closes} Encoding;
    enum {Header, Data} State;
    bool Persistent;
+   bool PipelineAllowed;
    std::string Location;
 
    // This is a Persistent attribute of the server itself.
@@ -56,6 +59,8 @@ struct ServerState
    URI ServerName;
    URI Proxy;
    unsigned long TimeOut;
+
+   unsigned long long MaximumSize;
 
    protected:
    ServerMethod *Owner;
@@ -77,11 +82,12 @@ struct ServerState
    };
    /** \brief Get the headers before the data */
    RunHeadersResult RunHeaders(FileFd * const File, const std::string &Uri);
+   bool AddPartialFileToHashes(FileFd &File);
 
    bool Comp(URI Other) const {return Other.Host == ServerName.Host && Other.Port == ServerName.Port;};
    virtual void Reset() {Major = 0; Minor = 0; Result = 0; Code[0] = '\0'; TotalFileSize = 0; JunkSize = 0;
 		 StartPos = 0; Encoding = Closes; time(&Date); HaveContent = false;
-		 State = Header; Persistent = false; Pipeline = true;};
+		 State = Header; Persistent = false; Pipeline = false; MaximumSize = 0; PipelineAllowed = true;};
    virtual bool WriteResponse(std::string const &Data) = 0;
 
    /** \brief Transfer the data from the socket */
@@ -90,7 +96,7 @@ struct ServerState
    virtual bool Open() = 0;
    virtual bool IsOpen() = 0;
    virtual bool Close() = 0;
-   virtual bool InitHashes(FileFd &File) = 0;
+   virtual bool InitHashes(HashStringList const &ExpectedHashes) = 0;
    virtual Hashes * GetHashes() = 0;
    virtual bool Die(FileFd &File) = 0;
    virtual bool Flush(FileFd * const File) = 0;
@@ -100,17 +106,21 @@ struct ServerState
    virtual ~ServerState() {};
 };
 
-class ServerMethod : public pkgAcqMethod
+class ServerMethod : public aptMethod
 {
    protected:
-   virtual bool Fetch(FetchItem *);
+   virtual bool Fetch(FetchItem *) APT_OVERRIDE;
 
-   ServerState *Server;
+   std::unique_ptr<ServerState> Server;
    std::string NextURI;
    FileFd *File;
 
    unsigned long PipelineDepth;
    bool AllowRedirect;
+
+   // Find the biggest item in the fetch queue for the checking of the maximum
+   // size
+   unsigned long long FindMaximumObjectSizeInQueue() const APT_PURE;
 
    public:
    bool Debug;
@@ -139,16 +149,15 @@ class ServerMethod : public pkgAcqMethod
    static time_t FailTime;
    static APT_NORETURN void SigTerm(int);
 
-   virtual bool Configuration(std::string Message);
    virtual bool Flush() { return Server->Flush(File); };
 
    int Loop();
 
    virtual void SendReq(FetchItem *Itm) = 0;
-   virtual ServerState * CreateServerState(URI uri) = 0;
+   virtual std::unique_ptr<ServerState> CreateServerState(URI const &uri) = 0;
    virtual void RotateDNS() = 0;
 
-   ServerMethod(const char *Ver,unsigned long Flags = 0) : pkgAcqMethod(Ver, Flags), Server(NULL), File(NULL), PipelineDepth(0), AllowRedirect(false), Debug(false) {};
+   ServerMethod(char const * const Binary, char const * const Ver,unsigned long const Flags);
    virtual ~ServerMethod() {};
 };
 

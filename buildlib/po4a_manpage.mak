@@ -51,17 +51,16 @@ clean/$(LOCAL):
 	rm -f $($(@F)-LIST) apt.ent apt-verbatim.ent
 veryclean/$(LOCAL):
 	# we are nuking the directory we are working in as it is auto-generated
-	rm -rf $(shell readlink -f .)
+	rm -rf '$(abspath .)'
 
 HAVE_PO4A=yes
 endif
 
 # take care of the rest
-SOURCE := $(SOURCE) $(wildcard apt.$(LC).8)
 INCLUDES :=
 
 ifndef HAVE_PO4A
-# Strip from the source list any man pages we dont have compiled already
+# Strip from the source list any man pages we don't have compiled already
 SOURCE := $(wildcard $(SOURCE))
 endif
 

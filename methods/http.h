@@ -63,6 +63,8 @@ class CircleBuf
 
    public:
    Hashes *Hash;
+   // total amount of data that got written so far
+   unsigned long long TotalWriten;
 
    // Read data in
    bool Read(int Fd);
@@ -81,11 +83,11 @@ class CircleBuf
    bool ReadSpace() const {return Size - (InP - OutP) > 0;};
    bool WriteSpace() const {return InP - OutP > 0;};
 
-   // Dump everything
    void Reset();
+   // Dump everything
    void Stats();
 
-   CircleBuf(unsigned long long Size);
+   explicit CircleBuf(unsigned long long Size);
    ~CircleBuf();
 };
 
@@ -97,23 +99,23 @@ struct HttpServerState: public ServerState
    int ServerFd;
 
    protected:
-   virtual bool ReadHeaderLines(std::string &Data);
-   virtual bool LoadNextResponse(bool const ToFile, FileFd * const File);
-   virtual bool WriteResponse(std::string const &Data);
+   virtual bool ReadHeaderLines(std::string &Data) APT_OVERRIDE;
+   virtual bool LoadNextResponse(bool const ToFile, FileFd * const File) APT_OVERRIDE;
+   virtual bool WriteResponse(std::string const &Data) APT_OVERRIDE;
 
    public:
-   virtual void Reset() { ServerState::Reset(); ServerFd = -1; };
+   virtual void Reset() APT_OVERRIDE { ServerState::Reset(); ServerFd = -1; };
 
-   virtual bool RunData(FileFd * const File);
+   virtual bool RunData(FileFd * const File) APT_OVERRIDE;
 
-   virtual bool Open();
-   virtual bool IsOpen();
-   virtual bool Close();
-   virtual bool InitHashes(FileFd &File);
-   virtual Hashes * GetHashes();
-   virtual bool Die(FileFd &File);
-   virtual bool Flush(FileFd * const File);
-   virtual bool Go(bool ToFile, FileFd * const File);
+   virtual bool Open() APT_OVERRIDE;
+   virtual bool IsOpen() APT_OVERRIDE;
+   virtual bool Close() APT_OVERRIDE;
+   virtual bool InitHashes(HashStringList const &ExpectedHashes) APT_OVERRIDE;
+   virtual Hashes * GetHashes() APT_OVERRIDE;
+   virtual bool Die(FileFd &File) APT_OVERRIDE;
+   virtual bool Flush(FileFd * const File) APT_OVERRIDE;
+   virtual bool Go(bool ToFile, FileFd * const File) APT_OVERRIDE;
 
    HttpServerState(URI Srv, HttpMethod *Owner);
    virtual ~HttpServerState() {Close();};
@@ -122,12 +124,12 @@ struct HttpServerState: public ServerState
 class HttpMethod : public ServerMethod
 {
    public:
-   virtual void SendReq(FetchItem *Itm);
+   virtual void SendReq(FetchItem *Itm) APT_OVERRIDE;
 
-   virtual bool Configuration(std::string Message);
+   virtual bool Configuration(std::string Message) APT_OVERRIDE;
 
-   virtual ServerState * CreateServerState(URI uri);
-   virtual void RotateDNS();
+   virtual std::unique_ptr<ServerState> CreateServerState(URI const &uri) APT_OVERRIDE;
+   virtual void RotateDNS() APT_OVERRIDE;
 
    protected:
    std::string AutoDetectProxyCmd;
@@ -135,7 +137,7 @@ class HttpMethod : public ServerMethod
    public:
    friend struct HttpServerState;
 
-   HttpMethod() : ServerMethod("1.2",Pipeline | SendConfig)
+   HttpMethod() : ServerMethod("http", "1.2",Pipeline | SendConfig)
    {
       File = 0;
       Server = 0;

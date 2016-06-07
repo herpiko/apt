@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-TESTDIR=$(readlink -f $(dirname $0))
-. $TESTDIR/framework
+TESTDIR="$(readlink -f "$(dirname "$0")")"
+. "$TESTDIR/framework"
 setupenvironment
 configarchitecture 'i386'
 
@@ -19,14 +19,31 @@ testsuccess aptget remove debhelper -y
 testdpkgnotinstalled 'debhelper'
 testdpkginstalled 'po-debconf' 'unrelated'
 
+AUTOREMOVE='apt autoremove'
+if [ -n "$SUDO_USER" ]; then
+	AUTOREMOVE="sudo $AUTOREMOVE"
+fi
 echo 'APT::NeverAutoRemove { "^debc.*nf$"; };' > rootdir/etc/apt/apt.conf.d/00autoremove
-testequal 'Reading package lists...
+testsuccessequal 'Reading package lists...
 Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
   po-debconf
 0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
 Remv po-debconf [1.0.16]' aptget autoremove -s
+testequal "Reading package lists...
+Building dependency tree...
+Reading state information...
+The following package was automatically installed and is no longer required:
+  po-debconf
+Use '$AUTOREMOVE' to remove it.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." aptget install -s
+testequal "Reading package lists...
+Building dependency tree...
+Reading state information...
+1 package was automatically installed and is no longer required.
+Use '$AUTOREMOVE' to remove it.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." aptget install -s -o APT::Get::HideAutoRemove=small
 testdpkginstalled 'po-debconf'
 
 echo 'APT::NeverAutoRemove { "^po-debconf$"; };' > rootdir/etc/apt/apt.conf.d/00autoremove
@@ -42,7 +59,10 @@ testsuccess aptget autoremove -y
 testdpkgnotinstalled 'po-debconf'
 testmarkedauto
 
-sed rootdir/var/log/apt/history.log -e '/^Commandline: / d' -e '/^Start-Date: / d' -e '/^End-Date: / d' -e 's#), #)\nInstall: #g' | sort -u > apt-history.log
+sed rootdir/var/log/apt/history.log -e '/^Commandline: / d' \
+	-e '/^Start-Date: / d' -e '/^End-Date: / d' \
+	-e '/^Requested-By: / d' \
+	-e 's#), #)\nInstall: #g' | sort -u > apt-history.log
 testfileequal 'apt-history.log' '
 Install: debhelper:i386 (8.0.0)
 Install: po-debconf:i386 (1.0.16, automatic)
@@ -55,7 +75,7 @@ testdpkginstalled 'unrelated' 'debhelper' 'po-debconf'
 testsuccess aptmark auto debhelper
 
 testmarkedauto 'debhelper' 'po-debconf'
-testequal 'Reading package lists...
+testsuccessequal 'Reading package lists...
 Building dependency tree...
 Reading state information...
 The following packages will be REMOVED:
@@ -63,9 +83,28 @@ The following packages will be REMOVED:
 0 upgraded, 0 newly installed, 2 to remove and 0 not upgraded.
 Remv debhelper [8.0.0]
 Remv po-debconf [1.0.16]' aptget autoremove -s
+testequal "Reading package lists...
+Building dependency tree...
+Reading state information...
+The following packages were automatically installed and are no longer required:
+  debhelper po-debconf
+Use '$AUTOREMOVE' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." aptget install -s
+testequal "Reading package lists...
+Building dependency tree...
+Reading state information...
+2 packages were automatically installed and are no longer required.
+Use '$AUTOREMOVE' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded." aptget install -s -o APT::Get::HideAutoRemove=small
 
 testsuccess aptmark hold debhelper
-testequal 'Reading package lists...
+testsuccessequal 'Reading package lists...
 Building dependency tree...
 Reading state information...
 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.' aptget autoremove -s
+
+testsuccess aptget autoremove debhelper -y --allow-change-held-packages
+testdpkgnotinstalled 'po-debconf' 'debhelper'
+testmarkedauto
+testsuccess aptget install debhelper --solver apt -y -o Debug::pkgDepCache::Marker=1
+testmarkedauto 'po-debconf'

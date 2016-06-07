@@ -37,7 +37,7 @@ class pkgDPkgPMPrivate;
 class pkgDPkgPM : public pkgPackageManager
 {
    private:
-   pkgDPkgPMPrivate *d;
+   pkgDPkgPMPrivate * const d;
 
    /** \brief record the disappear action and handle accordingly
 
@@ -52,7 +52,7 @@ class pkgDPkgPM : public pkgPackageManager
       needs to declare a Replaces on the disappeared package.
       \param pkgname Name of the package that disappeared
    */
-   void handleDisappearAction(std::string const &pkgname);
+   APT_HIDDEN void handleDisappearAction(std::string const &pkgname);
 
    protected:
    int pkgFailures;
@@ -91,7 +91,7 @@ class pkgDPkgPM : public pkgPackageManager
 
    // Helpers
    bool RunScriptsWithPkgs(const char *Cnf);
-   APT_DEPRECATED bool SendV2Pkgs(FILE *F);
+   APT_DEPRECATED_MSG("Use SendPkgInfo with the version as parameter instead") bool SendV2Pkgs(FILE *F);
    bool SendPkgsInfo(FILE * const F, unsigned int const &Version);
    void WriteHistoryTag(std::string const &tag, std::string value);
    std::string ExpandShortPackageName(pkgDepCache &Cache,
@@ -118,31 +118,16 @@ class pkgDPkgPM : public pkgPackageManager
    void DoTerminalPty(int master);
    void DoDpkgStatusFd(int statusfd);
    void ProcessDpkgStatusLine(char *line);
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 17)
-   void DoDpkgStatusFd(int statusfd, int /*unused*/) {
-      DoDpkgStatusFd(statusfd);
-   }
-   void ProcessDpkgStatusLine(int /*unused*/, char *line) {
-      ProcessDpkgStatusLine(line);
-   }
-#endif
 
+   // The Actual installation implementation
+   virtual bool Install(PkgIterator Pkg,std::string File) APT_OVERRIDE;
+   virtual bool Configure(PkgIterator Pkg) APT_OVERRIDE;
+   virtual bool Remove(PkgIterator Pkg,bool Purge = false) APT_OVERRIDE;
 
-   // The Actuall installation implementation
-   virtual bool Install(PkgIterator Pkg,std::string File);
-   virtual bool Configure(PkgIterator Pkg);
-   virtual bool Remove(PkgIterator Pkg,bool Purge = false);
+   virtual bool Go(APT::Progress::PackageManager *progress) APT_OVERRIDE;
+   virtual bool Go(int StatusFd=-1) APT_OVERRIDE;
 
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR >= 17)
-   virtual bool Go(APT::Progress::PackageManager *progress);
-   // compat
-   virtual bool Go(int StatusFd=-1);
-#else
-   virtual bool Go(int StatusFd=-1);
-   bool GoNoABIBreak(APT::Progress::PackageManager *progress);
-#endif
-
-   virtual void Reset();
+   virtual void Reset() APT_OVERRIDE;
    
    public:
 

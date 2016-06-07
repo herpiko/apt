@@ -7,31 +7,25 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/edsp.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/cacheset.h>
-#include <apt-pkg/configuration.h>
-#include <apt-pkg/tagfile.h>
-#include <apt-pkg/fileutl.h>
-#include <apt-pkg/progress.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/cacheiterators.h>
+#include <apt-pkg/progress.h>
+#include <apt-pkg/fileutl.h>
+#include <apt-pkg/edsp.h>
+#include <apt-pkg/tagfile.h>
 #include <apt-pkg/strutl.h>
-#include <apt-pkg/pkgrecords.h>
 
 #include <ctype.h>
 #include <stddef.h>
 #include <string.h>
-#include <time.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <algorithm>
 #include <iostream>
-#include <vector>
 #include <limits>
 #include <string>
-#include <list>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -39,70 +33,22 @@
 using std::string;
 
 // we could use pkgCache::DepType and ::Priority, but these would be localized strings…
-const char * const EDSP::PrioMap[] = {0, "important", "required", "standard",
+const char * const PrioMap[] = {0, "important", "required", "standard",
 				      "optional", "extra"};
-const char * const EDSP::DepMap[] = {"", "Depends", "Pre-Depends", "Suggests",
+const char * const DepMap[] = {"", "Depends", "Pre-Depends", "Suggests",
 				     "Recommends" , "Conflicts", "Replaces",
 				     "Obsoletes", "Breaks", "Enhances"};
 
-// EDSP::WriteScenario - to the given file descriptor			/*{{{*/
-bool EDSP::WriteScenario(pkgDepCache &Cache, FILE* output, OpProgress *Progress)
-{
-   if (Progress != NULL)
-      Progress->SubProgress(Cache.Head().VersionCount, _("Send scenario to solver"));
-   unsigned long p = 0;
-   std::vector<std::string> archs = APT::Configuration::getArchitectures();
-   for (pkgCache::PkgIterator Pkg = Cache.PkgBegin(); Pkg.end() == false; ++Pkg)
-   {
-      std::string const arch = Pkg.Arch();
-      if (std::find(archs.begin(), archs.end(), arch) == archs.end())
-	 continue;
-      for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver, ++p)
-      {
-	 WriteScenarioVersion(Cache, output, Pkg, Ver);
-	 WriteScenarioDependency(output, Ver);
-	 fprintf(output, "\n");
-	 if (Progress != NULL && p % 100 == 0)
-	    Progress->Progress(p);
-      }
-   }
-   return true;
-}
-									/*}}}*/
-// EDSP::WriteLimitedScenario - to the given file descriptor		/*{{{*/
-bool EDSP::WriteLimitedScenario(pkgDepCache &Cache, FILE* output,
-				APT::PackageSet const &pkgset,
-				OpProgress *Progress)
-{
-   if (Progress != NULL)
-      Progress->SubProgress(Cache.Head().VersionCount, _("Send scenario to solver"));
-   unsigned long p  = 0;
-   for (APT::PackageSet::const_iterator Pkg = pkgset.begin(); Pkg != pkgset.end(); ++Pkg, ++p)
-      for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver)
-      {
-	 WriteScenarioVersion(Cache, output, Pkg, Ver);
-	 WriteScenarioLimitedDependency(output, Ver, pkgset);
-	 fprintf(output, "\n");
-	 if (Progress != NULL && p % 100 == 0)
-	    Progress->Progress(p);
-      }
-   if (Progress != NULL)
-      Progress->Done();
-   return true;
-}
-									/*}}}*/
-// EDSP::WriteScenarioVersion						/*{{{*/
-void EDSP::WriteScenarioVersion(pkgDepCache &Cache, FILE* output, pkgCache::PkgIterator const &Pkg,
+
+// WriteScenarioVersion							/*{{{*/
+static void WriteScenarioVersion(pkgDepCache &Cache, FILE* output, pkgCache::PkgIterator const &Pkg,
 				pkgCache::VerIterator const &Ver)
 {
-   pkgRecords Recs(Cache);
-   pkgRecords::Parser &rec = Recs.Lookup(Ver.FileList());
-   string srcpkg = rec.SourcePkg().empty() ? Pkg.Name() : rec.SourcePkg();
-
    fprintf(output, "Package: %s\n", Pkg.Name());
-   fprintf(output, "Source: %s\n", srcpkg.c_str());
+   fprintf(output, "Source: %s\n", Ver.SourcePkgName());
    fprintf(output, "Architecture: %s\n", Ver.Arch());
    fprintf(output, "Version: %s\n", Ver.VerStr());
+   fprintf(output, "Source-Version: %s\n", Ver.SourceVerStr());
    if (Pkg.CurrentVer() == Ver)
       fprintf(output, "Installed: yes\n");
    if (Pkg->SelectedState == pkgCache::State::Hold ||
@@ -126,7 +72,7 @@ void EDSP::WriteScenarioVersion(pkgDepCache &Cache, FILE* output, pkgCache::PkgI
       signed short const p = Cache.GetPolicy().GetPriority(File);
       if (Pin < p)
 	 Pin = p;
-      if ((File->Flags & pkgCache::Flag::NotSource) != pkgCache::Flag::NotSource) {
+      if (File.Flagged(pkgCache::Flag::NotSource) == false) {
 	 string Release = File.RelStr();
 	 if (!Release.empty())
 	    Releases.insert(Release);
@@ -138,20 +84,20 @@ void EDSP::WriteScenarioVersion(pkgDepCache &Cache, FILE* output, pkgCache::PkgI
 	   fprintf(output, " %s\n", R->c_str());
    }
    fprintf(output, "APT-Pin: %d\n", Pin);
-   if (Cache.GetCandidateVer(Pkg) == Ver)
+   if (Cache.GetCandidateVersion(Pkg) == Ver)
       fprintf(output, "APT-Candidate: yes\n");
    if ((Cache[Pkg].Flags & pkgCache::Flag::Auto) == pkgCache::Flag::Auto)
       fprintf(output, "APT-Automatic: yes\n");
 }
 									/*}}}*/
-// EDSP::WriteScenarioDependency					/*{{{*/
-void EDSP::WriteScenarioDependency( FILE* output, pkgCache::VerIterator const &Ver)
+// WriteScenarioDependency						/*{{{*/
+static void WriteScenarioDependency( FILE* output, pkgCache::VerIterator const &Ver)
 {
    std::string dependencies[pkgCache::Dep::Enhances + 1];
    bool orGroup = false;
    for (pkgCache::DepIterator Dep = Ver.DependsList(); Dep.end() == false; ++Dep)
    {
-      if (Dep.IsMultiArchImplicit() == true)
+      if (Dep.IsImplicit() == true)
 	 continue;
       if (orGroup == false)
 	 dependencies[Dep->Type].append(", ");
@@ -175,13 +121,15 @@ void EDSP::WriteScenarioDependency( FILE* output, pkgCache::VerIterator const &V
       if (Prv.IsMultiArchImplicit() == true)
 	 continue;
       provides.append(", ").append(Prv.Name());
+      if (Prv->ProvideVersion != 0)
+	 provides.append(" (= ").append(Prv.ProvideVersion()).append(")");
    }
    if (provides.empty() == false)
       fprintf(output, "Provides: %s\n", provides.c_str()+2);
 }
 									/*}}}*/
-// EDSP::WriteScenarioLimitedDependency					/*{{{*/
-void EDSP::WriteScenarioLimitedDependency(FILE* output,
+// WriteScenarioLimitedDependency					/*{{{*/
+static void WriteScenarioLimitedDependency(FILE* output,
 					  pkgCache::VerIterator const &Ver,
 					  APT::PackageSet const &pkgset)
 {
@@ -189,7 +137,7 @@ void EDSP::WriteScenarioLimitedDependency(FILE* output,
    bool orGroup = false;
    for (pkgCache::DepIterator Dep = Ver.DependsList(); Dep.end() == false; ++Dep)
    {
-      if (Dep.IsMultiArchImplicit() == true)
+      if (Dep.IsImplicit() == true)
 	 continue;
       if (orGroup == false)
       {
@@ -230,6 +178,74 @@ void EDSP::WriteScenarioLimitedDependency(FILE* output,
    }
    if (provides.empty() == false)
       fprintf(output, "Provides: %s\n", provides.c_str()+2);
+}
+									/*}}}*/
+static bool SkipUnavailableVersions(pkgDepCache &Cache, pkgCache::PkgIterator const &Pkg, pkgCache::VerIterator const &Ver)/*{{{*/
+{
+   /* versions which aren't current and aren't available in
+      any "online" source file are bad, expect if they are the choosen
+      candidate: The exception is for build-dep implementation as it creates
+      such pseudo (package) versions and removes them later on again.
+      We filter out versions at all so packages in 'rc' state only available
+      in dpkg/status aren't passed to solvers as they can't be installed. */
+   if (Pkg->CurrentVer != 0)
+      return false;
+   if (Cache.GetCandidateVersion(Pkg) == Ver)
+      return false;
+   for (pkgCache::VerFileIterator I = Ver.FileList(); I.end() == false; ++I)
+      if (I.File().Flagged(pkgCache::Flag::NotSource) == false)
+	 return false;
+   return true;
+}
+									/*}}}*/
+// EDSP::WriteScenario - to the given file descriptor			/*{{{*/
+bool EDSP::WriteScenario(pkgDepCache &Cache, FILE* output, OpProgress *Progress)
+{
+   if (Progress != NULL)
+      Progress->SubProgress(Cache.Head().VersionCount, _("Send scenario to solver"));
+   unsigned long p = 0;
+   std::vector<std::string> archs = APT::Configuration::getArchitectures();
+   for (pkgCache::PkgIterator Pkg = Cache.PkgBegin(); Pkg.end() == false; ++Pkg)
+   {
+      std::string const arch = Pkg.Arch();
+      if (std::find(archs.begin(), archs.end(), arch) == archs.end())
+	 continue;
+      for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver, ++p)
+      {
+	 if (SkipUnavailableVersions(Cache, Pkg, Ver))
+	    continue;
+	 WriteScenarioVersion(Cache, output, Pkg, Ver);
+	 WriteScenarioDependency(output, Ver);
+	 fprintf(output, "\n");
+	 if (Progress != NULL && p % 100 == 0)
+	    Progress->Progress(p);
+      }
+   }
+   return true;
+}
+									/*}}}*/
+// EDSP::WriteLimitedScenario - to the given file descriptor		/*{{{*/
+bool EDSP::WriteLimitedScenario(pkgDepCache &Cache, FILE* output,
+				APT::PackageSet const &pkgset,
+				OpProgress *Progress)
+{
+   if (Progress != NULL)
+      Progress->SubProgress(Cache.Head().VersionCount, _("Send scenario to solver"));
+   unsigned long p  = 0;
+   for (APT::PackageSet::const_iterator Pkg = pkgset.begin(); Pkg != pkgset.end(); ++Pkg, ++p)
+      for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver)
+      {
+	 if (SkipUnavailableVersions(Cache, Pkg, Ver))
+	    continue;
+	 WriteScenarioVersion(Cache, output, Pkg, Ver);
+	 WriteScenarioLimitedDependency(output, Ver, pkgset);
+	 fprintf(output, "\n");
+	 if (Progress != NULL && p % 100 == 0)
+	    Progress->Progress(p);
+      }
+   if (Progress != NULL)
+      Progress->Done();
+   return true;
 }
 									/*}}}*/
 // EDSP::WriteRequest - to the given file descriptor			/*{{{*/
@@ -351,7 +367,11 @@ bool EDSP::ReadResponse(int const input, pkgDepCache &Cache, OpProgress *Progres
 		pkgCache::VerIterator Ver(Cache.GetCache(), Cache.GetCache().VerP + VerIdx[id]);
 		Cache.SetCandidateVersion(Ver);
 		if (type == "Install")
-			Cache.MarkInstall(Ver.ParentPkg(), false, 0, false);
+		{
+			pkgCache::PkgIterator const P = Ver.ParentPkg();
+			if (Cache[P].Mode != pkgDepCache::ModeInstall)
+				Cache.MarkInstall(P, false, 0, false);
+		}
 		else if (type == "Remove")
 			Cache.MarkDelete(Ver.ParentPkg(), false);
 		else if (type == "Autoremove") {
@@ -362,13 +382,13 @@ bool EDSP::ReadResponse(int const input, pkgDepCache &Cache, OpProgress *Progres
 	return true;
 }
 									/*}}}*/
-// EDSP::ReadLine - first line from the given file descriptor		/*{{{*/
+// ReadLine - first line from the given file descriptor			/*{{{*/
 // ---------------------------------------------------------------------
 /* Little helper method to read a complete line into a string. Similar to
    fgets but we need to use the low-level read() here as otherwise the
    listparser will be confused later on as mixing of fgets and read isn't
    a supported action according to the manpages and results are undefined */
-bool EDSP::ReadLine(int const input, std::string &line) {
+static bool ReadLine(int const input, std::string &line) {
 	char one;
 	ssize_t data = 0;
 	line.erase();
@@ -387,11 +407,11 @@ bool EDSP::ReadLine(int const input, std::string &line) {
 	return false;
 }
 									/*}}}*/
-// EDSP::StringToBool - convert yes/no to bool				/*{{{*/
+// StringToBool - convert yes/no to bool				/*{{{*/
 // ---------------------------------------------------------------------
 /* we are not as lazy as we are in the global StringToBool as we really
    only accept yes/no here - but we will ignore leading spaces */
-bool EDSP::StringToBool(char const *answer, bool const defValue) {
+static bool StringToBool(char const *answer, bool const defValue) {
    for (; isspace(*answer) != 0; ++answer);
    if (strncasecmp(answer, "yes", 3) == 0)
       return true;
@@ -440,11 +460,11 @@ bool EDSP::ReadRequest(int const input, std::list<std::string> &install,
 	    request = &remove;
 	 }
 	 else if (line.compare(0, 8, "Upgrade:") == 0)
-	    upgrade = EDSP::StringToBool(line.c_str() + 9, false);
+	    upgrade = StringToBool(line.c_str() + 9, false);
 	 else if (line.compare(0, 13, "Dist-Upgrade:") == 0)
-	    distUpgrade = EDSP::StringToBool(line.c_str() + 14, false);
+	    distUpgrade = StringToBool(line.c_str() + 14, false);
 	 else if (line.compare(0, 11, "Autoremove:") == 0)
-	    autoRemove = EDSP::StringToBool(line.c_str() + 12, false);
+	    autoRemove = StringToBool(line.c_str() + 12, false);
 	 else if (line.compare(0, 13, "Architecture:") == 0)
 	    _config->Set("APT::Architecture", line.c_str() + 14);
 	 else if (line.compare(0, 14, "Architectures:") == 0)
@@ -514,9 +534,10 @@ bool EDSP::WriteSolution(pkgDepCache &Cache, FILE* output)
       }
       else if (Cache[Pkg].NewInstall() == true || Cache[Pkg].Upgrade() == true)
       {
-	 fprintf(output, "Install: %d\n", Cache.GetCandidateVer(Pkg)->ID);
+	 pkgCache::VerIterator const CandVer = Cache.GetCandidateVersion(Pkg);
+	 fprintf(output, "Install: %d\n", CandVer->ID);
 	 if (Debug == true)
-	    fprintf(output, "Package: %s\nVersion: %s\n", Pkg.FullName().c_str(), Cache.GetCandidateVer(Pkg).VerStr());
+	    fprintf(output, "Package: %s\nVersion: %s\n", Pkg.FullName().c_str(), CandVer.VerStr());
       }
       else if (Cache[Pkg].Garbage == true)
       {

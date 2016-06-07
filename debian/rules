@@ -9,6 +9,7 @@ export NOISY=1
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 export DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+export PARALLEL = $(or $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS))),1)
 
 # FOR AUTOCONF 2.52 AND NEWER ONLY
 ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
@@ -17,6 +18,9 @@ else
   confflags += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
 
+# Set the number of procs to be run in parallel from the options.
+confflags += --with-procs=$(PARALLEL)
+
 # See below
 -include build/environment.mak
 
@@ -24,11 +28,7 @@ ifneq (,$(shell which dpkg-buildflags))
   # make does not export to $(shell) so we need to workaround 
   # (http://savannah.gnu.org/bugs/?10593)
   dpkg_buildflags = DEB_BUILD_MAINT_OPTIONS=hardening=+all dpkg-buildflags
- 
-  # workaround gcc-5 compile error
-  # (see https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1473674)
-  export CXXFLAGS = $(subst -O3,-O2,$(shell $(dpkg_buildflags) --get CXXFLAGS))
- 
+  export CXXFLAGS = $(shell $(dpkg_buildflags) --get CXXFLAGS)
   export LDFLAGS = $(shell $(dpkg_buildflags) --get LDFLAGS)
   export CPPFLAGS = $(shell $(dpkg_buildflags) --get CPPFLAGS)
 else
@@ -60,6 +60,11 @@ ifeq ($(words $(BLD)),0)
 override BLD := ./build
 endif
 
+# When building without <nocheck>, the header is available and thus the test is
+# successful. When building with <nocheck>, the header is missing, but we still
+# pretend it to be available, because configure would fail otherwise.
+export ac_cv_header_gtest_gtest_h=yes
+
 # APT Programs in apt-utils
 APT_UTILS=ftparchive sortpkgs extracttemplates
 
@@ -89,7 +94,7 @@ build/environment.mak: build/configure-stamp
 configure: configure.ac
 build/configure-stamp: configure buildlib/config.sub buildlib/config.guess
 	dh_testdir
-	-mkdir build
+	mkdir -p build
 	cp COPYING debian/copyright
 	cd build && CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" ../configure $(confflags)
 	touch $@
@@ -217,13 +222,17 @@ apt: build-binary build-manpages debian/apt.install
 	#   debian/$@/usr/lib/apt/apt-report-mirror-failure \
 
 	# move the apt-helper in place
-	mv debian/$@/usr/bin/apt-helper debian/$@/usr/lib/apt/apt-helper 
+	mv debian/$@/usr/bin/apt-helper debian/$@/usr/lib/apt/apt-helper
+	# install apt.systemd.daily helper in the right place
+	install -m755 debian/apt.systemd.daily debian/$@/usr/lib/apt/
 
 	dh_bugfiles -p$@
 	dh_lintian -p$@
 	dh_installexamples -p$@ $(BLD)/docs/examples/*
 	dh_installman -p$@ $(wildcard $(patsubst %,doc/en/%.[158],$(apt_MANPAGES)) $(patsubst %,doc/*/%.*.[158],$(apt_MANPAGES)))
-	dh_installcron -p$@
+	dh_installcron -p$@ --name=apt-compat
+	dh_systemd_enable -p$@ apt-daily.timer
+	dh_systemd_start -p$@ apt-daily.timer
 	dh_installdocs -p$@
 	dh_installchangelogs -p$@
 	dh_installlogrotate -p$@

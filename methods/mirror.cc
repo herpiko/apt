@@ -106,6 +106,7 @@ bool MirrorMethod::Clean(string Dir)
       // Skip some files..
       if (strcmp(Dir->d_name,"lock") == 0 ||
 	  strcmp(Dir->d_name,"partial") == 0 ||
+	  strcmp(Dir->d_name,"lost+found") == 0 ||
 	  strcmp(Dir->d_name,".") == 0 ||
 	  strcmp(Dir->d_name,"..") == 0)
 	 continue;
@@ -122,7 +123,7 @@ bool MirrorMethod::Clean(string Dir)
       }
       // nothing found, nuke it
       if (I == list.end())
-	 unlink(Dir->d_name);
+	 RemoveFile("mirror", Dir->d_name);
    }
 
    closedir(D);

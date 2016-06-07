@@ -18,6 +18,7 @@
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/acquire-method.h>
 #include <apt-pkg/configuration.h>
+#include <apt-pkg/srvrec.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -42,6 +43,8 @@ static std::string LastHost;
 static int LastPort = 0;
 static struct addrinfo *LastHostAddr = 0;
 static struct addrinfo *LastUsed = 0;
+
+static std::vector<SrvRec> SrvRecords;
 
 // Set of IP/hostnames that we timed out before or couldn't resolve
 static std::set<std::string> bad_addr;
@@ -130,15 +133,11 @@ static bool DoConnect(struct addrinfo *Addr,std::string Host,
    return true;
 }
 									/*}}}*/
-// Connect - Connect to a server					/*{{{*/
-// ---------------------------------------------------------------------
-/* Performs a connection to the server */
-bool Connect(std::string Host,int Port,const char *Service,int DefPort,int &Fd,
-	     unsigned long TimeOut,pkgAcqMethod *Owner)
+// Connect to a given Hostname						/*{{{*/
+static bool ConnectToHostname(std::string const &Host, int const Port,
+      const char * const Service, int DefPort, int &Fd,
+      unsigned long const TimeOut, pkgAcqMethod * const Owner)
 {
-   if (_error->PendingError() == true)
-      return false;
-
    // Convert the port name/number
    char ServStr[300];
    if (Port != 0)
@@ -165,7 +164,14 @@ bool Connect(std::string Host,int Port,const char *Service,int DefPort,int &Fd,
       struct addrinfo Hints;
       memset(&Hints,0,sizeof(Hints));
       Hints.ai_socktype = SOCK_STREAM;
-      Hints.ai_flags = AI_ADDRCONFIG;
+      Hints.ai_flags = 0;
+      if (_config->FindB("Acquire::Connect::IDN", true) == true)
+	 Hints.ai_flags |= AI_IDN;
+      // see getaddrinfo(3): only return address if system has such a address configured
+      // useful if system is ipv4 only, to not get ipv6, but that fails if the system has
+      // no address configured: e.g. offline and trying to connect to localhost.
+      if (_config->FindB("Acquire::Connect::AddrConfig", true) == true)
+	 Hints.ai_flags |= AI_ADDRCONFIG;
       Hints.ai_protocol = 0;
       
       if(_config->FindB("Acquire::ForceIPv4", false) == true)
@@ -258,3 +264,35 @@ bool Connect(std::string Host,int Port,const char *Service,int DefPort,int &Fd,
    return _error->Error(_("Unable to connect to %s:%s:"),Host.c_str(),ServStr);
 }
 									/*}}}*/
+// Connect - Connect to a server					/*{{{*/
+// ---------------------------------------------------------------------
+/* Performs a connection to the server (including SRV record lookup) */
+bool Connect(std::string Host,int Port,const char *Service,
+                            int DefPort,int &Fd,
+                            unsigned long TimeOut,pkgAcqMethod *Owner)
+{
+   if (_error->PendingError() == true)
+      return false;
+
+   if(LastHost != Host || LastPort != Port)
+   {
+      SrvRecords.clear();
+      if (_config->FindB("Acquire::EnableSrvRecords", true) == true)
+         GetSrvRecords(Host, DefPort, SrvRecords);
+   }
+   // we have no SrvRecords for this host, connect right away
+   if(SrvRecords.size() == 0)
+      return ConnectToHostname(Host, Port, Service, DefPort, Fd, 
+                                    TimeOut, Owner);
+
+   // try to connect in the priority order of the srv records
+   while(SrvRecords.size() > 0)
+   {
+      // PopFromSrvRecs will also remove the server
+      Host = PopFromSrvRecs(SrvRecords).target;
+      if(ConnectToHostname(Host, Port, Service, DefPort, Fd, TimeOut, Owner))
+         return true;
+   }
+
+   return false;
+}

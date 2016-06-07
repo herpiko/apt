@@ -23,11 +23,11 @@ LIB_MAKES = apt-pkg/makefile
 SOURCE = copy.cc
 include $(PROGRAM_H)
 
-# The gzip method
-PROGRAM=gzip
+# The store method
+PROGRAM=store
 SLIBS = -lapt-pkg $(INTLLIBS)
 LIB_MAKES = apt-pkg/makefile
-SOURCE = gzip.cc
+SOURCE = store.cc
 include $(PROGRAM_H)
 
 # The gpgv method
@@ -46,21 +46,21 @@ include $(PROGRAM_H)
 
 # The http method
 PROGRAM=http
-SLIBS = -lapt-pkg $(SOCKETLIBS) $(INTLLIBS)
+SLIBS = -lapt-pkg $(SOCKETLIBS) $(INTLLIBS) -lresolv
 LIB_MAKES = apt-pkg/makefile
 SOURCE = http.cc http_main.cc rfc2553emu.cc connect.cc server.cc
 include $(PROGRAM_H)
 
 # The https method
 PROGRAM=https
-SLIBS = -lapt-pkg -lcurl $(INTLLIBS)
+SLIBS = -lapt-pkg -lcurl $(INTLLIBS) -lresolv
 LIB_MAKES = apt-pkg/makefile
 SOURCE = https.cc server.cc
 include $(PROGRAM_H)
 
 # The ftp method
 PROGRAM=ftp
-SLIBS = -lapt-pkg $(SOCKETLIBS) $(INTLLIBS)
+SLIBS = -lapt-pkg $(SOCKETLIBS) $(INTLLIBS) -lresolv
 LIB_MAKES = apt-pkg/makefile
 SOURCE = ftp.cc rfc2553emu.cc connect.cc
 include $(PROGRAM_H)
@@ -81,7 +81,7 @@ include $(PROGRAM_H)
 
 # The mirror method
 PROGRAM=mirror
-SLIBS = -lapt-pkg $(SOCKETLIBS)
+SLIBS = -lapt-pkg $(SOCKETLIBS) -lresolv
 LIB_MAKES = apt-pkg/makefile
 SOURCE = mirror.cc http.cc rfc2553emu.cc connect.cc server.cc
 include $(PROGRAM_H)
@@ -96,15 +96,15 @@ $(BIN)/ssh:
 clean-$(BIN)/ssh:
 	-rm $(BIN)/ssh
 
-# create links for all other compressors
-COMPRESSORS=bzip2 lzma xz
+# create compat links for all compressors
+COMPRESSORS=gzip bzip2 lzma xz
 
 binary: $(addprefix $(BIN)/,$(COMPRESSORS))
 veryclean: $(addprefix clean-$(BIN)/,$(COMPRESSORS))
 
-$(addprefix $(BIN)/,$(COMPRESSORS)): $(BIN)/gzip
+$(addprefix $(BIN)/,$(COMPRESSORS)): $(BIN)/store
 	echo "Installing $(notdir $@) method link"
-	ln -fs gzip $@
+	ln -fs store $@
 
 $(addprefix clean-$(BIN)/,$(COMPRESSORS)):
 	-rm $(BIN)/$(notdir $@)

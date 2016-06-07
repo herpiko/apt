@@ -253,10 +253,7 @@ string Configuration::FindDir(const char *Name,const char *Default) const
 // Configuration::FindVector - Find a vector of values			/*{{{*/
 // ---------------------------------------------------------------------
 /* Returns a vector of config values under the given item */
-#if (APT_PKG_MAJOR >= 4 && APT_PKG_MINOR < 17)
-vector<string> Configuration::FindVector(const char *Name) const { return FindVector(Name, ""); }
-#endif
-vector<string> Configuration::FindVector(const char *Name, std::string const &Default) const
+vector<string> Configuration::FindVector(const char *Name, std::string const &Default, bool const Keys) const
 {
    vector<string> Vec;
    const Item *Top = Lookup(Name);
@@ -269,7 +266,7 @@ vector<string> Configuration::FindVector(const char *Name, std::string const &De
    Item *I = Top->Child;
    while(I != NULL)
    {
-      Vec.push_back(I->Value);
+      Vec.push_back(Keys ? I->Tag : I->Value);
       I = I->Next;
    }
    if (Vec.empty() == true)
@@ -488,6 +485,59 @@ void Configuration::Clear(string const &Name)
    }
 }
 									/*}}}*/
+void Configuration::MoveSubTree(char const * const OldRootName, char const * const NewRootName)/*{{{*/
+{
+   // prevent NewRoot being a subtree of OldRoot
+   if (OldRootName == nullptr)
+      return;
+   if (NewRootName != nullptr)
+   {
+      if (strcmp(OldRootName, NewRootName) == 0)
+	 return;
+      std::string const oldroot = std::string(OldRootName) + "::";
+      if (strcasestr(NewRootName, oldroot.c_str()) != NULL)
+	 return;
+   }
+
+   Item * Top;
+   Item const * const OldRoot = Top = Lookup(OldRootName, false);
+   if (Top == nullptr)
+      return;
+   std::string NewRoot;
+   if (NewRootName != nullptr)
+      NewRoot.append(NewRootName).append("::");
+
+   Top->Value.clear();
+   Item * const Stop = Top;
+   Top = Top->Child;
+   Stop->Child = 0;
+   for (; Top != 0;)
+   {
+      if (Top->Child != 0)
+      {
+	 Top = Top->Child;
+	 continue;
+      }
+
+      while (Top != 0 && Top->Next == 0)
+      {
+	 Set(NewRoot + Top->FullTag(OldRoot), Top->Value);
+	 Item const * const Tmp = Top;
+	 Top = Top->Parent;
+	 delete Tmp;
+
+	 if (Top == Stop)
+	    return;
+      }
+
+      Set(NewRoot + Top->FullTag(OldRoot), Top->Value);
+      Item const * const Tmp = Top;
+      if (Top != 0)
+	 Top = Top->Next;
+      delete Tmp;
+   }
+}
+									/*}}}*/
 // Configuration::Exists - Returns true if the Name exists		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -626,19 +676,19 @@ string Configuration::Item::FullTag(const Item *Stop) const
    tag/value. AsSectional enables Sectional parsing.*/
 bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectional,
 		    unsigned const &Depth)
-{   
+{
    // Open the stream for reading
-   ifstream F(FName.c_str(),ios::in); 
-   if (!F != 0)
+   ifstream F(FName.c_str(),ios::in);
+   if (F.fail() == true)
       return _error->Errno("ifstream::ifstream",_("Opening configuration file %s"),FName.c_str());
 
    string LineBuffer;
    string Stack[100];
    unsigned int StackPos = 0;
-   
+
    // Parser state
    string ParentTag;
-   
+
    int CurLine = 0;
    bool InComment = false;
    while (F.eof() == false)
