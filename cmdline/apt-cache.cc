@@ -380,7 +380,7 @@ static bool Dump(CommandLine &)
       std::cout << " Size: " << F->Size << std::endl;
       std::cout << " ID: " << F->ID << std::endl;
       std::cout << " Flags: " << F->Flags << std::endl;
-      std::cout << " Time: " << TimeRFC1123(F->mtime) << std::endl;
+      std::cout << " Time: " << TimeRFC1123(F->mtime, true) << std::endl;
       std::cout << " Archive: " << DeNull(F.Archive()) << std::endl;
       std::cout << " Component: " << DeNull(F.Component()) << std::endl;
       std::cout << " Version: " << DeNull(F.Version()) << std::endl;
@@ -1142,8 +1142,6 @@ static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
 									/*}}}*/
 int main(int argc,const char *argv[])					/*{{{*/
 {
-   InitLocale();
-
    // Parse the command line and initialize the package library
    CommandLine CmdL;
    auto const Cmds = ParseCommandLine(CmdL, APT_CMD::APT_CACHE, &_config, &_system, argc, argv, &ShowHelp, &GetCommands);

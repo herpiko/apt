@@ -80,9 +80,20 @@ void pkgAcqMethod::Fail(bool Transient)
 {
    string Err = "Undetermined Error";
    if (_error->empty() == false)
-      _error->PopMessage(Err);   
-   _error->Discard();
-   Fail(Err,Transient);
+   {
+      Err.clear();
+      while (_error->empty() == false)
+      {
+	 std::string msg;
+	 if (_error->PopMessage(msg))
+	 {
+	    if (Err.empty() == false)
+	       Err.append("\n");
+	    Err.append(msg);
+	 }
+      }
+   }
+   Fail(Err, Transient);
 }
 									/*}}}*/
 // AcqMethod::Fail - A fetch has failed					/*{{{*/
@@ -148,7 +159,7 @@ void pkgAcqMethod::URIStart(FetchResult &Res)
       std::cout << "Size: " << std::to_string(Res.Size) << "\n";
 
    if (Res.LastModified != 0)
-      std::cout << "Last-Modified: " << TimeRFC1123(Res.LastModified) << "\n";
+      std::cout << "Last-Modified: " << TimeRFC1123(Res.LastModified, true) << "\n";
 
    if (Res.ResumePoint != 0)
       std::cout << "Resume-Point: " << std::to_string(Res.ResumePoint) << "\n";
@@ -187,7 +198,7 @@ void pkgAcqMethod::URIDone(FetchResult &Res, FetchResult *Alt)
       std::cout << "Size: " << std::to_string(Res.Size) << "\n";
 
    if (Res.LastModified != 0)
-      std::cout << "Last-Modified: " << TimeRFC1123(Res.LastModified) << "\n";
+      std::cout << "Last-Modified: " << TimeRFC1123(Res.LastModified, true) << "\n";
 
    printHashStringList(&Res.Hashes);
 
@@ -216,7 +227,7 @@ void pkgAcqMethod::URIDone(FetchResult &Res, FetchResult *Alt)
 	 std::cout << "Alt-Size: " << std::to_string(Alt->Size) << "\n";
 
       if (Alt->LastModified != 0)
-	 std::cout << "Alt-Last-Modified: " << TimeRFC1123(Alt->LastModified) << "\n";
+	 std::cout << "Alt-Last-Modified: " << TimeRFC1123(Alt->LastModified, true) << "\n";
 
       printHashStringList(&Alt->Hashes);
 

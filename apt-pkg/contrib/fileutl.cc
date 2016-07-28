@@ -916,9 +916,12 @@ bool ChangeOwnerAndPermissionOfFile(char const * const requester, char const * c
       // ensure the file is owned by root and has good permissions
       struct passwd const * const pw = getpwnam(user);
       struct group const * const gr = getgrnam(group);
-      if (pw != NULL && gr != NULL && chown(file, pw->pw_uid, gr->gr_gid) != 0)
+      if (pw != NULL && gr != NULL && lchown(file, pw->pw_uid, gr->gr_gid) != 0)
 	 Res &= _error->WarningE(requester, "chown to %s:%s of file %s failed", user, group, file);
    }
+   struct stat Buf;
+   if (lstat(file, &Buf) != 0 || S_ISLNK(Buf.st_mode))
+      return Res;
    if (chmod(file, mode) != 0)
       Res &= _error->WarningE(requester, "chmod 0%o of file %s failed", mode, file);
    return Res;
@@ -1626,11 +1629,14 @@ public:
 
       if (cctx != nullptr)
       {
-	 res = LZ4F_compressEnd(cctx, lz4_buffer.buffer, lz4_buffer.buffersize_max, nullptr);
-	 if (LZ4F_isError(res) || backend.Write(lz4_buffer.buffer, res) == false)
-	    return false;
-	 if (!backend.Flush())
-	    return false;
+	 if (filefd->Failed() == false)
+	 {
+	    res = LZ4F_compressEnd(cctx, lz4_buffer.buffer, lz4_buffer.buffersize_max, nullptr);
+	    if (LZ4F_isError(res) || backend.Write(lz4_buffer.buffer, res) == false)
+	       return false;
+	    if (!backend.Flush())
+	       return false;
+	 }
 	 if (!backend.Close())
 	    return false;
 
@@ -1663,16 +1669,17 @@ class APT_HIDDEN LzmaFileFdPrivate: public FileFdPrivate {				/*{{{*/
 #ifdef HAVE_LZMA
    struct LZMAFILE {
       FILE* file;
+      FileFd * const filefd;
       uint8_t buffer[4096];
       lzma_stream stream;
       lzma_ret err;
       bool eof;
       bool compressing;
 
-      LZMAFILE() : file(nullptr), eof(false), compressing(false) { buffer[0] = '\0'; }
+      LZMAFILE(FileFd * const fd) : file(nullptr), filefd(fd), eof(false), compressing(false) { buffer[0] = '\0'; }
       ~LZMAFILE()
       {
-	 if (compressing == true)
+	 if (compressing == true && filefd->Failed() == false)
 	 {
 	    size_t constexpr buffersize = sizeof(buffer)/sizeof(buffer[0]);
 	    while(true)
@@ -1733,7 +1740,7 @@ public:
 	 return filefd->FileFdError("ReadWrite mode is not supported for lzma/xz files %s", filefd->FileName.c_str());
 
       if (lzma == nullptr)
-	 lzma = new LzmaFileFdPrivate::LZMAFILE;
+	 lzma = new LzmaFileFdPrivate::LZMAFILE(filefd);
       if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
 	 lzma->file = fdopen(iFd, "w");
       else
@@ -1878,6 +1885,9 @@ public:
 
       if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
 	 return filefd->FileFdError("ReadWrite mode is not supported for file %s", filefd->FileName.c_str());
+      if (compressor.Binary == "false")
+	 return filefd->FileFdError("libapt has inbuilt support for the %s compression,"
+	       " but was forced to ignore it in favor of an external binary – which isn't installed.", compressor.Name.c_str());
 
       bool const Comp = (Mode & FileFd::WriteOnly) == FileFd::WriteOnly;
       if (Comp == false)
@@ -2599,7 +2609,7 @@ unsigned long long FileFd::Size()
 /* */
 bool FileFd::Close()
 {
-   if (Flush() == false)
+   if (Failed() == false && Flush() == false)
       return false;
    if (iFd == -1)
       return true;
@@ -2619,7 +2629,7 @@ bool FileFd::Close()
    }
 
    if ((Flags & Replace) == Replace) {
-      if (rename(TemporaryFileName.c_str(), FileName.c_str()) != 0)
+      if (Failed() == false && rename(TemporaryFileName.c_str(), FileName.c_str()) != 0)
 	 Res &= _error->Errno("rename",_("Problem renaming the file %s to %s"), TemporaryFileName.c_str(), FileName.c_str());
 
       FileName = TemporaryFileName; // for the unlink() below.

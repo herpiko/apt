@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.8.10\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2016-01-26 01:51+0100\n"
 "Last-Translator: Manuel \"Venturi\" Porras Peralta <venturi@openmailbox."
 "org>\n"
@@ -295,10 +295,10 @@ msgid ""
 msgstr ""
 "Había paquetes sin autenticar y se utilizó -y sin --allow-unauthenticated"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Fallo al obtener %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Fallo al obtener %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -610,17 +610,19 @@ msgid_plural ""
 msgstr[0] "Hay %i versión adicional. Utilice la opción «-a» para verla"
 msgstr[1] "Hay %i versiones adicionales. Utilice la opción «-a» para verlas"
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "NOTA: ¡Esto es sólo una simulación!\n"
-"      apt-get necesita privilegios de administrador para la ejecución real.\n"
+"      %s necesita privilegios de administrador para la ejecución real.\n"
 "      Tenga también en cuenta que se han desactivado los bloqueos,\n"
-"      ¡no dependa la situación real actual de la relevancia de esto!"
+"      ¡no dependa la situación real actual de la relevancia de esto!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -827,10 +829,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Paquetes con pin:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(no encontrado)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -848,10 +846,6 @@ msgstr "  Candidato: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(ninguno)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Pin del paquete: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1807,6 +1801,25 @@ msgstr "Consulta"
 msgid "Unable to invoke "
 msgstr "No se pudo invocar "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"El fichero firmado en claro no es válido, «%s» obtenido (¿la red requiere "
+"autenticación?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"El fichero firmado en claro no es válido, «%s» obtenido (¿la red requiere "
+"autenticación?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Se encontró al menos una firma inválida."
@@ -1823,16 +1836,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "No se pudo ejecutar «apt-key»  para verificar la firma (¿está instalado "
 "gnupg?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"El fichero firmado en claro no es válido, «%s» obtenido (¿la red requiere "
-"autenticación?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -2029,6 +2032,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Fusionando información disponible"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Se esperaba %s pero no estaba presente"
 
 #: cmdline/apt-extracttemplates.cc
 msgid ""
@@ -2570,14 +2587,53 @@ msgstr ""
 "Vea la página de manual apt-secure(8) para los detalles sobre la creación de "
 "repositorios y la configuración de usuarios."
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "falló el cambio de nombre, %s (%s -> %s)."
+msgid "The repository '%s' is no longer signed."
+msgstr "El repositorio «%s» ya no está firmado."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "El repositorio «%s» no tiene un fichero de Publicación."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"Normalmente no está permitido, pero se ha dado la opción «Acquire::"
+"AllowDowngradeToInsecureRepositories» para anularlo."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' is not signed."
+msgstr "El repositorio «%s» no está firmado."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "El repositorio «%s» no tiene un fichero de Publicación."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr ""
+"Omitiendo el uso del fichero configurado «%s» ya que el repositorio «%s» "
+"proporciona solo información de seguridad débil para ello"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "La suma hash difiere"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "falló el cambio de nombre, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2650,35 +2706,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribución conflictiva: %s (se esperaba %s, pero se obtuvo %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is not signed."
-msgstr "El repositorio «%s» no está firmado."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "El repositorio «%s» no tiene un fichero de Publicación."
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "El repositorio «%s» ya no está firmado."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"Normalmente no está permitido, pero se ha dado la opción «Acquire::"
-"AllowDowngradeToInsecureRepositories» para anularlo."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3138,11 +3165,6 @@ msgstr ""
 "Omitiendo el fichero «%s» del directorio «%s», ya que tiene una extensión de "
 "nombre de fichero no válida"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Se esperaba %s pero no estaba presente"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3362,13 +3384,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Entrada «Date» inválida en el archivo «Release» %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Entrada «Valid-Until» inválida en el archivo «Release» %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Entrada «%s» inválida en el archivo «Release» %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3382,6 +3399,12 @@ msgstr ""
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr ""
 "Valor establecido inválido para la opción %s según el origen %s %s (%s)"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, fuzzy, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr ""
+"Valores establecidos en conflicto para la opción %s según el origen %s %s"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3454,7 +3477,7 @@ msgstr "Ejecutando disparador post-instalación %s"
 msgid "Directory '%s' missing"
 msgstr "Falta el directorio «%s»."
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "No se pudo abrir el fichero «%s»"
@@ -3886,11 +3909,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "No se pudo convertir %s a entero: fuera de rango"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Fallo al obtener %s  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3901,6 +3919,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Calculando la actualización"
+
+#~ msgid "(not found)"
+#~ msgstr "(no encontrado)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Pin del paquete: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr ""

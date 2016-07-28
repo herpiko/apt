@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2010-08-30 02:31+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <debian-l10n-korean@lists.debian.org>\n"
@@ -228,10 +228,10 @@ msgid ""
 "unauthenticated"
 msgstr "문제가 발생했고 -y 옵션이 --force-yes 옵션 없이 사용되었습니다"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "%s 파일을 받는데 실패했습니다  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "%s 파일을 받는데 실패했습니다  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -526,17 +526,19 @@ msgid_plural ""
 "There are %i additional versions. Please use the '-a' switch to see them."
 msgstr[0] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "알림: 시험 동작입니다!\n"
-"      실행하려면 apt-get을 실행할 때 루트 권한이 필요합니다.\n"
+"      실행하려면 %s을 실행할 때 루트 권한이 필요합니다.\n"
 "      또 잠금 기능을 사용하지 않는 상태이므로, 현재 상황에 의존하지\n"
-"      않도록 하십시오!"
+"      않도록 하십시오!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -744,10 +746,6 @@ msgstr "캐시가 동기화되지 않았습니다. 패키지 파일을 상호 �
 msgid "Pinned packages:"
 msgstr "핀 패키지:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(없음)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -765,10 +763,6 @@ msgstr "  후보: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(없음)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  패키지 핀: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1669,6 +1663,21 @@ msgstr "질의"
 msgid "Unable to invoke "
 msgstr "다음을 실행할 수 없습니다: "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "최소한 하나 이상의 서명이 잘못되었습니다."
@@ -1683,14 +1692,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "서명을 확인하는 'apt-key' 프로그램을 실행할 수 없습니다. (gnupg를 설치했습니"
 "까?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1879,6 +1880,20 @@ msgstr "오류만 중요합니다. 이 오류를 고친 다음에 설치(I)를 �
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "이용 가능 패키지 정보를 합칩니다"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "%s 프로세스를 기다렸지만 해당 프로세스가 없습니다"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2417,14 +2432,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "이름 바꾸기가 실패했습니다. %s (%s -> %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "%s 디렉터리가 전환되었습니다"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "%s 디렉터리가 전환되었습니다"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "%s 디렉터리가 전환되었습니다"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "%s 디렉터리가 전환되었습니다"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "%s 디렉터리가 전환되었습니다"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "해시 합이 맞지 않습니다"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "이름 바꾸기가 실패했습니다. %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2490,33 +2540,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "배포판 충돌: %s (예상값 %s, 실제값 %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "%s 디렉터리가 전환되었습니다"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "%s 디렉터리가 전환되었습니다"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "%s 디렉터리가 전환되었습니다"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -2940,11 +2963,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "%s 프로세스를 기다렸지만 해당 프로세스가 없습니다"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3158,13 +3176,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Release 파일 %s에 'Date' 항목이 잘못되었습니다"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Release 파일 %s에 'Valid-Until' 항목이 잘못되었습니다"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Release 파일 %s에 '%s' 항목이 잘못되었습니다"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3175,6 +3188,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3245,7 +3263,7 @@ msgstr "설치 후 트리거 %s 실행하는 중입니다"
 msgid "Directory '%s' missing"
 msgstr "디렉터리 '%s' 없습니다."
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "'%s' 파일을 열 수 없습니다"
@@ -3661,11 +3679,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "%s 파일을 받는데 실패했습니다  %s\n"
-
-#: apt-pkg/update.cc
 #, fuzzy
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
@@ -3677,6 +3690,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "업그레이드를 계산하는 중입니다"
+
+#~ msgid "(not found)"
+#~ msgstr "(없음)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  패키지 핀: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "다음 키 ID의 공개키가 없습니다:\n"

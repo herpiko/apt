@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.9.3\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
-"PO-Revision-Date: 2016-03-31 09:45+0900\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
+"PO-Revision-Date: 2016-05-18 15:31+0900\n"
 "Last-Translator: Takuma Yamada <tyamada@takumayamada.com>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "Language: ja\n"
@@ -244,10 +244,10 @@ msgstr ""
 "認証されていないパッケージがあり、-y オプションが --allow-unauthenticated な"
 "しで使用されました"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "%s の取得に失敗しました  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "%s の取得に失敗しました  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -551,17 +551,19 @@ msgid_plural ""
 msgstr[0] ""
 "追加バージョンが %i 件あります。表示するには '-a' スイッチを付けてください。"
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "注意: これはシミュレーションにすぎません!\n"
-"      apt-get は実際の実行に root 権限を必要とします。\n"
+"      %s は実際の実行に root 権限を必要とします。\n"
 "      ロックが非アクティブであることから、今この時点の状態に妥当性が\n"
-"      あるとは言い切れないことに注意してください!"
+"      あるとは言い切れないことに注意してください!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -767,10 +769,6 @@ msgstr "キャッシュが同期しておらず、パッケージファイルを
 msgid "Pinned packages:"
 msgstr "Pin されたパッケージ:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(見つかりません)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -788,10 +786,6 @@ msgstr "  候補: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(なし)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  パッケージ Pin: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1736,6 +1730,25 @@ msgstr "問い合わせ"
 msgid "Unable to invoke "
 msgstr "呼び出せません"
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"クリアサインされたファイルが有効ではなく、'%s' を得ました (認証にネットワーク"
+"が必要?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"クリアサインされたファイルが有効ではなく、'%s' を得ました (認証にネットワーク"
+"が必要?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "少なくとも 1 つの不正な署名が発見されました。"
@@ -1750,16 +1763,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "署名を検証するための 'apt-key' の実行ができませんでした (gnupg はインストール"
 "されていますか?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"クリアサインされたファイルが有効ではなく、'%s' を得ました (認証にネットワーク"
-"が必要?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1948,6 +1951,20 @@ msgstr "が重要です。これを修正して「導入」を再度実行して
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "入手可能情報をマージしています"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "%s を待ちましたが、そこにはありませんでした"
 
 #: cmdline/apt-extracttemplates.cc
 msgid ""
@@ -2483,14 +2500,53 @@ msgstr ""
 "リポジトリの作成とユーザ設定の詳細は、apt-secure(8) man ページを参照してくだ"
 "さい。"
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "名前の変更に失敗しました。%s (%s -> %s)"
+msgid "The repository '%s' is no longer signed."
+msgstr "リポジトリ %s はもう署名されていません。"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "リポジトリ %s には Release ファイルがありません。"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"通常は許可されませんが、オプション Acquire::"
+"AllowDowngradeToInsecureRepositories が上書きするために指定されました。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' is not signed."
+msgstr "リポジトリ %s は署名されていません。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "リポジトリ %s には Release ファイルがありません。"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr ""
+"リポジトリ '%2$s' は弱いセキュリティ情報のみを提供しているため、設定ファイル "
+"'%1$s' の取得をスキップします"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "ハッシュサムが適合しません"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "名前の変更に失敗しました。%s (%s -> %s)"
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2564,35 +2620,6 @@ msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 "ディストリビューションが競合しています: %s (%s を期待していたのに %s を取得し"
 "ました)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is not signed."
-msgstr "リポジトリ %s は署名されていません。"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "リポジトリ %s には Release ファイルがありません。"
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "リポジトリ %s はもう署名されていません。"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"通常は許可されませんが、オプション Acquire::"
-"AllowDowngradeToInsecureRepositories が上書きするために指定されました。"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3039,11 +3066,6 @@ msgstr ""
 "ディレクトリ '%2$s' の '%1$s' が無効なファイル名拡張子を持っているため、無視"
 "します"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "%s を待ちましたが、そこにはありませんでした"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3261,13 +3283,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Release ファイル %s に無効な 'Date' エントリがあります"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Release ファイル %s に無効な 'Valid-Until' エントリがあります"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Release ファイル %2$s に無効な '%1$s' エントリがあります"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3280,6 +3297,11 @@ msgstr "ソース %2$s %3$s に関してオプション %1$s の値が競合し�
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr ""
 "ソース %2$s %3$s (%4$s) に関してオプション %1$s に設定された値が無効です"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, fuzzy, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr "ソース %2$s %3$s に関してオプション %1$s の値が競合します"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3351,7 +3373,7 @@ msgstr "インストール後トリガ %s を実行しています"
 msgid "Directory '%s' missing"
 msgstr "ディレクトリ '%s' が見つかりません"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "ファイル '%s' をオープンできませんでした"
@@ -3777,11 +3799,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "%s を整数に変換できません: 範囲外"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "%s の取得に失敗しました  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3793,21 +3810,17 @@ msgstr ""
 msgid "Calculating upgrade"
 msgstr "アップグレードパッケージを検出しています"
 
-#, fuzzy
-#~ msgid ""
-#~ "Signed file isn't valid, got '%s' (does the network require "
-#~ "authentication?)"
-#~ msgstr ""
-#~ "クリアサインされたファイルが有効ではなく、'%s' を得ました (認証にネット"
-#~ "ワークが必要?)"
+#~ msgid "Failed to fetch %s  %s\n"
+#~ msgstr "%s の取得に失敗しました  %s\n"
 
-#~ msgid "Invalid '%s' entry in Release file %s"
-#~ msgstr "Release ファイル %2$s に無効な '%1$s' エントリがあります"
+#~ msgid "(not found)"
+#~ msgstr "(見つかりません)"
 
-#, fuzzy
-#~ msgid ""
-#~ "Conflicting values set for option %s regarding source %s %s: %s != %s"
-#~ msgstr "ソース %2$s %3$s に関してオプション %1$s の値が競合します"
+#~ msgid "  Package pin: "
+#~ msgstr "  パッケージ Pin: "
+
+#~ msgid "Invalid 'Valid-Until' entry in Release file %s"
+#~ msgstr "Release ファイル %s に無効な 'Valid-Until' エントリがあります"
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "以下の鍵 ID に対して利用可能な公開鍵がありません:\n"

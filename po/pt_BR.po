@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2008-11-17 02:33-0200\n"
 "Last-Translator: Felipe Augusto van de Wiel (faw) <faw@debian.org>\n"
 "Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
@@ -231,10 +231,10 @@ msgid ""
 "unauthenticated"
 msgstr "Há problemas e -y foi usado sem --force-yes"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Falhou ao buscar %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Falhou ao buscar %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -538,12 +538,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 
 #: apt-private/private-output.cc apt-private/private-show.cc
@@ -757,10 +759,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Pacotes alfinetados (\"pinned\"):"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(não encontrado)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -778,10 +776,6 @@ msgstr "  Candidato: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(nenhum)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Pacote alfinetado (\"pin\"): "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1685,6 +1679,21 @@ msgstr "Pesquisa"
 msgid "Unable to invoke "
 msgstr "Impossível invocar "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Ao menos uma assinatura inválida foi encontrada."
@@ -1702,14 +1711,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Não foi possível executar '%s' para verificar a assinatura (o gnupg está "
 "instalado?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1907,6 +1908,20 @@ msgstr "são importantes. Por favor, conserte-os e execute [I]nstalar novamente"
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Mesclando informação disponível"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Esperado %s mas este não estava lá"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2447,14 +2462,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "renomeação falhou, %s (%s -> %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "O diretório %s é desviado (\"diverted\")"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "O diretório %s é desviado (\"diverted\")"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "O diretório %s é desviado (\"diverted\")"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "O diretório %s é desviado (\"diverted\")"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "O diretório %s é desviado (\"diverted\")"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hash Sum incorreto"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "renomeação falhou, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2517,33 +2567,6 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
-msgstr ""
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "O diretório %s é desviado (\"diverted\")"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "O diretório %s é desviado (\"diverted\")"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "O diretório %s é desviado (\"diverted\")"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -2974,11 +2997,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Esperado %s mas este não estava lá"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3191,12 +3209,7 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, fuzzy, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Impossível analisar arquivo de pacote %s (1)"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, fuzzy, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
+msgid "Invalid '%s' entry in Release file %s"
 msgstr "Linha inválida no arquivo de desvios: %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
@@ -3208,6 +3221,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3275,7 +3293,7 @@ msgstr "Executando gatilho pós-instalação %s"
 msgid "Directory '%s' missing"
 msgstr "Diretório '%s' está faltando"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "Não foi possível abrir arquivo %s"
@@ -3691,11 +3709,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Falhou ao buscar %s  %s\n"
-
-#: apt-pkg/update.cc
 #, fuzzy
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
@@ -3707,6 +3720,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Calculando atualização"
+
+#~ msgid "(not found)"
+#~ msgstr "(não encontrado)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Pacote alfinetado (\"pin\"): "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "Não existem chaves públicas para os seguintes IDs de chaves:\n"

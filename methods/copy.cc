@@ -13,7 +13,6 @@
 
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/strutl.h>
-#include <apt-pkg/acquire-method.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/hashes.h>
 #include <apt-pkg/configuration.h>
@@ -79,13 +78,8 @@ bool CopyMethod::Fetch(FetchItem *Itm)
    From.Close();
    To.Close();
 
-   // Transfer the modification times
-   struct timeval times[2];
-   times[0].tv_sec = Buf.st_atime;
-   times[1].tv_sec = Buf.st_mtime;
-   times[0].tv_usec = times[1].tv_usec = 0;
-   if (utimes(Res.Filename.c_str(), times) != 0)
-      return _error->Errno("utimes",_("Failed to set modification time"));
+   if (TransferModificationTimes(File.c_str(), Res.Filename.c_str(), Res.LastModified) == false)
+      return false;
 
    CalculateHashes(Itm, Res);
    URIDone(Res);
@@ -95,9 +89,5 @@ bool CopyMethod::Fetch(FetchItem *Itm)
 
 int main()
 {
-   setlocale(LC_ALL, "");
-
-   CopyMethod Mth;
-
-   return Mth.Run();
+   return CopyMethod().Run();
 }

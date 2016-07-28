@@ -3,8 +3,17 @@
 
 #include <apt-pkg/acquire-method.h>
 #include <apt-pkg/configuration.h>
+#include <apt-pkg/error.h>
 
+#include <locale>
 #include <string>
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <apti18n.h>
 
 class aptMethod : public pkgAcqMethod
 {
@@ -42,9 +51,38 @@ public:
       va_end(args);
    }
 
+   bool TransferModificationTimes(char const * const From, char const * const To, time_t &LastModified)
+   {
+      if (strcmp(To, "/dev/null") == 0)
+	 return true;
+
+      struct stat Buf2;
+      if (lstat(To, &Buf2) != 0 || S_ISLNK(Buf2.st_mode))
+	 return true;
+
+      struct stat Buf;
+      if (stat(From, &Buf) != 0)
+	 return _error->Errno("stat",_("Failed to stat"));
+
+      // we don't use utimensat here for compatibility reasons: #738567
+      struct timeval times[2];
+      times[0].tv_sec = Buf.st_atime;
+      LastModified = times[1].tv_sec = Buf.st_mtime;
+      times[0].tv_usec = times[1].tv_usec = 0;
+      if (utimes(To, times) != 0)
+	 return _error->Errno("utimes",_("Failed to set modification time"));
+      return true;
+   }
+
    aptMethod(char const * const Binary, char const * const Ver, unsigned long const Flags) :
       pkgAcqMethod(Ver, Flags), Binary(Binary)
-   {}
+   {
+      try {
+	 std::locale::global(std::locale(""));
+      } catch (...) {
+	 setlocale(LC_ALL, "");
+      }
+   }
 };
 
 #endif

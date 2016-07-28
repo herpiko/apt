@@ -66,7 +66,32 @@ std::string TimeToStr(unsigned long Sec);
 std::string Base64Encode(const std::string &Str);
 std::string OutputInDepth(const unsigned long Depth, const char* Separator="  ");
 std::string URItoFileName(const std::string &URI);
-std::string TimeRFC1123(time_t Date);
+APT_DEPRECATED_MSG("Specify if GMT is required or a numeric timezone can be used") std::string TimeRFC1123(time_t Date);
+/** returns a datetime string as needed by HTTP/1.1 and Debian files.
+ *
+ * Note: The date will always be represented in a UTC timezone
+ *
+ * @param Date to be represented as a string
+ * @param NumericTimezone is preferred in general, but HTTP/1.1 requires the use
+ *    of GMT as timezone instead. \b true means that the timezone should be denoted
+ *    as "+0000" while \b false uses "GMT".
+ */
+std::string TimeRFC1123(time_t Date, bool const NumericTimezone);
+/** parses time as needed by HTTP/1.1 and Debian files.
+ *
+ * HTTP/1.1 prefers dates in RFC1123 format (but the other two obsolete date formats
+ * are supported to) and e.g. Release files use the same format in Date & Valid-Until
+ * fields.
+ *
+ * Note: datetime strings need to be in UTC timezones (GMT, UTC, Z, +/-0000) to be
+ * parsed. Other timezones will be rejected as invalid. Previous implementations
+ * accepted other timezones, but treated them as UTC.
+ *
+ * @param str is the datetime string to parse
+ * @param[out] time will be the seconds since epoch of the given datetime if
+ *    parsing is successful, undefined otherwise.
+ * @return \b true if parsing was successful, otherwise \b false.
+ */
 bool RFC1123StrToTime(const char* const str,time_t &time) APT_MUSTCHECK;
 bool FTPMDTMStrToTime(const char* const str,time_t &time) APT_MUSTCHECK;
 APT_DEPRECATED_MSG("Use RFC1123StrToTime or FTPMDTMStrToTime as needed instead") bool StrToTime(const std::string &Val,time_t &Result);

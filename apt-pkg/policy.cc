@@ -132,104 +132,6 @@ bool pkgPolicy::InitDefaults()
    best package is. */
 pkgCache::VerIterator pkgPolicy::GetCandidateVer(pkgCache::PkgIterator const &Pkg)
 {
-   if (_config->FindI("APT::Policy", 1) >= 1) {
-      return GetCandidateVerNew(Pkg);
-   }
-
-   // Look for a package pin and evaluate it.
-   signed Max = GetPriority(Pkg);
-   pkgCache::VerIterator Pref = GetMatch(Pkg);
-
-   // Alternatives in case we can not find our package pin (Bug#512318).
-   signed MaxAlt = 0;
-   pkgCache::VerIterator PrefAlt;
-
-   // no package = no candidate version
-   if (Pkg.end() == true)
-      return Pref;
-
-   // packages with a pin lower than 0 have no newer candidate than the current version
-   if (Max < 0)
-      return Pkg.CurrentVer();
-
-   /* Falling through to the default version.. Setting Max to zero
-      effectively excludes everything <= 0 which are the non-automatic
-      priorities.. The status file is given a prio of 100 which will exclude
-      not-automatic sources, except in a single shot not-installed mode.
-
-      The user pin is subject to the same priority rules as default 
-      selections. Thus there are two ways to create a pin - a pin that
-      tracks the default when the default is taken away, and a permanent
-      pin that stays at that setting.
-    */
-   bool PrefSeen = false;
-   for (pkgCache::VerIterator Ver = Pkg.VersionList(); Ver.end() == false; ++Ver)
-   {
-      /* Lets see if this version is the installed version */
-      bool instVer = (Pkg.CurrentVer() == Ver);
-
-      if (Pref == Ver)
-	 PrefSeen = true;
-
-      for (pkgCache::VerFileIterator VF = Ver.FileList(); VF.end() == false; ++VF)
-      {
-	 /* If this is the status file, and the current version is not the
-	    version in the status file (ie it is not installed, or somesuch)
-	    then it is not a candidate for installation, ever. This weeds
-	    out bogus entries that may be due to config-file states, or
-	    other. */
-	 if (VF.File().Flagged(pkgCache::Flag::NotSource) && instVer == false)
-	    continue;
-
-	 signed Prio = PFPriority[VF.File()->ID];
-	 if (Prio > Max)
-	 {
-	    Pref = Ver;
-	    Max = Prio;
-	    PrefSeen = true;
-	 }
-	 if (Prio > MaxAlt)
-	 {
-	    PrefAlt = Ver;
-	    MaxAlt = Prio;
-	 }
-      }
-
-      if (instVer == true && Max < 1000)
-      {
-	 /* Not having seen the Pref yet means we have a specific pin below 1000
-	    on a version below the current installed one, so ignore the specific pin
-	    as this would be a downgrade otherwise */
-	 if (PrefSeen == false || Pref.end() == true)
-	 {
-	    Pref = Ver;
-	    PrefSeen = true;
-	 }
-	 /* Elevate our current selection (or the status file itself) so that only
-	    a downgrade can override it from now on */
-	 Max = 999;
-
-	 // Fast path optimize.
-	 if (StatusOverride == false)
-	    break;
-      }
-   }
-   // If we do not find our candidate, use the one with the highest pin.
-   // This means that if there is a version available with pin > 0; there
-   // will always be a candidate (Closes: #512318)
-   if (!Pref.IsGood() && MaxAlt > 0)
-       Pref = PrefAlt;
-
-   return Pref;
-}
-									/*}}}*/
-// Policy::GetCandidateVerNew - Get the candidate install version	/*{{{*/
-// ---------------------------------------------------------------------
-/* Evaluate the package pins and the default list to deteremine what the
-   best package is. */
-pkgCache::VerIterator pkgPolicy::GetCandidateVerNew(pkgCache::PkgIterator const &Pkg)
-{
-   // TODO: Replace GetCandidateVer()
    pkgCache::VerIterator cand;
    pkgCache::VerIterator cur = Pkg.CurrentVer();
    int candPriority = -1;
@@ -374,7 +276,8 @@ APT_PURE signed short pkgPolicy::GetPriority(pkgCache::VerIterator const &Ver, b
    if (!ConsiderFiles)
       return 0;
 
-   int priority = std::numeric_limits<int>::min();
+   // priorities are short ints, but we want to pick a value outside the valid range here
+   auto priority = std::numeric_limits<signed int>::min();
    for (pkgCache::VerFileIterator file = Ver.FileList(); file.end() == false; file++)
    {
       /* If this is the status file, and the current version is not the
@@ -382,14 +285,13 @@ APT_PURE signed short pkgPolicy::GetPriority(pkgCache::VerIterator const &Ver, b
          then it is not a candidate for installation, ever. This weeds
          out bogus entries that may be due to config-file states, or
          other. */
-      if (file.File().Flagged(pkgCache::Flag::NotSource) && Ver.ParentPkg().CurrentVer() != Ver) {
-	 // Ignore
-      } else if (GetPriority(file.File()) > priority) {
-	 priority = GetPriority(file.File());
-      }
+      if (file.File().Flagged(pkgCache::Flag::NotSource) && Ver.ParentPkg().CurrentVer() != Ver)
+	 priority = std::max(priority, static_cast<decltype(priority)>(-1));
+      else
+	 priority = std::max(priority, static_cast<decltype(priority)>(GetPriority(file.File())));
    }
 
-   return priority == std::numeric_limits<int>::min() ? 0 : priority;
+   return priority == std::numeric_limits<decltype(priority)>::min() ? 0 : priority;
 }
 APT_PURE signed short pkgPolicy::GetPriority(pkgCache::PkgFileIterator const &File)
 {
@@ -405,11 +307,11 @@ APT_PURE signed short pkgPolicy::GetPriority(pkgCache::PkgFileIterator const &Fi
 bool ReadPinDir(pkgPolicy &Plcy,string Dir)
 {
    if (Dir.empty() == true)
-      Dir = _config->FindDir("Dir::Etc::PreferencesParts");
+      Dir = _config->FindDir("Dir::Etc::PreferencesParts", "/dev/null");
 
    if (DirectoryExists(Dir) == false)
    {
-      if (Dir != "/dev/null")
+      if (APT::String::Endswith(Dir, "/dev/null") == false)
 	 _error->WarningE("DirectoryExists",_("Unable to read %s"),Dir.c_str());
       return true;
    }

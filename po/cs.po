@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2015-08-29 15:24+0200\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
@@ -231,10 +231,10 @@ msgid ""
 msgstr ""
 "Vyskytly se neověřené balíky a -y bylo použito bez --allow-unauthenticated."
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Selhalo stažení %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Selhalo stažení %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -542,17 +542,19 @@ msgstr[0] "Existuje %i další verze. Zobrazíte ji přepínačem „-a“."
 msgstr[1] "Existují %i další verze. Zobrazíte je přepínačem „-a“."
 msgstr[2] "Existuje %i dalších verzí. Zobrazíte je přepínačem „-a“."
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "INFO: Toto je pouze simulace!\n"
-"      apt-get vyžaduje pro skutečný běh rootovská oprávnění.\n"
+"      %s vyžaduje pro skutečný běh rootovská oprávnění.\n"
 "      Mějte také na paměti, že je vypnuto zamykání, tudíž\n"
-"      tyto výsledky nemusí mít s realitou nic společného!"
+"      tyto výsledky nemusí mít s realitou nic společného!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -759,10 +761,6 @@ msgstr "Cache není synchronizovaná, nelze se odkázat na soubor balíku"
 msgid "Pinned packages:"
 msgstr "Vypíchnuté balíky:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(nenalezeno)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -780,10 +778,6 @@ msgstr "  Kandidát: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(žádná)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Vypíchnutý balík: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1696,6 +1690,25 @@ msgstr "Dotaz"
 msgid "Unable to invoke "
 msgstr "Nelze vyvolat "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Podepsaný soubor není platný, obdrženo „%s“ (vyžaduje přístup na síť "
+"ověření?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Podepsaný soubor není platný, obdrženo „%s“ (vyžaduje přístup na síť "
+"ověření?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Byl zaznamenán nejméně jeden neplatný podpis. "
@@ -1708,16 +1721,6 @@ msgstr "Vnitřní chyba: Dobrý podpis, ale nelze zjistit otisk klíče?!"
 #: methods/gpgv.cc
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr "Nelze spustit „apt-key“ pro ověření podpisu (je gnupg nainstalováno?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Podepsaný soubor není platný, obdrženo „%s“ (vyžaduje přístup na síť "
-"ověření?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1908,6 +1911,20 @@ msgstr "chyby nad touto hláškou. Opravte je a poté znovu spusťte [I]nstalova
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Slučují se dostupné informace"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Čekali jsme na %s, ale nebyl tam"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2441,14 +2458,51 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "přejmenování selhalo, %s (%s -> %s)."
+msgid "The repository '%s' is no longer signed."
+msgstr "Repositář „%s“ není podepsán."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Repositář „%s“ není podepsán."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"Toto není běžně povoleno, ale bylo to vynuceno volbou Acquire::"
+"AllowDowngradeToInsecureRepositories."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Repositář „%s“ není podepsán."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Repositář „%s“ není podepsán."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "Repositář „%s“ není podepsán."
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Neshoda kontrolních součtů"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "přejmenování selhalo, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2516,35 +2570,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konfliktní distribuce: %s (očekáváno %s, obdrženo %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Repositář „%s“ není podepsán."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Repositář „%s“ není podepsán."
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Repositář „%s“ není podepsán."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"Toto není běžně povoleno, ale bylo to vynuceno volbou Acquire::"
-"AllowDowngradeToInsecureRepositories."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -2977,11 +3002,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr "Ignoruji soubor „%s“ v adresáři „%s“, jelikož má neplatnou příponu"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Čekali jsme na %s, ale nebyl tam"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3196,13 +3216,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Neplatná položka „Date“ v Release souboru %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Neplatná položka „Valid-Until“ v Release souboru %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Neplatná položka „%s“ v Release souboru %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3214,6 +3229,11 @@ msgstr "Pro volbu %s byly nastaveny kolidující hodnoty zdroje %s %s"
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr "Pro volbu %s byla nastavena kolidující hodnota zdroje %s %s (%s)"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, fuzzy, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr "Pro volbu %s byly nastaveny kolidující hodnoty zdroje %s %s"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3280,7 +3300,7 @@ msgstr "Spouští se poinstalační spouštěč %s"
 msgid "Directory '%s' missing"
 msgstr "Adresář „%s“ chybí"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Nelze otevřít soubor „%s“"
@@ -3703,11 +3723,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "Nelze převést %s na celé číslo (integer)"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Selhalo stažení %s  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3718,6 +3733,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Propočítává se aktualizace"
+
+#~ msgid "(not found)"
+#~ msgstr "(nenalezeno)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Vypíchnutý balík: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "K následujícím ID klíčů není dostupný veřejný klíč:\n"

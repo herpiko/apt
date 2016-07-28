@@ -352,23 +352,37 @@ string pkgAcquire::QueueName(string Uri,MethodConfig const *&Config)
       return U.Access;
 
    string AccessSchema = U.Access + ':';
-	string FullQueueName;
+   string FullQueueName;
 
    if (U.Host.empty())
    {
-      long randomQueue = random();
+      long existing = 0;
+      // check how many queues exist already and reuse empty ones
+      for (Queue const *I = Queues; I != 0; I = I->Next)
+	 if (I->Name.compare(0, AccessSchema.length(), AccessSchema) == 0)
+	 {
+	    if (I->Items == nullptr)
+	       return I->Name;
+	    ++existing;
+	 }
+
 #ifdef _SC_NPROCESSORS_ONLN
       long cpuCount = sysconf(_SC_NPROCESSORS_ONLN) * 2;
 #else
-      long cpuCount = _config->FindI("Acquire::QueueHost::Limit",10);
+      long cpuCount = 10;
 #endif
-      if (cpuCount > 0)
-         randomQueue %= cpuCount;
+      cpuCount = _config->FindI("Acquire::QueueHost::Limit", cpuCount);
 
-      strprintf(FullQueueName, "%s%ld", AccessSchema.c_str(), randomQueue);
-      if (Debug) {
-         clog << "Chose random queue " << FullQueueName << " for " << Uri << endl;
+      if (cpuCount <= 0 || existing < cpuCount)
+	 strprintf(FullQueueName, "%s%ld", AccessSchema.c_str(), existing);
+      else
+      {
+	 long const randomQueue = random() % cpuCount;
+	 strprintf(FullQueueName, "%s%ld", AccessSchema.c_str(), randomQueue);
       }
+
+      if (Debug)
+         clog << "Chose random queue " << FullQueueName << " for " << Uri << endl;
    } else
    {
       FullQueueName = AccessSchema + U.Host;
@@ -452,7 +466,7 @@ void pkgAcquire::SetFds(int &Fd,fd_set *RSet,fd_set *WSet)
 void pkgAcquire::RunFds(fd_set *RSet,fd_set *WSet)
 {
    RunFdsSane(RSet, WSet);
-};
+}
 									/*}}}*/
 // Acquire::RunFdsSane - Deal with active FDs				/*{{{*/
 // ---------------------------------------------------------------------
@@ -1133,7 +1147,7 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
    // Compute the total number of bytes to fetch
    unsigned int Unknown = 0;
    unsigned int Count = 0;
-   bool UnfetchedReleaseFiles = false;
+   bool ExpectAdditionalItems = false;
    for (pkgAcquire::ItemCIterator I = Owner->ItemsBegin(); 
         I != Owner->ItemsEnd();
 	++I, ++Count)
@@ -1142,12 +1156,9 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
       if ((*I)->Status == pkgAcquire::Item::StatDone)
 	 ++CurrentItems;
 
-      // see if the method tells us to expect more
-      TotalItems += (*I)->ExpectedAdditionalItems;
-
-      // check if there are unfetched Release files
-      if ((*I)->Status != pkgAcquire::Item::StatDone && (*I)->ExpectedAdditionalItems > 0)
-         UnfetchedReleaseFiles = true;
+      // do we expect to acquire more files than we know of yet?
+      if ((*I)->ExpectedAdditionalItems > 0)
+         ExpectAdditionalItems = true;
 
       TotalBytes += (*I)->FileSize;
       if ((*I)->Complete == true)
@@ -1204,7 +1215,7 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
 
    double const OldPercent = Percent;
    // calculate the percentage, if we have too little data assume 1%
-   if (TotalBytes > 0 && UnfetchedReleaseFiles)
+   if (ExpectAdditionalItems)
       Percent = 0;
    else
       // use both files and bytes because bytes can be unreliable

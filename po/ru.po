@@ -7,13 +7,13 @@
 # Dmitry Astapov <adept@umc.com.ua>, 2004.
 # Dmitry Astapov <adept@despammed.com>, 2004.
 # Yuri Kozlov <kozlov.y@gmail.com>, 2004, 2005, 2006, 2007, 2008.
-# Yuri Kozlov <yuray@komyakino.ru>, 2009, 2010, 2012, 2015.
+# Yuri Kozlov <yuray@komyakino.ru>, 2009, 2010, 2012, 2015, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 1.0.9.10\n"
+"Project-Id-Version: apt 1.2.12\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
-"PO-Revision-Date: 2015-06-23 20:40+0300\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
+"PO-Revision-Date: 2016-05-19 20:50+0300\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
 "Language: ru\n"
@@ -246,10 +246,10 @@ msgstr ""
 "Обнаружены неудостоверенные пакеты и был указан параметр -y без --allow-"
 "unauthenticated."
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Не удалось получить %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Не удалось получить %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -567,17 +567,19 @@ msgstr[0] "Есть %i дополнительная версия. Использ
 msgstr[1] "Есть %i дополнительные версии. Используйте «-a» для их просмотра"
 msgstr[2] "Есть %i дополнительных версий. Используйте «-a» для их просмотра"
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "ЗАМЕЧАНИЕ: Производить только имитация работы!\n"
-"      Для реальной работы apt-get требуются права суперпользователя.\n"
+"      Для реальной работы %s требуются права суперпользователя.\n"
 "      Учтите, что блокировка не используется,\n"
-"      поэтому нет полного соответствия с текущей реальной ситуацией!"
+"      поэтому нет полного соответствия с текущей реальной ситуацией!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -785,10 +787,6 @@ msgstr "Кэш рассинхронизирован, невозможно обн
 msgid "Pinned packages:"
 msgstr "Зафиксированные пакеты:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(не найдено)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -806,10 +804,6 @@ msgstr "  Кандидат: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(отсутствует)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Фиксатор пакета: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1760,6 +1754,25 @@ msgstr "Запрос"
 msgid "Unable to invoke "
 msgstr "Невозможно вызвать "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Некорректный подписанный файл, получено «%s» (возможно в сети требуется "
+"аутентификация?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Подписанный файл некорректен, получено «%s» (возможно в сети требуется "
+"аутентификация?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Найдена как минимум одна неправильная подпись."
@@ -1775,16 +1788,6 @@ msgstr ""
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Не удалось выполнить «apt-key» для проверки подписи (gnupg установлена?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Некорректный подписанный файл, получено «%s» (возможно в сети требуется "
-"аутентификация?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1979,6 +1982,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Слияние доступной информации"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Ожидалось завершение процесса %s, но он не был запущен"
 
 #: cmdline/apt-extracttemplates.cc
 msgid ""
@@ -2520,14 +2537,53 @@ msgstr ""
 "Смотрите справочную страницу apt-secure(8) о создании репозитория и "
 "настройке пользователя."
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "переименовать не удалось, %s (%s -> %s)."
+msgid "The repository '%s' is no longer signed."
+msgstr "Репозиторий «%s» больше не подписан."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Репозиторий «%s» не содержит файла Release."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"Обычно это не разрешается, но указан параметр Acquire::"
+"AllowDowngradeToInsecureRepositories для игнорирования."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Репозиторий «%s» не подписан."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Репозиторий «%s» не содержит файла Release."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr ""
+"Пропускается получение настроенного файла «s», так как репозиторий «%s»  "
+"предоставляет только нестойкое шифрование информации"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Хеш сумма не совпадает"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "переименовать не удалось, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2599,35 +2655,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Конфликт распространения: %s (ожидался %s, но получен %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Репозиторий «%s» не подписан."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Репозиторий «%s» не содержит файла Release."
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Репозиторий «%s» больше не подписан."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"Обычно это не разрешается, но указан параметр Acquire::"
-"AllowDowngradeToInsecureRepositories для игнорирования."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3074,11 +3101,6 @@ msgstr ""
 "Файл «%s» в каталоге «%s» игнорируется, так как он не имеет неправильное "
 "расширение"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Ожидалось завершение процесса %s, но он не был запущен"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3298,13 +3320,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Неправильный элемент «Date» в файле Release %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Неправильный элемент «Valid-Until» в файле Release %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Неправильный элемент «%s» в файле Release %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3316,6 +3333,11 @@ msgstr "Указаны конфликтующие значения параме�
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr "Указано некорректное значения параметра %s из источника %s %s (%s)"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, fuzzy, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr "Указаны конфликтующие значения параметра %s из источника %s %s"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3388,7 +3410,7 @@ msgstr "Выполняется послеустановочный триггер
 msgid "Directory '%s' missing"
 msgstr "Отсутствует каталог «%s»"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Не удалось открыть файл «%s»"
@@ -3821,11 +3843,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "Невозможно преобразовать %s в целое число: выход за пределы диапазона"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Не удалось получить %s  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3837,15 +3854,11 @@ msgstr ""
 msgid "Calculating upgrade"
 msgstr "Расчёт обновлений"
 
-#~ msgid ""
-#~ "Signed file isn't valid, got '%s' (does the network require "
-#~ "authentication?)"
-#~ msgstr ""
-#~ "Подписанный файл некорректен, получено «%s» (возможно в сети требуется "
-#~ "аутентификация?)"
+#~ msgid "(not found)"
+#~ msgstr "(не найдено)"
 
-#~ msgid "Invalid '%s' entry in Release file %s"
-#~ msgstr "Неправильный элемент «%s» в файле Release %s"
+#~ msgid "  Package pin: "
+#~ msgstr "  Фиксатор пакета: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "Недоступен открытый ключ для следующих ID ключей:\n"
@@ -4354,6 +4367,7 @@ msgstr "Расчёт обновлений"
 #~ msgstr "Нет доступа к связке (keyring) ключей: '%s'"
 
 #, fuzzy
+#~| msgid "Could not open file %s"
 #~ msgid "Could not patch file"
 #~ msgstr "Не удалось открыть файл %s"
 

@@ -14,7 +14,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2015-08-14T00:00:00Z</date>
+   <date>2016-07-07T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -249,8 +249,8 @@
 	      working with APT to get information as well as filenames for
 	      downloaded files so they can use them as well instead of
 	      downloading them again on their own. Detailed documentation is
-	      omitted here and can instead be found in the source tree in
-	      <literal><filename>doc/acquire-additional-files.txt</filename></literal>.
+	      omitted here and can instead be found in the file
+	      &apt-acquire-additional-files; shipped by the <package>apt-doc</package> package.
 	   </para>
 	</listitem>
      </varlistentry>
@@ -357,9 +357,8 @@
      Configuration Item: <literal>APT::Get::Assume-No</literal>.</para></listitem>
      </varlistentry>
 
-     <varlistentry><term><option>-u</option></term><term><option>--show-upgraded</option></term>
-     <listitem><para>Show upgraded packages; print out a list of all packages that are to be
-     upgraded. 
+     <varlistentry><term><option>--no-show-upgraded</option></term>
+     <listitem><para>Do not show a list of all packages that are to be upgraded.
      Configuration Item: <literal>APT::Get::Show-Upgraded</literal>.</para></listitem>
      </varlistentry>
 
@@ -564,8 +563,9 @@
 
      <varlistentry><term><option>--no-allow-insecure-repositories</option></term>
      <listitem><para>Forbid the update command to acquire unverifiable
-     data from configured sources. Apt will fail at the update command
-     for repositories without valid cryptographically signatures.
+     data from configured sources. APT will fail at the update command
+     for repositories without valid cryptographically signatures. See
+     also &apt-secure; for details on the concept and the implications.
 
      Configuration Item: <literal>Acquire::AllowInsecureRepositories</literal>.</para></listitem>
      </varlistentry>

@@ -19,7 +19,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2015-12-14T00:00:00Z</date>
+   <date>2016-07-07T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -170,6 +170,29 @@ DPkg::Pre-Install-Pkgs {"/usr/sbin/dpkg-preconfigure --apt";};
      (<literal>APT::Architecture</literal>), and foreign architectures are
      added to the default list when they are registered via
      <command>dpkg --add-architecture</command>.
+     </para></listitem>
+     </varlistentry>
+
+     <varlistentry><term><option>Compressor</option></term>
+     <listitem><para>
+     This scope defines which compression formats are supported, how compression
+     and decompression can be performed if support for this format isn't built
+     into apt directly and a cost-value indicating how costly it is to compress
+     something in this format. As an example the following configuration stanza
+     would allow apt to download and uncompress as well as create and store
+     files with the low-cost <literal>.reversed</literal> file extension which
+     it will pass to the command <command>rev</command> without additional
+     commandline parameters for compression and uncompression:
+<informalexample><programlisting>
+APT::Compressor::rev {
+	Name "rev";
+	Extension ".reversed";
+	Binary "rev";
+	CompressArg {};
+	UncompressArg {};
+	Cost "10";
+};
+</programlisting></informalexample>
      </para></listitem>
      </varlistentry>
 
@@ -421,15 +444,20 @@ DPkg::Pre-Install-Pkgs {"/usr/sbin/dpkg-preconfigure --apt";};
      only if the client uses a known identifier.</para>
 
      <para><literal>Acquire::http::Proxy-Auto-Detect</literal> can be used to
-     specify an external command to discover the http proxy to use. Apt expects
-     the command to output the proxy on stdout in the style
-     <literal>http://proxy:port/</literal>. This will override the
-     generic <literal>Acquire::http::Proxy</literal> but not any specific
-     host proxy configuration set via 
-     <literal>Acquire::http::Proxy::$HOST</literal>.
+     specify an external command to discover the http proxy to use. The first
+     and only parameter is an URI denoting the host to be contacted to allow
+     for host-specific configuration. APT expects the command to output the
+     proxy on stdout as a single line in the style <literal>http://proxy:port/</literal>
+     or the word <literal>DIRECT</literal> if no proxy should be used. No output
+     indicates that the generic proxy settings should be used.
+
+     Note that auto-detection will not be used for a host if a host-specific proxy
+     configuration is already set via <literal>Acquire::http::Proxy::<replaceable>HOST</replaceable></literal>.
 
      See the &squid-deb-proxy-client; package for an example implementation that
-     uses avahi. This option takes precedence over the legacy option name 
+     uses avahi.
+
+     This option takes precedence over the legacy option name
      <literal>ProxyAutoDetect</literal>.
      </para>
 
@@ -529,25 +557,25 @@ DPkg::Pre-Install-Pkgs {"/usr/sbin/dpkg-preconfigure --apt";};
      <varlistentry><term><option>CompressionTypes</option></term>
      <listitem><para>List of compression types which are understood by the acquire methods.
      Files like <filename>Packages</filename> can be available in various compression formats.
-     By default the acquire methods can decompress <command>bzip2</command>, <command>lzma</command>
-     and <command>gzip</command> compressed files; with this setting more formats can be added
-     on the fly or the used method can be changed. The syntax for this is:
+     By default the acquire methods can decompress and recompress many common formats like <command>xz</command> and
+     <command>gzip</command>; with this scope the supported formats can be queried, modified
+     as well as support for more formats added (see also <option>APT::Compressor</option>). The syntax for this is:
      <synopsis>Acquire::CompressionTypes::<replaceable>FileExtension</replaceable> "<replaceable>Methodname</replaceable>";</synopsis>
      </para><para>Also, the <literal>Order</literal> subgroup can be used to define in which order
      the acquire system will try to download the compressed files. The acquire system will try the first
      and proceed with the next compression type in this list on error, so to prefer one over the other type
-     simply add the preferred type first - default types not already added will be implicitly appended
+     simply add the preferred type first - types not already added will be implicitly appended
      to the end of the list, so e.g. <synopsis>Acquire::CompressionTypes::Order:: "gz";</synopsis> can
-     be used to prefer <command>gzip</command> compressed files over <command>bzip2</command> and <command>lzma</command>.
-     If <command>lzma</command> should be preferred over <command>gzip</command> and <command>bzip2</command> the
-     configure setting should look like this: <synopsis>Acquire::CompressionTypes::Order { "lzma"; "gz"; };</synopsis>
+     be used to prefer <command>gzip</command> compressed files over all other compression formats.
+     If <command>xz</command> should be preferred over <command>gzip</command> and <command>bzip2</command> the
+     configure setting should look like this: <synopsis>Acquire::CompressionTypes::Order { "xz"; "gz"; };</synopsis>
      It is not needed to add <literal>bz2</literal> to the list explicitly as it will be added automatically.</para>
      <para>Note that the
      <literal>Dir::Bin::<replaceable>Methodname</replaceable></literal>
-     will be checked at run time. If this option has been set, the
-     method will only be used if this file exists; e.g. for the
-     <literal>bzip2</literal> method (the inbuilt) setting is:
-     <literallayout>Dir::Bin::bzip2 "/bin/bzip2";</literallayout>
+     will be checked at run time. If this option has been set and support for
+     this format isn't directly built into apt, the method will only be used if
+     this file exists; e.g. for the <literal>bzip2</literal> method (the
+     inbuilt) setting is: <literallayout>Dir::Bin::bzip2 "/bin/bzip2";</literallayout>
      Note also that list entries specified on the command line will be added at the end of the list
      specified in the configuration files, but before the default entries. To prefer a type in this case
      over the ones specified in the configuration files you can set the option direct - not in list style.
@@ -622,27 +650,32 @@ DPkg::Pre-Install-Pkgs {"/usr/sbin/dpkg-preconfigure --apt";};
 
      <varlistentry><term><option>AllowInsecureRepositories</option></term>
 	 <listitem><para>
-           Allow the update operation to load data files from
-           a repository without a trusted signature. If enabled this
-           option no data files will be loaded and the update
-           operation fails with a error for this source. The default
-           is false for backward compatibility. This will be changed
-           in the future.
+	   Allow update operations to load data files from
+	   repositories without sufficient security information.
+	   The default value is "<literal>false</literal>".
+	   Concept, implications as well as alternatives are detailed in &apt-secure;.
+	 </para></listitem>
+     </varlistentry>
+
+     <varlistentry><term><option>AllowWeakRepositories</option></term>
+	 <listitem><para>
+	   Allow update operations to load data files from
+	   repositories which provide security information, but these
+	   are deemed no longer cryptographically strong enough.
+	   The default value is "<literal>false</literal>".
+	   Concept, implications as well as alternatives are detailed in &apt-secure;.
 	 </para></listitem>
      </varlistentry>
 
      <varlistentry><term><option>AllowDowngradeToInsecureRepositories</option></term>
 	 <listitem><para>
-           Allow that a repository that was previously gpg signed to become
-           unsigned durign a update operation. When there is no valid signature
-           of a perviously trusted repository apt will refuse the update. This
-           option can be used to override this protection. You almost certainly
-           never want to enable this. The default is false.
-
-           Note that apt will still consider packages from this source
-           untrusted and warn about them if you try to install
-           them.
-         </para></listitem>
+	   Allow that a repository that was previously gpg signed to become
+	   unsigned during an update operation. When there is no valid signature
+	   for a previously trusted repository apt will refuse the update. This
+	   option can be used to override this protection. You almost certainly
+	   never want to enable this. The default is <literal>false</literal>.
+	   Concept, implications as well as alternatives are detailed in &apt-secure;.
+	 </para></listitem>
      </varlistentry>
 
      <varlistentry><term><option>Changelogs::URI</option> scope</term>

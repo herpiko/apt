@@ -191,6 +191,7 @@ aptitude() { runapt aptitude "$@"; }
 aptextracttemplates() { runapt apt-extracttemplates "$@"; }
 aptinternalsolver() { runapt "${APTINTERNALSOLVER}" "$@"; }
 aptdumpsolver() { runapt "${APTDUMPSOLVER}" "$@"; }
+aptinternalplanner() { runapt "${APTINTERNALPLANNER}" "$@"; }
 
 dpkg() {
 	"${TMPWORKINGDIRECTORY}/rootdir/usr/bin/dpkg" "$@"
@@ -216,6 +217,12 @@ gdb() {
 		CMD="${BUILDDIRECTORY}/${CMD}"
 	fi
 	runapt command gdb --quiet -ex run "$CMD" --args "$CMD" "$@"
+}
+lastmodification() {
+	date -u -d "@$(stat -c '%Y' "${TMPWORKINGDIRECTORY}/$1")" -R
+}
+releasefiledate() {
+	grep "^${2:-Date}:" "$1" | cut -d' ' -f 2-
 }
 
 exitwithstatus() {
@@ -283,6 +290,7 @@ setupenvironment() {
         APTWEBSERVERBINDIR="${APT_INTEGRATION_TESTS_WEBSERVER_BIN_DIR:-"${BUILDDIRECTORY}"}"
         APTINTERNALSOLVER="${APT_INTEGRATION_TESTS_INTERNAL_SOLVER:-"${BUILDDIRECTORY}/apt-internal-solver"}"
 	APTDUMPSOLVER="${APT_INTEGRATION_TESTS_DUMP_SOLVER:-"${BUILDDIRECTORY}/apt-dump-solver"}"
+	APTINTERNALPLANNER="${APT_INTEGRATION_TESTS_INTERNAL_PLANNER:-"${BUILDDIRECTORY}/apt-internal-planner"}"
 	test -x "${BUILDDIRECTORY}/apt-get" || msgdie "You need to build tree first"
         # -----
 
@@ -292,15 +300,15 @@ setupenvironment() {
 	mkdir -p etc/apt/apt.conf.d etc/apt/sources.list.d etc/apt/trusted.gpg.d etc/apt/preferences.d
 	mkdir -p usr/bin var/cache var/lib var/log tmp
 	mkdir -p var/lib/dpkg/info var/lib/dpkg/updates var/lib/dpkg/triggers
+	mkdir -p usr/lib/apt/solvers usr/lib/apt/planners
 	touch var/lib/dpkg/available
-	mkdir -p usr/lib/apt
 	ln -s "${METHODSDIR}" usr/lib/apt/methods
-	if [ "$BUILDDIRECTORY" = "$LIBRARYPATH" ]; then
-		mkdir -p usr/lib/apt/solvers
-		ln -s "${BUILDDIRECTORY}/apt-dump-solver" usr/lib/apt/solvers/dump
-		ln -s "${BUILDDIRECTORY}/apt-internal-solver" usr/lib/apt/solvers/apt
-		echo "Dir::Bin::Solvers \"${TMPWORKINGDIRECTORY}/rootdir/usr/lib/apt/solvers\";" > etc/apt/apt.conf.d/externalsolver.conf
-	fi
+	ln -s "${APTDUMPSOLVER}" usr/lib/apt/solvers/dump
+	ln -s "${APTDUMPSOLVER}" usr/lib/apt/planners/dump
+	ln -s "${APTINTERNALSOLVER}" usr/lib/apt/solvers/apt
+	ln -s "${APTINTERNALPLANNER}" usr/lib/apt/planners/apt
+	echo "Dir::Bin::Solvers \"${TMPWORKINGDIRECTORY}/rootdir/usr/lib/apt/solvers\";" >> ../aptconfig.conf
+	echo "Dir::Bin::Planners \"${TMPWORKINGDIRECTORY}/rootdir/usr/lib/apt/planners\";" >> ../aptconfig.conf
         # use the autoremove from the BUILDDIRECTORY if its there, otherwise
         # system
         if [ -e "${BUILDDIRECTORY}/../../debian/apt.conf.autoremove" ]; then
@@ -322,7 +330,7 @@ setupenvironment() {
 	chmod 644 keys/*
 	ln -s "${TMPWORKINGDIRECTORY}/keys/joesixpack.pub" rootdir/etc/apt/trusted.gpg.d/joesixpack.gpg
 
-	echo "Dir \"${TMPWORKINGDIRECTORY}/rootdir\";" > aptconfig.conf
+	echo "Dir \"${TMPWORKINGDIRECTORY}/rootdir\";" >> aptconfig.conf
 	echo "Dir::state::status \"${TMPWORKINGDIRECTORY}/rootdir/var/lib/dpkg/status\";" >> aptconfig.conf
 	echo "APT::Get::Show-User-Simulation-Note \"false\";" >> aptconfig.conf
 	echo "Dir::Bin::Methods \"${TMPWORKINGDIRECTORY}/rootdir/usr/lib/apt/methods\";" >> aptconfig.conf
@@ -333,7 +341,10 @@ setupenvironment() {
 	# destroys coverage reporting though, so we disable changing user for the calling gpgv
 	echo "Dir::Bin::apt-key \"${BUILDDIRECTORY}/apt-key\";" >> aptconfig.conf
 	if [ "$(id -u)" = '0' ]; then
-		echo 'Binary::gpgv::Debug::NoDropPrivs "true";' >>aptconfig.conf
+		echo 'Binary::gpgv::APT::Sandbox::User "root";' >> aptconfig.conf
+		# same for the solver executables
+		echo 'APT::Solver::RunAsUser "root";' >> aptconfig.conf
+		echo 'APT::Planner::RunAsUser "root";' >> aptconfig.conf
 	fi
 
 	cat > "${TMPWORKINGDIRECTORY}/rootdir/usr/bin/dpkg" <<EOF
@@ -389,6 +400,7 @@ EOF
 	fi
 	echo "Acquire::https::CaInfo \"${TMPWORKINGDIRECTORY}/rootdir/etc/webserver.pem\";" > rootdir/etc/apt/apt.conf.d/99https
 	echo "Apt::Cmd::Disable-Script-Warning \"1\";" > rootdir/etc/apt/apt.conf.d/apt-binary
+	export APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=no
 	echo 'Acquire::Connect::AddrConfig "false";' > rootdir/etc/apt/apt.conf.d/connect-addrconfig
 
 	configcompression '.' 'gz' #'bz2' 'lzma' 'xz'
@@ -413,6 +425,13 @@ EOF
 	# If gpgv supports --weak-digest, pass it to make sure we can disable SHA1
 	if aptkey verify --weak-digest SHA1 --help 2>/dev/null >/dev/null; then
 		echo 'Acquire::gpgv::Options { "--weak-digest"; "sha1"; };' > rootdir/etc/apt/apt.conf.d/no-sha1
+	fi
+
+	# most tests just need one signed Release file, not both
+	export APT_DONT_SIGN='Release.gpg'
+
+	if [ -r "${TESTDIRECTORY}/extra-environment" ]; then
+		. "${TESTDIRECTORY}/extra-environment"
 	fi
 
 	msgdone "info"
@@ -577,64 +596,8 @@ Dir::Bin::uncompressed \"/does/not/exist\";" > "$CONFFILE"
 	done
 }
 
-setupsimplenativepackage() {
+_setupsimplenativepackage() {
 	local NAME="$1"
-	local ARCH="$2"
-	local VERSION="$3"
-	local RELEASE="${4:-unstable}"
-	local DEPENDENCIES="$5"
-	local DESCRIPTION="${6:-"an autogenerated dummy ${NAME}=${VERSION}/${RELEASE}
- If you find such a package installed on your system,
- something went horribly wrong! They are autogenerated
- und used only by testcases and serve no other purpose…"}"
-
-	local SECTION="${7:-others}"
-	local DISTSECTION
-	if [ "$SECTION" = "${SECTION#*/}" ]; then
-		DISTSECTION="main"
-	else
-		DISTSECTION="${SECTION%/*}"
-	fi
-	local BUILDDIR=incoming/${NAME}-${VERSION}
-	mkdir -p ${BUILDDIR}/debian/source
-	cd ${BUILDDIR}
-	echo "* most suckless software product ever" > FEATURES
-	test -e debian/copyright || echo "Copyleft by Joe Sixpack $(date +%Y)" > debian/copyright
-	test -e debian/changelog || echo "$NAME ($VERSION) $RELEASE; urgency=low
-
-  * Initial release
-
- -- Joe Sixpack <joe@example.org>  $(date -R)" > debian/changelog
-	test -e debian/control || echo "Source: $NAME
-Section: $SECTION
-Priority: optional
-Maintainer: Joe Sixpack <joe@example.org>
-Build-Depends: debhelper (>= 7)
-Standards-Version: 3.9.1
-
-Package: $NAME" > debian/control
-	if [ "$ARCH" = 'all' ]; then
-		echo "Architecture: all" >> debian/control
-	else
-		echo "Architecture: any" >> debian/control
-	fi
-	test -z "$DEPENDENCIES" || echo "$DEPENDENCIES" >> debian/control
-	echo "Description: $DESCRIPTION" >> debian/control
-
-	test -e debian/compat || echo "7" > debian/compat
-	test -e debian/source/format || echo "3.0 (native)" > debian/source/format
-	test -e debian/rules || cp /usr/share/doc/debhelper/examples/rules.tiny debian/rules
-	cd - > /dev/null
-}
-
-buildsimplenativepackage() {
-	local NAME="$1"
-	local NM
-	if [ "$(echo "$NAME" | cut -c 1-3)" = 'lib' ]; then
-		NM="$(echo "$NAME" | cut -c 1-4)"
-	else
-		NM="$(echo "$NAME" | cut -c 1)"
-	fi
 	local ARCH="$2"
 	local VERSION="$3"
 	local RELEASE="${4:-unstable}"
@@ -656,18 +619,17 @@ buildsimplenativepackage() {
 	fi
 	local BUILDDIR="${TMPWORKINGDIRECTORY}/incoming/${NAME}-${VERSION}"
 
-	msgtest "Build source package in version ${VERSION} for ${RELEASE} in ${DISTSECTION}" "$NAME"
 	mkdir -p "$BUILDDIR/debian/source"
 	echo "* most suckless software product ever" > "${BUILDDIR}/FEATURES"
 	echo "#!/bin/sh
 echo '$NAME says \"Hello!\"'" > "${BUILDDIR}/${NAME}"
 
-	echo "Copyleft by Joe Sixpack $(date +%Y)" > "${BUILDDIR}/debian/copyright"
+	echo "Copyleft by Joe Sixpack $(date -u +%Y)" > "${BUILDDIR}/debian/copyright"
 	echo "$NAME ($VERSION) $RELEASE; urgency=low
 
   * Initial release
 
- -- Joe Sixpack <joe@example.org>  $(date -R)" > "${BUILDDIR}/debian/changelog"
+ -- Joe Sixpack <joe@example.org>  $(date -u -R)" > "${BUILDDIR}/debian/changelog"
 	{
 		echo "Source: $NAME
 Priority: $PRIORITY
@@ -692,6 +654,37 @@ Package: $NAME"
 	} > "${BUILDDIR}/debian/control"
 
 	echo '3.0 (native)' > "${BUILDDIR}/debian/source/format"
+}
+
+setupsimplenativepackage() {
+	_setupsimplenativepackage "$@"
+	local NAME="$1"
+	local VERSION="$3"
+	local BUILDDIR="${TMPWORKINGDIRECTORY}/incoming/${NAME}-${VERSION}"
+	test -e "${BUILDDIR}/debian/compat" || echo '7' > "${BUILDDIR}/debian/compat"
+	test -e  "${BUILDDIR}/debian/rules" || cp /usr/share/doc/debhelper/examples/rules.tiny "${BUILDDIR}/debian/rules"
+}
+
+buildsimplenativepackage() {
+	local NAME="$1"
+	local ARCH="$2"
+	local VERSION="$3"
+	local RELEASE="${4:-unstable}"
+	local DEPENDENCIES="$5"
+	local DESCRIPTION="$6"
+	local SECTION="${7:-others}"
+	local PRIORITY="${8:-optional}"
+	local FILE_TREE="$9"
+	local COMPRESS_TYPE="${10:-gzip}"
+	local DISTSECTION
+	if [ "$SECTION" = "${SECTION#*/}" ]; then
+		DISTSECTION="main"
+	else
+		DISTSECTION="${SECTION%/*}"
+	fi
+	local BUILDDIR="${TMPWORKINGDIRECTORY}/incoming/${NAME}-${VERSION}"
+	msgtest "Build source package in version ${VERSION} for ${RELEASE} in ${DISTSECTION}" "$NAME"
+	_setupsimplenativepackage "$@"
 	cd "${BUILDDIR}/.."
 	testsuccess --nomsg dpkg-source -b ${NAME}-${VERSION}
 	cd - >/dev/null
@@ -725,6 +718,12 @@ Package: $NAME"
 		echo "pool/${NAME}_${VERSION}_${arch}.deb" >> "${BUILDDIR}/../${RELEASE}.${DISTSECTION}.pkglist"
 	done
 
+	local NM
+	if [ "$(echo "$NAME" | cut -c 1-3)" = 'lib' ]; then
+		NM="$(echo "$NAME" | cut -c 1-4)"
+	else
+		NM="$(echo "$NAME" | cut -c 1)"
+	fi
 	local CHANGEPATH="${BUILDDIR}/../${DISTSECTION}/${NM}/${NAME}/${NAME}_${VERSION}"
 	mkdir -p "$CHANGEPATH"
 	cp "${BUILDDIR}/debian/changelog" "$CHANGEPATH"
@@ -1018,13 +1017,13 @@ NotAutomatic: yes' "$dir/Release"
 	fi
 	if [ -n "$DATE" -a "$DATE" != "now" ]; then
 		for release in $(find ./aptarchive -name 'Release'); do
-			sed -i "s/^Date: .*$/Date: $(date -d "$DATE" '+%a, %d %b %Y %H:%M:%S %Z')/" "$release"
+			sed -i "s/^Date: .*$/Date: $(date -u -d "$DATE" -R)/" "$release"
 			touch -d "$DATE" "$release"
 		done
 	fi
 	if [ -n "$VALIDUNTIL" ]; then
 		sed -i "/^Date: / a\
-Valid-Until: $(date -d "$VALIDUNTIL" '+%a, %d %b %Y %H:%M:%S %Z')" $(find ./aptarchive -name 'Release')
+Valid-Until: $(date -u -d "$VALIDUNTIL" -R)" $(find ./aptarchive -name 'Release')
 	fi
 	msgdone "info"
 }
@@ -1082,6 +1081,8 @@ setupaptarchive() {
 signreleasefiles() {
 	local SIGNERS="${1:-Joe Sixpack}"
 	local REPODIR="${2:-aptarchive}"
+	if [ -n "$1" ]; then shift; fi
+	if [ -n "$1" ]; then shift; fi
 	local KEY="keys/$(echo "$SIGNERS" | tr 'A-Z' 'a-z' | tr -d ' ,')"
 	msgninfo "\tSign archive with $SIGNERS key $KEY… "
 	local REXKEY='keys/rexexpired'
@@ -1130,11 +1131,21 @@ signreleasefiles() {
 	fi
 	local GPG="aptkey --quiet --keyring ${KEY}.pub --secret-keyring ${KEY}.sec --readonly adv --batch --yes --digest-algo ${APT_TESTS_DIGEST_ALGO:-SHA512}"
 	for RELEASE in $(find "${REPODIR}/" -name Release); do
-		testsuccess $GPG $SIGUSERS --armor --detach-sign --sign --output "${RELEASE}.gpg" "${RELEASE}"
-		local INRELEASE="$(echo "${RELEASE}" | sed 's#/Release$#/InRelease#')"
-		testsuccess $GPG $SIGUSERS --clearsign --output "$INRELEASE" "$RELEASE"
 		# we might have set a specific date for the Release file, so copy it
-		touch -d "$(stat --format "%y" ${RELEASE})" "${RELEASE}.gpg" "${INRELEASE}"
+		local DATE="$(stat --format "%y" "${RELEASE}")"
+		if [ "$APT_DONT_SIGN" = 'Release.gpg' ]; then
+			rm -f "${RELEASE}.gpg"
+		else
+			testsuccess $GPG "$@" $SIGUSERS --armor --detach-sign --sign --output "${RELEASE}.gpg" "${RELEASE}"
+			touch -d "$DATE" "${RELEASE}.gpg"
+		fi
+		local INRELEASE="${RELEASE%/*}/InRelease"
+		if [ "$APT_DONT_SIGN" = 'InRelease' ]; then
+			rm -f "$INRELEASE"
+		else
+			testsuccess $GPG "$@" $SIGUSERS --clearsign --output "$INRELEASE" "$RELEASE"
+			touch -d "$DATE" "${INRELEASE}"
+		fi
 	done
 	if [ -f "$SECEXPIREBAK" ] && [ -f "$PUBEXPIREBAK" ]; then
 		mv -f "$SECEXPIREBAK" "${REXKEY}.sec"
@@ -1144,7 +1155,7 @@ signreleasefiles() {
 }
 
 redatereleasefiles() {
-	local DATE="$(date -d "$1" '+%a, %d %b %Y %H:%M:%S %Z')"
+	local DATE="$(date -u -d "$1" -R)"
 	for release in $(find aptarchive/ -name 'Release'); do
 		sed -i "s/^Date: .*$/Date: ${DATE}/" "$release"
 		touch -d "$DATE" "$release"
@@ -1530,17 +1541,26 @@ testmarkedmanual() {
 	msggroup
 }
 
+catfile() {
+	if [ "${1##*.}" = 'deb' ]; then
+		stat >&2 "$1" || true
+		file >&2 "$1" || true
+	else
+		cat >&2 "$1" || true
+	fi
+}
 msgfailoutput() {
 	msgreportheader 'msgfailoutput'
 	local MSG="$1"
 	local OUTPUT="$2"
 	shift 2
-	if [ "$1" = 'grep' ]; then
+	local CMD="$1"
+	if [ "$1" = 'grep' -o "$1" = 'tail' -o "$1" = 'head' ]; then
 		echo >&2
 		while [ -n "$2" ]; do shift; done
 		echo "#### Complete file: $1 ####"
-		cat >&2 "$1" || true
-		echo '#### grep output ####'
+		catfile "$1"
+		echo "#### $CMD output ####"
 	elif [ "$1" = 'test' ]; then
 		echo >&2
 		# doesn't support ! or non-file flags
@@ -1554,7 +1574,7 @@ msgfailoutput() {
 					ls >&2 "$2" || true
 				elif test -e "$2"; then
 					echo "#### Complete file: $2 ####"
-					cat >&2 "$2" || true
+					catfile "$2"
 				fi
 			fi
 		}
@@ -1568,12 +1588,12 @@ msgfailoutput() {
 		echo >&2
 		while [ -n "$2" ]; do
 			echo "#### Complete file: $2 ####"
-			cat >&2 "$2" || true
+			catfile "$2"
 			shift
 		done
 		echo '#### cmp output ####'
 	fi
-	cat >&2 "$OUTPUT"
+	catfile "$OUTPUT"
 	msgfail "$MSG"
 }
 
@@ -1672,8 +1692,9 @@ testfailure() {
 		local EXITCODE=$?
 		if expr match "$1" '^apt.*' >/dev/null; then
 			if [ "$1" = 'aptkey' ]; then
-				if grep -q -E " Can't check signature: " "$OUTPUT" || \
-					grep -q -E " BAD signature from " "$OUTPUT"; then
+				if grep -q " Can't check signature: 
+ BAD signature from 
+ signature could not be verified" "$OUTPUT"; then
 					msgpass
 				else
 					msgfailoutput "run failed with exitcode ${EXITCODE}, but no signature error" "$OUTPUT" "$@"
@@ -1862,6 +1883,11 @@ pause() {
 	read IGNORE
 }
 
+logcurrentarchivedirectory() {
+	find "${TMPWORKINGDIRECTORY}/aptarchive/dists" -type f | while read line; do
+		stat --format '%U:%G:%a:%n' "$line"
+	done | sort > "${TMPWORKINGDIRECTORY}/rootdir/var/log/aptgetupdate.before.lst"
+}
 listcurrentlistsdirectory() {
 	{
 		find rootdir/var/lib/apt/lists -maxdepth 1 -type d | while read line; do
@@ -1939,6 +1965,10 @@ aptautotest_aptget_update() {
 	if [ "$TESTCALL" = 'testsuccess' ]; then
 		# failure cases can retain partial files and such
 		testempty find "${TMPWORKINGDIRECTORY}/rootdir/var/lib/apt/lists/partial" -mindepth 1 ! \( -name 'lock' -o -name '*.FAILED' \)
+	fi
+	if [ -s "${TMPWORKINGDIRECTORY}/rootdir/var/log/aptgetupdate.before.lst" ]; then
+		testfileequal "${TMPWORKINGDIRECTORY}/rootdir/var/log/aptgetupdate.before.lst" \
+			"$(find "${TMPWORKINGDIRECTORY}/aptarchive/dists" -type f | while read line; do stat --format '%U:%G:%a:%n' "$line"; done | sort)"
 	fi
 }
 aptautotest_apt_update() { aptautotest_aptget_update "$@"; }

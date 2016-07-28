@@ -28,7 +28,6 @@
 #include <config.h>
 
 #include <apt-pkg/fileutl.h>
-#include <apt-pkg/acquire-method.h>
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/hashes.h>
@@ -442,12 +441,12 @@ bool HttpServerState::RunData(FileFd * const File)
    {
       /* Closes encoding is used when the server did not specify a size, the
          loss of the connection means we are done */
-      if (Persistent == false)
-	 In.Limit(-1);
-      else if (JunkSize != 0)
+      if (JunkSize != 0)
 	 In.Limit(JunkSize);
-      else
+      else if (DownloadSize != 0)
 	 In.Limit(DownloadSize);
+      else if (Persistent == false)
+	 In.Limit(-1);
       
       // Just transfer the whole block.
       do
@@ -498,20 +497,22 @@ APT_PURE Hashes * HttpServerState::GetHashes()				/*{{{*/
 }
 									/*}}}*/
 // HttpServerState::Die - The server has closed the connection.		/*{{{*/
-bool HttpServerState::Die(FileFd &File)
+bool HttpServerState::Die(FileFd * const File)
 {
    unsigned int LErrno = errno;
 
    // Dump the buffer to the file
    if (State == ServerState::Data)
    {
+      if (File == nullptr)
+	 return true;
       // on GNU/kFreeBSD, apt dies on /dev/null because non-blocking
       // can't be set
-      if (File.Name() != "/dev/null")
-	 SetNonBlock(File.Fd(),false);
+      if (File->Name() != "/dev/null")
+	 SetNonBlock(File->Fd(),false);
       while (In.WriteSpace() == true)
       {
-	 if (In.Write(File.Fd()) == false)
+	 if (In.Write(File->Fd()) == false)
 	    return _error->Errno("write",_("Error writing to the file"));
 
 	 // Done
@@ -630,7 +631,7 @@ bool HttpServerState::Go(bool ToFile, FileFd * const File)
    if (Res == 0)
    {
       _error->Error(_("Connection timed out"));
-      return Die(*File);
+      return Die(File);
    }
    
    // Handle server IO
@@ -638,14 +639,14 @@ bool HttpServerState::Go(bool ToFile, FileFd * const File)
    {
       errno = 0;
       if (In.Read(ServerFd) == false)
-	 return Die(*File);
+	 return Die(File);
    }
 	 
    if (ServerFd != -1 && FD_ISSET(ServerFd,&wfds))
    {
       errno = 0;
       if (Out.Write(ServerFd) == false)
-	 return Die(*File);
+	 return Die(File);
    }
 
    // Send data to the file
@@ -738,9 +739,9 @@ void HttpMethod::SendReq(FetchItem *Itm)
    struct stat SBuf;
    if (stat(Itm->DestFile.c_str(),&SBuf) >= 0 && SBuf.st_size > 0)
       Req << "Range: bytes=" << SBuf.st_size << "-\r\n"
-	 << "If-Range: " << TimeRFC1123(SBuf.st_mtime) << "\r\n";
+	 << "If-Range: " << TimeRFC1123(SBuf.st_mtime, false) << "\r\n";
    else if (Itm->LastModified != 0)
-      Req << "If-Modified-Since: " << TimeRFC1123(Itm->LastModified).c_str() << "\r\n";
+      Req << "If-Modified-Since: " << TimeRFC1123(Itm->LastModified, false).c_str() << "\r\n";
 
    if (Server->Proxy.User.empty() == false || Server->Proxy.Password.empty() == false)
       Req << "Proxy-Authorization: Basic "

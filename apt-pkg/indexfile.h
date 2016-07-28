@@ -91,6 +91,11 @@ class IndexTarget							/*{{{*/
       SOURCESENTRY,
       BY_HASH,
       KEEPCOMPRESSEDAS,
+      FALLBACK_OF,
+      IDENTIFIER,
+      ALLOW_INSECURE,
+      ALLOW_WEAK,
+      ALLOW_DOWNGRADE_TO_INSECURE,
    };
    std::string Option(OptionKeys const Key) const;
    bool OptionBool(OptionKeys const Key) const;

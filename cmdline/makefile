@@ -79,17 +79,23 @@ LIB_MAKES = apt-pkg/makefile apt-inst/makefile apt-private/makefile
 SOURCE = apt-extracttemplates.cc 
 include $(PROGRAM_H)
 
-# The internal solver acting as an external
+# The internal solver/planner acting as an external
 PROGRAM=apt-internal-solver
 SLIBS = -lapt-pkg -lapt-private $(INTLLIBS)
 LIB_MAKES = apt-pkg/makefile apt-private/makefile
 SOURCE = apt-internal-solver.cc
 include $(PROGRAM_H)
 
+PROGRAM=apt-internal-planner
+SLIBS = -lapt-pkg -lapt-private $(INTLLIBS)
+LIB_MAKES = apt-pkg/makefile apt-private/makefile
+SOURCE = apt-internal-planner.cc
+include $(PROGRAM_H)
+
 # This just dumps out the state
 PROGRAM=apt-dump-solver
-SLIBS = -lapt-pkg $(INTLLIBS)
-LIB_MAKES = apt-pkg/makefile
+SLIBS = -lapt-pkg -lapt-private $(INTLLIBS)
+LIB_MAKES = apt-pkg/makefile apt-private/makefile
 SOURCE = apt-dump-solver.cc
 include $(PROGRAM_H)
 

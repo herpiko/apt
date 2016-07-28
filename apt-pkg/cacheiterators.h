@@ -175,11 +175,11 @@ class pkgCache::PkgIterator: public Iterator<Package, PkgIterator> {
 	inline DepIterator RevDependsList() const APT_PURE;
 	inline PrvIterator ProvidesList() const APT_PURE;
 	OkState State() const APT_PURE;
-	const char *CandVersion() const APT_PURE;
+	APT_DEPRECATED_MSG("This method does not respect apt_preferences! Use pkgDepCache::GetCandidateVersion(Pkg)") const char *CandVersion() const APT_PURE;
 	const char *CurVersion() const APT_PURE;
 
 	//Nice printable representation
-	friend std::ostream& operator <<(std::ostream& out, PkgIterator i);
+	APT_DEPRECATED_MSG("Use APT::PrettyPkg instead") friend std::ostream& operator <<(std::ostream& out, PkgIterator i);
 	std::string FullName(bool const &Pretty = false) const;
 
 	// Constructors
@@ -343,7 +343,7 @@ class pkgCache::DepIterator : public Iterator<Dependency, DepIterator> {
 	}
 
 	//Nice printable representation
-	friend std::ostream& operator <<(std::ostream& out, DepIterator D);
+	APT_DEPRECATED_MSG("Use APT::PrettyDep instead") friend std::ostream& operator <<(std::ostream& out, DepIterator D);
 
 	inline DepIterator(pkgCache &Owner, Dependency *Trg, Version* = 0) :
 		Iterator<Dependency, DepIterator>(Owner, Trg), Type(DepVer), S2(Trg == 0 ? Owner.DepDataP : (Owner.DepDataP + Trg->DependencyData)) {

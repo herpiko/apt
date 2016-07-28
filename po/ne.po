@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2006-06-12 14:35+0545\n"
 "Last-Translator: Shiva Pokharel <pokharelshiva@hotmail.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -231,10 +231,10 @@ msgid ""
 "unauthenticated"
 msgstr "त्यहाँ समस्याहरू छन् र हुन्छलाई जोड नगरिकन -y को प्रयोग भयो"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "%s  %s तान्न असफल भयो\n"
+msgid "Failed to fetch %s  %s"
+msgstr "%s  %s तान्न असफल भयो"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -528,12 +528,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 
 #: apt-private/private-output.cc apt-private/private-show.cc
@@ -744,10 +746,6 @@ msgstr "क्यास sync  भन्दा बाहिर छ, प्या�
 msgid "Pinned packages:"
 msgstr "पिन गरिएका प्याकेजहरू:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(फेला परेन)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -765,10 +763,6 @@ msgstr "  उमेद्वार:"
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(कुनै पनि होइन)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "प्याकेज पिन:"
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1670,6 +1664,21 @@ msgstr "क्वेरी"
 msgid "Unable to invoke "
 msgstr "आह्वान गर्न असक्षम भयो"
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "कम्तिमा एउटा अवैध हस्ताक्षर विरोध भयो ।"
@@ -1683,14 +1692,6 @@ msgstr "आन्तरिक त्रुटि: असल हस्ताक�
 #, fuzzy
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr "हस्ताक्षर रूजू गर्न '%s' कार्यन्वयन गर्न सकिएन (के gnupg स्थापना भयो?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1882,6 +1883,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "उपलब्ध सूचना गाँभिदैछ"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr " %s को लागि पर्खिरहेको तर यो त्यहाँ छैन"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2418,15 +2433,50 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "पुन:नामकरण असफल गरियो, %s (%s -> %s) ।"
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "डाइरेक्ट्री %s फेरियो "
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "डाइरेक्ट्री %s फेरियो "
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "डाइरेक्ट्री %s फेरियो "
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "डाइरेक्ट्री %s फेरियो "
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "डाइरेक्ट्री %s फेरियो "
 
 #: apt-pkg/acquire-item.cc
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "MD5Sum मेल भएन"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "पुन:नामकरण असफल गरियो, %s (%s -> %s) ।"
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2489,33 +2539,6 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
-msgstr ""
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "डाइरेक्ट्री %s फेरियो "
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "डाइरेक्ट्री %s फेरियो "
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "डाइरेक्ट्री %s फेरियो "
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -2934,11 +2957,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr " %s को लागि पर्खिरहेको तर यो त्यहाँ छैन"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3152,12 +3170,7 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, fuzzy, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "प्याकेज फाइल पद वर्णन गर्न असक्षम %s (१)"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, fuzzy, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
+msgid "Invalid '%s' entry in Release file %s"
 msgstr "घुमाउरो फाइलमा अवैध लाइन:%s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
@@ -3169,6 +3182,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3236,7 +3254,7 @@ msgstr ""
 msgid "Directory '%s' missing"
 msgstr "आंशिक सूचिहरुको डाइरेक्ट्री %s हराइरहेछ ।"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "फाइल %s खोल्न सकिएन"
@@ -3646,11 +3664,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "%s  %s तान्न असफल भयो\n"
-
-#: apt-pkg/update.cc
 #, fuzzy
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
@@ -3662,6 +3675,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "स्तर वृद्धि गणना गरिदैछ"
+
+#~ msgid "(not found)"
+#~ msgstr "(फेला परेन)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "प्याकेज पिन:"
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "निम्न कुञ्जी IDs को लागि कुनै सार्वजनिक कुञ्जी उपलब्ध छैन:\n"

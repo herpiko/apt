@@ -21,16 +21,19 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/error.h>
 
+#include <algorithm>
+#include <iomanip>
+#include <locale>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string>
-#include <vector>
 #include <ctype.h>
 #include <string.h>
-#include <sstream>
 #include <stdio.h>
-#include <algorithm>
 #include <unistd.h>
 #include <regex.h>
 #include <errno.h>
@@ -71,14 +74,14 @@ bool Endswith(const std::string &s, const std::string &end)
 {
    if (end.size() > s.size())
       return false;
-   return (s.substr(s.size() - end.size(), s.size()) == end);
+   return (s.compare(s.size() - end.size(), end.size(), end) == 0);
 }
 
 bool Startswith(const std::string &s, const std::string &start)
 {
    if (start.size() > s.size())
       return false;
-   return (s.substr(0, start.size()) == start);
+   return (s.compare(0, start.size(), start) == 0);
 }
 
 }
@@ -747,19 +750,26 @@ int StringToBool(const string &Text,int Default)
    year 2000 complient and timezone neutral */
 string TimeRFC1123(time_t Date)
 {
+   return TimeRFC1123(Date, false);
+}
+string TimeRFC1123(time_t Date, bool const NumericTimezone)
+{
    struct tm Conv;
    if (gmtime_r(&Date, &Conv) == NULL)
       return "";
 
-   char Buf[300];
-   const char *Day[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-   const char *Month[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul",
-                          "Aug","Sep","Oct","Nov","Dec"};
-
-   snprintf(Buf, sizeof(Buf), "%s, %02i %s %i %02i:%02i:%02i GMT",Day[Conv.tm_wday],
-	   Conv.tm_mday,Month[Conv.tm_mon],Conv.tm_year+1900,Conv.tm_hour,
-	   Conv.tm_min,Conv.tm_sec);
-   return Buf;
+   auto const posix = std::locale("C.UTF-8");
+   std::ostringstream datestr;
+   datestr.imbue(posix);
+   APT::StringView const fmt("%a, %d %b %Y %H:%M:%S");
+   std::use_facet<std::time_put<char>>(posix).put(
+                    std::ostreambuf_iterator<char>(datestr),
+                    datestr, ' ', &Conv, fmt.data(), fmt.data() + fmt.size());
+   if (NumericTimezone)
+      datestr << " +0000";
+   else
+      datestr << " GMT";
+   return datestr.str();
 }
 									/*}}}*/
 // ReadMessages - Read messages from the FD				/*{{{*/
@@ -868,7 +878,7 @@ bool ReadMessages(int Fd, vector<string> &List)
 // ---------------------------------------------------------------------
 /* This was lifted from the boa webserver which lifted it from 'wn-v1.07'
    Made it a bit more robust with a few tolower_ascii though. */
-static int MonthConv(char *Month)
+static int MonthConv(char const * const Month)
 {
    switch (tolower_ascii(*Month)) 
    {
@@ -921,28 +931,98 @@ static time_t timegm(struct tm *t)
 }
 #endif
 									/*}}}*/
-// FullDateToTime - Converts a HTTP1.1 full date strings into a time_t	/*{{{*/
+// RFC1123StrToTime - Converts a HTTP1.1 full date strings into a time_t	/*{{{*/
 // ---------------------------------------------------------------------
-/* tries to parses a full date as specified in RFC2616 Section 3.3.1
-   with one exception: All timezones (%Z) are accepted but the protocol
-   says that it MUST be GMT, but this one is equal to UTC which we will
-   encounter from time to time (e.g. in Release files) so we accept all
-   here and just assume it is GMT (or UTC) later on */
+/* tries to parses a full date as specified in RFC7231 §7.1.1.1
+   with one exception: HTTP/1.1 valid dates need to have GMT as timezone.
+   As we encounter dates from UTC or with a numeric timezone in other places,
+   we allow them here to to be able to reuse the method. Either way, a date
+   must be in UTC or parsing will fail. Previous implementations of this
+   method used to ignore the timezone and assume always UTC. */
 bool RFC1123StrToTime(const char* const str,time_t &time)
 {
-   struct tm Tm;
-   setlocale (LC_ALL,"C");
-   bool const invalid =
-   // Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
-      (strptime(str, "%a, %d %b %Y %H:%M:%S %Z", &Tm) == NULL &&
-   // Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
-       strptime(str, "%A, %d-%b-%y %H:%M:%S %Z", &Tm) == NULL &&
-   // Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
-       strptime(str, "%a %b %d %H:%M:%S %Y", &Tm) == NULL);
-   setlocale (LC_ALL,"");
-   if (invalid == true)
+   unsigned short day = 0;
+   signed int year = 0; // yes, Y23K problem – we gonna worry then…
+   std::string weekday, month, datespec, timespec, zone;
+   std::istringstream ss(str);
+   auto const &posix = std::locale("C.UTF-8");
+   ss.imbue(posix);
+   ss >> weekday;
+   // we only superficially check weekday, mostly to avoid accepting localized
+   // weekdays here and take only its length to decide which datetime format we
+   // encounter here. The date isn't stored.
+   std::transform(weekday.begin(), weekday.end(), weekday.begin(), ::tolower);
+   std::array<char const * const, 7> c_weekdays = {{ "sun", "mon", "tue", "wed", "thu", "fri", "sat" }};
+   if (std::find(c_weekdays.begin(), c_weekdays.end(), weekday.substr(0,3)) == c_weekdays.end())
       return false;
 
+   switch (weekday.length())
+   {
+   case 4:
+      // Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123
+      if (weekday[3] != ',')
+	 return false;
+      ss >> day >> month >> year >> timespec >> zone;
+      break;
+   case 3:
+      // Sun Nov  6 08:49:37 1994 ; ANSI C's asctime() format
+      ss >> month >> day >> timespec >> year;
+      zone = "UTC";
+      break;
+   case 0:
+   case 1:
+   case 2:
+      return false;
+   default:
+      // Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036
+      if (weekday[weekday.length() - 1] != ',')
+	 return false;
+      ss >> datespec >> timespec >> zone;
+      auto const expldate = VectorizeString(datespec, '-');
+      if (expldate.size() != 3)
+	 return false;
+      try {
+	 size_t pos;
+	 day = std::stoi(expldate[0], &pos);
+	 if (pos != expldate[0].length())
+	    return false;
+	 year = 1900 + std::stoi(expldate[2], &pos);
+	 if (pos != expldate[2].length())
+	    return false;
+	 strprintf(datespec, "%.4d-%.2d-%.2d", year, MonthConv(expldate[1].c_str()) + 1, day);
+      } catch (...) {
+         return false;
+      }
+      break;
+   }
+
+   if (ss.fail() || ss.bad() || !ss.eof())
+      return false;
+
+   if (zone != "GMT" && zone != "UTC" && zone != "Z") // RFC 822
+   {
+      // numeric timezones as a should of RFC 1123 and generally preferred
+      try {
+	 size_t pos;
+	 auto const z = std::stoi(zone, &pos);
+	 if (z != 0 || pos != zone.length())
+	    return false;
+      } catch (...) {
+	 return false;
+      }
+   }
+
+   if (datespec.empty())
+   {
+      if (month.empty())
+	 return false;
+      strprintf(datespec, "%.4d-%.2d-%.2d", year, MonthConv(month.c_str()) + 1, day);
+   }
+
+   std::string const datetime = datespec + ' ' + timespec;
+   struct tm Tm;
+   if (strptime(datetime.c_str(), "%Y-%m-%d %H:%M:%S", &Tm) == nullptr)
+      return false;
    time = timegm(&Tm);
    return true;
 }

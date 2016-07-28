@@ -33,13 +33,13 @@ class APT_HIDDEN debReleaseIndexPrivate					/*{{{*/
    public:
    struct APT_HIDDEN debSectionEntry
    {
-      std::string sourcesEntry;
-      std::string Name;
-      std::vector<std::string> Targets;
-      std::vector<std::string> Architectures;
-      std::vector<std::string> Languages;
-      bool UsePDiffs;
-      std::string UseByHash;
+      std::string const sourcesEntry;
+      std::string const Name;
+      std::vector<std::string> const Targets;
+      std::vector<std::string> const Architectures;
+      std::vector<std::string> const Languages;
+      bool const UsePDiffs;
+      std::string const UseByHash;
    };
 
    std::vector<debSectionEntry> DebEntries;
@@ -51,8 +51,9 @@ class APT_HIDDEN debReleaseIndexPrivate					/*{{{*/
 
    std::vector<std::string> Architectures;
    std::vector<std::string> NoSupportForAll;
+   std::map<std::string, std::string> const ReleaseOptions;
 
-   debReleaseIndexPrivate() : CheckValidUntil(metaIndex::TRI_UNSET), ValidUntilMin(0), ValidUntilMax(0) {}
+   debReleaseIndexPrivate(std::map<std::string, std::string> const &Options) : CheckValidUntil(metaIndex::TRI_UNSET), ValidUntilMin(0), ValidUntilMax(0), ReleaseOptions(Options) {}
 };
 									/*}}}*/
 // ReleaseIndex::MetaIndex* - display helpers				/*{{{*/
@@ -80,28 +81,27 @@ std::string debReleaseIndex::MetaIndexFile(const char *Type) const
    return _config->FindDir("Dir::State::lists") +
       URItoFileName(MetaIndexURI(Type));
 }
-
+static std::string constructMetaIndexURI(std::string URI, std::string const &Dist, char const * const Type)
+{
+   if (Dist == "/")
+      ;
+   else if (Dist[Dist.size()-1] == '/')
+      URI += Dist;
+   else
+      URI += "dists/" + Dist + "/";
+   return URI + Type;
+}
 std::string debReleaseIndex::MetaIndexURI(const char *Type) const
 {
-   std::string Res;
-
-   if (Dist == "/")
-      Res = URI;
-   else if (Dist[Dist.size()-1] == '/')
-      Res = URI + Dist;
-   else
-      Res = URI + "dists/" + Dist + "/";
-   
-   Res += Type;
-   return Res;
+   return constructMetaIndexURI(URI, Dist, Type);
 }
 									/*}}}*/
 // ReleaseIndex Con- and Destructors					/*{{{*/
-debReleaseIndex::debReleaseIndex(std::string const &URI, std::string const &Dist) :
-					metaIndex(URI, Dist, "deb"), d(new debReleaseIndexPrivate())
+debReleaseIndex::debReleaseIndex(std::string const &URI, std::string const &Dist, std::map<std::string, std::string> const &Options) :
+					metaIndex(URI, Dist, "deb"), d(new debReleaseIndexPrivate(Options))
 {}
-debReleaseIndex::debReleaseIndex(std::string const &URI, std::string const &Dist, bool const pTrusted) :
-					metaIndex(URI, Dist, "deb"), d(new debReleaseIndexPrivate())
+debReleaseIndex::debReleaseIndex(std::string const &URI, std::string const &Dist, bool const pTrusted, std::map<std::string, std::string> const &Options) :
+					metaIndex(URI, Dist, "deb"), d(new debReleaseIndexPrivate(Options))
 {
    Trusted = pTrusted ? TRI_YES : TRI_NO;
 }
@@ -113,17 +113,10 @@ debReleaseIndex::~debReleaseIndex() {
 // ReleaseIndex::GetIndexTargets					/*{{{*/
 static void GetIndexTargetsFor(char const * const Type, std::string const &URI, std::string const &Dist,
       std::vector<debReleaseIndexPrivate::debSectionEntry> const &entries,
-      std::vector<IndexTarget> &IndexTargets)
+      std::vector<IndexTarget> &IndexTargets, std::map<std::string, std::string> const &ReleaseOptions)
 {
    bool const flatArchive = (Dist[Dist.length() - 1] == '/');
-   std::string baseURI = URI;
-   if (flatArchive)
-   {
-      if (Dist != "/")
-         baseURI += Dist;
-   }
-   else
-      baseURI += "dists/" + Dist + "/";
+   std::string const baseURI = constructMetaIndexURI(URI, Dist, "");
    std::string const Release = (Dist == "/") ? "" : Dist;
    std::string const Site = ::URI::ArchiveOnly(URI);
 
@@ -153,7 +146,8 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
       }
       DefKeepCompressedAs += "uncompressed";
    }
-   std::string const NativeArch = _config->Find("APT::Architecture");
+
+   std::vector<std::string> const NativeArchs = { _config->Find("APT::Architecture"), "all" };
    bool const GzipIndex = _config->FindB("Acquire::GzipIndexes", false);
    for (std::vector<debReleaseIndexPrivate::debSectionEntry>::const_iterator E = entries.begin(); E != entries.end(); ++E)
    {
@@ -164,6 +158,7 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 	 std::string const tplMetaKey = APT_T_CONFIG_STR(flatArchive ? "flatMetaKey" : "MetaKey", "");
 	 std::string const tplShortDesc = APT_T_CONFIG_STR("ShortDescription", "");
 	 std::string const tplLongDesc = "$(SITE) " + APT_T_CONFIG_STR(flatArchive ? "flatDescription" : "Description", "");
+	 std::string const tplIdentifier = APT_T_CONFIG_STR("Identifier", *T);
 	 bool const IsOptional = APT_T_CONFIG_BOOL("Optional", true);
 	 bool const KeepCompressed = APT_T_CONFIG_BOOL("KeepCompressed", GzipIndex);
 	 bool const DefaultEnabled = APT_T_CONFIG_BOOL("DefaultEnabled", true);
@@ -171,6 +166,7 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 	 std::string const UseByHash = APT_T_CONFIG_STR("By-Hash", E->UseByHash);
 	 std::string const CompressionTypes = APT_T_CONFIG_STR("CompressionTypes", DefCompressionTypes);
 	 std::string KeepCompressedAs = APT_T_CONFIG_STR("KeepCompressedAs", "");
+	 std::string const FallbackOf = APT_T_CONFIG_STR("Fallback-Of", "");
 #undef APT_T_CONFIG_BOOL
 #undef APT_T_CONFIG_STR
 	 if (tplMetaKey.empty())
@@ -206,113 +202,124 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 
 	    for (std::vector<std::string>::const_iterator A = E->Architectures.begin(); A != E->Architectures.end(); ++A)
 	    {
-	       // available in templates
-	       std::map<std::string, std::string> Options;
-	       Options.insert(std::make_pair("SITE", Site));
-	       Options.insert(std::make_pair("RELEASE", Release));
-	       if (tplMetaKey.find("$(COMPONENT)") != std::string::npos)
-		  Options.insert(std::make_pair("COMPONENT", E->Name));
-	       if (tplMetaKey.find("$(LANGUAGE)") != std::string::npos)
-		  Options.insert(std::make_pair("LANGUAGE", *L));
-	       if (tplMetaKey.find("$(ARCHITECTURE)") != std::string::npos)
-		  Options.insert(std::make_pair("ARCHITECTURE", *A));
-	       else if (tplMetaKey.find("$(NATIVE_ARCHITECTURE)") != std::string::npos)
-		  Options.insert(std::make_pair("ARCHITECTURE", NativeArch));
-	       if (tplMetaKey.find("$(NATIVE_ARCHITECTURE)") != std::string::npos)
-		  Options.insert(std::make_pair("NATIVE_ARCHITECTURE", NativeArch));
-
-	       std::string MetaKey = tplMetaKey;
-	       std::string ShortDesc = tplShortDesc;
-	       std::string LongDesc = tplLongDesc;
-	       for (std::map<std::string, std::string>::const_iterator O = Options.begin(); O != Options.end(); ++O)
+	       for (auto const &NativeArch: NativeArchs)
 	       {
-		  MetaKey = SubstVar(MetaKey, std::string("$(") + O->first + ")", O->second);
-		  ShortDesc = SubstVar(ShortDesc, std::string("$(") + O->first + ")", O->second);
-		  LongDesc = SubstVar(LongDesc, std::string("$(") + O->first + ")", O->second);
-	       }
+		  constexpr static auto BreakPoint = "$(NATIVE_ARCHITECTURE)";
+		  // available in templates
+		  std::map<std::string, std::string> Options;
+		  Options.insert(std::make_pair("SITE", Site));
+		  Options.insert(std::make_pair("RELEASE", Release));
+		  if (tplMetaKey.find("$(COMPONENT)") != std::string::npos)
+		     Options.insert(std::make_pair("COMPONENT", E->Name));
+		  if (tplMetaKey.find("$(LANGUAGE)") != std::string::npos)
+		     Options.insert(std::make_pair("LANGUAGE", *L));
+		  if (tplMetaKey.find("$(ARCHITECTURE)") != std::string::npos)
+		     Options.insert(std::make_pair("ARCHITECTURE", *A));
+		  else if (tplMetaKey.find("$(NATIVE_ARCHITECTURE)") != std::string::npos)
+		     Options.insert(std::make_pair("ARCHITECTURE", NativeArch));
+		  if (tplMetaKey.find("$(NATIVE_ARCHITECTURE)") != std::string::npos)
+		     Options.insert(std::make_pair("NATIVE_ARCHITECTURE", NativeArch));
 
-	       {
-		  auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &IT) {
-		     return MetaKey == IT.MetaKey && baseURI == IT.Option(IndexTarget::BASE_URI) &&
-			E->sourcesEntry == IT.Option(IndexTarget::SOURCESENTRY) && *T == IT.Option(IndexTarget::CREATED_BY);
-		  });
-		  if (dup != IndexTargets.end())
+		  std::string MetaKey = tplMetaKey;
+		  std::string ShortDesc = tplShortDesc;
+		  std::string LongDesc = tplLongDesc;
+		  std::string Identifier = tplIdentifier;
+		  for (std::map<std::string, std::string>::const_iterator O = Options.begin(); O != Options.end(); ++O)
 		  {
-		     if (tplMetaKey.find("$(ARCHITECTURE)") == std::string::npos)
-			break;
-		     continue;
+		     std::string const varname = "$(" + O->first + ")";
+		     MetaKey = SubstVar(MetaKey, varname, O->second);
+		     ShortDesc = SubstVar(ShortDesc, varname, O->second);
+		     LongDesc = SubstVar(LongDesc, varname, O->second);
+		     Identifier = SubstVar(Identifier, varname, O->second);
 		  }
-	       }
 
-	       {
-		  auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &IT) {
-		     return MetaKey == IT.MetaKey && baseURI == IT.Option(IndexTarget::BASE_URI) &&
-			E->sourcesEntry == IT.Option(IndexTarget::SOURCESENTRY) && *T != IT.Option(IndexTarget::CREATED_BY);
-		  });
-		  if (dup != IndexTargets.end())
 		  {
-		     std::string const dupT = dup->Option(IndexTarget::CREATED_BY);
-		     std::string const dupEntry = dup->Option(IndexTarget::SOURCESENTRY);
-		     //TRANSLATOR: an identifier like Packages; Releasefile key indicating
-		     // a file like main/binary-amd64/Packages; another identifier like Contents;
-		     // filename and linenumber of the sources.list entry currently parsed
-		     _error->Warning(_("Target %s wants to acquire the same file (%s) as %s from source %s"),
-			   T->c_str(), MetaKey.c_str(), dupT.c_str(), dupEntry.c_str());
-		     if (tplMetaKey.find("$(ARCHITECTURE)") == std::string::npos)
-			break;
-		     continue;
+		     auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &IT) {
+			return MetaKey == IT.MetaKey && baseURI == IT.Option(IndexTarget::BASE_URI) &&
+			   E->sourcesEntry == IT.Option(IndexTarget::SOURCESENTRY) && *T == IT.Option(IndexTarget::CREATED_BY);
+		     });
+		     if (dup != IndexTargets.end())
+		     {
+			if (tplMetaKey.find(BreakPoint) == std::string::npos)
+			   break;
+			continue;
+		     }
 		  }
-	       }
 
-	       {
-		  auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &T) {
-		     return MetaKey == T.MetaKey && baseURI == T.Option(IndexTarget::BASE_URI) &&
-			E->sourcesEntry != T.Option(IndexTarget::SOURCESENTRY);
-		  });
-		  if (dup != IndexTargets.end())
 		  {
-		     std::string const dupEntry = dup->Option(IndexTarget::SOURCESENTRY);
-		     //TRANSLATOR: an identifier like Packages; Releasefile key indicating
-		     // a file like main/binary-amd64/Packages; filename and linenumber of
-		     // two sources.list entries
-		     _error->Warning(_("Target %s (%s) is configured multiple times in %s and %s"),
-			   T->c_str(), MetaKey.c_str(), dupEntry.c_str(), E->sourcesEntry.c_str());
-		     if (tplMetaKey.find("$(ARCHITECTURE)") == std::string::npos)
-			break;
-		     continue;
+		     auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &IT) {
+			return MetaKey == IT.MetaKey && baseURI == IT.Option(IndexTarget::BASE_URI) &&
+			   E->sourcesEntry == IT.Option(IndexTarget::SOURCESENTRY) && *T != IT.Option(IndexTarget::CREATED_BY);
+			});
+		     if (dup != IndexTargets.end())
+		     {
+			std::string const dupT = dup->Option(IndexTarget::CREATED_BY);
+			std::string const dupEntry = dup->Option(IndexTarget::SOURCESENTRY);
+			//TRANSLATOR: an identifier like Packages; Releasefile key indicating
+			// a file like main/binary-amd64/Packages; another identifier like Contents;
+			// filename and linenumber of the sources.list entry currently parsed
+			_error->Warning(_("Target %s wants to acquire the same file (%s) as %s from source %s"),
+			      T->c_str(), MetaKey.c_str(), dupT.c_str(), dupEntry.c_str());
+			if (tplMetaKey.find(BreakPoint) == std::string::npos)
+			   break;
+			continue;
+		     }
 		  }
+
+		  {
+		     auto const dup = std::find_if(IndexTargets.begin(), IndexTargets.end(), [&](IndexTarget const &T) {
+			return MetaKey == T.MetaKey && baseURI == T.Option(IndexTarget::BASE_URI) &&
+			   E->sourcesEntry != T.Option(IndexTarget::SOURCESENTRY);
+		     });
+		     if (dup != IndexTargets.end())
+		     {
+			std::string const dupEntry = dup->Option(IndexTarget::SOURCESENTRY);
+			//TRANSLATOR: an identifier like Packages; Releasefile key indicating
+			// a file like main/binary-amd64/Packages; filename and linenumber of
+			// two sources.list entries
+			_error->Warning(_("Target %s (%s) is configured multiple times in %s and %s"),
+			      T->c_str(), MetaKey.c_str(), dupEntry.c_str(), E->sourcesEntry.c_str());
+			if (tplMetaKey.find(BreakPoint) == std::string::npos)
+			   break;
+			continue;
+		     }
+		  }
+
+		  // not available in templates, but in the indextarget
+		  Options.insert(ReleaseOptions.begin(), ReleaseOptions.end());
+		  Options.insert(std::make_pair("IDENTIFIER", Identifier));
+		  Options.insert(std::make_pair("TARGET_OF", Type));
+		  Options.insert(std::make_pair("CREATED_BY", *T));
+		  Options.insert(std::make_pair("FALLBACK_OF", FallbackOf));
+		  Options.insert(std::make_pair("PDIFFS", UsePDiffs ? "yes" : "no"));
+		  Options.insert(std::make_pair("BY_HASH", UseByHash));
+		  Options.insert(std::make_pair("DEFAULTENABLED", DefaultEnabled ? "yes" : "no"));
+		  Options.insert(std::make_pair("COMPRESSIONTYPES", CompressionTypes));
+		  Options.insert(std::make_pair("KEEPCOMPRESSEDAS", KeepCompressedAs));
+		  Options.insert(std::make_pair("SOURCESENTRY", E->sourcesEntry));
+
+		  bool IsOpt = IsOptional;
+		  if (IsOpt == false)
+		  {
+		     auto const arch = Options.find("ARCHITECTURE");
+		     if (arch != Options.end() && arch->second == "all")
+			IsOpt = true;
+		  }
+
+		  IndexTarget Target(
+			MetaKey,
+			ShortDesc,
+			LongDesc,
+			baseURI + MetaKey,
+			IsOpt,
+			KeepCompressed,
+			Options
+			);
+		  IndexTargets.push_back(Target);
+
+		  if (tplMetaKey.find(BreakPoint) == std::string::npos)
+		     break;
 	       }
-
-	       // not available in templates, but in the indextarget
-	       Options.insert(std::make_pair("BASE_URI", baseURI));
-	       Options.insert(std::make_pair("REPO_URI", URI));
-	       Options.insert(std::make_pair("TARGET_OF", Type));
-	       Options.insert(std::make_pair("CREATED_BY", *T));
-	       Options.insert(std::make_pair("PDIFFS", UsePDiffs ? "yes" : "no"));
-	       Options.insert(std::make_pair("BY_HASH", UseByHash));
-	       Options.insert(std::make_pair("DEFAULTENABLED", DefaultEnabled ? "yes" : "no"));
-	       Options.insert(std::make_pair("COMPRESSIONTYPES", CompressionTypes));
-	       Options.insert(std::make_pair("KEEPCOMPRESSEDAS", KeepCompressedAs));
-	       Options.insert(std::make_pair("SOURCESENTRY", E->sourcesEntry));
-
-	       bool IsOpt = IsOptional;
-	       if (IsOpt == false)
-	       {
-		  auto const arch = Options.find("ARCHITECTURE");
-		  if (arch != Options.end() && arch->second == "all")
-		     IsOpt = true;
-	       }
-
-	       IndexTarget Target(
-		     MetaKey,
-		     ShortDesc,
-		     LongDesc,
-		     Options.find("BASE_URI")->second + MetaKey,
-		     IsOpt,
-		     KeepCompressed,
-		     Options
-		     );
-	       IndexTargets.push_back(Target);
 
 	       if (tplMetaKey.find("$(ARCHITECTURE)") == std::string::npos)
 		  break;
@@ -330,8 +337,8 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 std::vector<IndexTarget> debReleaseIndex::GetIndexTargets() const
 {
    std::vector<IndexTarget> IndexTargets;
-   GetIndexTargetsFor("deb-src", URI, Dist, d->DebSrcEntries, IndexTargets);
-   GetIndexTargetsFor("deb", URI, Dist, d->DebEntries, IndexTargets);
+   GetIndexTargetsFor("deb-src", URI, Dist, d->DebSrcEntries, IndexTargets, d->ReleaseOptions);
+   GetIndexTargetsFor("deb", URI, Dist, d->DebEntries, IndexTargets, d->ReleaseOptions);
    return IndexTargets;
 }
 									/*}}}*/
@@ -426,23 +433,18 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
       }
    }
 
+   bool AuthPossible = false;
    if(FoundHashSum == false)
-   {
-      if (ErrorText != NULL)
-	 strprintf(*ErrorText, _("No Hash entry in Release file %s"), Filename.c_str());
-      return false;
-   }
-   if(FoundStrongHashSum == false)
-   {
-      if (ErrorText != NULL)
-	 strprintf(*ErrorText, _("No Hash entry in Release file %s which is considered strong enough for security purposes"), Filename.c_str());
-      return false;
-   }
+      _error->Warning(_("No Hash entry in Release file %s"), Filename.c_str());
+   else if(FoundStrongHashSum == false)
+      _error->Warning(_("No Hash entry in Release file %s which is considered strong enough for security purposes"), Filename.c_str());
+   else
+      AuthPossible = true;
 
    std::string const StrDate = Section.FindS("Date");
    if (RFC1123StrToTime(StrDate.c_str(), Date) == false)
    {
-      _error->Warning( _("Invalid 'Date' entry in Release file %s"), Filename.c_str());
+      _error->Warning( _("Invalid '%s' entry in Release file %s"), "Date", Filename.c_str());
       Date = 0;
    }
 
@@ -463,7 +465,7 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
 	 if(RFC1123StrToTime(StrValidUntil.c_str(), ValidUntil) == false)
 	 {
 	    if (ErrorText != NULL)
-	       strprintf(*ErrorText, _("Invalid 'Valid-Until' entry in Release file %s"), Filename.c_str());
+	       strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Valid-Until", Filename.c_str());
 	    return false;
 	 }
       }
@@ -498,18 +500,46 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
       }
    }
 
-   LoadedSuccessfully = TRI_YES;
-   return true;
+   /* as the Release file is parsed only after it was verified, the Signed-By field
+      does not effect the current, but the "next" Release file */
+   auto Sign = Section.FindS("Signed-By");
+   if (Sign.empty() == false)
+   {
+      std::transform(Sign.begin(), Sign.end(), Sign.begin(), [&](char const c) {
+	 return (isspace(c) == 0) ? c : ',';
+      });
+      auto fingers = VectorizeString(Sign, ',');
+      std::transform(fingers.begin(), fingers.end(), fingers.begin(), [&](std::string finger) {
+	 std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
+	 if (finger.length() != 40 || finger.find_first_not_of("0123456789ABCDEF") != std::string::npos)
+	 {
+	    if (ErrorText != NULL)
+	       strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Signed-By", Filename.c_str());
+	    return std::string();
+	 }
+	 return finger;
+      });
+      if (fingers.empty() == false && std::find(fingers.begin(), fingers.end(), "") == fingers.end())
+      {
+	 std::stringstream os;
+	 std::copy(fingers.begin(), fingers.end(), std::ostream_iterator<std::string>(os, ","));
+	 SignedBy = os.str();
+      }
+   }
+
+   if (AuthPossible)
+      LoadedSuccessfully = TRI_YES;
+   return AuthPossible;
 }
 									/*}}}*/
 metaIndex * debReleaseIndex::UnloadedClone() const			/*{{{*/
 {
    if (Trusted == TRI_NO)
-      return new debReleaseIndex(URI, Dist, false);
+      return new debReleaseIndex(URI, Dist, false, d->ReleaseOptions);
    else if (Trusted == TRI_YES)
-      return new debReleaseIndex(URI, Dist, true);
+      return new debReleaseIndex(URI, Dist, true, d->ReleaseOptions);
    else
-      return new debReleaseIndex(URI, Dist);
+      return new debReleaseIndex(URI, Dist, d->ReleaseOptions);
 }
 									/*}}}*/
 bool debReleaseIndex::parseSumData(const char *&Start, const char *End,	/*{{{*/
@@ -574,16 +604,15 @@ bool debReleaseIndex::parseSumData(const char *&Start, const char *End,	/*{{{*/
 
 bool debReleaseIndex::GetIndexes(pkgAcquire *Owner, bool const &GetAll)/*{{{*/
 {
-   std::vector<IndexTarget> const targets = GetIndexTargets();
-#define APT_TARGET(X) IndexTarget("", X, MetaIndexInfo(X), MetaIndexURI(X), false, false, std::map<std::string,std::string>())
+#define APT_TARGET(X) IndexTarget("", X, MetaIndexInfo(X), MetaIndexURI(X), false, false, d->ReleaseOptions)
    pkgAcqMetaClearSig * const TransactionManager = new pkgAcqMetaClearSig(Owner,
-	 APT_TARGET("InRelease"), APT_TARGET("Release"), APT_TARGET("Release.gpg"),
-	 targets, this);
+	 APT_TARGET("InRelease"), APT_TARGET("Release"), APT_TARGET("Release.gpg"), this);
 #undef APT_TARGET
    // special case for --print-uris
    if (GetAll)
-      for (auto const &Target: targets)
-	 new pkgAcqIndex(Owner, TransactionManager, Target);
+      for (auto const &Target: GetIndexTargets())
+	 if (Target.Option(IndexTarget::FALLBACK_OF).empty())
+	    new pkgAcqIndex(Owner, TransactionManager, Target);
 
    return true;
 }
@@ -627,22 +656,38 @@ bool debReleaseIndex::SetSignedBy(std::string const &pSignedBy)
    if (SignedBy.empty() == true && pSignedBy.empty() == false)
    {
       if (pSignedBy[0] == '/') // no check for existence as we could be chrooting later or such things
-	 ; // absolute path to a keyring file
+	 SignedBy = pSignedBy; // absolute path to a keyring file
       else
       {
 	 // we could go all fancy and allow short/long/string matches as gpgv/apt-key does,
 	 // but fingerprints are harder to fake than the others and this option is set once,
 	 // not interactively all the time so easy to type is not really a concern.
-	 std::string finger = pSignedBy;
-	 finger.erase(std::remove(finger.begin(), finger.end(), ' '), finger.end());
-	 std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
-	 if (finger.length() != 40 || finger.find_first_not_of("0123456789ABCDEF") != std::string::npos)
-	    return _error->Error(_("Invalid value set for option %s regarding source %s %s (%s)"), "Signed-By", URI.c_str(), Dist.c_str(), "not a fingerprint");
+	 auto fingers = VectorizeString(pSignedBy, ',');
+	 std::transform(fingers.begin(), fingers.end(), fingers.begin(), [&](std::string finger) {
+	    std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
+	    if (finger.length() != 40 || finger.find_first_not_of("0123456789ABCDEF") != std::string::npos)
+	    {
+	       _error->Error(_("Invalid value set for option %s regarding source %s %s (%s)"), "Signed-By", URI.c_str(), Dist.c_str(), "not a fingerprint");
+	       return std::string();
+	    }
+	    return finger;
+	 });
+	 std::stringstream os;
+	 std::copy(fingers.begin(), fingers.end(), std::ostream_iterator<std::string>(os, ","));
+	 SignedBy = os.str();
       }
-      SignedBy = pSignedBy;
+      // Normalize the string: Remove trailing commas
+      while (SignedBy[SignedBy.size() - 1] == ',')
+	 SignedBy.resize(SignedBy.size() - 1);
    }
-   else if (SignedBy != pSignedBy)
-      return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), "Signed-By", URI.c_str(), Dist.c_str());
+   else {
+      // Only compare normalized strings
+      auto pSignedByView = APT::StringView(pSignedBy);
+      while (pSignedByView[pSignedByView.size() - 1] == ',')
+	 pSignedByView = pSignedByView.substr(0, pSignedByView.size() - 1);
+      if (pSignedByView != SignedBy)
+	 return _error->Error(_("Conflicting values set for option %s regarding source %s %s: %s != %s"), "Signed-By", URI.c_str(), Dist.c_str(), SignedBy.c_str(), pSignedByView.to_string().c_str());
+   }
    return true;
 }
 									/*}}}*/
@@ -699,6 +744,10 @@ std::vector <pkgIndexFile *> *debReleaseIndex::GetIndexFiles()		/*{{{*/
    return Indexes;
 }
 									/*}}}*/
+std::map<std::string, std::string> debReleaseIndex::GetReleaseOptions()
+{
+   return d->ReleaseOptions;
+}
 
 static bool ReleaseFileName(debReleaseIndex const * const That, std::string &ReleaseFile)/*{{{*/
 {
@@ -848,12 +897,63 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
       return metaIndex::TRI_DONTCARE;
    }
 
-   time_t GetTimeOption(std::map<std::string, std::string>const &Options, char const * const name) const
+   static time_t GetTimeOption(std::map<std::string, std::string>const &Options, char const * const name)
    {
       std::map<std::string, std::string>::const_iterator const opt = Options.find(name);
       if (opt == Options.end())
 	 return 0;
       return strtoull(opt->second.c_str(), NULL, 10);
+   }
+
+   static bool GetBoolOption(std::map<std::string, std::string> const &Options, char const * const name, bool const defVal)
+   {
+      std::map<std::string, std::string>::const_iterator const opt = Options.find(name);
+      if (opt == Options.end())
+	 return defVal;
+      return StringToBool(opt->second, defVal);
+   }
+
+   static std::vector<std::string> GetMapKeys(std::map<std::string, std::string> const &Options)
+   {
+      std::vector<std::string> ret;
+      ret.reserve(Options.size());
+      for (auto &&O: Options)
+	 ret.emplace_back(O.first);
+      std::sort(ret.begin(), ret.end());
+      return ret;
+   }
+
+   static bool MapsAreEqual(std::map<std::string, std::string> const &OptionsA,
+	 std::map<std::string, std::string> const &OptionsB,
+	 std::string const &URI, std::string const &Dist)
+   {
+      auto const KeysA = GetMapKeys(OptionsA);
+      auto const KeysB = GetMapKeys(OptionsB);
+      auto const m = std::mismatch(KeysA.begin(), KeysA.end(), KeysB.begin());
+      if (m.first != KeysA.end())
+      {
+	 if (std::find(KeysB.begin(), KeysB.end(), *m.first) == KeysB.end())
+	    return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), m.first->c_str(), "<set>", "<unset>");
+	 else
+	    return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), m.second->c_str(), "<set>", "<unset>");
+      }
+      if (m.second != KeysB.end())
+      {
+	 if (std::find(KeysA.begin(), KeysA.end(), *m.second) == KeysA.end())
+	    return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), m.first->c_str(), "<set>", "<unset>");
+	 else
+	    return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), m.second->c_str(), "<set>", "<unset>");
+      }
+      for (auto&& key: KeysA)
+      {
+	 if (key == "BASE_URI" || key == "REPO_URI")
+	    continue;
+	 auto const a = OptionsA.find(key);
+	 auto const b = OptionsB.find(key);
+	 if (unlikely(a == OptionsA.end() || b == OptionsB.end()) || a->second != b->second)
+	    return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), key.c_str(), URI.c_str(), Dist.c_str());
+      }
+      return true;
    }
 
    protected:
@@ -862,29 +962,45 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 			   std::string const &Dist, std::string const &Section,
 			   bool const &IsSrc, std::map<std::string, std::string> const &Options) const
    {
-      debReleaseIndex *Deb = NULL;
-      for (std::vector<metaIndex *>::const_iterator I = List.begin();
-	   I != List.end(); ++I)
+      std::map<std::string,std::string> ReleaseOptions = {{
+	 { "BASE_URI", constructMetaIndexURI(URI, Dist, "") },
+	 { "REPO_URI", URI },
+      }};
+      if (GetBoolOption(Options, "allow-insecure", _config->FindB("Acquire::AllowInsecureRepositories")))
+	 ReleaseOptions.emplace("ALLOW_INSECURE", "true");
+      if (GetBoolOption(Options, "allow-weak", _config->FindB("Acquire::AllowWeakRepositories")))
+	 ReleaseOptions.emplace("ALLOW_WEAK", "true");
+      if (GetBoolOption(Options, "allow-downgrade-to-insecure", _config->FindB("Acquire::AllowDowngradeToInsecureRepositories")))
+	 ReleaseOptions.emplace("ALLOW_DOWNGRADE_TO_INSECURE", "true");
+
+      debReleaseIndex * Deb = nullptr;
+      std::string const FileName = URItoFileName(constructMetaIndexURI(URI, Dist, "Release"));
+      for (auto const &I: List)
       {
 	 // We only worry about debian entries here
-	 if (strcmp((*I)->GetType(), "deb") != 0)
+	 if (strcmp(I->GetType(), "deb") != 0)
 	    continue;
 
-	 /* This check insures that there will be only one Release file
+	 auto const D = dynamic_cast<debReleaseIndex*>(I);
+	 if (unlikely(D == nullptr))
+	    continue;
+
+	 /* This check ensures that there will be only one Release file
 	    queued for all the Packages files and Sources files it
 	    corresponds to. */
-	 if ((*I)->GetURI() == URI && (*I)->GetDist() == Dist)
+	 if (URItoFileName(D->MetaIndexURI("Release")) == FileName)
 	 {
-	    Deb = dynamic_cast<debReleaseIndex*>(*I);
-	    if (Deb != NULL)
-	       break;
+	    if (MapsAreEqual(ReleaseOptions, D->GetReleaseOptions(), URI, Dist) == false)
+	       return false;
+	    Deb = D;
+	    break;
 	 }
       }
 
       // No currently created Release file indexes this entry, so we create a new one.
-      if (Deb == NULL)
+      if (Deb == nullptr)
       {
-	 Deb = new debReleaseIndex(URI, Dist);
+	 Deb = new debReleaseIndex(URI, Dist, ReleaseOptions);
 	 List.push_back(Deb);
       }
 
@@ -902,20 +1018,43 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 	 std::map<std::string, std::string>::const_iterator const opt = Options.find(target);
 	 if (opt == Options.end())
 	    continue;
-	 auto const tarItr = std::find(mytargets.begin(), mytargets.end(), target);
-	 bool const optValue = StringToBool(opt->second);
-	 if (optValue == true && tarItr == mytargets.end())
-	    mytargets.push_back(target);
-	 else if (optValue == false && tarItr != mytargets.end())
-	    mytargets.erase(std::remove(mytargets.begin(), mytargets.end(), target), mytargets.end());
+	 auto const idMatch = [&](std::string const &t) {
+	    return target == _config->Find(std::string("Acquire::IndexTargets::") + Name + "::" + t + "::Identifier", t);
+	 };
+	 if (StringToBool(opt->second))
+	    std::copy_if(alltargets.begin(), alltargets.end(), std::back_inserter(mytargets), idMatch);
+	 else
+	    mytargets.erase(std::remove_if(mytargets.begin(), mytargets.end(), idMatch), mytargets.end());
+      }
+      // if we can't order it in a 1000 steps we give up… probably a cycle
+      for (auto i = 0; i < 1000; ++i)
+      {
+	 bool Changed = false;
+	 for (auto t = mytargets.begin(); t != mytargets.end(); ++t)
+	 {
+	    std::string const fallback = _config->Find(std::string("Acquire::IndexTargets::") + Name + "::" + *t + "::Fallback-Of");
+	    if (fallback.empty())
+	       continue;
+	    auto const faller = std::find(mytargets.begin(), mytargets.end(), fallback);
+	    if (faller == mytargets.end() || faller < t)
+	       continue;
+	    Changed = true;
+	    auto const tv = *t;
+	    mytargets.erase(t);
+	    mytargets.emplace_back(tv);
+	 }
+	 if (Changed == false)
+	    break;
+      }
+      // remove duplicates without changing the order (in first appearance)
+      {
+	 std::set<std::string> seenOnce;
+	 mytargets.erase(std::remove_if(mytargets.begin(), mytargets.end(), [&](std::string const &t) {
+	    return seenOnce.insert(t).second == false;
+	 }), mytargets.end());
       }
 
-      bool UsePDiffs = _config->FindB("Acquire::PDiffs", true);
-      {
-	 std::map<std::string, std::string>::const_iterator const opt = Options.find("pdiffs");
-	 if (opt != Options.end())
-	    UsePDiffs = StringToBool(opt->second);
-      }
+      bool const UsePDiffs = GetBoolOption(Options, "pdiffs", _config->FindB("Acquire::PDiffs", true));
 
       std::string UseByHash = _config->Find("APT::Acquire::By-Hash", "yes");
       UseByHash = _config->Find("Acquire::By-Hash", UseByHash);
@@ -949,7 +1088,30 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
       std::map<std::string, std::string>::const_iterator const signedby = Options.find("signed-by");
       if (signedby == Options.end())
       {
-	 if (Deb->SetSignedBy("") == false)
+	 bool alreadySet = false;
+	 std::string filename;
+	 if (ReleaseFileName(Deb, filename))
+	 {
+	    auto OldDeb = Deb->UnloadedClone();
+	    _error->PushToStack();
+	    OldDeb->Load(filename, nullptr);
+	    bool const goodLoad = _error->PendingError() == false;
+	    _error->RevertToStack();
+	    if (goodLoad)
+	    {
+	       if (OldDeb->GetValidUntil() > 0)
+	       {
+		  time_t const invalid_since = time(NULL) - OldDeb->GetValidUntil();
+		  if (invalid_since <= 0)
+		  {
+		     Deb->SetSignedBy(OldDeb->GetSignedBy());
+		     alreadySet = true;
+		  }
+	       }
+	    }
+	    delete OldDeb;
+	 }
+	 if (alreadySet == false && Deb->SetSignedBy("") == false)
 	    return false;
       }
       else

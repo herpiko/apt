@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.8\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2014-09-19 13:04+0100\n"
 "Last-Translator: Holger Wansing <linux@wansing-online.de>\n"
 "Language-Team: Debian German <debian-l10n-german@lists.debian.org>\n"
@@ -234,10 +234,10 @@ msgid ""
 "unauthenticated"
 msgstr "Es gab Probleme und -y wurde ohne --force-yes verwendet."
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Fehlschlag beim Holen von %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Fehlschlag beim Holen von %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -554,18 +554,20 @@ msgstr[1] ""
 "Es gibt %i zusätzliche Versionen. Bitte verwenden Sie die Option »-a«, um "
 "sie anzuzeigen."
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "HINWEIS: Dies ist nur eine Simulation!\n"
-"         apt-get benötigt root-Privilegien für die reale Ausführung.\n"
+"         %s benötigt root-Privilegien für die reale Ausführung.\n"
 "         Behalten Sie ebenfalls in Hinterkopf, dass die Sperren deaktiviert\n"
 "         sind, verlassen Sie sich also bezüglich des reellen aktuellen\n"
-"         Status der Sperre nicht darauf!"
+"         Status der Sperre nicht darauf!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -778,10 +780,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Mit Pinning verwaltete Pakete:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(nicht gefunden)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -799,10 +797,6 @@ msgstr "  Installationskandidat: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(keine)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Paket-Pinning: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1749,6 +1743,25 @@ msgstr "Abfrage"
 msgid "Unable to invoke "
 msgstr "Aufruf nicht möglich: "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Durch Clearsign signierte Datei ist nicht gültig, »%s« erhalten (erfordert "
+"das Netzwerk eine Authentifizierung?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Durch Clearsign signierte Datei ist nicht gültig, »%s« erhalten (erfordert "
+"das Netzwerk eine Authentifizierung?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Mindestens eine ungültige Signatur wurde entdeckt."
@@ -1765,16 +1778,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "»apt-key« konnte zur Überprüfung der Signatur nicht ausgeführt werden (ist "
 "gnupg installiert?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Durch Clearsign signierte Datei ist nicht gültig, »%s« erhalten (erfordert "
-"das Netzwerk eine Authentifizierung?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1975,6 +1978,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Verfügbare Informationen werden zusammengeführt."
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Es wurde auf %s gewartet, war jedoch nicht vorhanden"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2519,14 +2536,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "Umbenennen fehlgeschlagen, %s (%s -> %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "Das Verzeichnis %s ist umgeleitet."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Das Verzeichnis %s ist umgeleitet."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Das Verzeichnis %s ist umgeleitet."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Das Verzeichnis %s ist umgeleitet."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "Das Verzeichnis %s ist umgeleitet."
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hash-Summe stimmt nicht überein"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "Umbenennen fehlgeschlagen, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2596,33 +2648,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konflikt bei Distribution: %s (%s erwartet, aber %s bekommen)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Das Verzeichnis %s ist umgeleitet."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Das Verzeichnis %s ist umgeleitet."
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Das Verzeichnis %s ist umgeleitet."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3073,11 +3098,6 @@ msgstr ""
 "Datei »%s« in Verzeichnis »%s« wird ignoriert, da sie eine ungültige "
 "Dateinamen-Erweiterung hat."
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Es wurde auf %s gewartet, war jedoch nicht vorhanden"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3298,13 +3318,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Ungültiger »Date«-Eintrag in Release-Datei %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Ungültiger »Valid-Until«-Eintrag in Release-Datei %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Ungültiger »%s«-Eintrag in Release-Datei %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3315,6 +3330,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3387,7 +3407,7 @@ msgstr "Aufruf des Nach-Installations-Triggers %s"
 msgid "Directory '%s' missing"
 msgstr "Verzeichnis »%s« fehlt"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Datei »%s« konnte nicht geöffnet werden."
@@ -3827,11 +3847,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Fehlschlag beim Holen von %s  %s\n"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3842,6 +3857,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Paketaktualisierung (Upgrade) wird berechnet"
+
+#~ msgid "(not found)"
+#~ msgstr "(nicht gefunden)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Paket-Pinning: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr ""

@@ -27,8 +27,9 @@
 static bool pkgDistUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
+   auto const ret = EDSP::ResolveExternal(solver.c_str(), Cache, EDSP::Request::UPGRADE_ALL, Progress);
    if (solver != "internal")
-      return EDSP::ResolveExternal(solver.c_str(), Cache, false, true, false, Progress);
+      return ret;
 
    if (Progress != NULL)
       Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
@@ -115,7 +116,7 @@ static bool pkgDistUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
       }
    }
 
-   bool const success = Fix.Resolve(false, Progress);
+   bool const success = Fix.ResolveInternal(false);
    if (Progress != NULL)
       Progress->Done();
    return success;
@@ -129,8 +130,10 @@ bool pkgDistUpgrade(pkgDepCache &Cache)
 static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
+   constexpr auto flags = EDSP::Request::UPGRADE_ALL | EDSP::Request::FORBID_NEW_INSTALL | EDSP::Request::FORBID_REMOVE;
+   auto const ret = EDSP::ResolveExternal(solver.c_str(), Cache, flags, Progress);
    if (solver != "internal")
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, Progress);
+      return ret;
 
    if (Progress != NULL)
       Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
@@ -156,7 +159,7 @@ static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache, OpProgress * const Pr
       Progress->Progress(50);
 
    // resolve remaining issues via keep
-   bool const success = Fix.ResolveByKeep(Progress);
+   bool const success = Fix.ResolveByKeepInternal();
    if (Progress != NULL)
       Progress->Done();
    return success;
@@ -171,8 +174,10 @@ static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache, OpProgress * const Pr
 static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache, OpProgress * const Progress)
 {
    std::string const solver = _config->Find("APT::Solver", "internal");
+   constexpr auto flags = EDSP::Request::UPGRADE_ALL | EDSP::Request::FORBID_REMOVE;
+   auto const ret = EDSP::ResolveExternal(solver.c_str(), Cache, flags, Progress);
    if (solver != "internal")
-      return EDSP::ResolveExternal(solver.c_str(), Cache, true, false, false, Progress);
+      return ret;
 
    if (Progress != NULL)
       Progress->OverallProgress(0, 100, 1, _("Calculating upgrade"));
@@ -214,7 +219,7 @@ static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache, OpProgress * const 
       Progress->Progress(60);
 
    // resolve remaining issues via keep
-   bool const success = Fix.ResolveByKeep(Progress);
+   bool const success = Fix.ResolveByKeepInternal();
    if (Progress != NULL)
       Progress->Done();
    return success;

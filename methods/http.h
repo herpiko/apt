@@ -12,7 +12,6 @@
 #define APT_HTTP_H
 
 #include <apt-pkg/strutl.h>
-#include <apt-pkg/acquire-method.h>
 
 #include <string>
 #include <sys/time.h>
@@ -113,7 +112,7 @@ struct HttpServerState: public ServerState
    virtual bool Close() APT_OVERRIDE;
    virtual bool InitHashes(HashStringList const &ExpectedHashes) APT_OVERRIDE;
    virtual Hashes * GetHashes() APT_OVERRIDE;
-   virtual bool Die(FileFd &File) APT_OVERRIDE;
+   virtual bool Die(FileFd * const File) APT_OVERRIDE;
    virtual bool Flush(FileFd * const File) APT_OVERRIDE;
    virtual bool Go(bool ToFile, FileFd * const File) APT_OVERRIDE;
 

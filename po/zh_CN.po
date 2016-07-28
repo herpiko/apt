@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.2.x\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
-"PO-Revision-Date: 2016-03-27 07:00+0000\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
+"PO-Revision-Date: 2016-06-27 08:00+0000\n"
 "Last-Translator: Zhou Mo <cdluminate@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -235,10 +235,10 @@ msgid ""
 msgstr ""
 "存在未认证的软件包同时使用了 -y 选项，然而未搭配  --allow-unauthenticated"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "下载 %s  %s 失败\n"
+msgid "Failed to fetch %s  %s"
+msgstr "无法下载 %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -522,16 +522,18 @@ msgid_plural ""
 "There are %i additional versions. Please use the '-a' switch to see them."
 msgstr[0] "还有 %i 个版本。请使用 -a 选项来查看它(他们)。"
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "注意：这只是模拟！\n"
-"　　　apt-get 需要 root 特权进行实际的执行。\n"
-"　　　同时请记住此时并未锁定，所以请勿完全相信当前的情况！"
+"　　　%s 需要 root 特权进行实际的执行。\n"
+"　　　同时请记住此时并未锁定，所以请勿完全相信当前的情况！\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -736,10 +738,6 @@ msgstr "缓存尚未同步，无法交差引证(x-ref)一个软件包文件"
 msgid "Pinned packages:"
 msgstr "被锁定的软件包："
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(没有找到)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -757,10 +755,6 @@ msgstr "  候选："
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(无)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  软件包锁："
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1678,6 +1672,21 @@ msgstr "查询"
 msgid "Unable to invoke "
 msgstr "无法调用 "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr "明文签署文件不可用，结果为‘%s’（您的网络需要认证吗？）"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr "明文签署文件不可用，结果为‘%s’（您的网络接入需要认证吗？）"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "至少发现一个无效的签名。"
@@ -1690,14 +1699,6 @@ msgstr "内部错误：签名正确无误，但是无法确认密钥指纹？！
 #: methods/gpgv.cc
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr "无法运行 apt-key 以验证签名(您安装了 gnupg 吗？)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr "明文签署文件不可用，结果为‘%s’（您的网络需要认证吗？）"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1884,6 +1885,24 @@ msgstr "这个提示之前的错误消息才值得您注意。请更正它们，
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "正在合并可用信息"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+"用法：apt-dump-solver\n"
+"\n"
+"apt-dump-solver 是一个在文件中存储EDSP情景的接口，\n"
+"并可将其传送到另一个解决器。\n"
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "等待子进程 %s 的退出，但是它并不存在"
 
 #: cmdline/apt-extracttemplates.cc
 msgid ""
@@ -2408,14 +2427,51 @@ msgid ""
 "details."
 msgstr "参见 apt-secure(8) 手册以了解仓库创建和用户配置方面的细节。"
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "无法重命名文件，%s (%s -> %s)。"
+msgid "The repository '%s' is no longer signed."
+msgstr "仓库 “%s” 的签名不再生效。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "仓库 “%s” 不再含有 Release 文件。"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"一般不可以这样做，但选项 Acquire:: AllowDowngradeToInsecureRepositories 可以"
+"用于覆盖默认设置。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' is not signed."
+msgstr "仓库 “%s” 没有数字签名。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "仓库 “%s” 没有 Release 文件。"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "仓库 '%s' 只提供了低强度的安全信息。"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hash 校验和不符"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr "可用信息不足，不能安全执行本次下载"
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "无法重命名文件，%s (%s -> %s)。"
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2481,35 +2537,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "冲突的发行版：%s (期望 %s 但得到 %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is not signed."
-msgstr "仓库 “%s” 没有数字签名。"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "仓库 “%s” 没有 Release 文件。"
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "仓库 “%s” 的签名不再生效。"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"一般不可以这样做，但选项 Acquire:: AllowDowngradeToInsecureRepositories 可以"
-"用于覆盖默认设置。"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -2932,11 +2959,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr "忽略‘%s’(于目录‘%s’)，鉴于它的文件扩展名无效"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "等待子进程 %s 的退出，但是它并不存在"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3149,13 +3171,8 @@ msgstr "Release 文件 %s 中不含散列项，该文件用于保证足够的安
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "软件包仓库 Release 文件 %s 内 Date 条目无效"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "软件包仓库 Release 文件 %s 内 Valid-Until 条目无效"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "软件包仓库 Release 文件 %2$s 内 %1$s 条目无效"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3167,6 +3184,11 @@ msgstr "软件源 %2$s %3$s 的选项 %1$s 中含有互相冲突的值"
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr "软件源 %2$s %3$s (%4$s) 的选项 %1$s 中含有无效值"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr "软件源 %2$s %3$s 的选项 %1$s 中含有互相冲突的值：%4$s != %5$s"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3233,7 +3255,7 @@ msgstr "执行安装后执行的触发器 %s"
 msgid "Directory '%s' missing"
 msgstr "目录 %s 缺失"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "无法打开文件 %s"
@@ -3643,11 +3665,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "无法将 %s 转换为整数：超出范围"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "无法下载 %s  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3656,6 +3673,12 @@ msgstr "部分索引文件下载失败。如果忽略它们，那将转而使用
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "正在计算更新"
+
+#~ msgid "(not found)"
+#~ msgstr "(没有找到)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  软件包锁："
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "以下 ID 的密钥没有可用的公钥：\n"

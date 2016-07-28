@@ -246,3 +246,76 @@ TEST(StrUtilTest,QuoteString)
    EXPECT_EQ("%45ltvill%65%2d%45rbach", QuoteString("Eltville-Erbach", "E-Ae"));
    EXPECT_EQ("Eltville-Erbach", DeQuoteString(QuoteString("Eltville-Erbach", "")));
 }
+
+TEST(StrUtilTest,RFC1123StrToTime)
+{
+   {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37 GMT", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 6 Nov 1994 08:49:37 UTC", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun,  6 Nov 1994 08:49:37 UTC", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 06 Nov 1994  8:49:37 UTC", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37 UTC", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37 -0000", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37 +0000", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sunday, 06-Nov-94 08:49:37 GMT", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sunday,  6-Nov-94 08:49:37 GMT", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sunday, 06-Nov-94 8:49:37 GMT", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun Nov  6 08:49:37 1994", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun Nov 06 08:49:37 1994", t));
+      EXPECT_EQ(784111777, t);
+   } {
+      time_t t;
+      EXPECT_TRUE(RFC1123StrToTime("Sun Nov  6  8:49:37 1994", t));
+      EXPECT_EQ(784111777, t);
+   }
+   time_t t;
+   EXPECT_FALSE(RFC1123StrToTime("So, 06 Nov 1994 08:49:37 UTC", t));
+   EXPECT_FALSE(RFC1123StrToTime(", 06 Nov 1994 08:49:37 UTC", t));
+   EXPECT_FALSE(RFC1123StrToTime("Son, 06 Nov 1994 08:49:37 UTC", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sun: 06 Nov 1994 08:49:37 UTC", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sun, 06 Nov 1994 08:49:37 GMT+1", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sun, 06 Nov 1994 GMT", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday, 06 Nov 1994 GMT", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sonntag, 06 Nov 1994 08:49:37 GMT", t));
+   EXPECT_FALSE(RFC1123StrToTime("domingo Nov 6 08:49:37 1994", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday: 06-Nov-94 08:49:37 GMT", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday, 06-Nov-94 08:49:37 GMT+1", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday, 06-Nov-94 08:49:37 EDT", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday, 06-Nov-94 08:49:37 -0100", t));
+   EXPECT_FALSE(RFC1123StrToTime("Sunday, 06-Nov-94 08:49:37 -0.1", t));
+}

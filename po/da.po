@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2014-07-06 23:51+0200\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
@@ -231,10 +231,10 @@ msgid ""
 "unauthenticated"
 msgstr "Der er problemer og -y blev brugt uden --force-yes"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Kunne ikke hente %s %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Kunne ikke hente %s %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -542,17 +542,19 @@ msgstr[0] ""
 msgstr[1] ""
 "Der er %i yderligere versioner. Brug venligst kontakten »-a« til at se dem."
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "BEMÆRK: Dette er kun en simulering!\n"
-"    apt-get kræver rootprivilegier for reel kørsel.\n"
+"    %s kræver rootprivilegier for reel kørsel.\n"
 "    Husk også at låsning er deaktiveret,\n"
-"    så stol ikke på relevansen for den reelle aktuelle situation!"
+"    så stol ikke på relevansen for den reelle aktuelle situation!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -762,10 +764,6 @@ msgstr "Mellemlageret er ude af trit, kan ikke krydsreferere en pakkefil"
 msgid "Pinned packages:"
 msgstr "»Pinned« pakker:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(ikke fundet)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -783,10 +781,6 @@ msgstr "  Kandidat: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(ingen)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Pakke-pin: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1703,6 +1697,25 @@ msgstr "Forespørgsel"
 msgid "Unable to invoke "
 msgstr "Kunne ikke udføre "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Clearsigned-fil er ikke gyldig, fik »%s« (kræver netværket ikke "
+"autentificering?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Clearsigned-fil er ikke gyldig, fik »%s« (kræver netværket ikke "
+"autentificering?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Stødte på mindst én ugyldig signatur."
@@ -1718,16 +1731,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Kunne ikke køre »apt-key« for at verificere signaturen (er gnupg "
 "installeret?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Clearsigned-fil er ikke gyldig, fik »%s« (kræver netværket ikke "
-"autentificering?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1923,6 +1926,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Sammenfletter tilgængelighedsoplysninger"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Ventede på %s, men den var der ikke"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2459,14 +2476,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "omdøbning mislykkedes, %s (%s -> %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "Mappen %s er omrokeret"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Mappen %s er omrokeret"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Mappen %s er omrokeret"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Mappen %s er omrokeret"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "Mappen %s er omrokeret"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hashsum stemmer ikke"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "omdøbning mislykkedes, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2535,33 +2587,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konfliktdistribution: %s (forventede %s men fik %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Mappen %s er omrokeret"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Mappen %s er omrokeret"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Mappen %s er omrokeret"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -2988,11 +3013,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr "Ignorerer fil »%s« i mappe »%s« da den har en ugyldig filendelse"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Ventede på %s, men den var der ikke"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3209,13 +3229,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Ugyldigt punkt »Date« i udgivelsesfil %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Ugyldigt punkt »Valid-Until« i udgivelsesfil %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Ugyldigt punkt »%s« i udgivelsesfil %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3226,6 +3241,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3294,7 +3314,7 @@ msgstr "Kører førinstallationsudløser %s"
 msgid "Directory '%s' missing"
 msgstr "Mappe »%s« mangler"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Kunne ikke åbne filen »%s«"
@@ -3717,11 +3737,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Kunne ikke hente %s %s\n"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3732,6 +3747,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Beregner opgraderingen"
+
+#~ msgid "(not found)"
+#~ msgstr "(ikke fundet)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Pakke-pin: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr ""

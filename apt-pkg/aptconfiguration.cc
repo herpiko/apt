@@ -35,11 +35,12 @@ namespace APT {
 // setDefaultConfigurationForCompressors				/*{{{*/
 static void setDefaultConfigurationForCompressors() {
 	// Set default application paths to check for optional compression types
+	_config->CndSet("Dir::Bin::gzip", "/bin/gzip");
 	_config->CndSet("Dir::Bin::bzip2", "/bin/bzip2");
 	_config->CndSet("Dir::Bin::xz", "/usr/bin/xz");
 	_config->CndSet("Dir::Bin::lz4", "/usr/bin/lz4");
-	if (FileExists(_config->FindFile("Dir::Bin::xz")) == true) {
-		_config->Set("Dir::Bin::lzma", _config->FindFile("Dir::Bin::xz"));
+	if (FileExists(_config->Find("Dir::Bin::xz")) == true) {
+		_config->Set("Dir::Bin::lzma", _config->Find("Dir::Bin::xz"));
 		_config->Set("APT::Compressor::lzma::Binary", "xz");
 		if (_config->Exists("APT::Compressor::lzma::CompressArg") == false) {
 			_config->Set("APT::Compressor::lzma::CompressArg::", "--format=lzma");
@@ -60,6 +61,12 @@ static void setDefaultConfigurationForCompressors() {
 			_config->Set("APT::Compressor::lzma::UncompressArg::", "-d");
 		}
 	}
+	// setup the defaults for the compressiontypes => method mapping
+	_config->CndSet("Acquire::CompressionTypes::xz","xz");
+	_config->CndSet("Acquire::CompressionTypes::bz2","bzip2");
+	_config->CndSet("Acquire::CompressionTypes::lzma","lzma");
+	_config->CndSet("Acquire::CompressionTypes::gz","gzip");
+	_config->CndSet("Acquire::CompressionTypes::lz4","lz4");
 }
 									/*}}}*/
 // getCompressionTypes - Return Vector of usable compressiontypes	/*{{{*/
@@ -75,14 +82,6 @@ const Configuration::getCompressionTypes(bool const &Cached) {
 			types.clear();
 	}
 
-	// setup the defaults for the compressiontypes => method mapping
-	_config->CndSet("Acquire::CompressionTypes::xz","xz");
-	_config->CndSet("Acquire::CompressionTypes::bz2","bzip2");
-	_config->CndSet("Acquire::CompressionTypes::lzma","lzma");
-	_config->CndSet("Acquire::CompressionTypes::gz","gzip");
-	_config->CndSet("Acquire::CompressionTypes::lz4","lz4");
-
-	setDefaultConfigurationForCompressors();
 	std::vector<APT::Configuration::Compressor> const compressors = getCompressors();
 
 	// load the order setting into our vector
@@ -126,7 +125,7 @@ const Configuration::getCompressionTypes(bool const &Cached) {
 	// add the special "uncompressed" type
 	if (std::find(types.begin(), types.end(), "uncompressed") == types.end())
 	{
-		std::string const uncompr = _config->FindFile("Dir::Bin::uncompressed", "");
+		std::string const uncompr = _config->Find("Dir::Bin::uncompressed", "");
 		if (uncompr.empty() == true || FileExists(uncompr) == true)
 			types.push_back("uncompressed");
 	}
@@ -366,44 +365,47 @@ const Configuration::getCompressors(bool const Cached) {
 
 	setDefaultConfigurationForCompressors();
 
-	compressors.push_back(Compressor(".", "", "", NULL, NULL, 0));
-	if (_config->Exists("Dir::Bin::lz4") == false || FileExists(_config->FindFile("Dir::Bin::lz4")) == true)
-		compressors.push_back(Compressor("lz4",".lz4","lz4","-1","-d",50));
+	std::vector<std::string> CompressorsDone;
+# define APT_ADD_COMPRESSOR(NAME, EXT, BINARY, ARG, DEARG, COST) \
+	{ CompressorsDone.push_back(NAME); compressors.emplace_back(NAME, EXT, BINARY, ARG, DEARG, COST); }
+	APT_ADD_COMPRESSOR(".", "", "", nullptr, nullptr, 0)
+	if (_config->Exists("Dir::Bin::lz4") == false || FileExists(_config->Find("Dir::Bin::lz4")) == true)
+		APT_ADD_COMPRESSOR("lz4",".lz4","lz4","-1","-d",50)
 #ifdef HAVE_LZ4
 	else
-		compressors.push_back(Compressor("lz4",".lz4","false", NULL, NULL, 50));
+		APT_ADD_COMPRESSOR("lz4",".lz4","false", nullptr, nullptr, 50)
 #endif
-	if (_config->Exists("Dir::Bin::gzip") == false || FileExists(_config->FindFile("Dir::Bin::gzip")) == true)
-		compressors.push_back(Compressor("gzip",".gz","gzip","-6n","-d",100));
+	if (_config->Exists("Dir::Bin::gzip") == false || FileExists(_config->Find("Dir::Bin::gzip")) == true)
+		APT_ADD_COMPRESSOR("gzip",".gz","gzip","-6n","-d",100)
 #ifdef HAVE_ZLIB
 	else
-		compressors.push_back(Compressor("gzip",".gz","false", NULL, NULL, 100));
+		APT_ADD_COMPRESSOR("gzip",".gz","false", nullptr, nullptr, 100)
 #endif
-	if (_config->Exists("Dir::Bin::xz") == false || FileExists(_config->FindFile("Dir::Bin::xz")) == true)
-		compressors.push_back(Compressor("xz",".xz","xz","-6","-d",200));
+	if (_config->Exists("Dir::Bin::xz") == false || FileExists(_config->Find("Dir::Bin::xz")) == true)
+		APT_ADD_COMPRESSOR("xz",".xz","xz","-6","-d",200)
 #ifdef HAVE_LZMA
 	else
-		compressors.push_back(Compressor("xz",".xz","false", NULL, NULL, 200));
+		APT_ADD_COMPRESSOR("xz",".xz","false", nullptr, nullptr, 200)
 #endif
-	if (_config->Exists("Dir::Bin::bzip2") == false || FileExists(_config->FindFile("Dir::Bin::bzip2")) == true)
-		compressors.push_back(Compressor("bzip2",".bz2","bzip2","-6","-d",300));
+	if (_config->Exists("Dir::Bin::bzip2") == false || FileExists(_config->Find("Dir::Bin::bzip2")) == true)
+		APT_ADD_COMPRESSOR("bzip2",".bz2","bzip2","-6","-d",300)
 #ifdef HAVE_BZ2
 	else
-		compressors.push_back(Compressor("bzip2",".bz2","false", NULL, NULL, 300));
+		APT_ADD_COMPRESSOR("bzip2",".bz2","false", nullptr, nullptr, 300)
 #endif
-	if (_config->Exists("Dir::Bin::lzma") == false || FileExists(_config->FindFile("Dir::Bin::lzma")) == true)
-		compressors.push_back(Compressor("lzma",".lzma","lzma","-6","-d",400));
+	if (_config->Exists("Dir::Bin::lzma") == false || FileExists(_config->Find("Dir::Bin::lzma")) == true)
+		APT_ADD_COMPRESSOR("lzma",".lzma","lzma","-6","-d",400)
 #ifdef HAVE_LZMA
 	else
-		compressors.push_back(Compressor("lzma",".lzma","false", NULL, NULL, 400));
+		APT_ADD_COMPRESSOR("lzma",".lzma","false", nullptr, nullptr, 400)
 #endif
 
-	std::vector<std::string> const comp = _config->FindVector("APT::Compressor");
-	for (std::vector<std::string>::const_iterator c = comp.begin();
-	     c != comp.end(); ++c) {
-		if (c->empty() || *c == "." || *c == "gzip" || *c == "bzip2" || *c == "lzma" || *c == "xz")
+	std::vector<std::string> const comp = _config->FindVector("APT::Compressor", "", true);
+	for (auto const &c: comp)
+	{
+		if (c.empty() || std::find(CompressorsDone.begin(), CompressorsDone.end(), c) != CompressorsDone.end())
 			continue;
-		compressors.push_back(Compressor(c->c_str(), std::string(".").append(*c).c_str(), c->c_str(), "-9", "-d", 100));
+		compressors.push_back(Compressor(c.c_str(), std::string(".").append(c).c_str(), c.c_str(), nullptr, nullptr, 1000));
 	}
 
 	return compressors;

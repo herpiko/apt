@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.8\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2014-09-12 13:48+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
@@ -234,10 +234,10 @@ msgid ""
 "unauthenticated"
 msgstr "Có lỗi và đã dùng tùy chọn “-y” mà không có  “--force-yes”"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Gặp lỗi khi lấy về %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Gặp lỗi khi lấy về %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -534,17 +534,19 @@ msgid_plural ""
 "There are %i additional versions. Please use the '-a' switch to see them."
 msgstr[0] "Ở đây có %i phiên bản phụ thêm. Hãy dùng tùy chọn “-a” để xem."
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "CHÚ Ý: đây chỉ là mô phỏng!\n"
-"       apt-get yêu cầu quyền root để thực hiện thật.\n"
+"       %s yêu cầu quyền root để thực hiện thật.\n"
 "       Cần nhớ rằng chức năng khóa đã bị tắt,\n"
-"       nên có thể nó không chính xác như khi làm thật!"
+"       nên có thể nó không chính xác như khi làm thật!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -750,10 +752,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Các gói đã ghim:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(không tìm thấy)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -771,10 +769,6 @@ msgstr "  Ứng cử: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(không)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Ghim gói: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1699,6 +1693,25 @@ msgstr "Truy vấn"
 msgid "Unable to invoke "
 msgstr "Không thể gọi "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Tập tin Clearsigned không hợp lệ, nhận được “%s” (mạng yêu cầu xác nhận phải "
+"không?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Tập tin Clearsigned không hợp lệ, nhận được “%s” (mạng yêu cầu xác nhận phải "
+"không?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Gặp ít nhất một chữ ký không hợp lệ."
@@ -1713,16 +1726,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Không thể thực hiện “apt-key” để thẩm tra chữ ký (gnupg đã được cài đặt "
 "chưa?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Tập tin Clearsigned không hợp lệ, nhận được “%s” (mạng yêu cầu xác nhận phải "
-"không?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1917,6 +1920,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Đang hòa trộn các thông tin sẵn có..."
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Cần %s nhưng mà không thấy nó ở đây"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2472,14 +2489,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "gặp lỗi khi đổi tên, %s (%s → %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "Thư mục %s bị trệch hướng"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Thư mục %s bị trệch hướng"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Thư mục %s bị trệch hướng"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Thư mục %s bị trệch hướng"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "Thư mục %s bị trệch hướng"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Mã băm tổng kiểm tra không khớp"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "gặp lỗi khi đổi tên, %s (%s → %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2549,33 +2601,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Bản phát hành xung đột: %s (cần %s nhưng lại nhận được %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Thư mục %s bị trệch hướng"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Thư mục %s bị trệch hướng"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Thư mục %s bị trệch hướng"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3009,11 +3034,6 @@ msgstr ""
 "Bỏ qua tập tin “%s” trong thư mục “%s” vì nó có phần đuôi mở rộng không hợp "
 "lệ"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Cần %s nhưng mà không thấy nó ở đây"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3229,16 +3249,9 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
+msgid "Invalid '%s' entry in Release file %s"
 msgstr ""
-"Gặp mục tin “Date” (ngày tháng) không hợp lệ trong tập tin Phát hành %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr ""
-"Gặp mục tin “Valid-Until” (hợp lệ đến khi) không hợp lệ trong tập tin Phát "
-"hành %s"
+"Gặp mục tin “%s” (hợp lệ đến khi) không hợp lệ trong tập tin Phát hành %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3249,6 +3262,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3320,7 +3338,7 @@ msgstr "Đang chạy bẫy sau-cài-đặt %s"
 msgid "Directory '%s' missing"
 msgstr "Thiếu thư mục “%s”"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Không thể mở tập tin “%s”"
@@ -3746,11 +3764,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Gặp lỗi khi lấy về %s  %s\n"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3761,6 +3774,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Đang tính toán nâng cấp"
+
+#~ msgid "(not found)"
+#~ msgstr "(không tìm thấy)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Ghim gói: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "Không có khóa công sẵn sàng cho những mã số khoá theo đây:\n"

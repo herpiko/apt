@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2015-08-19 21:33+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <debian-l10n-swedish@debian.org>\n"
@@ -234,10 +234,10 @@ msgid ""
 "unauthenticated"
 msgstr "Problem har uppstått och -y användes utan --force-yes"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Misslyckades med att hämta %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Misslyckades med att hämta %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -549,17 +549,19 @@ msgstr[0] ""
 msgstr[1] ""
 "Det finns %i ytterligare versioner. Använd växeln ”-a” för att se dem."
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "OBSERVERA: Detta är endast en simulation!\n"
-"           apt-get behöver root-privilegier för verklig körning.\n"
+"           %s behöver root-privilegier för verklig körning.\n"
 "           Tänk också på att låsningen är inaktiverad, så\n"
-"           förlita dig inte på relevansen till den verkliga situationen!"
+"           förlita dig inte på relevansen till den verkliga situationen!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -765,10 +767,6 @@ msgstr "Cachen är inte synkroniserad, kan inte korsreferera en paketfil"
 msgid "Pinned packages:"
 msgstr "Fastnålade paket:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(hittades inte)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -786,10 +784,6 @@ msgstr "  Kandidat: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(ingen)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Paketnålning: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1710,6 +1704,25 @@ msgstr "Frågar"
 msgid "Unable to invoke "
 msgstr "Kunde inte starta "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"Klartextsignerad fil är inte giltig, fick ”%s” (kräver nätverket "
+"autentisering?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"Klartextsignerad fil är inte giltig, fick ”%s” (kräver nätverket "
+"autentisering?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Minst en ogiltig signatur träffades på."
@@ -1725,16 +1738,6 @@ msgstr ""
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Kunde inte köra ”apt-key” för att verifiera signatur (är gnupg installerad?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"Klartextsignerad fil är inte giltig, fick ”%s” (kräver nätverket "
-"autentisering?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1930,6 +1933,20 @@ msgstr "meddelande är viktiga. Försök korrigera dem och kör [I]nstallera ige
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Sammanfogar tillgänglig information"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Väntade på %s men den fanns inte där"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2473,14 +2490,51 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "namnbyte misslyckades, %s (%s -> %s)."
+msgid "The repository '%s' is no longer signed."
+msgstr "Förrådet ”%s” är inte längre signerat."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "Förrådet ”%s” är inte längre signerat."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"Detta är vanligen inte tillåtet, men flaggan Acquire::"
+"AllowDowngradeToInsecureRepositories gavs för att åsidosätta detta."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "Förrådet ”%s” är inte längre signerat."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "Förrådet ”%s” är inte längre signerat."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "Förrådet ”%s” är inte längre signerat."
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hash-kontrollsumman stämmer inte"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "namnbyte misslyckades, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2549,35 +2603,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konflikt i distribution: %s (förväntade %s men fick %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "Förrådet ”%s” är inte längre signerat."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "Förrådet ”%s” är inte längre signerat."
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "Förrådet ”%s” är inte längre signerat."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"Detta är vanligen inte tillåtet, men flaggan Acquire::"
-"AllowDowngradeToInsecureRepositories gavs för att åsidosätta detta."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3013,11 +3038,6 @@ msgid ""
 msgstr ""
 "Ignorerar filen ”%s” i katalogen ”%s” eftersom den har en ogiltig filändelse"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Väntade på %s men den fanns inte där"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3234,13 +3254,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Ogiltig ”Date”-post i Release-filen %s"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Ogiltig ”Valid-Until”-post i Release-filen %s"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Ogiltig ”%s”-post i Release-filen %s"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3251,6 +3266,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3320,7 +3340,7 @@ msgstr "Kör efterinstallationsutlösare %s"
 msgid "Directory '%s' missing"
 msgstr "Katalogen ”%s” saknas"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "Kunde inte öppna filen ”%s”"
@@ -3750,11 +3770,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Misslyckades med att hämta %s  %s\n"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3765,6 +3780,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Beräknar uppgradering"
+
+#~ msgid "(not found)"
+#~ msgstr "(hittades inte)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Paketnålning: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr ""

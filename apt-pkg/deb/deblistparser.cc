@@ -357,8 +357,12 @@ unsigned short debListParser::VersionHash()
 	    continue;
 	 *J++ = tolower_ascii(*Start);
 
-	 if ((*Start == '<' || *Start == '>') && Start[1] != *Start && Start[1] != '=')
-	    *J++ = '=';
+	 /* Normalize <= to < and >= to >. This is the wrong way around, but
+	  * more efficient that the right way. And since we're only hashing
+	  * it does not matter which way we normalize. */
+	 if ((*Start == '<' || *Start == '>') && Start[1] == '=') {
+	    Start++;
+	 }
       }
 
       Result = AddCRC16(Result,S,J - S);
@@ -995,7 +999,7 @@ bool debListParser::SameVersion(unsigned short const Hash,		/*{{{*/
    // status file is parsed last, so the first version we encounter is
    // probably also the version we have downloaded
    unsigned long long const Size = Section.FindULL("Size");
-   if (Size != 0 && Size != Ver->Size)
+   if (Size != 0 && Ver->Size != 0 && Size != Ver->Size)
       return false;
    // available everywhere, but easier to check here than to include in VersionHash
    unsigned char MultiArch = ParseMultiArch(false);

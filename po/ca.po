@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.9.7.6\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2012-10-19 13:30+0200\n"
 "Last-Translator: Jordi Mallach <jordi@debian.org>\n"
 "Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
@@ -232,10 +232,10 @@ msgid ""
 "unauthenticated"
 msgstr "Hi ha problemes i s'ha emprat -y sense --force-yes"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "No s'ha pogut obtenir %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "No s'ha pogut obtenir %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -544,17 +544,19 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "Nota: Això només és una simulació!\n"
-"      L'apt-get necessita privilegis de root per a l'execució real.\n"
+"      L'%s necessita privilegis de root per a l'execució real.\n"
 "      Tingueu en ment que el bloqueig està desactivat,\n"
-"      per tant, no es depèn de la situació actual real."
+"      per tant, no es depèn de la situació actual real.\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -764,10 +766,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Paquets etiquetats:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(no trobat)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -785,10 +783,6 @@ msgstr "  Candidat: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(cap)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Etiqueta del paquet: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1704,6 +1698,21 @@ msgstr "Consulta"
 msgid "Unable to invoke "
 msgstr "No es pot invocar"
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "S'ha trobat almenys una signatura invàlida."
@@ -1720,14 +1729,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "No s'ha pogut executar el «apt-key» per a verificar la signatura (està "
 "instaŀlat el gnupg?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1923,6 +1924,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "S'està fusionant la informació disponible"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Esperava %s però no hi era"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2459,14 +2474,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "no s'ha pogut canviar el nom, %s (%s -> %s)."
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "El directori %s està desviat"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "El directori %s està desviat"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "El directori %s està desviat"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "El directori %s està desviat"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "El directori %s està desviat"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "La suma resum no concorda"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "no s'ha pogut canviar el nom, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2537,33 +2587,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribució en conflicte: %s (s'esperava %s però s'ha obtingut %s)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "El directori %s està desviat"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "El directori %s està desviat"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "El directori %s està desviat"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3009,11 +3032,6 @@ msgstr ""
 "S'està descartant «%s» al directori «%s» perquè té una extensió del nom de "
 "fitxer invàlida"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Esperava %s però no hi era"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3230,13 +3248,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "El camp «Date» al fitxer Release %s és invàlid"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "El camp «Valid-Until» al fitxer Release %s és invàlid"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "El camp «%s» al fitxer Release %s és invàlid"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3247,6 +3260,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3318,7 +3336,7 @@ msgstr "S'està executant l'activador de postinstaŀlació %s"
 msgid "Directory '%s' missing"
 msgstr "Manca el directori «%s»"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "No s'ha pogut obrir el fitxer «%s»"
@@ -3750,11 +3768,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "No s'ha pogut obtenir %s  %s\n"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3766,12 +3779,21 @@ msgstr ""
 msgid "Calculating upgrade"
 msgstr "S'està calculant l'actualització"
 
+#~ msgid "(not found)"
+#~ msgstr "(no trobat)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Etiqueta del paquet: "
+
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "No hi ha cap clau pública disponible per als següents ID de clau:\n"
 
 #, fuzzy
 #~ msgid "The repository is insufficiently signed by key %s (%s)"
 #~ msgstr "El directori %s està desviat"
+
+#~ msgid "Failed to fetch %s  %s\n"
+#~ msgstr "No s'ha pogut obtenir %s  %s\n"
 
 #~ msgid ""
 #~ "%s dependency for %s can't be satisfied because %s is not allowed on '%s' "

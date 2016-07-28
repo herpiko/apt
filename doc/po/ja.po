@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-doc 1.0.6\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-07-08 14:30+0200\n"
 "PO-Revision-Date: 2016-03-23 09:39+0900\n"
 "Last-Translator: Takuma Yamada <tyamada@takumayamada.com>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -762,7 +762,7 @@ msgstr ""
 "パッケージを削除することができます。"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt.8.xml
+#: apt.8.xml apt-key.8.xml
 msgid ","
 msgstr ","
 
@@ -1386,6 +1386,18 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-get.8.xml
+#, fuzzy
+#| msgid ""
+#| "Displays by default a deb822 formatted listing of information about all "
+#| "data files (aka index targets) <command>apt-get update</command> would "
+#| "download. Supports a <option>--format</option> option to modify the "
+#| "output format as well as accepts lines of the default output to filter "
+#| "the records by. The command is mainly used as an interface for external "
+#| "tools working with APT to get information as well as filenames for "
+#| "downloaded files so they can use them as well instead of downloading them "
+#| "again on their own. Detailed documentation is omitted here and can "
+#| "instead be found in the source tree in <literal><filename>doc/acquire-"
+#| "additional-files.txt</filename></literal>."
 msgid ""
 "Displays by default a deb822 formatted listing of information about all data "
 "files (aka index targets) <command>apt-get update</command> would download. "
@@ -1394,8 +1406,8 @@ msgid ""
 "command is mainly used as an interface for external tools working with APT "
 "to get information as well as filenames for downloaded files so they can use "
 "them as well instead of downloading them again on their own. Detailed "
-"documentation is omitted here and can instead be found in the source tree in "
-"<literal><filename>doc/acquire-additional-files.txt</filename></literal>."
+"documentation is omitted here and can instead be found in the file &apt-"
+"acquire-additional-files; shipped by the <package>apt-doc</package> package."
 msgstr ""
 "デフォルトでは <command>apt-get update</command> でダウンロードすることができ"
 "るすべてのデータファイル (別名インデックスターゲット) に関する情報の deb822 "
@@ -1577,9 +1589,13 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-get.8.xml
+#, fuzzy
+#| msgid ""
+#| "Show upgraded packages; print out a list of all packages that are to be "
+#| "upgraded.  Configuration Item: <literal>APT::Get::Show-Upgraded</literal>."
 msgid ""
-"Show upgraded packages; print out a list of all packages that are to be "
-"upgraded.  Configuration Item: <literal>APT::Get::Show-Upgraded</literal>."
+"Do not show a list of all packages that are to be upgraded.  Configuration "
+"Item: <literal>APT::Get::Show-Upgraded</literal>."
 msgstr ""
 "更新パッケージ表示 - 更新される全パッケージを一覧表示します。設定項目: "
 "<literal>APT::Get::Show-Upgraded</literal>"
@@ -1925,10 +1941,17 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-get.8.xml
+#, fuzzy
+#| msgid ""
+#| "Forbid the update command to acquire unverifiable data from configured "
+#| "sources. Apt will fail at the update command for repositories without "
+#| "valid cryptographically signatures.  Configuration Item: "
+#| "<literal>Acquire::AllowInsecureRepositories</literal>."
 msgid ""
 "Forbid the update command to acquire unverifiable data from configured "
-"sources. Apt will fail at the update command for repositories without valid "
-"cryptographically signatures.  Configuration Item: <literal>Acquire::"
+"sources. APT will fail at the update command for repositories without valid "
+"cryptographically signatures. See also &apt-secure; for details on the "
+"concept and the implications.  Configuration Item: <literal>Acquire::"
 "AllowInsecureRepositories</literal>."
 msgstr ""
 "設定された取得元から検証できないデータを取得する update コマンドを禁止しま"
@@ -2472,11 +2495,10 @@ msgstr ""
 msgid ""
 "Per default <command>depends</command> and <command>rdepends</command> print "
 "only dependencies explicitly expressed in the metadata. With this flag it "
-"will also show dependencies implicitely added based on the encountered "
-"data.  A <literal>Conflicts: foo</literal> e.g. expresses implicitely that "
-"this package also conflicts with the package foo from any other "
-"architecture.  Configuration Item: <literal>APT::Cache::ShowImplicit</"
-"literal>."
+"will also show dependencies implicitly added based on the encountered data.  "
+"A <literal>Conflicts: foo</literal> e.g. expresses implicitly that this "
+"package also conflicts with the package foo from any other architecture.  "
+"Configuration Item: <literal>APT::Cache::ShowImplicit</literal>."
 msgstr ""
 "デフォルトでは <command>depends</command> や <command>rdepends</command> はメ"
 "タデータ中に明示的に表現された依存関係のみを出力します。このフラグを指定する"
@@ -2593,6 +2615,18 @@ msgstr ""
 "一覧を管理するのに使用します。このキーで認証されたパッケージは、信頼するに足"
 "ると見なせるでしょう。"
 
+#. type: Content of: <refentry><refsect1><para>
+#: apt-key.8.xml
+msgid ""
+"Note that if usage of <command>apt-key</command> is desired the additional "
+"installation of the GNU Privacy Guard suite (packaged in <package>gnupg</"
+"package>) is required. For this reason alone the programatic usage "
+"(especially in package maintainerscripts!) is strongly discouraged.  Further "
+"more the output format of all commands is undefined and can and does change "
+"whenever the underlying commands change. <command>apt-key</command> will try "
+"to detect such usage and generates warnings on stderr in these cases."
+msgstr ""
+
 #. type: Content of: <refentry><refsect1><title>
 #: apt-key.8.xml
 msgid "Commands"
@@ -2622,6 +2656,15 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-key.8.xml
+msgid ""
+"Instead of using this command a keyring can be placed directly in the "
+"<filename>/etc/apt/trusted.gpg.d/</filename> directory with a descriptive "
+"name (same rules for filename apply as for &apt-conf; files) and "
+"\"<literal>gpg</literal>\" as file extension."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt-key.8.xml
 msgid "Remove a key from the list of trusted keys."
 msgstr "信頼キー一覧からキーを削除します。"
 
@@ -2637,13 +2680,10 @@ msgstr "信頼するキーをすべて標準出力に出力します。"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-key.8.xml
-msgid "List trusted keys."
+#, fuzzy
+#| msgid "List trusted keys."
+msgid "List trusted keys with fingerprints."
 msgstr "信頼キーを一覧表示します。"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-key.8.xml
-msgid "List fingerprints of trusted keys."
-msgstr "信頼キーのフィンガープリントを一覧表示します。"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-key.8.xml
@@ -2658,6 +2698,11 @@ msgstr ""
 "できます。チェックが<emphasis>行われない</emphasis>ことに注意してください。注"
 "意せず使用するなら、容易に &apt-secure; インフラを完全に傷つけます。"
 
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
+#: apt-key.8.xml
+msgid "(deprecated)"
+msgstr ""
+
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-key.8.xml
 msgid ""
@@ -2671,6 +2716,16 @@ msgstr ""
 "ディストリビューションにある <literal>archive-keyring</literal> パッケージ "
 "(例えば &keyring-distro; では &keyring-package; パッケージ) で提供されていま"
 "す。"
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt-key.8.xml
+msgid ""
+"Note that a distribution does not need to and in fact should not use this "
+"command any longer and instead ship keyring files in the <filename>/etc/apt/"
+"trusted.gpg</filename> directory directly as this avoids a dependency on "
+"<package>gnupg</package> and it is easier to manage keys by simply adding "
+"and removing files for maintainers and users alike."
+msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-key.8.xml
@@ -2718,36 +2773,6 @@ msgstr ""
 "gpg.d</filename> ディレクトリにあるすべてのファイルを用いて、コマンドが動作し"
 "ます。とはいえ、<filename>trusted.gpg</filename> がプライマリキーリングになり"
 "ます。つまり新しいキーはこのファイルに追加されます。"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-key.8.xml
-msgid "<filename>/etc/apt/trustdb.gpg</filename>"
-msgstr "<filename>/etc/apt/trustdb.gpg</filename>"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-key.8.xml
-msgid "Local trust database of archive keys."
-msgstr "アーカイブキーのローカル信頼データベースです。"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-key.8.xml
-msgid "&keyring-filename;"
-msgstr "&keyring-filename;"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-key.8.xml
-msgid "Keyring of &keyring-distro; archive trusted keys."
-msgstr "&keyring-distro; アーカイブ信頼キーのキーリングです。"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
-#: apt-key.8.xml
-msgid "&keyring-removed-filename;"
-msgstr "&keyring-removed-filename;"
-
-#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
-#: apt-key.8.xml
-msgid "Keyring of &keyring-distro; archive removed trusted keys."
-msgstr "削除された &keyring-distro; アーカイブ信頼キーのキーリングです。"
 
 #. type: Content of: <refentry><refsect1><para>
 #: apt-key.8.xml
@@ -2929,11 +2954,19 @@ msgstr "APT アーカイブ認証サポート"
 
 #. type: Content of: <refentry><refsect1><para>
 #: apt-secure.8.xml
+#, fuzzy
+#| msgid ""
+#| "Starting with version 0.6, <command>APT</command> contains code that does "
+#| "signature checking of the Release file for all repositories. This ensures "
+#| "that data like packages in the archive can't be modified by people who "
+#| "have no access to the Release file signing key."
 msgid ""
 "Starting with version 0.6, <command>APT</command> contains code that does "
 "signature checking of the Release file for all repositories. This ensures "
 "that data like packages in the archive can't be modified by people who have "
-"no access to the Release file signing key."
+"no access to the Release file signing key. Starting with version 1.1 "
+"<command>APT</command> requires repositories to provide recent "
+"authentication information for unimpeded usage of the repository."
 msgstr ""
 "バージョン 0.6 より、<command>apt</command> 全リポジトリに対する Release ファ"
 "イルの署名チェックコードが含まれています。これにより、アーカイブのパッケージ"
@@ -2942,12 +2975,19 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><para>
 #: apt-secure.8.xml
+#, fuzzy
+#| msgid ""
+#| "If an archive has an unsigned Release file or no Release file at all "
+#| "current APT versions will raise a warning in <command>update</command> "
+#| "operations and front-ends like <command>apt-get</command> will require "
+#| "explicit confirmation if an installation request includes a package from "
+#| "such an unauthenticated archive."
 msgid ""
 "If an archive has an unsigned Release file or no Release file at all current "
-"APT versions will raise a warning in <command>update</command> operations "
-"and front-ends like <command>apt-get</command> will require explicit "
-"confirmation if an installation request includes a package from such an "
-"unauthenticated archive."
+"APT versions will refuse to download data from them by default in "
+"<command>update</command> operations and even if forced to download front-"
+"ends like &apt-get; will require explicit confirmation if an installation "
+"request includes a package from such an unauthenticated archive."
 msgstr ""
 "アーカイブに署名されていない Release ファイルがあるか、または Release ファイ"
 "ルがまったくない場合は、現在の APT バージョンは <command>update</command> 操"
@@ -2958,17 +2998,40 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><para>
 #: apt-secure.8.xml
 msgid ""
-"In the future APT will refuse to work with unauthenticated repositories by "
-"default until support for them is removed entirely. Users have the option to "
-"opt-in to this behavior already by setting the configuration option "
-"<option>Acquire::AllowInsecureRepositories</option> to <literal>false</"
-"literal>."
+"As a temporary exception &apt-get; (not &apt;!) raises warnings only if it "
+"encounters unauthenticated archives to give a slightly longer grace period "
+"on this backward compatibility effecting change. This exception will be "
+"removed in future releases and you can opt-out of this grace period by "
+"setting the configuration option <option>Binary::apt-get::Acquire::"
+"AllowInsecureRepositories</option> to <literal>false</literal> or <option>--"
+"no-allow-insecure-repositories</option> on the command line."
 msgstr ""
-"将来的には、リポジトリ認証サポートが完全に削除されるまで、APT はデフォルトで"
-"認証されていないリポジトリでの動作を拒否するでしょう。設定オプション "
-"<option>Acquire::AllowInsecureRepositories</option> を <literal>false</"
-"literal> に設定することで、ユーザはこのような動作にするオプトインするオプショ"
-"ンがあります。"
+
+#. type: Content of: <refentry><refsect1><para>
+#: apt-secure.8.xml
+msgid ""
+"You can force all APT clients to raise only warnings by setting the "
+"configuration option <option>Acquire::AllowInsecureRepositories</option> to "
+"<literal>true</literal>. Individual repositories can also be allowed to be "
+"insecure via the &sources-list; option <literal>allow-insecure=yes</"
+"literal>.  Note that insecure repositories are strongly discouraged and all "
+"options to force apt to continue supporting them will eventually be "
+"removed.  Users also have the <option>Trusted</option> option available to "
+"disable even the warnings, but be sure to understand the implications as "
+"detailed in &sources-list;."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><para>
+#: apt-secure.8.xml
+msgid ""
+"A repository which previously was authentication but would loose this state "
+"in an <command>update</command> operation raises an error in all APT clients "
+"irrespective of the option to allow or forbid usage of insecure "
+"repositories.  The error can be overcome by additionally setting "
+"<option>Acquire::AllowDowngradeToInsecureRepositories</option> to "
+"<literal>true</literal> or for Individual repositories with the &sources-"
+"list; option <literal>allow-downgrade-to-insecure=yes</literal>."
+msgstr ""
 
 #. type: Content of: <refentry><refsect1><para>
 #: apt-secure.8.xml
@@ -3880,6 +3943,33 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
 msgid ""
+"This scope defines which compression formats are supported, how compression "
+"and decompression can be performed if support for this format isn't built "
+"into apt directly and a cost-value indicating how costly it is to compress "
+"something in this format. As an example the following configuration stanza "
+"would allow apt to download and uncompress as well as create and store files "
+"with the low-cost <literal>.reversed</literal> file extension which it will "
+"pass to the command <command>rev</command> without additional commandline "
+"parameters for compression and uncompression:"
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para><informalexample><programlisting>
+#: apt.conf.5.xml
+#, no-wrap
+msgid ""
+"APT::Compressor::rev {\n"
+"\tName \"rev\";\n"
+"\tExtension \".reversed\";\n"
+"\tBinary \"rev\";\n"
+"\tCompressArg {};\n"
+"\tUncompressArg {};\n"
+"\tCost \"10\";\n"
+"};\n"
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+msgid ""
 "List of all build profiles enabled for build-dependency resolution, without "
 "the \"<literal>profile.</literal>\" namespace prefix.  By default this list "
 "is empty. The <envar>DEB_BUILD_PROFILES</envar> as used by &dpkg-"
@@ -4341,16 +4431,30 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
+#, fuzzy
+#| msgid ""
+#| "<literal>Acquire::http::Proxy-Auto-Detect</literal> can be used to "
+#| "specify an external command to discover the http proxy to use. Apt "
+#| "expects the command to output the proxy on stdout in the style "
+#| "<literal>http://proxy:port/</literal>. This will override the generic "
+#| "<literal>Acquire::http::Proxy</literal> but not any specific host proxy "
+#| "configuration set via <literal>Acquire::http::Proxy::$HOST</literal>.  "
+#| "See the &squid-deb-proxy-client; package for an example implementation "
+#| "that uses avahi. This option takes precedence over the legacy option name "
+#| "<literal>ProxyAutoDetect</literal>."
 msgid ""
 "<literal>Acquire::http::Proxy-Auto-Detect</literal> can be used to specify "
-"an external command to discover the http proxy to use. Apt expects the "
-"command to output the proxy on stdout in the style <literal>http://proxy:"
-"port/</literal>. This will override the generic <literal>Acquire::http::"
-"Proxy</literal> but not any specific host proxy configuration set via "
-"<literal>Acquire::http::Proxy::$HOST</literal>.  See the &squid-deb-proxy-"
-"client; package for an example implementation that uses avahi. This option "
-"takes precedence over the legacy option name <literal>ProxyAutoDetect</"
-"literal>."
+"an external command to discover the http proxy to use. The first and only "
+"parameter is an URI denoting the host to be contacted to allow for host-"
+"specific configuration. APT expects the command to output the proxy on "
+"stdout as a single line in the style <literal>http://proxy:port/</literal> "
+"or the word <literal>DIRECT</literal> if no proxy should be used. No output "
+"indicates that the generic proxy settings should be used.  Note that auto-"
+"detection will not be used for a host if a host-specific proxy configuration "
+"is already set via <literal>Acquire::http::Proxy::<replaceable>HOST</"
+"replaceable></literal>.  See the &squid-deb-proxy-client; package for an "
+"example implementation that uses avahi.  This option takes precedence over "
+"the legacy option name <literal>ProxyAutoDetect</literal>."
 msgstr ""
 "<literal>Acquire::http::Proxy-Auto-Detect</literal> を使って利用する http プ"
 "ロキシを検出するための外部コマンドを指定できます。APT はコマンドが標準出力に "
@@ -4536,14 +4640,23 @@ msgstr "Acquire::CompressionTypes::<replaceable>FileExtension</replaceable> \"<r
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
+#, fuzzy
+#| msgid ""
+#| "List of compression types which are understood by the acquire methods.  "
+#| "Files like <filename>Packages</filename> can be available in various "
+#| "compression formats.  By default the acquire methods can decompress "
+#| "<command>bzip2</command>, <command>lzma</command> and <command>gzip</"
+#| "command> compressed files; with this setting more formats can be added on "
+#| "the fly or the used method can be changed. The syntax for this is: "
+#| "<placeholder type=\"synopsis\" id=\"0\"/>"
 msgid ""
 "List of compression types which are understood by the acquire methods.  "
 "Files like <filename>Packages</filename> can be available in various "
-"compression formats.  By default the acquire methods can decompress "
-"<command>bzip2</command>, <command>lzma</command> and <command>gzip</"
-"command> compressed files; with this setting more formats can be added on "
-"the fly or the used method can be changed. The syntax for this is: "
-"<placeholder type=\"synopsis\" id=\"0\"/>"
+"compression formats.  By default the acquire methods can decompress and "
+"recompress many common formats like <command>xz</command> and <command>gzip</"
+"command>; with this scope the supported formats can be queried, modified as "
+"well as support for more formats added (see also <option>APT::Compressor</"
+"option>). The syntax for this is: <placeholder type=\"synopsis\" id=\"0\"/>"
 msgstr ""
 "acquire メソッドが理解できる、圧縮法のリストです。<filename>Packages</"
 "filename> のようなファイルは、さまざまな圧縮形式が利用できます。デフォルトで"
@@ -4560,26 +4673,41 @@ msgstr "Acquire::CompressionTypes::Order:: \"gz\";"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para><synopsis>
 #: apt.conf.5.xml
-#, no-wrap
-msgid "Acquire::CompressionTypes::Order { \"lzma\"; \"gz\"; };"
+#, fuzzy, no-wrap
+#| msgid "Acquire::CompressionTypes::Order { \"lzma\"; \"gz\"; };"
+msgid "Acquire::CompressionTypes::Order { \"xz\"; \"gz\"; };"
 msgstr "Acquire::CompressionTypes::Order { \"lzma\"; \"gz\"; };"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
+#, fuzzy
+#| msgid ""
+#| "Also, the <literal>Order</literal> subgroup can be used to define in "
+#| "which order the acquire system will try to download the compressed files. "
+#| "The acquire system will try the first and proceed with the next "
+#| "compression type in this list on error, so to prefer one over the other "
+#| "type simply add the preferred type first - default types not already "
+#| "added will be implicitly appended to the end of the list, so e.g. "
+#| "<placeholder type=\"synopsis\" id=\"0\"/> can be used to prefer "
+#| "<command>gzip</command> compressed files over <command>bzip2</command> "
+#| "and <command>lzma</command>.  If <command>lzma</command> should be "
+#| "preferred over <command>gzip</command> and <command>bzip2</command> the "
+#| "configure setting should look like this: <placeholder type=\"synopsis\" "
+#| "id=\"1\"/> It is not needed to add <literal>bz2</literal> to the list "
+#| "explicitly as it will be added automatically."
 msgid ""
 "Also, the <literal>Order</literal> subgroup can be used to define in which "
 "order the acquire system will try to download the compressed files. The "
 "acquire system will try the first and proceed with the next compression type "
 "in this list on error, so to prefer one over the other type simply add the "
-"preferred type first - default types not already added will be implicitly "
-"appended to the end of the list, so e.g. <placeholder type=\"synopsis\" id="
-"\"0\"/> can be used to prefer <command>gzip</command> compressed files over "
-"<command>bzip2</command> and <command>lzma</command>.  If <command>lzma</"
-"command> should be preferred over <command>gzip</command> and "
-"<command>bzip2</command> the configure setting should look like this: "
-"<placeholder type=\"synopsis\" id=\"1\"/> It is not needed to add "
-"<literal>bz2</literal> to the list explicitly as it will be added "
-"automatically."
+"preferred type first - types not already added will be implicitly appended "
+"to the end of the list, so e.g. <placeholder type=\"synopsis\" id=\"0\"/> "
+"can be used to prefer <command>gzip</command> compressed files over all "
+"other compression formats.  If <command>xz</command> should be preferred "
+"over <command>gzip</command> and <command>bzip2</command> the configure "
+"setting should look like this: <placeholder type=\"synopsis\" id=\"1\"/> It "
+"is not needed to add <literal>bz2</literal> to the list explicitly as it "
+"will be added automatically."
 msgstr ""
 "また、<literal>Order</literal> サブグループを使用して、取得システムが、圧縮"
 "ファイルのダウンロードを試みる順番を定義できます。取得システムは先頭のものを"
@@ -4601,17 +4729,30 @@ msgstr "Dir::Bin::bzip2 \"/bin/bzip2\";"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
+#, fuzzy
+#| msgid ""
+#| "Note that the <literal>Dir::Bin::<replaceable>Methodname</replaceable></"
+#| "literal> will be checked at run time. If this option has been set, the "
+#| "method will only be used if this file exists; e.g. for the "
+#| "<literal>bzip2</literal> method (the inbuilt) setting is: <placeholder "
+#| "type=\"literallayout\" id=\"0\"/> Note also that list entries specified "
+#| "on the command line will be added at the end of the list specified in the "
+#| "configuration files, but before the default entries. To prefer a type in "
+#| "this case over the ones specified in the configuration files you can set "
+#| "the option direct - not in list style.  This will not override the "
+#| "defined list; it will only prefix the list with this type."
 msgid ""
 "Note that the <literal>Dir::Bin::<replaceable>Methodname</replaceable></"
-"literal> will be checked at run time. If this option has been set, the "
-"method will only be used if this file exists; e.g. for the <literal>bzip2</"
-"literal> method (the inbuilt) setting is: <placeholder type=\"literallayout"
-"\" id=\"0\"/> Note also that list entries specified on the command line will "
-"be added at the end of the list specified in the configuration files, but "
-"before the default entries. To prefer a type in this case over the ones "
-"specified in the configuration files you can set the option direct - not in "
-"list style.  This will not override the defined list; it will only prefix "
-"the list with this type."
+"literal> will be checked at run time. If this option has been set and "
+"support for this format isn't directly built into apt, the method will only "
+"be used if this file exists; e.g. for the <literal>bzip2</literal> method "
+"(the inbuilt) setting is: <placeholder type=\"literallayout\" id=\"0\"/> "
+"Note also that list entries specified on the command line will be added at "
+"the end of the list specified in the configuration files, but before the "
+"default entries. To prefer a type in this case over the ones specified in "
+"the configuration files you can set the option direct - not in list style.  "
+"This will not override the defined list; it will only prefix the list with "
+"this type."
 msgstr ""
 "実行時に <literal>Dir::Bin::<replaceable>Methodname</replaceable></literal> "
 "をチェックすることに注意してください。このオプションが設定されていると、ファ"
@@ -4754,25 +4895,39 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
 msgid ""
-"Allow the update operation to load data files from a repository without a "
-"trusted signature. If enabled this option no data files will be loaded and "
-"the update operation fails with a error for this source. The default is "
-"false for backward compatibility. This will be changed in the future."
+"Allow update operations to load data files from repositories without "
+"sufficient security information.  The default value is \"<literal>false</"
+"literal>\".  Concept, implications as well as alternatives are detailed in "
+"&apt-secure;."
 msgstr ""
-"信頼された署名がないリポジトリからデータファイルをロードする更新操作を許可し"
-"ます。このオプションを有効にした場合は、データファイルはロードされず、更新処"
-"理はこの取得元からのエラーで失敗します。デフォルトは、下位互換性を維持するた"
-"めに無効です。これは将来的に変更されます。"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
 msgid ""
+"Allow update operations to load data files from repositories which provide "
+"security information, but these are deemed no longer cryptographically "
+"strong enough.  The default value is \"<literal>false</literal>\".  Concept, "
+"implications as well as alternatives are detailed in &apt-secure;."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+#, fuzzy
+#| msgid ""
+#| "Allow that a repository that was previously gpg signed to become unsigned "
+#| "durign a update operation. When there is no valid signature of a "
+#| "previously trusted repository apt will refuse the update. This option can "
+#| "be used to override this protection. You almost certainly never want to "
+#| "enable this. The default is false.  Note that apt will still consider "
+#| "packages from this source untrusted and warn about them if you try to "
+#| "install them."
+msgid ""
 "Allow that a repository that was previously gpg signed to become unsigned "
-"durign a update operation. When there is no valid signature of a perviously "
-"trusted repository apt will refuse the update. This option can be used to "
-"override this protection. You almost certainly never want to enable this. "
-"The default is false.  Note that apt will still consider packages from this "
-"source untrusted and warn about them if you try to install them."
+"during an update operation. When there is no valid signature for a "
+"previously trusted repository apt will refuse the update. This option can be "
+"used to override this protection. You almost certainly never want to enable "
+"this. The default is <literal>false</literal>.  Concept, implications as "
+"well as alternatives are detailed in &apt-secure;."
 msgstr ""
 "以前に GPG 署名されたリポジトリが、更新操作中に署名なしにすることを許可しま"
 "す。以前に信頼されたリポジトリの有効な署名が存在しない場合、更新を拒否しま"
@@ -7537,13 +7692,22 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><para><itemizedlist><listitem><para>
 #: sources.list.5.xml
+#, fuzzy
+#| msgid ""
+#| "<option>Targets</option> (<option>target</option>) is a multivalue option "
+#| "defining which download targets apt will try to acquire from this source. "
+#| "If not specified, the default set is defined by the <option>Acquire::"
+#| "IndexTargets</option> configuration scope.  Additionally, specific "
+#| "targets can be enabled or disabled by using the identifier as field name "
+#| "instead of using this multivalue option."
 msgid ""
 "<option>Targets</option> (<option>target</option>) is a multivalue option "
 "defining which download targets apt will try to acquire from this source. If "
 "not specified, the default set is defined by the <option>Acquire::"
-"IndexTargets</option> configuration scope.  Additionally, specific targets "
-"can be enabled or disabled by using the identifier as field name instead of "
-"using this multivalue option."
+"IndexTargets</option> configuration scope (targets are specified by their "
+"name in the <literal>Created-By</literal> field).  Additionally, targets can "
+"be enabled or disabled by using the <literal>Identifier</literal> field as "
+"an option with a boolean value instead of using this multivalue option."
 msgstr ""
 "<option>Targets</option> (<option>target</option>) は、apt が取得元から取得し"
 "ようとするダウンロードターゲットを定義する複数の値を持つオプションです。指定"
@@ -7617,6 +7781,17 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><para><itemizedlist><listitem><para>
 #: sources.list.5.xml
 msgid ""
+"<option>Allow-Insecure</option> (<option>allow-insecure</option>), "
+"<option>Allow-Weak</option> (<option>allow-weak</option>) and <option>Allow-"
+"Downgrade-To-Insecure</option> (<option>allow-downgrade-to-insecure</"
+"option>)  are boolean values which all default to <literal>no</literal>.  If "
+"set to <literal>yes</literal> they circumvent parts of &apt-secure; and "
+"should therefore not be used lightly!"
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><para><itemizedlist><listitem><para>
+#: sources.list.5.xml
+msgid ""
 "<option>Trusted</option> (<option>trusted</option>)  is a tri-state value "
 "which defaults to APT deciding if a source is considered trusted or if "
 "warnings should be raised before e.g.  packages are installed from this "
@@ -7642,17 +7817,30 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><para><itemizedlist><listitem><para>
 #: sources.list.5.xml
+#, fuzzy
+#| msgid ""
+#| "<option>Signed-By</option> (<option>signed-by</option>)  is either an "
+#| "absolute path to a keyring file (has to be accessible and readable for "
+#| "the <literal>_apt</literal> user, so ensure everyone has read-permissions "
+#| "on the file) or a fingerprint of a key either in the <filename>trusted."
+#| "gpg</filename> keyring or in one of the keyrings in the <filename>trusted."
+#| "gpg.d/</filename> directory (see <command>apt-key fingerprint</command>). "
+#| "If the option is set, only the key(s) in this keyring or only the key "
+#| "with this fingerprint is used for the &apt-secure; verification of this "
+#| "repository. Otherwise all keys in the trusted keyrings are considered "
+#| "valid signers for this repository."
 msgid ""
 "<option>Signed-By</option> (<option>signed-by</option>)  is either an "
 "absolute path to a keyring file (has to be accessible and readable for the "
 "<literal>_apt</literal> user, so ensure everyone has read-permissions on the "
-"file) or a fingerprint of a key either in the <filename>trusted.gpg</"
-"filename> keyring or in one of the keyrings in the <filename>trusted.gpg.d/</"
+"file) or one or more fingerprints of keys either in the <filename>trusted."
+"gpg</filename> keyring or in the keyrings in the <filename>trusted.gpg.d/</"
 "filename> directory (see <command>apt-key fingerprint</command>). If the "
-"option is set, only the key(s) in this keyring or only the key with this "
-"fingerprint is used for the &apt-secure; verification of this repository. "
-"Otherwise all keys in the trusted keyrings are considered valid signers for "
-"this repository."
+"option is set, only the key(s) in this keyring or only the keys with these "
+"fingerprints are used for the &apt-secure; verification of this repository. "
+"Defaults to the value of the option with the same name if set in the "
+"previously acquired <filename>Release</filename> file.  Otherwise all keys "
+"in the trusted keyrings are considered valid signers for this repository."
 msgstr ""
 "<option>Signed-By</option> (<option>signed-by</option>) は、(<literal>_apt</"
 "literal> ユーザがアクセス可能かつ読み取り可能な必要があり、つまりすべてのユー"
@@ -8132,8 +8320,10 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><para>
 #: sources.list.5.xml
-msgid "&apt-get;, &apt-conf;"
-msgstr "&apt-get;, &apt-conf;"
+#, fuzzy
+#| msgid "&apt-cache;, &apt-config;, &apt-preferences;."
+msgid "&apt-get;, &apt-conf;, &apt-acquire-additional-files;"
+msgstr "&apt-cache;, &apt-config;, &apt-preferences;."
 
 #. type: Content of: <refentry><refmeta><manvolnum>
 #: apt-extracttemplates.1.xml apt-sortpkgs.1.xml apt-ftparchive.1.xml
@@ -8352,17 +8542,31 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-ftparchive.1.xml
+#, fuzzy
+#| msgid ""
+#| "The <literal>release</literal> command generates a Release file from a "
+#| "directory tree. It recursively searches the given directory for "
+#| "uncompressed <filename>Packages</filename> and <filename>Sources</"
+#| "filename> files and ones compressed with <command>gzip</command>, "
+#| "<command>bzip2</command> or <command>lzma</command> as well as "
+#| "<filename>Release</filename> and <filename>md5sum.txt</filename> files by "
+#| "default (<literal>APT::FTPArchive::Release::Default-Patterns</literal>). "
+#| "Additional filename patterns can be added by listing them in "
+#| "<literal>APT::FTPArchive::Release::Patterns</literal>.  It then writes to "
+#| "stdout a <filename>Release</filename> file containing (by default) an "
+#| "MD5, SHA1, SHA256 and SHA512 digest for each file."
 msgid ""
 "The <literal>release</literal> command generates a Release file from a "
 "directory tree. It recursively searches the given directory for uncompressed "
-"<filename>Packages</filename> and <filename>Sources</filename> files and "
-"ones compressed with <command>gzip</command>, <command>bzip2</command> or "
-"<command>lzma</command> as well as <filename>Release</filename> and "
-"<filename>md5sum.txt</filename> files by default (<literal>APT::FTPArchive::"
-"Release::Default-Patterns</literal>). Additional filename patterns can be "
-"added by listing them in <literal>APT::FTPArchive::Release::Patterns</"
-"literal>.  It then writes to stdout a <filename>Release</filename> file "
-"containing (by default) an MD5, SHA1, SHA256 and SHA512 digest for each file."
+"and compressed <filename>Packages</filename>, <filename>Sources</filename>, "
+"<filename>Contents</filename>, <filename>Components</filename> and "
+"<filename>icons</filename> files as well as <filename>Release</filename>, "
+"<filename>Index</filename> and <filename>md5sum.txt</filename> files by "
+"default (<literal>APT::FTPArchive::Release::Default-Patterns</literal>).  "
+"Additional filename patterns can be added by listing them in <literal>APT::"
+"FTPArchive::Release::Patterns</literal>.  It then writes to stdout a "
+"<filename>Release</filename> file containing (by default) an MD5, SHA1, "
+"SHA256 and SHA512 digest for each file."
 msgstr ""
 "<literal>release</literal> コマンドは、ディレクトリツリーから Release ファイ"
 "ルを生成します。与えたディレクトリを再帰的に検索し、未圧縮の "
@@ -8378,15 +8582,25 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-ftparchive.1.xml
+#, fuzzy
+#| msgid ""
+#| "Values for the additional metadata fields in the Release file are taken "
+#| "from the corresponding variables under <literal>APT::FTPArchive::Release</"
+#| "literal>, e.g. <literal>APT::FTPArchive::Release::Origin</literal>.  The "
+#| "supported fields are: <literal>Origin</literal>, <literal>Label</"
+#| "literal>, <literal>Suite</literal>, <literal>Version</literal>, "
+#| "<literal>Codename</literal>, <literal>Date</literal>, <literal>Valid-"
+#| "Until</literal>, <literal>Architectures</literal>, <literal>Components</"
+#| "literal>, <literal>Description</literal>."
 msgid ""
 "Values for the additional metadata fields in the Release file are taken from "
 "the corresponding variables under <literal>APT::FTPArchive::Release</"
-"literal>, e.g. <literal>APT::FTPArchive::Release::Origin</literal>.  The "
-"supported fields are: <literal>Origin</literal>, <literal>Label</literal>, "
+"literal>, e.g. <literal>APT::FTPArchive::Release::Origin</literal>. The "
+"supported fields are <literal>Origin</literal>, <literal>Label</literal>, "
 "<literal>Suite</literal>, <literal>Version</literal>, <literal>Codename</"
 "literal>, <literal>Date</literal>, <literal>Valid-Until</literal>, "
-"<literal>Architectures</literal>, <literal>Components</literal>, "
-"<literal>Description</literal>."
+"<literal>Signed-By</literal>, <literal>Architectures</literal>, "
+"<literal>Components</literal> and <literal>Description</literal>."
 msgstr ""
 "Release ファイルの追加メタデータフィールドの値は、<literal>APT::FTPArchive::"
 "Release</literal> 以下の相当する値 (例: <literal>APT::FTPArchive::Release::"
@@ -8513,11 +8727,17 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><refsect2><variablelist><varlistentry><listitem><para>
 #: apt-ftparchive.1.xml
+#, fuzzy
+#| msgid ""
+#| "Sets the default compression schemes to use for the package index files. "
+#| "It is a string that contains a space separated list of at least one of: "
+#| "'.' (no compression), 'gzip' and 'bzip2'. The default for all compression "
+#| "schemes is '. gzip'."
 msgid ""
 "Sets the default compression schemes to use for the package index files. It "
-"is a string that contains a space separated list of at least one of: '.' (no "
-"compression), 'gzip' and 'bzip2'. The default for all compression schemes is "
-"'. gzip'."
+"is a string that contains a space separated list of at least one of the "
+"compressors configured via the <option>APT::Compressor</option> "
+"configuration scope.  The default for all compression schemes is '. gzip'."
 msgstr ""
 "パッケージインデックスファイルのデフォルト圧縮方法を設定します。少なくとも "
 "'.' (圧縮なし), 'gzip', 'bzip2' のどれかが入る、空白区切りの文字列です。圧縮"
@@ -10731,6 +10951,54 @@ msgstr "  # apt-get -o dir::cache::archives=\"/disc/\" dist-upgrade\n"
 #: offline.dbk
 msgid "Which will use the already fetched archives on the disc."
 msgstr "これで、ディスクにある取得済みのアーカイブを使用するようになります。"
+
+#~ msgid "List fingerprints of trusted keys."
+#~ msgstr "信頼キーのフィンガープリントを一覧表示します。"
+
+#~ msgid "<filename>/etc/apt/trustdb.gpg</filename>"
+#~ msgstr "<filename>/etc/apt/trustdb.gpg</filename>"
+
+#~ msgid "Local trust database of archive keys."
+#~ msgstr "アーカイブキーのローカル信頼データベースです。"
+
+#~ msgid "&keyring-filename;"
+#~ msgstr "&keyring-filename;"
+
+#~ msgid "Keyring of &keyring-distro; archive trusted keys."
+#~ msgstr "&keyring-distro; アーカイブ信頼キーのキーリングです。"
+
+#~ msgid "&keyring-removed-filename;"
+#~ msgstr "&keyring-removed-filename;"
+
+#~ msgid "Keyring of &keyring-distro; archive removed trusted keys."
+#~ msgstr "削除された &keyring-distro; アーカイブ信頼キーのキーリングです。"
+
+#~ msgid ""
+#~ "In the future APT will refuse to work with unauthenticated repositories "
+#~ "by default until support for them is removed entirely. Users have the "
+#~ "option to opt-in to this behavior already by setting the configuration "
+#~ "option <option>Acquire::AllowInsecureRepositories</option> to "
+#~ "<literal>false</literal>."
+#~ msgstr ""
+#~ "将来的には、リポジトリ認証サポートが完全に削除されるまで、APT はデフォルト"
+#~ "で認証されていないリポジトリでの動作を拒否するでしょう。設定オプション "
+#~ "<option>Acquire::AllowInsecureRepositories</option> を <literal>false</"
+#~ "literal> に設定することで、ユーザはこのような動作にするオプトインするオプ"
+#~ "ションがあります。"
+
+#~ msgid ""
+#~ "Allow the update operation to load data files from a repository without a "
+#~ "trusted signature. If enabled this option no data files will be loaded "
+#~ "and the update operation fails with a error for this source. The default "
+#~ "is false for backward compatibility. This will be changed in the future."
+#~ msgstr ""
+#~ "信頼された署名がないリポジトリからデータファイルをロードする更新操作を許可"
+#~ "します。このオプションを有効にした場合は、データファイルはロードされず、更"
+#~ "新処理はこの取得元からのエラーで失敗します。デフォルトは、下位互換性を維持"
+#~ "するために無効です。これは将来的に変更されます。"
+
+#~ msgid "&apt-get;, &apt-conf;"
+#~ msgstr "&apt-get;, &apt-conf;"
 
 #~ msgid ""
 #~ "This is a space separated list of all the architectures that appear under "

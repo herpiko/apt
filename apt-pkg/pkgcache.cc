@@ -59,7 +59,7 @@ pkgCache::Header::Header()
    /* Whenever the structures change the major version should be bumped,
       whenever the generator changes the minor version should be bumped. */
    APT_HEADER_SET(MajorVersion, 10);
-   APT_HEADER_SET(MinorVersion, 5);
+   APT_HEADER_SET(MinorVersion, 6);
    APT_HEADER_SET(Dirty, false);
 
    APT_HEADER_SET(HeaderSz, sizeof(pkgCache::Header));
@@ -553,7 +553,9 @@ operator<<(std::ostream& out, pkgCache::PkgIterator Pkg)
       return out << "invalid package";
 
    string current = string(Pkg.CurVersion() == 0 ? "none" : Pkg.CurVersion());
+APT_IGNORE_DEPRECATED_PUSH
    string candidate = string(Pkg.CandVersion() == 0 ? "none" : Pkg.CandVersion());
+APT_IGNORE_DEPRECATED_POP
    string newest = string(Pkg.VersionList().end() ? "none" : Pkg.VersionList().VerStr());
 
    out << Pkg.Name() << " [ " << Pkg.Arch() << " ] < " << current;
@@ -815,10 +817,12 @@ std::ostream& operator<<(std::ostream& out, pkgCache::DepIterator D)
 
    out << (P.end() ? "invalid pkg" : P.FullName(false)) << " " << D.DepType()
 	<< " on ";
+APT_IGNORE_DEPRECATED_PUSH
    if (T.end() == true)
       out << "invalid pkg";
    else
       out << T;
+APT_IGNORE_DEPRECATED_POP
 
    if (D->Version != 0)
       out << " (" << D.CompType() << " " << D.TargetVer() << ")";

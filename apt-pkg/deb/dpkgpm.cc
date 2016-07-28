@@ -1,10 +1,9 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: dpkgpm.cc,v 1.28 2004/01/27 02:25:01 mdz Exp $
 /* ######################################################################
 
    DPKG Package Manager - Provide an interface to dpkg
-   
+
    ##################################################################### */
 									/*}}}*/
 // Includes								/*{{{*/
@@ -56,8 +55,7 @@
 
 using namespace std;
 
-APT_PURE static string
-AptHistoryRequestingUser()
+APT_PURE static string AptHistoryRequestingUser()			/*{{{*/
 {
    const char* EnvKeys[]{"SUDO_UID", "PKEXEC_UID", "PACKAGEKIT_CALLER_UID"};
 
@@ -80,9 +78,8 @@ AptHistoryRequestingUser()
    }
    return "";
 }
-
-APT_PURE static unsigned int
-EnvironmentSize()
+									/*}}}*/
+APT_PURE static unsigned int EnvironmentSize()				/*{{{*/
 {
   unsigned int size = 0;
   char **envp = environ;
@@ -92,8 +89,8 @@ EnvironmentSize()
 
   return size;
 }
-
-class pkgDPkgPMPrivate 
+									/*}}}*/
+class pkgDPkgPMPrivate							/*{{{*/
 {
 public:
    pkgDPkgPMPrivate() : stdin_is_dev_null(false), dpkgbuf_pos(0),
@@ -129,7 +126,7 @@ public:
 
    bool direct_stdin;
 };
-
+									/*}}}*/
 namespace
 {
   // Maps the dpkg "processing" info to human readable names.  Entry 0
@@ -165,13 +162,10 @@ namespace
   };
 }
 
-/* helper function to ionice the given PID 
-
- there is no C header for ionice yet - just the syscall interface
- so we use the binary from util-linux
-*/
-static bool
-ionice(int PID)
+// ionice - helper function to ionice the given PID			/*{{{*/
+/* there is no C header for ionice yet - just the syscall interface
+   so we use the binary from util-linux */
+static bool ionice(int PID)
 {
    if (!FileExists("/usr/bin/ionice"))
       return false;
@@ -189,13 +183,13 @@ ionice(int PID)
    }
    return ExecWait(Process, "ionice");
 }
-
+									/*}}}*/
 // FindNowVersion - Helper to find a Version in "now" state	/*{{{*/
 // ---------------------------------------------------------------------
-/* This is helpful when a package is no longer installed but has residual 
+/* This is helpful when a package is no longer installed but has residual
  * config files
  */
-static 
+static
 pkgCache::VerIterator FindNowVersion(const pkgCache::PkgIterator &Pkg)
 {
    pkgCache::VerIterator Ver;
@@ -275,7 +269,7 @@ bool pkgDPkgPM::Remove(PkgIterator Pkg,bool Purge)
 {
    if (Pkg.end() == true)
       return false;
-   
+
    if (Purge == true)
       List.push_back(Item(Item::Purge,Pkg));
    else
@@ -316,14 +310,14 @@ bool pkgDPkgPM::SendPkgsInfo(FILE * const F, unsigned int const &Version)
 	 Top = Top->Child;
 	 continue;
       }
-      
+
       while (Top != 0 && Top->Next == 0)
 	 Top = Top->Parent;
       if (Top != 0)
 	 Top = Top->Next;
-   }   
+   }
    fprintf(F,"\n");
- 
+
    // Write out the package actions in order.
    for (vector<Item>::iterator I = List.begin(); I != List.end(); ++I)
    {
@@ -331,7 +325,7 @@ bool pkgDPkgPM::SendPkgsInfo(FILE * const F, unsigned int const &Version)
 	 continue;
 
       pkgDepCache::StateCache &S = Cache[I->Pkg];
-      
+
       fprintf(F,"%s ",I->Pkg.Name());
 
       // Current version which we are going to replace
@@ -386,13 +380,13 @@ bool pkgDPkgPM::SendPkgsInfo(FILE * const F, unsigned int const &Version)
 	    fprintf(F,"**ERROR**\n");
 	 else
 	    fprintf(F,"%s\n",I->File.c_str());
-      }      
+      }
       else if (I->Op == Item::Configure)
 	 fprintf(F,"**CONFIGURE**\n");
       else if (I->Op == Item::Remove ||
 	  I->Op == Item::Purge)
 	 fprintf(F,"**REMOVE**\n");
-      
+
       if (ferror(F) != 0)
 	 return false;
    }
@@ -414,7 +408,7 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
    Opts = Opts->Child;
 
    sighandler_t old_sigpipe = signal(SIGPIPE, SIG_IGN);
-   
+
    unsigned int Count = 1;
    for (; Opts != 0; Opts = Opts->Next, Count++)
    {
@@ -431,10 +425,10 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
       if ((Pos = OptSec.find(' ')) == string::npos || Pos == 0)
 	 Pos = OptSec.length();
       OptSec = "DPkg::Tools::Options::" + string(Opts->Value.c_str(),Pos);
-      
+
       unsigned int Version = _config->FindI(OptSec+"::Version",1);
       unsigned int InfoFD = _config->FindI(OptSec + "::InfoFD", STDIN_FILENO);
-      
+
       // Create the pipes
       std::set<int> KeepFDs;
       MergeKeepFdsFromConfiguration(KeepFDs);
@@ -477,10 +471,10 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
       close(Pipes[0]);
       FILE *F = fdopen(Pipes[1],"w");
       if (F == 0) {
-         result = _error->Errno("fdopen","Faild to open new FD");
+         result = _error->Errno("fdopen","Failed to open new FD");
          break;
       }
-      
+
       // Feed it the filenames.
       if (Version <= 1)
       {
@@ -493,7 +487,7 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 	    // No errors here..
 	    if (I->File[0] != '/')
 	       continue;
-	    
+
 	    /* Feed the filename of each package that is pending install
 	       into the pipe. */
 	    fprintf(F,"%s\n",I->File.c_str());
@@ -505,7 +499,7 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 	 SendPkgsInfo(F, Version);
 
       fclose(F);
-      
+
       // Clean up the sub process
       if (ExecWait(Process,Opts->Value.c_str()) == false) {
 	 result = _error->Error("Failure running script %s",Opts->Value.c_str());
@@ -549,18 +543,15 @@ void pkgDPkgPM::DoTerminalPty(int master)
       struct timespec sleepfor = { 0, 500000000 };
       nanosleep(&sleepfor, NULL);
       return;
-   }  
-   if(len <= 0) 
+   }
+   if(len <= 0)
       return;
    FileFd::Write(1, term_buf, len);
    if(d->term_out)
       fwrite(term_buf, len, sizeof(char), d->term_out);
 }
 									/*}}}*/
-// DPkgPM::ProcessDpkgStatusBuf                                        	/*{{{*/
-// ---------------------------------------------------------------------
-/*
- */
+// DPkgPM::ProcessDpkgStatusBuf						/*{{{*/
 void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
 {
    bool const Debug = _config->FindB("Debug::pkgDPkgProgressReporting",false);
@@ -570,14 +561,14 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
    /* dpkg sends strings like this:
       'status:   <pkg>: <pkg  qstate>'
       'status:   <pkg>:<arch>: <pkg  qstate>'
-      
+
       'processing: {install,upgrade,configure,remove,purge,disappear,trigproc}: pkg'
       'processing: {install,upgrade,configure,remove,purge,disappear,trigproc}: trigger'
    */
 
    // we need to split on ": " (note the appended space) as the ':' is
    // part of the pkgname:arch information that dpkg sends
-   // 
+   //
    // A dpkg error message may contain additional ":" (like
    //  "failed in buffer_write(fd) (10, ret=-1): backend dpkg-deb ..."
    // so we need to ensure to not split too much
@@ -696,12 +687,12 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
       d->progress->StatusChanged(pkgname, PackagesDone, PackagesTotal, msg);
 
       // FIXME: this needs a muliarch testcase
-      // FIXME2: is "pkgname" here reliable with dpkg only sending us 
+      // FIXME2: is "pkgname" here reliable with dpkg only sending us
       //         short pkgnames?
       if (action == "disappear")
 	 handleDisappearAction(pkgname);
       return;
-   } 
+   }
 
    if (prefix == "status")
    {
@@ -914,7 +905,7 @@ bool pkgDPkgPM::OpenLog()
       WriteHistoryTag("Purge",purge);
       fflush(d->history_out);
    }
-   
+
    return true;
 }
 									/*}}}*/
@@ -963,28 +954,6 @@ bool pkgDPkgPM::CloseLog()
    return true;
 }
 									/*}}}*/
-									/*}}}*/
-/*{{{*/
-// This implements a racy version of pselect for those architectures
-// that don't have a working implementation.
-// FIXME: Probably can be removed on Lenny+1
-static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
-   fd_set *exceptfds, const struct timespec *timeout,
-   const sigset_t *sigmask)
-{
-   sigset_t origmask;
-   struct timeval tv;
-   int retval;
-
-   tv.tv_sec = timeout->tv_sec;
-   tv.tv_usec = timeout->tv_nsec/1000;
-
-   sigprocmask(SIG_SETMASK, sigmask, &origmask);
-   retval = select(nfds, readfds, writefds, exceptfds, &tv);
-   sigprocmask(SIG_SETMASK, &origmask, 0);
-   return retval;
-}
-                                                                        /*}}}*/
 
 // DPkgPM::BuildPackagesProgressMap					/*{{{*/
 void pkgDPkgPM::BuildPackagesProgressMap()
@@ -993,27 +962,27 @@ void pkgDPkgPM::BuildPackagesProgressMap()
    // (this is sorted in the same way as Item::Ops)
    static const struct DpkgState DpkgStatesOpMap[][7] = {
       // Install operation
-      { 
-	 {"half-installed", N_("Preparing %s")}, 
-	 {"unpacked", N_("Unpacking %s") }, 
+      {
+	 {"half-installed", N_("Preparing %s")},
+	 {"unpacked", N_("Unpacking %s") },
 	 {NULL, NULL}
       },
       // Configure operation
-      { 
+      {
 	 {"unpacked",N_("Preparing to configure %s") },
 	 {"half-configured", N_("Configuring %s") },
 	 { "installed", N_("Installed %s")},
 	 {NULL, NULL}
       },
       // Remove operation
-      { 
+      {
 	 {"half-configured", N_("Preparing for removal of %s")},
 	 {"half-installed", N_("Removing %s")},
 	 {"config-files",  N_("Removed %s")},
 	 {NULL, NULL}
       },
       // Purge operation
-      { 
+      {
 	 {"config-files", N_("Preparing to completely remove %s")},
 	 {"not-installed", N_("Completely removed %s")},
 	 {NULL, NULL}
@@ -1045,18 +1014,18 @@ void pkgDPkgPM::BuildPackagesProgressMap()
    ++PackagesTotal;
 }
                                                                         /*}}}*/
-bool pkgDPkgPM::Go(int StatusFd)
+bool pkgDPkgPM::Go(int StatusFd)					/*{{{*/
 {
    APT::Progress::PackageManager *progress = NULL;
    if (StatusFd == -1)
       progress = APT::Progress::PackageManagerProgressFactory();
    else
       progress = new APT::Progress::PackageManagerProgressFd(StatusFd);
-   
+
    return Go(progress);
 }
-
-void pkgDPkgPM::StartPtyMagic()
+									/*}}}*/
+void pkgDPkgPM::StartPtyMagic()						/*{{{*/
 {
    if (_config->FindB("Dpkg::Use-Pty", true) == false)
    {
@@ -1154,7 +1123,8 @@ void pkgDPkgPM::StartPtyMagic()
    }
    _error->RevertToStack();
 }
-void pkgDPkgPM::SetupSlavePtyMagic()
+									/*}}}*/
+void pkgDPkgPM::SetupSlavePtyMagic()					/*{{{*/
 {
    if(d->master == -1 || d->slave == NULL)
       return;
@@ -1186,7 +1156,8 @@ void pkgDPkgPM::SetupSlavePtyMagic()
    if (slaveFd != -1)
       close(slaveFd);
 }
-void pkgDPkgPM::StopPtyMagic()
+									/*}}}*/
+void pkgDPkgPM::StopPtyMagic()						/*{{{*/
 {
    if (d->slave != NULL)
       free(d->slave);
@@ -1196,7 +1167,7 @@ void pkgDPkgPM::StopPtyMagic()
       close(d->protect_slave_from_dying);
       d->protect_slave_from_dying = -1;
    }
-   if(d->master >= 0) 
+   if(d->master >= 0)
    {
       if (d->tt_is_valid == true && tcsetattr(STDIN_FILENO, TCSAFLUSH, &d->tt) == -1)
 	 _error->FatalE("tcsetattr", "Setting in Stop via TCSAFLUSH for stdin failed!");
@@ -1207,7 +1178,7 @@ void pkgDPkgPM::StopPtyMagic()
 
 // DPkgPM::Go - Run the sequence					/*{{{*/
 // ---------------------------------------------------------------------
-/* This globs the operations and calls dpkg 
+/* This globs the operations and calls dpkg
  *
  * If it is called with a progress object apt will report the install
  * progress to this object. It maps the dpkg states a package goes
@@ -1231,9 +1202,6 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
    fd_set rfds;
    struct timespec tv;
 
-   // FIXME: do we really need this limit when we have MaxArgBytes?
-   unsigned int const MaxArgs = _config->FindI("Dpkg::MaxArgs",32*1024);
-
    // try to figure out the max environment size
    int OSArgMax = sysconf(_SC_ARG_MAX);
    if(OSArgMax < 0)
@@ -1248,14 +1216,32 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
    if (RunScriptsWithPkgs("DPkg::Pre-Install-Pkgs") == false)
       return false;
 
+   auto const noopDPkgInvocation = _config->FindB("Debug::pkgDPkgPM",false);
+   // store auto-bits as they are supposed to be after dpkg is run
+   if (noopDPkgInvocation == false)
+      Cache.writeStateFile(NULL);
+
+   decltype(List)::const_iterator::difference_type const notconfidx =
+      _config->FindB("Dpkg::ExplicitLastConfigure", false) ? std::numeric_limits<decltype(notconfidx)>::max() :
+      std::distance(List.cbegin(), std::find_if_not(List.crbegin(), List.crend(), [](Item const &i) { return i.Op == Item::Configure; }).base());
+
    // support subpressing of triggers processing for special
    // cases like d-i that runs the triggers handling manually
    bool const TriggersPending = _config->FindB("DPkg::TriggersPending", false);
-   if (_config->FindB("DPkg::ConfigurePending", true) == true)
+   bool const ConfigurePending = _config->FindB("DPkg::ConfigurePending", true);
+   if (ConfigurePending)
       List.push_back(Item(Item::ConfigurePending, PkgIterator()));
 
    // for the progress
    BuildPackagesProgressMap();
+
+   if (notconfidx != std::numeric_limits<decltype(notconfidx)>::max())
+   {
+      if (ConfigurePending)
+	 List.erase(std::next(List.begin(), notconfidx), std::prev(List.end()));
+      else
+	 List.erase(std::next(List.begin(), notconfidx), List.end());
+   }
 
    d->stdin_is_dev_null = false;
 
@@ -1267,7 +1253,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
    // start pty magic before the loop
    StartPtyMagic();
 
-   // Tell the progress that its starting and fork dpkg 
+   // Tell the progress that its starting and fork dpkg
    d->progress->Start(d->master);
 
    // this loop is runs once per dpkg operation
@@ -1292,33 +1278,14 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	 for (; J != List.end() && J->Op == I->Op; ++J)
 	    /* nothing */;
 
-      // keep track of allocated strings for multiarch package names
-      std::vector<char *> Packages;
+      auto const size = (J - I) + 10;
 
       // start with the baseset of arguments
-      unsigned long Size = StartSize;
+      auto Size = StartSize;
       Args.erase(Args.begin() + BaseArgs, Args.end());
-
-      // Now check if we are within the MaxArgs limit
-      //
-      // this code below is problematic, because it may happen that
-      // the argument list is split in a way that A depends on B
-      // and they are in the same "--configure A B" run
-      // - with the split they may now be configured in different
-      //   runs, using Immediate-Configure-All can help prevent this.
-      if (J - I > (signed)MaxArgs)
-      {
-	 J = I + MaxArgs;
-	 unsigned long const size = MaxArgs + 10;
-	 Args.reserve(size);
-	 Packages.reserve(size);
-      }
-      else
-      {
-	 unsigned long const size = (J - I) + 10;
-	 Args.reserve(size);
-	 Packages.reserve(size);
-      }
+      Args.reserve(size);
+      // keep track of allocated strings for multiarch package names
+      std::vector<char *> Packages(size, nullptr);
 
       int fd[2];
       if (pipe(fd) != 0)
@@ -1340,13 +1307,13 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	 ADDARGC("--force-remove-essential");
 	 ADDARGC("--remove");
 	 break;
-	 
+
 	 case Item::Purge:
 	 ADDARGC("--force-depends");
 	 ADDARGC("--force-remove-essential");
 	 ADDARGC("--purge");
 	 break;
-	 
+
 	 case Item::Configure:
 	 ADDARGC("--configure");
 	 break;
@@ -1433,8 +1400,8 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 #undef ADDARG
 
       J = I;
-      
-      if (_config->FindB("Debug::pkgDPkgPM",false) == true)
+
+      if (noopDPkgInvocation == true)
       {
 	 for (std::vector<const char *>::const_iterator a = Args.begin();
 	      a != Args.end(); ++a)
@@ -1444,6 +1411,8 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	       p != Packages.end(); ++p)
 	    free(*p);
 	 Packages.clear();
+	 close(fd[0]);
+	 close(fd[1]);
 	 continue;
       }
       Args.push_back(NULL);
@@ -1452,18 +1421,17 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
       clog << flush;
       cerr << flush;
 
-      /* Mask off sig int/quit. We do this because dpkg also does when 
+      /* Mask off sig int/quit. We do this because dpkg also does when
          it forks scripts. What happens is that when you hit ctrl-c it sends
-	 it to all processes in the group. Since dpkg ignores the signal 
+	 it to all processes in the group. Since dpkg ignores the signal
 	 it doesn't die but we do! So we must also ignore it */
       sighandler_t old_SIGQUIT = signal(SIGQUIT,SIG_IGN);
       sighandler_t old_SIGINT = signal(SIGINT,SigINT);
-      
+
       // Check here for any SIGINT
-      if (pkgPackageManager::SigINTStop && (Op == Item::Remove || Op == Item::Purge || Op == Item::Install)) 
+      if (pkgPackageManager::SigINTStop && (Op == Item::Remove || Op == Item::Purge || Op == Item::Install))
          break;
-      
-      
+
       // ignore SIGHUP as well (debian #463030)
       sighandler_t old_SIGHUP = signal(SIGHUP,SIG_IGN);
 
@@ -1490,32 +1458,36 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
             int dummy = 0;
 	    if ((Flags = fcntl(STDIN_FILENO,F_GETFL,dummy)) < 0)
 	       _exit(100);
-	    
+
 	    // Discard everything in stdin before forking dpkg
 	    if (fcntl(STDIN_FILENO,F_SETFL,Flags | O_NONBLOCK) < 0)
 	       _exit(100);
-	    
+
 	    while (read(STDIN_FILENO,&dummy,1) == 1);
-	    
+
 	    if (fcntl(STDIN_FILENO,F_SETFL,Flags & (~(long)O_NONBLOCK)) < 0)
 	       _exit(100);
 	 }
 
+	 // if color support isn't enabled/disabled explicitly tell
+	 // dpkg to use the same state apt is using for its color support
+	 if (_config->FindB("APT::Color", false) == true)
+	    setenv("DPKG_COLORS", "always", 0);
+	 else
+	    setenv("DPKG_COLORS", "never", 0);
+
 	 execvp(Args[0], (char**) &Args[0]);
 	 cerr << "Could not exec dpkg!" << endl;
 	 _exit(100);
-      }      
-
-      // apply ionice
-      if (_config->FindB("DPkg::UseIoNice", false) == true)
-	 ionice(Child);
-
-      // Wait for dpkg
-      int Status = 0;
+      }
 
       // we read from dpkg here
       int const _dpkgin = fd[0];
       close(fd[1]);                        // close the write end of the pipe
+
+      // apply ionice
+      if (_config->FindB("DPkg::UseIoNice", false) == true)
+	 ionice(Child);
 
       // setups fds
       sigemptyset(&d->sigmask);
@@ -1528,8 +1500,8 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
       Packages.clear();
 
       // the result of the waitpid call
+      int Status = 0;
       int res;
-      int select_ret;
       bool waitpid_failure = false;
       while ((res=waitpid(Child,&Status, WNOHANG)) != Child) {
 	 if(res < 0) {
@@ -1549,22 +1521,19 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	    FD_SET(d->master, &rfds);
          tv.tv_sec = 0;
          tv.tv_nsec = d->progress->GetPulseInterval();
-	 select_ret = pselect(max(d->master, _dpkgin)+1, &rfds, NULL, NULL, 
+	 auto const select_ret = pselect(max(d->master, _dpkgin)+1, &rfds, NULL, NULL,
 			      &tv, &d->original_sigmask);
-	 if (select_ret < 0 && (errno == EINVAL || errno == ENOSYS))
-	    select_ret = racy_pselect(max(d->master, _dpkgin)+1, &rfds, NULL,
-				      NULL, &tv, &d->original_sigmask);
          d->progress->Pulse();
-	 if (select_ret == 0) 
-  	    continue;
-  	 else if (select_ret < 0 && errno == EINTR)
-  	    continue;
-  	 else if (select_ret < 0) 
- 	 {
-  	    perror("select() returned error");
-  	    continue;
-  	 } 
-	 
+	 if (select_ret == 0)
+	    continue;
+	 else if (select_ret < 0 && errno == EINTR)
+	    continue;
+	 else if (select_ret < 0)
+	 {
+	    perror("select() returned error");
+	    continue;
+	 }
+
 	 if(d->master >= 0 && FD_ISSET(d->master, &rfds))
 	    DoTerminalPty(d->master);
 	 if(d->master >= 0 && FD_ISSET(0, &rfds))
@@ -1613,7 +1582,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
    if (pkgPackageManager::SigINTStop)
        _error->Warning(_("Operation was interrupted before it could finish"));
 
-   if (_config->FindB("Debug::pkgDPkgPM",false) == false)
+   if (noopDPkgInvocation == false)
    {
       std::string const oldpkgcache = _config->FindFile("Dir::cache::pkgcache");
       if (oldpkgcache.empty() == false && RealFileExists(oldpkgcache) == true &&
@@ -1630,7 +1599,9 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
       }
    }
 
-   Cache.writeStateFile(NULL);
+   // disappearing packages can forward their auto-bit
+   if (disappearedPkgs.empty() == false)
+      Cache.writeStateFile(NULL);
 
    d->progress->Stop();
 
@@ -1647,7 +1618,7 @@ void SigINT(int /*sig*/) {
 // pkgDpkgPM::Reset - Dump the contents of the command list		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgDPkgPM::Reset() 
+void pkgDPkgPM::Reset()
 {
    List.erase(List.begin(),List.end());
 }
@@ -1655,7 +1626,7 @@ void pkgDPkgPM::Reset()
 // pkgDpkgPM::WriteApportReport - write out error report pkg failure	/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg) 
+void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
 {
    // If apport doesn't exist or isn't installed do nothing
    // This e.g. prevents messages in 'universes' without apport
@@ -1680,20 +1651,20 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
       return;
    }
 
-   // check if its not a follow up error 
+   // check if its not a follow up error
    const char *needle = dgettext("dpkg", "dependency problems - leaving unconfigured");
    if(strstr(errormsg, needle) != NULL) {
       std::clog << _("No apport report written because the error message indicates its a followup error from a previous failure.") << std::endl;
       return;
    }
 
-   // do not report disk-full failures 
+   // do not report disk-full failures
    if(strstr(errormsg, strerror(ENOSPC)) != NULL) {
       std::clog << _("No apport report written because the error message indicates a disk full error") << std::endl;
       return;
    }
 
-   // do not report out-of-memory failures 
+   // do not report out-of-memory failures
    if(strstr(errormsg, strerror(ENOMEM)) != NULL ||
       strstr(errormsg, "failed to allocate memory") != NULL) {
       std::clog << _("No apport report written because the error message indicates a out of memory error") << std::endl;
@@ -1729,7 +1700,7 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
          // to kill the "s" manually
          if (list[1].size() > 1) {
             list[1].erase(0, 1);
-            if(strstr(errormsg, list[0].c_str()) && 
+            if(strstr(errormsg, list[0].c_str()) &&
                strstr(errormsg, list[1].c_str())) {
                std::clog << _("No apport report written because the error message indicates a dpkg I/O error") << std::endl;
                return;

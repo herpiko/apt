@@ -10,6 +10,7 @@
 #include <apt-pkg/strutl.h>
 
 #include <apt-private/private-cmndline.h>
+#include <apt-private/private-main.h>
 
 #include <stdarg.h>
 #include <string.h>
@@ -23,6 +24,8 @@
 
 APT_SENTINEL static bool strcmp_match_in_list(char const * const Cmd, ...)		/*{{{*/
 {
+   if (Cmd == nullptr)
+      return false;
    va_list args;
    bool found = false;
    va_start(args, Cmd);
@@ -130,6 +133,12 @@ static bool addArgumentsAPTConfig(std::vector<CommandLine::Args> &Args, char con
    return true;
 }
 									/*}}}*/
+static bool addArgumentsAPTDumpSolver(std::vector<CommandLine::Args> &Args, char const * const)/*{{{*/
+{
+   addArg(0,"user","APT::Solver::RunAsUser",CommandLine::HasArg);
+   return true;
+}
+									/*}}}*/
 static bool addArgumentsAPTExtractTemplates(std::vector<CommandLine::Args> &Args, char const * const)/*{{{*/
 {
    addArg('t',"tempdir","APT::ExtractTemplates::TempDir",CommandLine::HasArg);
@@ -148,6 +157,11 @@ static bool addArgumentsAPTFTPArchive(std::vector<CommandLine::Args> &Args, char
    addArg(0,"readonly","APT::FTPArchive::ReadOnlyDB",0);
    addArg(0,"contents","APT::FTPArchive::Contents",0);
    addArg('a',"arch","APT::FTPArchive::Architecture",CommandLine::HasArg);
+   return true;
+}
+									/*}}}*/
+static bool addArgumentsAPTInternalPlanner(std::vector<CommandLine::Args> &, char const * const)/*{{{*/
+{
    return true;
 }
 									/*}}}*/
@@ -177,6 +191,7 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
       addArg(0, "auto-remove", "APT::Get::AutomaticRemove", 0);
       addArg(0, "reinstall", "APT::Get::ReInstall", 0);
       addArg(0, "solver", "APT::Solver", CommandLine::HasArg);
+      addArg(0, "planner", "APT::Planner", CommandLine::HasArg);
       if (CmdMatches("upgrade"))
       {
          addArg(0, "new-pkgs", "APT::Get::Upgrade-Allow-New", 
@@ -256,6 +271,7 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
    addArg(0,"arch-only","APT::Get::Arch-Only",0);
    addArg(0,"allow-unauthenticated","APT::Get::AllowUnauthenticated",0);
    addArg(0,"allow-insecure-repositories","Acquire::AllowInsecureRepositories",0);
+   addArg(0,"allow-weak-repositories","Acquire::AllowWeakRepositories",0);
    addArg(0,"install-recommends","APT::Install-Recommends",CommandLine::Boolean);
    addArg(0,"install-suggests","APT::Install-Suggests",CommandLine::Boolean);
    addArg(0,"fix-policy","APT::Get::Fix-Policy-Broken",0);
@@ -331,12 +347,7 @@ std::vector<CommandLine::Args> getCommandArgs(APT_CMD const Program, char const 
 {
    std::vector<CommandLine::Args> Args;
    Args.reserve(50);
-   if (Cmd == nullptr)
-   {
-      if (Program == APT_CMD::APT_EXTRACTTEMPLATES)
-	 addArgumentsAPTExtractTemplates(Args, Cmd);
-   }
-   else if (strcmp(Cmd, "help") == 0)
+   if (Cmd != nullptr && strcmp(Cmd, "help") == 0)
       ; // no options for help so no need to implement it in each
    else
       switch (Program)
@@ -346,9 +357,11 @@ std::vector<CommandLine::Args> getCommandArgs(APT_CMD const Program, char const 
 	 case APT_CMD::APT_CACHE: addArgumentsAPTCache(Args, Cmd); break;
 	 case APT_CMD::APT_CDROM: addArgumentsAPTCDROM(Args, Cmd); break;
 	 case APT_CMD::APT_CONFIG: addArgumentsAPTConfig(Args, Cmd); break;
+	 case APT_CMD::APT_DUMP_SOLVER: addArgumentsAPTDumpSolver(Args, Cmd); break;
 	 case APT_CMD::APT_EXTRACTTEMPLATES: addArgumentsAPTExtractTemplates(Args, Cmd); break;
 	 case APT_CMD::APT_FTPARCHIVE: addArgumentsAPTFTPArchive(Args, Cmd); break;
 	 case APT_CMD::APT_HELPER: addArgumentsAPTHelper(Args, Cmd); break;
+	 case APT_CMD::APT_INTERNAL_PLANNER: addArgumentsAPTInternalPlanner(Args, Cmd); break;
 	 case APT_CMD::APT_INTERNAL_SOLVER: addArgumentsAPTInternalSolver(Args, Cmd); break;
 	 case APT_CMD::APT_MARK: addArgumentsAPTMark(Args, Cmd); break;
 	 case APT_CMD::APT_SORTPKG: addArgumentsAPTSortPkgs(Args, Cmd); break;
@@ -367,7 +380,6 @@ std::vector<CommandLine::Args> getCommandArgs(APT_CMD const Program, char const 
    return Args;
 }
 									/*}}}*/
-#undef CmdMatches
 #undef addArg
 static void ShowHelpListCommands(std::vector<aptDispatchWithHelp> const &Cmds)/*{{{*/
 {
@@ -401,24 +413,28 @@ static bool ShowCommonHelp(APT_CMD const Binary, CommandLine &CmdL, std::vector<
       case APT_CMD::APT_CACHE: cmd = "apt-cache(8)"; break;
       case APT_CMD::APT_CDROM: cmd = "apt-cdrom(8)"; break;
       case APT_CMD::APT_CONFIG: cmd = "apt-config(8)"; break;
+      case APT_CMD::APT_DUMP_SOLVER: cmd = nullptr; break;
       case APT_CMD::APT_EXTRACTTEMPLATES: cmd = "apt-extracttemplates(1)"; break;
       case APT_CMD::APT_FTPARCHIVE: cmd = "apt-ftparchive(1)"; break;
       case APT_CMD::APT_GET: cmd = "apt-get(8)"; break;
       case APT_CMD::APT_HELPER: cmd = nullptr; break;
+      case APT_CMD::APT_INTERNAL_PLANNER: cmd = nullptr; break;
       case APT_CMD::APT_INTERNAL_SOLVER: cmd = nullptr; break;
       case APT_CMD::APT_MARK: cmd = "apt-mark(8)"; break;
       case APT_CMD::APT_SORTPKG: cmd = "apt-sortpkgs(1)"; break;
    }
    if (cmd != nullptr)
       ioprintf(std::cout, _("See %s for more information about the available commands."), cmd);
-   std::cout << std::endl <<
-      _("Configuration options and syntax is detailed in apt.conf(5).\n"
-	    "Information about how to configure sources can be found in sources.list(5).\n"
-	    "Package and version choices can be expressed via apt_preferences(5).\n"
-	    "Security details are available in apt-secure(8).\n");
+   if (Binary != APT_CMD::APT_DUMP_SOLVER && Binary != APT_CMD::APT_INTERNAL_SOLVER &&
+	 Binary != APT_CMD::APT_INTERNAL_PLANNER)
+      std::cout << std::endl <<
+	 _("Configuration options and syntax is detailed in apt.conf(5).\n"
+	       "Information about how to configure sources can be found in sources.list(5).\n"
+	       "Package and version choices can be expressed via apt_preferences(5).\n"
+	       "Security details are available in apt-secure(8).\n");
    if (Binary == APT_CMD::APT_GET || Binary == APT_CMD::APT)
       std::cout << std::right << std::setw(70) << _("This APT has Super Cow Powers.") << std::endl;
-   else if (Binary == APT_CMD::APT_HELPER)
+   else if (Binary == APT_CMD::APT_HELPER || Binary == APT_CMD::APT_DUMP_SOLVER)
       std::cout << std::right << std::setw(70) << _("This APT helper has Super Meep Powers.") << std::endl;
    return true;
 }
@@ -438,19 +454,27 @@ static void BinarySpecificConfiguration(char const * const Binary)	/*{{{*/
       _config->CndSet("Binary::apt::APT::Get::Upgrade-Allow-New", true);
       _config->CndSet("Binary::apt::APT::Cmd::Show-Update-Stats", true);
       _config->CndSet("Binary::apt::DPkg::Progress-Fancy", true);
-      _config->CndSet("Binary::apt::Acquire::AllowInsecureRepositories", false);
       _config->CndSet("Binary::apt::APT::Keep-Downloaded-Packages", false);
    }
+   if (binary == "apt-config")
+      _config->CndSet("Binary::apt-get::Acquire::AllowInsecureRepositories", true);
 
    _config->Set("Binary", binary);
-   std::string const conf = "Binary::" + binary;
-   _config->MoveSubTree(conf.c_str(), NULL);
 }
+									/*}}}*/
+static void BinaryCommandSpecificConfiguration(char const * const Binary, char const * const Cmd)/*{{{*/
+{
+   std::string const binary = flNotDir(Binary);
+   if (binary == "apt-get" && CmdMatches("update"))
+      _config->CndSet("Binary::apt-get::Acquire::AllowInsecureRepositories", true);
+}
+#undef CmdMatches
 									/*}}}*/
 std::vector<CommandLine::Dispatch> ParseCommandLine(CommandLine &CmdL, APT_CMD const Binary,/*{{{*/
       Configuration * const * const Cnf, pkgSystem ** const Sys, int const argc, const char *argv[],
       bool (*ShowHelp)(CommandLine &), std::vector<aptDispatchWithHelp> (*GetCommands)(void))
 {
+   InitLocale(Binary);
    if (Cnf != NULL && pkgInitConfig(**Cnf) == false)
    {
       _error->DumpErrors();
@@ -473,11 +497,14 @@ std::vector<CommandLine::Dispatch> ParseCommandLine(CommandLine &CmdL, APT_CMD c
    // Args running out of scope invalidates the pointer stored in CmdL,
    // but we don't use the pointer after this function, so we ignore
    // this problem for now and figure something out if we have to.
-   std::vector<CommandLine::Args> Args;
+   char const * CmdCalled = nullptr;
    if (Cmds.empty() == false && Cmds[0].Handler != nullptr)
-      Args = getCommandArgs(Binary, CommandLine::GetCommand(Cmds.data(), argc, argv));
-   else
-      Args = getCommandArgs(Binary, nullptr);
+      CmdCalled = CommandLine::GetCommand(Cmds.data(), argc, argv);
+   if (CmdCalled != nullptr)
+      BinaryCommandSpecificConfiguration(argv[0], CmdCalled);
+   std::string const conf = "Binary::" + _config->Find("Binary");
+   _config->MoveSubTree(conf.c_str(), nullptr);
+   auto Args = getCommandArgs(Binary, CmdCalled);
    CmdL = CommandLine(Args.data(), _config);
 
    if (CmdL.Parse(argc,argv) == false ||

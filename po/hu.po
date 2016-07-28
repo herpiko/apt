@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2016-04-10 19:46+0200\n"
-"Last-Translator: Gabor Kelemen <kelemeng at ubuntu dot com>\n"
+"Last-Translator: Gabor Kelemen <kelemeng@ubuntu.com>\n"
 "Language-Team: Hungarian <gnome-hu-list@gnome.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
@@ -238,10 +238,10 @@ msgstr ""
 "Hitelesítetlen csomagok vannak, és a -y kapcsolót használta\n"
 "a --allow-unauthenticated nélkül."
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "Sikertelen letöltés: %s  %s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "Sikertelen letöltés: %s  %s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -547,17 +547,19 @@ msgstr[0] ""
 msgstr[1] ""
 "%i további verzió van. A megjelenítésükhöz használja a „-a” kapcsolót"
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 "NE FELEDJE: Ez csak szimuláció!\n"
-"      Az apt-get rendszergazdai jogokat igényel a tényleges végrehajtáshoz.\n"
+"      Az %s rendszergazdai jogokat igényel a tényleges végrehajtáshoz.\n"
 "      Ne feledje, hogy a zárolás is ki van kapcsolva,\n"
-"      így ne számítson a jelenlegi helyzet valósságára!"
+"      így ne számítson a jelenlegi helyzet valósságára!\n"
 
 #: apt-private/private-output.cc apt-private/private-show.cc
 msgid "unknown"
@@ -766,10 +768,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "Rögzített csomagok:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(nem található)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -787,10 +785,6 @@ msgstr "  Jelölt: "
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(nincs)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  Csomagrögzítés: "
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1739,6 +1733,25 @@ msgstr "Lekérdezés"
 msgid "Unable to invoke "
 msgstr "Nem lehet meghívni "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+"A digitálisan aláírt fájl nem érvényes, érkezett: „%s” (igényel a hálózat "
+"hitelesítést?)"
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, fuzzy, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+"A digitálisan aláírt fájl nem érvényes, érkezett: „%s” (igényel a hálózat "
+"hitelesítést?)"
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "Legalább egy aláírás érvénytelen."
@@ -1753,16 +1766,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "Nem indítható el a „apt-key” az aláírás ellenőrzéséhez (telepítve van a "
 "gnupg?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
-"A digitálisan aláírt fájl nem érvényes, érkezett: „%s” (igényel a hálózat "
-"hitelesítést?)"
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1955,6 +1958,20 @@ msgstr "előtti hibák fontosak. Javítsa azokat, és futtassa az [I]nstallt új
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "Elérhető információk egyesítése"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "Nem található a(z) %s, a várakozás után sem"
 
 #: cmdline/apt-extracttemplates.cc
 msgid ""
@@ -2490,14 +2507,54 @@ msgstr ""
 "Lásd az apt-secure(8) kézikönyvoldalt a tárolólétrehozással és felhasználói "
 "beállításokkal kapcsolatos részletekért."
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "sikertelen átnevezés, %s (%s -> %s)."
+msgid "The repository '%s' is no longer signed."
+msgstr "A(z) „%s” tároló már nincs aláírva."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "A(z) „%s” tárolónak nincs Release fájlja."
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+"Ez általában nem engedélyezett, de az Acquire::"
+"AllowDowngradeToInsecureRepositories beállítás meg lett adva a "
+"felülbírálásához."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' is not signed."
+msgstr "A(z) „%s” tároló nincs aláírva."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "A(z) „%s” tárolónak nincs Release fájlja."
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr ""
+"A beállított „%s” fájl beszerzésének kihagyása, mert a(z) „%s” tároló csak "
+"gyenge biztonsági információkat biztosít hozzá"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "A Hash Sum nem megfelelő"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "sikertelen átnevezés, %s (%s -> %s)."
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2569,36 +2626,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Ütköző disztribúció: %s (a várt %s helyett %s érkezett)"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is not signed."
-msgstr "A(z) „%s” tároló nincs aláírva."
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "A(z) „%s” tárolónak nincs Release fájlja."
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "A(z) „%s” tároló már nincs aláírva."
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
-"Ez általában nem engedélyezett, de az Acquire::"
-"AllowDowngradeToInsecureRepositories beállítás meg lett adva a "
-"felülbírálásához."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -3044,11 +3071,6 @@ msgstr ""
 "„%s” fájl figyelmen kívül hagyása a(z) „%s” könyvtárban, mert érvénytelen "
 "fájlkiterjesztése van"
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "Nem található a(z) %s, a várakozás után sem"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3269,13 +3291,8 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "Érvénytelen „Date” bejegyzés a(z) %s Release fájlban"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
-msgstr "Érvénytelen „Valid-Until” bejegyzés a(z) %s Release fájlban"
+msgid "Invalid '%s' entry in Release file %s"
+msgstr "Érvénytelen „%s” bejegyzés a(z) %s Release fájlban"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
 #: apt-pkg/deb/debmetaindex.cc
@@ -3291,6 +3308,13 @@ msgid "Invalid value set for option %s regarding source %s %s (%s)"
 msgstr ""
 "Érvénytelen érték van megadva a(z) %s beállításhoz ezen forrásra "
 "vonatkozóan: %s %s (%s)"
+
+#: apt-pkg/deb/debmetaindex.cc
+#, fuzzy, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
+msgstr ""
+"Ütköző értékek vannak megadva a(z) %s beállításhoz ezen forrásra "
+"vonatkozóan: %s %s"
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
 #, c-format
@@ -3362,7 +3386,7 @@ msgstr "A(z) %s telepítés utáni trigger futtatása"
 msgid "Directory '%s' missing"
 msgstr "A(z) „%s” könyvtár hiányzik"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, c-format
 msgid "Could not open file '%s'"
 msgstr "A(z) „%s” fájl megnyitása sikertelen"
@@ -3784,11 +3808,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr "%s nem alakítható egésszé: kívül esik a tartományon"
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Sikertelen letöltés: %s  %s"
-
-#: apt-pkg/update.cc
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
 "used instead."
@@ -3799,6 +3818,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "Frissítés kiszámítása"
+
+#~ msgid "(not found)"
+#~ msgstr "(nem található)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  Csomagrögzítés: "
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "Nem érhető el nyilvános kulcs az alábbi kulcsazonosítókhoz:\n"

@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <memory>
 #include <utility>
@@ -966,6 +967,19 @@ bool ContentsWriter::ReadFromPkgs(string const &PkgFile,string const &PkgCompres
 // ReleaseWriter::ReleaseWriter - Constructor				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
+static std::string formatUTCDateTime(time_t const now)
+{
+   bool const NumericTimezone = _config->FindB("APT::FTPArchive::Release::NumericTimezone", true);
+   // TimeRFC1123 uses GMT to satisfy HTTP/1.1
+   std::string datetime = TimeRFC1123(now, NumericTimezone);
+   if (NumericTimezone == false)
+   {
+      auto const lastspace = datetime.rfind(' ');
+      if (likely(lastspace != std::string::npos))
+	 datetime.replace(lastspace + 1, 3, "UTC");
+   }
+   return datetime;
+}
 ReleaseWriter::ReleaseWriter(FileFd * const GivenOutput, string const &/*DB*/) : FTWScanner(GivenOutput)
 {
    if (_config->FindB("APT::FTPArchive::Release::Default-Patterns", true) == true)
@@ -978,31 +992,16 @@ ReleaseWriter::ReleaseWriter(FileFd * const GivenOutput, string const &/*DB*/) :
       AddPattern("Release");
       AddPattern("Contents-*");
       AddPattern("Index");
+      AddPattern("icons-*.tar");
+      AddPattern("icons-*.tar.*");
+      AddPattern("Components-*.yml");
+      AddPattern("Components-*.yml.*");
       AddPattern("md5sum.txt");
    }
    AddPatterns(_config->FindVector("APT::FTPArchive::Release::Patterns"));
 
    time_t const now = time(NULL);
-
-   setlocale(LC_TIME, "C");
-
-   char datestr[128];
-   if (strftime(datestr, sizeof(datestr), "%a, %d %b %Y %H:%M:%S UTC",
-                gmtime(&now)) == 0)
-   {
-      datestr[0] = '\0';
-   }
-
    time_t const validuntil = now + _config->FindI("APT::FTPArchive::Release::ValidTime", 0);
-   char validstr[128];
-   if (now == validuntil ||
-       strftime(validstr, sizeof(validstr), "%a, %d %b %Y %H:%M:%S UTC",
-                gmtime(&validuntil)) == 0)
-   {
-      validstr[0] = '\0';
-   }
-
-   setlocale(LC_TIME, "");
 
    map<string,string> Fields;
    Fields["Origin"] = "";
@@ -1010,11 +1009,13 @@ ReleaseWriter::ReleaseWriter(FileFd * const GivenOutput, string const &/*DB*/) :
    Fields["Suite"] = "";
    Fields["Version"] = "";
    Fields["Codename"] = "";
-   Fields["Date"] = datestr;
-   Fields["Valid-Until"] = validstr;
+   Fields["Date"] = formatUTCDateTime(now);
+   if (validuntil != now)
+      Fields["Valid-Until"] = formatUTCDateTime(validuntil);
    Fields["Architectures"] = "";
    Fields["Components"] = "";
    Fields["Description"] = "";
+   Fields["Signed-By"] = "";
    if (_config->FindB("APT::FTPArchive::DoByHash", false) == true)
       Fields["Acquire-By-Hash"] = "true";
    

@@ -18,7 +18,6 @@
 #include <config.h>
 
 #include <apt-pkg/fileutl.h>
-#include <apt-pkg/acquire-method.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/hashes.h>
 #include <apt-pkg/netrc.h>
@@ -498,12 +497,25 @@ bool FTPConn::GoPasv()
    
    // Unsupported function
    string::size_type Pos = Msg.find('(');
-   if (Tag >= 400 || Pos == string::npos)
+   if (Tag >= 400)
+      return true;
+
+   //wu-2.6.2(1) ftp server, returns
+   //227 Entering Passive Mode 193,219,28,140,150,111
+   //without parentheses, let's try to cope with it.
+   //wget(1) and ftp(1) can.
+   if (Pos == string::npos)
+      Pos = Msg.rfind(' ');
+   else
+      ++Pos;
+
+   // Still unsupported function
+   if (Pos == string::npos)
       return true;
 
    // Scan it
    unsigned a0,a1,a2,a3,p0,p1;
-   if (sscanf(Msg.c_str() + Pos,"(%u,%u,%u,%u,%u,%u)",&a0,&a1,&a2,&a3,&p0,&p1) != 6)
+   if (sscanf(Msg.c_str() + Pos,"%u,%u,%u,%u,%u,%u",&a0,&a1,&a2,&a3,&p0,&p1) != 6)
       return true;
    
    /* Some evil servers return 0 to mean their addr. We can actually speak
@@ -1115,9 +1127,7 @@ bool FtpMethod::Fetch(FetchItem *Itm)
 									/*}}}*/
 
 int main(int, const char *argv[])
-{ 
-   setlocale(LC_ALL, "");
-
+{
    /* See if we should be come the http client - we do this for http
       proxy urls */
    if (getenv("ftp_proxy") != 0)
@@ -1140,8 +1150,5 @@ int main(int, const char *argv[])
 	 exit(100);
       }      
    }
-   
-   FtpMethod Mth;
-
-   return Mth.Run();
+   return FtpMethod().Run();
 }

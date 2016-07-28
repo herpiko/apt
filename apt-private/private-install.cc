@@ -21,6 +21,7 @@
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/upgrade.h>
 #include <apt-pkg/install-progress.h>
+#include <apt-pkg/prettyprinters.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -76,37 +77,87 @@ bool CheckNothingBroken(CacheFile &Cache)				/*{{{*/
 // ---------------------------------------------------------------------
 /* This displays the informative messages describing what is going to 
    happen and then calls the download routines */
+static void RemoveDownloadNeedingItemsFromFetcher(pkgAcquire &Fetcher, bool &Transient)
+{
+   for (pkgAcquire::ItemIterator I = Fetcher.ItemsBegin(); I < Fetcher.ItemsEnd();)
+   {
+      if ((*I)->Local == true)
+      {
+	 ++I;
+	 continue;
+      }
+
+      // Close the item and check if it was found in cache
+      (*I)->Finished();
+      if ((*I)->Complete == false)
+	 Transient = true;
+
+      // Clear it out of the fetch list
+      delete *I;
+      I = Fetcher.ItemsBegin();
+   }
+}
 bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 {
-   if (_config->FindB("APT::Get::Purge",false) == true)
-   {
-      pkgCache::PkgIterator I = Cache->PkgBegin();
-      for (; I.end() == false; ++I)
-      {
-	 if (I.Purge() == false && Cache[I].Mode == pkgDepCache::ModeDelete)
+   if (_config->FindB("APT::Get::Purge", false) == true)
+      for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() == false; ++I)
+	 if (Cache[I].Delete() == true && Cache[I].Purge() == false)
 	    Cache->MarkDelete(I,true);
-      }
+
+   // Create the download object
+   aptAcquireWithTextStatus Fetcher;
+   if (_config->FindB("APT::Get::Print-URIs", false) == true)
+   {
+      // force a hashsum for compatibility reasons
+      _config->CndSet("Acquire::ForceHash", "md5sum");
    }
-   
-   bool Hold = false;
-   bool Downgrade = false;
-   bool Essential = false;
-   
+   else if (_config->FindB("APT::Get::Simulate") == true)
+      ;
+   else if (Fetcher.GetLock(_config->FindDir("Dir::Cache::Archives")) == false)
+      return false;
+
+   // Read the source list
+   if (Cache.BuildSourceList() == false)
+      return false;
+   pkgSourceList * const List = Cache.GetSourceList();
+
+   // Create the text record parser
+   pkgRecords Recs(Cache);
+   if (_error->PendingError() == true)
+      return false;
+
+   // Create the package manager and prepare to download
+   std::unique_ptr<pkgPackageManager> PM(_system->CreatePM(Cache));
+   if (PM->GetArchives(&Fetcher,List,&Recs) == false || 
+       _error->PendingError() == true)
+      return false;
+
+   if (_config->FindB("APT::Get::Fix-Missing",false) == true &&
+	 _config->FindB("APT::Get::Download",true) == false)
+   {
+      bool Missing = false;
+      RemoveDownloadNeedingItemsFromFetcher(Fetcher, Missing);
+      if (Missing)
+	 PM->FixMissing();
+      Fetcher.Shutdown();
+      if (PM->GetArchives(&Fetcher,List,&Recs) == false ||
+	    _error->PendingError() == true)
+	 return false;
+   }
+
    // Show all the various warning indicators
    ShowDel(c1out,Cache);
    ShowNew(c1out,Cache);
    if (ShwKept == true)
       ShowKept(c1out,Cache);
-   Hold = !ShowHold(c1out,Cache);
+   bool const Hold = !ShowHold(c1out,Cache);
    if (_config->FindB("APT::Get::Show-Upgraded",true) == true)
       ShowUpgraded(c1out,Cache);
-   Downgrade = !ShowDowngraded(c1out,Cache);
+   bool const Downgrade = !ShowDowngraded(c1out,Cache);
 
+   bool Essential = false;
    if (_config->FindB("APT::Get::Download-Only",false) == false)
         Essential = !ShowEssential(c1out,Cache);
-
-   // All kinds of failures
-   bool Fail = (Essential || Downgrade || Hold);
 
    Stats(c1out,Cache);
 
@@ -126,6 +177,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       return _error->Error(_("Packages need to be removed but remove is disabled."));
 
    // Fail safe check
+   bool const Fail = (Essential || Downgrade || Hold);
    if (_config->FindI("quiet",0) >= 2 ||
        _config->FindB("APT::Get::Assume-Yes",false) == true)
    {
@@ -158,37 +210,11 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 	 return _error->Error(_("Internal error, Ordering didn't finish"));
       return true;
    }
-   
-   // Create the text record parser
-   pkgRecords Recs(Cache);
-   if (_error->PendingError() == true)
-      return false;
-
-   // Create the download object
-   aptAcquireWithTextStatus Fetcher;
-   if (_config->FindB("APT::Get::Print-URIs", false) == true)
-   {
-      // force a hashsum for compatibility reasons
-      _config->CndSet("Acquire::ForceHash", "md5sum");
-   }
-   else if (Fetcher.GetLock(_config->FindDir("Dir::Cache::Archives")) == false)
-      return false;
-
-   // Read the source list
-   if (Cache.BuildSourceList() == false)
-      return false;
-   pkgSourceList *List = Cache.GetSourceList();
-   
-   // Create the package manager and prepare to download
-   std::unique_ptr<pkgPackageManager> PM(_system->CreatePM(Cache));
-   if (PM->GetArchives(&Fetcher,List,&Recs) == false || 
-       _error->PendingError() == true)
-      return false;
 
    // Display statistics
-   unsigned long long FetchBytes = Fetcher.FetchNeeded();
-   unsigned long long FetchPBytes = Fetcher.PartialPresent();
-   unsigned long long DebBytes = Fetcher.TotalNeeded();
+   auto const FetchBytes = Fetcher.FetchNeeded();
+   auto const FetchPBytes = Fetcher.PartialPresent();
+   auto const DebBytes = Fetcher.TotalNeeded();
    if (DebBytes != Cache->DebSize())
    {
       c0out << DebBytes << ',' << Cache->DebSize() << std::endl;
@@ -219,11 +245,21 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       ioprintf(c1out,_("After this operation, %sB disk space will be freed.\n"),
 	       SizeToStr(-1*Cache->UsrSize()).c_str());
 
+   if (CheckFreeSpaceBeforeDownload(_config->FindDir("Dir::Cache::Archives"), (FetchBytes - FetchPBytes)) == false)
+      return false;
+
    if (_error->PendingError() == true)
       return false;
 
-   if (CheckFreeSpaceBeforeDownload(_config->FindDir("Dir::Cache::Archives"), (FetchBytes - FetchPBytes)) == false)
-      return false;
+   // Just print out the uris an exit if the --print-uris flag was used
+   if (_config->FindB("APT::Get::Print-URIs") == true)
+   {
+      pkgAcquire::UriIterator I = Fetcher.UriBegin();
+      for (; I != Fetcher.UriEnd(); ++I)
+	 std::cout << '\'' << I->URI << "' " << flNotDir(I->Owner->DestFile) << ' ' <<
+	       std::to_string(I->Owner->FileSize) << ' ' << I->Owner->HashSum() << std::endl;
+      return true;
+   }
 
    if (Essential == true && Safety == true && _config->FindB("APT::Get::allow-remove-essential", false) == false)
    {
@@ -233,46 +269,35 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       // TRANSLATOR: This string needs to be typed by the user as a confirmation, so be
       //             careful with hard to type or special characters (like non-breaking spaces)
       const char *Prompt = _("Yes, do as I say!");
-      ioprintf(c2out,
+      std::string question;
+      strprintf(question,
 	       _("You are about to do something potentially harmful.\n"
 		 "To continue type in the phrase '%s'\n"
 		 " ?] "),Prompt);
-      c2out << std::flush;
-      if (AnalPrompt(Prompt) == false)
+      if (AnalPrompt(question, Prompt) == false)
       {
 	 c2out << _("Abort.") << std::endl;
 	 exit(1);
-      }     
+      }
    }
    else
-   {      
+   {
       // Prompt to continue
       if (Ask == true || Fail == true)
-      {            
+      {
 	 if (_config->FindB("APT::Get::Trivial-Only",false) == true)
 	    return _error->Error(_("Trivial Only specified but this is not a trivial operation."));
-	 
+
 	 if (_config->FindI("quiet",0) < 2 &&
 	     _config->FindB("APT::Get::Assume-Yes",false) == false)
 	 {
-            c2out << _("Do you want to continue?") << std::flush;
- 	    if (YnPrompt() == false)
+	    if (YnPrompt(_("Do you want to continue?")) == false)
 	    {
 	       c2out << _("Abort.") << std::endl;
 	       exit(1);
-	    }     
-	 }	 
-      }      
-   }
-   
-   // Just print out the uris an exit if the --print-uris flag was used
-   if (_config->FindB("APT::Get::Print-URIs") == true)
-   {
-      pkgAcquire::UriIterator I = Fetcher.UriBegin();
-      for (; I != Fetcher.UriEnd(); ++I)
-	 std::cout << '\'' << I->URI << "' " << flNotDir(I->Owner->DestFile) << ' ' <<
-	       I->Owner->FileSize << ' ' << I->Owner->HashSum() << std::endl;
-      return true;
+	    }
+	 }
+      }
    }
 
    if (!CheckAuth(Fetcher, true))
@@ -282,46 +307,15 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       after. */
    if (_config->FindB("APT::Get::Download-Only",false) == true)
       _system->UnLock();
-   
+
    // Run it
+   bool Failed = false;
    while (1)
    {
       bool Transient = false;
-      if (_config->FindB("APT::Get::Download",true) == false)
-      {
-	 for (pkgAcquire::ItemIterator I = Fetcher.ItemsBegin(); I < Fetcher.ItemsEnd();)
-	 {
-	    if ((*I)->Local == true)
-	    {
-	       ++I;
-	       continue;
-	    }
-
-	    // Close the item and check if it was found in cache
-	    (*I)->Finished();
-	    if ((*I)->Complete == false)
-	       Transient = true;
-	    
-	    // Clear it out of the fetch list
-	    delete *I;
-	    I = Fetcher.ItemsBegin();
-	 }	 
-      }
-
-      bool Failed = false;
       if (AcquireRun(Fetcher, 0, &Failed, &Transient) == false)
 	 return false;
 
-      /* If we are in no download mode and missing files and there were
-         'failures' then the user must specify -m. Furthermore, there 
-         is no such thing as a transient error in no-download mode! */
-      if (Transient == true &&
-	  _config->FindB("APT::Get::Download",true) == false)
-      {
-	 Transient = false;
-	 Failed = true;
-      }
-      
       if (_config->FindB("APT::Get::Download-Only",false) == true)
       {
 	 if (Failed == true && _config->FindB("APT::Get::Fix-Missing",false) == false)
@@ -329,15 +323,13 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 	 c1out << _("Download complete and in download only mode") << std::endl;
 	 return true;
       }
-      
+
       if (Failed == true && _config->FindB("APT::Get::Fix-Missing",false) == false)
-      {
 	 return _error->Error(_("Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?"));
-      }
-      
+
       if (Transient == true && Failed == true)
 	 return _error->Error(_("--fix-missing and media swapping is not currently supported"));
-      
+
       // Try to deal with missing package files
       if (Failed == true && PM->FixMissing() == false)
       {
@@ -345,23 +337,26 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 	 return _error->Error(_("Aborting install."));
       }
 
+      auto const progress = APT::Progress::PackageManagerProgressFactory();
       _system->UnLock();
-
-      APT::Progress::PackageManager *progress = APT::Progress::PackageManagerProgressFactory();
-      pkgPackageManager::OrderResult Res = PM->DoInstall(progress);
+      pkgPackageManager::OrderResult const Res = PM->DoInstall(progress);
       delete progress;
 
       if (Res == pkgPackageManager::Failed || _error->PendingError() == true)
 	 return false;
       if (Res == pkgPackageManager::Completed)
 	 break;
-      
+
+      _system->Lock();
+
       // Reload the fetcher object and loop again for media swapping
       Fetcher.Shutdown();
       if (PM->GetArchives(&Fetcher,List,&Recs) == false)
 	 return false;
-      
-      _system->Lock();
+
+      Failed = false;
+      if (_config->FindB("APT::Get::Download",true) == false)
+	 RemoveDownloadNeedingItemsFromFetcher(Fetcher, Failed);
    }
 
    std::set<std::string> const disappearedPkgs = PM->GetDisappearedPackages();
@@ -443,8 +438,7 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	    // install it in the first place, so nuke it instead of show it
 	    if (Cache[Pkg].Install() == true && Pkg.CurrentVer() == 0)
 	    {
-	       if (Pkg.CandVersion() != 0)
-	          tooMuch.insert(Pkg);
+	       tooMuch.insert(Pkg);
 	       Cache->MarkDelete(Pkg, false, 0, false);
 	    }
 	    // only show stuff in the list that is not yet marked for removal
@@ -481,7 +475,7 @@ bool DoAutomaticRemove(CacheFile &Cache)
 		 if (N.end() == true || (N->CurrentVer == 0 && (*Cache)[N].Install() == false))
 		    continue;
 		 if (Debug == true)
-		    std::clog << "Save " << Pkg << " as another installed garbage package depends on it" << std::endl;
+		    std::clog << "Save " << APT::PrettyPkg(Cache, Pkg) << " as another installed garbage package depends on it" << std::endl;
 		 Cache->MarkInstall(Pkg, false, 0, false);
 		 if (hideAutoRemove == false)
 		    ++autoRemoveCount;
@@ -527,8 +521,13 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	 ioprintf(c1out, P_("%lu package was automatically installed and is no longer required.\n",
 	          "%lu packages were automatically installed and are no longer required.\n", autoRemoveCount), autoRemoveCount);
       std::string autocmd = "apt autoremove";
-      if (getenv("SUDO_USER") != NULL)
-	 autocmd = "sudo " + autocmd;
+      if (getenv("SUDO_USER") != nullptr)
+      {
+	 auto const envsudocmd = getenv("SUDO_COMMAND");
+	 auto const envshell = getenv("SHELL");
+	 if (envsudocmd == nullptr || envshell == nullptr || strcmp(envsudocmd, envshell) != 0)
+	    autocmd = "sudo " + autocmd;
+      }
       ioprintf(c1out, P_("Use '%s' to remove it.", "Use '%s' to remove them.", autoRemoveCount), autocmd.c_str());
       c1out << std::endl;
    }

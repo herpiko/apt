@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2006-09-19 09:49+0530\n"
 "Last-Translator: Kinley Tshering <gasepkuenden2k3@hotmail.com>\n"
 "Language-Team: Dzongkha <pgeyleg@dit.gov.bt>\n"
@@ -233,10 +233,10 @@ msgid ""
 "unauthenticated"
 msgstr "དཀའ་ངལ་ཚུ་ཡོདཔ་ལས་-y ་འདི་ --force-yes་མེདཐོག་ལས་ལག་ལེན་འཐབ་སྟེ་ཡོད།"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "%s  %s་ ལེན་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།\n"
+msgid "Failed to fetch %s  %s"
+msgstr "%s  %s་ ལེན་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -536,12 +536,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 
 #: apt-private/private-output.cc apt-private/private-show.cc
@@ -753,10 +755,6 @@ msgstr ""
 msgid "Pinned packages:"
 msgstr "ཁབ་གཟེར་བཏབ་ཡོད་པའི་ཐུམ་སྒྲིལ་ཚུ:"
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(མ་ཐོབ།)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -774,10 +772,6 @@ msgstr "མི་ངོ:"
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(ཅི་མེད།)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "ཐུམ་སྒྲིལ་གྱི་ཁབ་གཟེར:"
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1682,6 +1676,21 @@ msgstr "འདྲི་དཔྱད།"
 msgid "Unable to invoke "
 msgstr "ལས་བཀོལ་འབད་མ་ཚུགས།"
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "ཉུང་མཐའ་རང་ནུས་མེད་ཀྱི་མིང་རྟགས་ཅིག་གདོང་ཐུག་བྱུང་སྟེ་ཡོདཔ་ཨིན།"
@@ -1699,14 +1708,6 @@ msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr ""
 "མིང་རྟགས་བདེན་སྦྱོར་འབད་ནི་ལུ་'%s'འདི་ལག་ལེན་འཐབ་མ་ཚུགས། (gnupg་དེ་ཁཞི་བཙུགས་འབད་ཡོདཔ་ཨིན་"
 "ན།?)"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1901,6 +1902,20 @@ msgstr ""
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "འཐོབ་ཚུགས་པའི་བརྡ་དོན་མཉམ་བསྡོམས་འབད་དོ།"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "%s་གི་དོན་ལུ་བསྒུག་སྡོད་ཅི་ འདི་འབདཝ་ད་ཕར་མིན་འདུག"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2441,15 +2456,50 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "%s (%s -> %s)བསྐྱར་མིང་བཏགས་ནི་འདི་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན།"
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
 
 #: apt-pkg/acquire-item.cc
 #, fuzzy
 msgid "Hash Sum mismatch"
 msgstr "ཨེམ་ཌི་༥་ ཁྱོན་བསྡོམས་མ་མཐུན་པ།"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "%s (%s -> %s)བསྐྱར་མིང་བཏགས་ནི་འདི་འཐུས་ཤོར་བྱུང་ཡོདཔ་ཨིན།"
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2512,33 +2562,6 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
-msgstr ""
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "སྣོད་ཐོ་%s་འདི་ཁ་ཕྱོགས་སྒྱུར་དེ་ཡོད།"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -2961,11 +2984,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "%s་གི་དོན་ལུ་བསྒུག་སྡོད་ཅི་ འདི་འབདཝ་ད་ཕར་མིན་འདུག"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3179,12 +3197,7 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, fuzzy, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "%s (༡་)་ཐུམ་སྒྲིལ་ཡིག་སྣོད་འདི་མིང་དཔྱད་འབད་མ་ཚུགས།"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, fuzzy, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
+msgid "Invalid '%s' entry in Release file %s"
 msgstr "%s་ཁ་ཕྱོགས་ཡིག་སྣོད་ནང་ནུས་མེད་གྲལ་ཐིག"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
@@ -3196,6 +3209,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3263,7 +3281,7 @@ msgstr ""
 msgid "Directory '%s' missing"
 msgstr "ཐོ་བཀོད་འབད་མི་སྣོད་ཐོ་%s་ཆ་ཤས་འདི་བརླག་སྟོར་ཟུགས་ཏེ་འདུག"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "%s་ཡིག་སྣོད་འདི་ཁ་ཕྱེ་མ་ཚུགས།"
@@ -3677,11 +3695,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "%s  %s་ ལེན་ནི་ལུ་འཐུས་ཤོར་བྱུང་ཡོད།\n"
-
-#: apt-pkg/update.cc
 #, fuzzy
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
@@ -3693,6 +3706,12 @@ msgstr ""
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "ཡར་བསྐྱེད་རྩིས་བཏོན་དོ་"
+
+#~ msgid "(not found)"
+#~ msgstr "(མ་ཐོབ།)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "ཐུམ་སྒྲིལ་གྱི་ཁབ་གཟེར:"
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "འོག་གི་ ཨའི་ཌི་་ ལྡེ་མིག་ཚུ་གི་དོན་ལུ་མི་དམང་གི་ལྡེ་མིག་འདི་འཐོབ་མི་ཚུགས་པས:\n"

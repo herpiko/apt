@@ -281,7 +281,7 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
     *
     *  \param FailCode A short failure string that is send
     */
-   void ReportMirrorFailure(std::string const &FailCode);
+   APT_DEPRECATED_MSG("Item::Failed does this for you") void ReportMirrorFailure(std::string const &FailCode);
 
    /** \brief Set the name of the current active subprocess
     *
@@ -368,12 +368,13 @@ class APT_HIDDEN pkgAcqTransactionItem: public pkgAcquire::Item		/*{{{*/
 {
    void * const d;
    protected:
-   IndexTarget const Target;
    HashStringList GetExpectedHashesFor(std::string const &MetaKey) const;
 
    bool QueueURI(pkgAcquire::ItemDesc &Item) APT_OVERRIDE;
 
    public:
+   IndexTarget const Target;
+
    /** \brief storge name until a transaction is finished */
    std::string PartialFile;
 
@@ -393,7 +394,7 @@ class APT_HIDDEN pkgAcqTransactionItem: public pkgAcquire::Item		/*{{{*/
    virtual bool HashesRequired() const APT_OVERRIDE;
 
 
-   pkgAcqTransactionItem(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager, IndexTarget const &Target);
+   pkgAcqTransactionItem(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager, IndexTarget const &Target) APT_NONNULL(2, 3);
    virtual ~pkgAcqTransactionItem();
 
    friend class pkgAcqMetaBase;
@@ -407,24 +408,9 @@ class APT_HIDDEN pkgAcqMetaBase : public pkgAcqTransactionItem		/*{{{*/
  protected:
    std::vector<pkgAcqTransactionItem*> Transaction;
 
-   /** \brief The index files which should be looked up in the meta-index
-    *  and then downloaded.
-    */
-   std::vector<IndexTarget> IndexTargets;
-
    /** \brief If \b true, the index's signature is currently being verified.
     */
    bool AuthPass;
-
-   /** \brief Starts downloading the individual index files.
-    *
-    *  \param verify If \b true, only indices whose expected hashsum
-    *  can be determined from the meta-index will be downloaded, and
-    *  the hashsums of indices will be checked (reporting
-    *  #StatAuthError if there is a mismatch).  If verify is \b false,
-    *  no hashsum checking will be performed.
-    */
-   void QueueIndexes(bool const verify);
 
    /** \brief Called when a file is finished being retrieved.
     *
@@ -469,6 +455,7 @@ class APT_HIDDEN pkgAcqMetaBase : public pkgAcqTransactionItem		/*{{{*/
    // This refers more to the Transaction-Manager than the actual file
    bool IMSHit;
    TransactionStates State;
+   std::string BaseURI;
 
    virtual bool QueueURI(pkgAcquire::ItemDesc &Item) APT_OVERRIDE;
    virtual HashStringList GetExpectedHashes() const APT_OVERRIDE;
@@ -493,8 +480,7 @@ class APT_HIDDEN pkgAcqMetaBase : public pkgAcqTransactionItem		/*{{{*/
    virtual std::string GetFinalFilename() const APT_OVERRIDE;
 
    pkgAcqMetaBase(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-		  std::vector<IndexTarget> const &IndexTargets,
-		  IndexTarget const &DataTarget);
+		  IndexTarget const &DataTarget) APT_NONNULL(2, 3);
    virtual ~pkgAcqMetaBase();
 };
 									/*}}}*/
@@ -527,8 +513,7 @@ class APT_HIDDEN pkgAcqMetaIndex : public pkgAcqMetaBase
 
    /** \brief Create a new pkgAcqMetaIndex. */
    pkgAcqMetaIndex(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-		   IndexTarget const &DataTarget, IndexTarget const &DetachedSigTarget,
-		   std::vector<IndexTarget> const &IndexTargets);
+		   IndexTarget const &DataTarget, IndexTarget const &DetachedSigTarget) APT_NONNULL(2, 3);
    virtual ~pkgAcqMetaIndex();
 
    friend class pkgAcqMetaSig;
@@ -567,7 +552,7 @@ class APT_HIDDEN pkgAcqMetaSig : public pkgAcqTransactionItem
 
    /** \brief Create a new pkgAcqMetaSig. */
    pkgAcqMetaSig(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-	 IndexTarget const &Target, pkgAcqMetaIndex * const MetaIndex);
+	 IndexTarget const &Target, pkgAcqMetaIndex * const MetaIndex) APT_NONNULL(2, 3, 5);
    virtual ~pkgAcqMetaSig();
 };
 									/*}}}*/
@@ -575,8 +560,6 @@ class APT_HIDDEN pkgAcqMetaSig : public pkgAcqTransactionItem
 class APT_HIDDEN pkgAcqMetaClearSig : public pkgAcqMetaIndex
 {
    void * const d;
-
-   IndexTarget const ClearsignedTarget;
    IndexTarget const DetachedDataTarget;
 
  public:
@@ -591,12 +574,21 @@ class APT_HIDDEN pkgAcqMetaClearSig : public pkgAcqMetaIndex
 		     pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
    virtual void Finished() APT_OVERRIDE;
 
+   /** \brief Starts downloading the individual index files.
+    *
+    *  \param verify If \b true, only indices whose expected hashsum
+    *  can be determined from the meta-index will be downloaded, and
+    *  the hashsums of indices will be checked (reporting
+    *  #StatAuthError if there is a mismatch).  If verify is \b false,
+    *  no hashsum checking will be performed.
+    */
+   void QueueIndexes(bool const verify);
+
    /** \brief Create a new pkgAcqMetaClearSig. */
    pkgAcqMetaClearSig(pkgAcquire * const Owner,
 		IndexTarget const &ClearsignedTarget,
 		IndexTarget const &DetachedDataTarget,
 		IndexTarget const &DetachedSigTarget,
-		std::vector<IndexTarget> const &IndexTargets,
 		metaIndex * const MetaIndexParser);
    virtual ~pkgAcqMetaClearSig();
 };
@@ -609,9 +601,10 @@ class APT_HIDDEN pkgAcqBaseIndex : public pkgAcqTransactionItem
  public:
    /** \brief Get the full pathname of the final file for the current URI */
    virtual std::string GetFinalFilename() const APT_OVERRIDE;
+   virtual void Failed(std::string const &Message,pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
 
    pkgAcqBaseIndex(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-                   IndexTarget const &Target);
+                   IndexTarget const &Target) APT_NONNULL(2, 3);
    virtual ~pkgAcqBaseIndex();
 };
 									/*}}}*/
@@ -676,7 +669,7 @@ class APT_HIDDEN pkgAcqDiffIndex : public pkgAcqBaseIndex
     *  \param ShortDesc A short description of the list file to download.
     */
    pkgAcqDiffIndex(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-                   IndexTarget const &Target);
+                   IndexTarget const &Target) APT_NONNULL(2, 3);
    virtual ~pkgAcqDiffIndex();
  private:
    APT_HIDDEN void QueueOnIMSHit() const;
@@ -776,7 +769,7 @@ class APT_HIDDEN pkgAcqIndexMergeDiffs : public pkgAcqBaseIndex
     */
    pkgAcqIndexMergeDiffs(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
                          IndexTarget const &Target, DiffInfo const &patch,
-                         std::vector<pkgAcqIndexMergeDiffs*> const * const allPatches);
+                         std::vector<pkgAcqIndexMergeDiffs*> const * const allPatches) APT_NONNULL(2, 3, 6);
    virtual ~pkgAcqIndexMergeDiffs();
 };
 									/*}}}*/
@@ -887,7 +880,7 @@ class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
     */
    pkgAcqIndexDiffs(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
                     IndexTarget const &Target,
-		    std::vector<DiffInfo> const &diffs=std::vector<DiffInfo>());
+		    std::vector<DiffInfo> const &diffs=std::vector<DiffInfo>()) APT_NONNULL(2, 3);
    virtual ~pkgAcqIndexDiffs();
 };
 									/*}}}*/
@@ -954,7 +947,7 @@ class APT_HIDDEN pkgAcqIndex : public pkgAcqBaseIndex
    virtual std::string GetMetaKey() const APT_OVERRIDE;
 
    pkgAcqIndex(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-               IndexTarget const &Target);
+               IndexTarget const &Target) APT_NONNULL(2, 3);
    virtual ~pkgAcqIndex();
 
    private:

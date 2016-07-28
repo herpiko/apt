@@ -63,10 +63,24 @@ static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
    return {};
 }
 									/*}}}*/
+static bool WriteSolution(pkgDepCache &Cache, FileFd &output)		/*{{{*/
+{
+   bool Okay = output.Failed() == false;
+   for (pkgCache::PkgIterator Pkg = Cache.PkgBegin(); Pkg.end() == false && likely(Okay); ++Pkg)
+   {
+      std::string action;
+      if (Cache[Pkg].Delete() == true)
+	 Okay &= EDSP::WriteSolutionStanza(output, "Remove", Pkg.CurrentVer());
+      else if (Cache[Pkg].NewInstall() == true || Cache[Pkg].Upgrade() == true)
+	 Okay &= EDSP::WriteSolutionStanza(output, "Install", Cache.GetCandidateVersion(Pkg));
+      else if (Cache[Pkg].Garbage == true)
+	 Okay &= EDSP::WriteSolutionStanza(output, "Autoremove", Pkg.CurrentVer());
+   }
+   return Okay;
+}
+									/*}}}*/
 int main(int argc,const char *argv[])					/*{{{*/
 {
-	InitLocale();
-
 	// we really don't need anything
 	DropPrivileges();
 
@@ -82,12 +96,19 @@ int main(int argc,const char *argv[])					/*{{{*/
 		pkgCacheFile CacheFile;
 		CacheFile.Open(NULL, false);
 		APT::PackageSet pkgset = APT::PackageSet::FromCommandLine(CacheFile, CmdL.FileList + 1);
-		FILE* output = stdout;
+		FileFd output;
+		if (output.OpenDescriptor(STDOUT_FILENO, FileFd::WriteOnly | FileFd::BufferedWrite, true) == false)
+			return 2;
 		if (pkgset.empty() == true)
 			EDSP::WriteScenario(CacheFile, output);
 		else
-			EDSP::WriteLimitedScenario(CacheFile, output, pkgset);
-		fclose(output);
+		{
+			std::vector<bool> pkgvec(CacheFile->Head().PackageCount, false);
+			for (auto const &p: pkgset)
+			   pkgvec[p->ID] = true;
+			EDSP::WriteLimitedScenario(CacheFile, output, pkgvec);
+		}
+		output.Close();
 		_error->DumpErrors(std::cerr);
 		return 0;
 	}
@@ -102,8 +123,11 @@ int main(int argc,const char *argv[])					/*{{{*/
 	_config->Set("APT::System", "Debian APT solver interface");
 	_config->Set("APT::Solver", "internal");
 	_config->Set("edsp::scenario", "/nonexistent/stdin");
-	int input = STDIN_FILENO;
-	FILE* output = stdout;
+	_config->Clear("Dir::Log");
+	FileFd output;
+	if (output.OpenDescriptor(STDOUT_FILENO, FileFd::WriteOnly | FileFd::BufferedWrite, true) == false)
+	   DIE("stdout couldn't be opened");
+	int const input = STDIN_FILENO;
 	SetNonBlock(input, false);
 
 	EDSP::WriteProgress(0, "Start up solver…", output);
@@ -117,8 +141,8 @@ int main(int argc,const char *argv[])					/*{{{*/
 		DIE("WAIT timed out in the resolver");
 
 	std::list<std::string> install, remove;
-	bool upgrade, distUpgrade, autoRemove;
-	if (EDSP::ReadRequest(input, install, remove, upgrade, distUpgrade, autoRemove) == false)
+	unsigned int flags;
+	if (EDSP::ReadRequest(input, install, remove, flags) == false)
 		DIE("Parsing the request failed!");
 
 	EDSP::WriteProgress(5, "Read scenario…", output);
@@ -155,12 +179,19 @@ int main(int argc,const char *argv[])					/*{{{*/
 	EDSP::WriteProgress(60, "Call problemresolver on current scenario…", output);
 
 	std::string failure;
-	if (upgrade == true) {
-		if (APT::Upgrade::Upgrade(CacheFile, APT::Upgrade::FORBID_REMOVE_PACKAGES | APT::Upgrade::FORBID_INSTALL_NEW_PACKAGES) == false)
+	if (flags & EDSP::Request::UPGRADE_ALL) {
+		int upgrade_flags = APT::Upgrade::ALLOW_EVERYTHING;
+		if (flags & EDSP::Request::FORBID_NEW_INSTALL)
+		   upgrade_flags |= APT::Upgrade::FORBID_INSTALL_NEW_PACKAGES;
+		if (flags & EDSP::Request::FORBID_REMOVE)
+		   upgrade_flags |= APT::Upgrade::FORBID_REMOVE_PACKAGES;
+
+		if (APT::Upgrade::Upgrade(CacheFile, upgrade_flags))
+			;
+		else if (upgrade_flags == APT::Upgrade::ALLOW_EVERYTHING)
+			failure = "ERR_UNSOLVABLE_FULL_UPGRADE";
+		else
 			failure = "ERR_UNSOLVABLE_UPGRADE";
-	} else if (distUpgrade == true) {
-		if (APT::Upgrade::Upgrade(CacheFile, APT::Upgrade::ALLOW_EVERYTHING) == false)
-			failure = "ERR_UNSOLVABLE_DIST_UPGRADE";
 	} else if (Fix.Resolve() == false)
 		failure = "ERR_UNSOLVABLE";
 
@@ -173,7 +204,7 @@ int main(int argc,const char *argv[])					/*{{{*/
 
 	EDSP::WriteProgress(95, "Write solution…", output);
 
-	if (EDSP::WriteSolution(CacheFile, output) == false)
+	if (WriteSolution(CacheFile, output) == false)
 		DIE("Failed to output the solution!");
 
 	EDSP::WriteProgress(100, "Done", output);

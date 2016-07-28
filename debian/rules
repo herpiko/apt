@@ -42,23 +42,9 @@ endif
 # Default rule
 build:
 
-PKG=apt
-DEB_BUILD_PROG:=debuild --preserve-envvar PATH --preserve-envvar CCACHE_DIR -us -uc $(DEB_BUILD_PROG_OPTS)
-
 # Determine the build directory to use
-BASE=.
-ifdef BUILD
-BUILD_POSSIBLE := $(BUILD) $(BASE)/$(BUILD)
-else
-BUILD_POSSIBLE := $(BASE) $(BASE)/build-$(shell uname --machine) $(BASE)/build
-endif
-BUILDX:= $(foreach i,$(BUILD_POSSIBLE),$(wildcard $(i)/environment.mak*))
-BUILDX:= $(patsubst %/,%,$(firstword $(dir $(BUILDX))))
-override BLD := $(BUILDX)
-
-ifeq ($(words $(BLD)),0)
-override BLD := ./build
-endif
+override BASE := .
+override BLD := $(BASE)/build
 
 # When building without <nocheck>, the header is available and thus the test is
 # successful. When building with <nocheck>, the header is missing, but we still
@@ -147,15 +133,9 @@ libapt-pkg-doc: build-docbook
 # libapt-pkg-doc install
 #
 	rm -f $(BLD)/doc/doxygen/html/*.map $(BLD)/doc/doxygen/html/*.md5
-	dh_installdocs -p$@ $(BLD)/docs/design* \
-			    $(BLD)/docs/dpkg-tech* \
-			    $(BLD)/docs/files* \
-			    $(BLD)/docs/method* \
-			    doc/libapt-pkg2_to_3.txt \
-			    doc/style.txt \
-			    $(BLD)/doc/doxygen/html
+	dh_installdocs -p$@
 	dh_installexamples -p$@
-
+	dh_lintian -p$@
 	dh_installchangelogs -p$@
 	dh_strip -p$@
 	dh_compress -p$@ -X.xhtml
@@ -173,10 +153,7 @@ apt-doc: build-docbook
 # apt-doc install
 #
 	# Copy the guides
-	dh_installdocs -p$@ $(BLD)/docs/guide*.text \
-			    $(BLD)/docs/guide*.html \
-			    $(BLD)/docs/offline*.text \
-			    $(BLD)/docs/offline*.html
+	dh_installdocs -p$@
 	dh_installchangelogs -p$@
 	dh_compress -p$@
 	dh_fixperms -p$@
@@ -212,7 +189,9 @@ apt: build-binary build-manpages debian/apt.install
 	dh_install -p$@ --sourcedir=$(BLD)
 
 	# Remove the bits that are in apt-utils
-	rm $(addprefix debian/$@/usr/bin/apt-,$(APT_UTILS) dump-solver internal-solver)
+	rm $(addprefix debian/$@/usr/bin/apt-,$(APT_UTILS) dump-solver internal-solver internal-planner)
+	cp $(BLD)/bin/apt-dump-solver debian/$@/usr/lib/apt/solvers/dump
+	ln -s ../solvers/dump debian/$@/usr/lib/apt/planners/dump
 
 	# https has its own package
 	rm debian/$@/usr/lib/apt/methods/https
@@ -228,7 +207,7 @@ apt: build-binary build-manpages debian/apt.install
 
 	dh_bugfiles -p$@
 	dh_lintian -p$@
-	dh_installexamples -p$@ $(BLD)/docs/examples/*
+	dh_installexamples -p$@
 	dh_installman -p$@ $(wildcard $(patsubst %,doc/en/%.[158],$(apt_MANPAGES)) $(patsubst %,doc/*/%.*.[158],$(apt_MANPAGES)))
 	dh_installcron -p$@ --name=apt-compat
 	dh_systemd_enable -p$@ apt-daily.timer
@@ -273,8 +252,8 @@ apt-utils: build-binary build-manpages
 	dh_installdirs -p$@
 
 	cp $(addprefix $(BLD)/bin/apt-,$(APT_UTILS)) debian/$@/usr/bin/
-	cp $(BLD)/bin/apt-dump-solver debian/$@/usr/lib/apt/solvers/dump
 	cp $(BLD)/bin/apt-internal-solver debian/$@/usr/lib/apt/solvers/apt
+	cp $(BLD)/bin/apt-internal-planner debian/$@/usr/lib/apt/planners/apt
 
 	dh_install -p$@ --sourcedir=$(BLD)
 	dh_link -p$@
@@ -328,7 +307,7 @@ $(LIBAPT_INST): build-binary debian/$(LIBAPT_INST).install
 	dh_fixperms -p$@
 	dh_makeshlibs -p$@
 	dh_installdeb -p$@
-	dh_shlibdeps -p$@ 
+	dh_shlibdeps -p$@
 	dh_gencontrol -p$@
 	dh_md5sums -p$@
 	dh_builddeb -p$@
@@ -340,7 +319,7 @@ apt-transport-https: build-binary libapt-pkg-dev
 	dh_installdirs -p$@
 
 	dh_install -p$@ --sourcedir=$(BLD)
-	dh_installdocs -p$@ debian/apt-transport-https.README
+	dh_installdocs -p$@
 	dh_installexamples -p$@
 
 	# Install the man pages..
@@ -351,7 +330,7 @@ apt-transport-https: build-binary libapt-pkg-dev
 	dh_compress -p$@
 	dh_fixperms -p$@
 	dh_installdeb -p$@
-	dh_shlibdeps -p$@ 
+	dh_shlibdeps -p$@
 	dh_gencontrol -p$@
 	dh_md5sums -p$@
 	dh_builddeb -p$@

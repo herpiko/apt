@@ -9,6 +9,7 @@ configcompression '.' 'gz'
 
 buildsimplenativepackage 'unrelated' 'all' '0.5~squeeze1' 'unstable'
 
+export APT_DONT_SIGN=''
 setupaptarchive --no-update
 changetowebserver
 webserverconfig 'aptwebserver::redirect::replace::/redirectme/' "http://0.0.0.0:${APTHTTPPORT}/"
@@ -20,9 +21,44 @@ Get:3 http://0.0.0.0:${APTHTTPPORT} unstable/main all Packages [$(stat -c %s apt
 Get:4 http://0.0.0.0:${APTHTTPPORT} unstable/main Translation-en [$(stat -c %s aptarchive/dists/unstable/main/i18n/Translation-en.gz) B]
 Reading package lists..." aptget update
 
+# ensure we asked the redirector only once
+testsuccessequal "Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease" grep '^Location:' aptarchive/webserver.log
+
 testsuccessequal "Hit:1 http://0.0.0.0:${APTHTTPPORT} unstable InRelease
 Reading package lists..." aptget update
+
+testsuccessequal "Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease" grep '^Location:' aptarchive/webserver.log
+
+rm -rf rootdir/var/lib/apt/lists
+testsuccess apt update -o Debug::Acquire::http=1 -o Acquire::SameMirrorForAllIndexes=0
+testsuccessequal "Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/InRelease
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/main/source/Sources.gz
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/main/binary-all/Packages.gz
+Location: http://0.0.0.0:${APTHTTPPORT}/dists/unstable/main/i18n/Translation-en.gz" grep '^Location:' aptarchive/webserver.log
 
 cd downloaded
 testsuccess apthelper download-file "http://localhost:${APTHTTPPORT}/redirectme/dists/unstable/InRelease" inrelease
 testsuccess test -s inrelease
+cd - >/dev/null
+
+find aptarchive -name 'InRelease' -delete
+rm -rf rootdir/var/lib/apt/lists
+
+testsuccessequal "Ign:1 http://0.0.0.0:${APTHTTPPORT} unstable InRelease
+  404  Not Found
+Get:2 http://0.0.0.0:${APTHTTPPORT} unstable Release [$(stat -c %s aptarchive/dists/unstable/Release) B]
+Get:3 http://0.0.0.0:${APTHTTPPORT} unstable Release.gpg [$(stat -c %s aptarchive/dists/unstable/Release.gpg) B]
+Get:4 http://0.0.0.0:${APTHTTPPORT} unstable/main Sources [$(stat -c %s aptarchive/dists/unstable/main/source/Sources.gz) B]
+Get:5 http://0.0.0.0:${APTHTTPPORT} unstable/main all Packages [$(stat -c %s aptarchive/dists/unstable/main/binary-all/Packages.gz) B]
+Get:6 http://0.0.0.0:${APTHTTPPORT} unstable/main Translation-en [$(stat -c %s aptarchive/dists/unstable/main/i18n/Translation-en.gz) B]
+Reading package lists..." aptget update
+
+testsuccessequal "Ign:1 http://0.0.0.0:${APTHTTPPORT} unstable InRelease
+  404  Not Found
+Hit:2 http://0.0.0.0:${APTHTTPPORT} unstable Release
+Reading package lists..." aptget update
+
+

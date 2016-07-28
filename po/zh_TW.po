@@ -2,13 +2,15 @@
 # Translators: 黃思文 <steven.huang@upcursor.org>
 #              Asho Yeh <asho@debian.org.tw>
 #              Kanru Chen <kanru.96@stu.csie.ncnu.edu.tw>
+#              Tetralet <tetralet@gmail.com>
+#              Zhou Mo <cdluminate@gmail.com> 2016 # Simplified Chinese Translator, only make trivial fixes.
 #
 # $Id: zh_TW.po,v 1.11 2004/04/30 04:50:38 mdz Exp $
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 0.5.4\n"
+"Project-Id-Version: apt 1.2.X\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-06-11 17:28+0200\n"
+"POT-Creation-Date: 2016-06-23 09:02+0200\n"
 "PO-Revision-Date: 2009-01-28 10:41+0800\n"
 "Last-Translator: Tetralet <tetralet@gmail.com>\n"
 "Language-Team: Debian-user in Chinese [Big5] <debian-chinese-big5@lists."
@@ -228,10 +230,10 @@ msgid ""
 "unauthenticated"
 msgstr "發生了問題，且 -y 並沒有和 --force-yes 搭配使用"
 
-#: apt-private/private-download.cc
+#: apt-private/private-download.cc apt-pkg/update.cc
 #, c-format
-msgid "Failed to fetch %s  %s\n"
-msgstr "無法取得 %s，%s\n"
+msgid "Failed to fetch %s  %s"
+msgstr "無法取得 %s，%s"
 
 #: apt-private/private-download.cc
 #, c-format
@@ -521,12 +523,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
+#, c-format
 msgid ""
 "NOTE: This is only a simulation!\n"
-"      apt-get needs root privileges for real execution.\n"
+"      %s needs root privileges for real execution.\n"
 "      Keep also in mind that locking is deactivated,\n"
-"      so don't depend on the relevance to the real current situation!"
+"      so don't depend on the relevance to the real current situation!\n"
 msgstr ""
 
 #: apt-private/private-output.cc apt-private/private-show.cc
@@ -737,10 +741,6 @@ msgstr "快取資料未同步，無法 x-ref 套件檔"
 msgid "Pinned packages:"
 msgstr "鎖定的套件："
 
-#: apt-private/private-show.cc
-msgid "(not found)"
-msgstr "(未找到)"
-
 #. Print the package name and the version we are forcing to
 #: apt-private/private-show.cc
 #, c-format
@@ -758,10 +758,6 @@ msgstr "  候選："
 #: apt-private/private-show.cc
 msgid "(none)"
 msgstr "(無)"
-
-#: apt-private/private-show.cc
-msgid "  Package pin: "
-msgstr "  套件鎖定："
 
 #. Show the priority tables
 #: apt-private/private-show.cc
@@ -1658,6 +1654,21 @@ msgstr "查詢"
 msgid "Unable to invoke "
 msgstr "無法 invoke "
 
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Clearsigned file isn't valid, got '%s' (does the network require "
+"authentication?)"
+msgstr ""
+
+#. TRANSLATORS: %s is a single techy word like 'NODATA'
+#: methods/gpgv.cc
+#, c-format
+msgid ""
+"Signed file isn't valid, got '%s' (does the network require authentication?)"
+msgstr ""
+
 #: methods/gpgv.cc
 msgid "At least one invalid signature was encountered."
 msgstr "至少發現一個無效的簽章。"
@@ -1671,14 +1682,6 @@ msgstr "內部錯誤：簽章無誤，但卻無法辨識密鑰的指紋碼？！
 #, fuzzy
 msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
 msgstr "無法執行 '%s' 來驗證簽章（gnupg 是否安裝了？）"
-
-#. TRANSLATORS: %s is a single techy word like 'NODATA'
-#: methods/gpgv.cc apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"Clearsigned file isn't valid, got '%s' (does the network require "
-"authentication?)"
-msgstr ""
 
 #: methods/gpgv.cc
 msgid "Unknown error executing apt-key"
@@ -1868,6 +1871,20 @@ msgstr "以上的訊息相當重要。請修正它們並重新執行安裝[I]"
 #: dselect/update:30
 msgid "Merging available information"
 msgstr "整合現有的資料"
+
+#: cmdline/apt-dump-solver.cc
+msgid ""
+"Usage: apt-dump-solver\n"
+"\n"
+"apt-dump-solver is an interface to store an EDSP scenario in\n"
+"a file and optionally forwards it to another solver.\n"
+msgstr ""
+
+#: cmdline/apt-dump-solver.cc apt-pkg/contrib/fileutl.cc
+#: apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Waited for %s but it wasn't there"
+msgstr "等待 %s 但是它並不存在"
 
 #: cmdline/apt-extracttemplates.cc
 #, fuzzy
@@ -2401,14 +2418,49 @@ msgid ""
 "details."
 msgstr ""
 
-#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
-#, c-format
-msgid "rename failed, %s (%s -> %s)."
-msgstr "無法重新命名，%s (%s -> %s)。"
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is no longer signed."
+msgstr "路徑 %s 已被抽換"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does no longer have a Release file."
+msgstr "路徑 %s 已被抽換"
+
+#: apt-pkg/acquire-item.cc
+msgid ""
+"This is normally not allowed, but the option Acquire::"
+"AllowDowngradeToInsecureRepositories was given to override it."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' is not signed."
+msgstr "路徑 %s 已被抽換"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' does not have a Release file."
+msgstr "路徑 %s 已被抽換"
+
+#: apt-pkg/acquire-item.cc
+#, fuzzy, c-format
+msgid "The repository '%s' provides only weak security information."
+msgstr "路徑 %s 已被抽換"
 
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hash Sum 不符"
+
+#: apt-pkg/acquire-item.cc
+msgid "Insufficient information available to perform this download securely"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "rename failed, %s (%s -> %s)."
+msgstr "無法重新命名，%s (%s -> %s)。"
 
 #: apt-pkg/acquire-item.cc
 msgid "Size mismatch"
@@ -2472,33 +2524,6 @@ msgstr ""
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "發行版本衝突：%s（應當是 %s 但卻得到 %s）"
-
-#. No Release file was present, or verification failed, so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is not signed."
-msgstr "路徑 %s 已被抽換"
-
-#. No Release file was present so fall
-#. back to queueing Packages files without verification
-#. only allow going further if the user explicitly wants it
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' does not have a Release file."
-msgstr "路徑 %s 已被抽換"
-
-#: apt-pkg/acquire-item.cc
-#, fuzzy, c-format
-msgid "The repository '%s' is no longer signed."
-msgstr "路徑 %s 已被抽換"
-
-#: apt-pkg/acquire-item.cc
-msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -2915,11 +2940,6 @@ msgid ""
 "Ignoring file '%s' in directory '%s' as it has an invalid filename extension"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc apt-pkg/deb/debsystem.cc
-#, c-format
-msgid "Waited for %s but it wasn't there"
-msgstr "等待 %s 但是它並不存在"
-
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Sub-process %s received a segmentation fault."
@@ -3134,12 +3154,7 @@ msgstr ""
 
 #: apt-pkg/deb/debmetaindex.cc
 #, fuzzy, c-format
-msgid "Invalid 'Date' entry in Release file %s"
-msgstr "在 Release 檔 %s 裡沒有 Hash 項目"
-
-#: apt-pkg/deb/debmetaindex.cc
-#, fuzzy, c-format
-msgid "Invalid 'Valid-Until' entry in Release file %s"
+msgid "Invalid '%s' entry in Release file %s"
 msgstr "在 Release 檔 %s 裡沒有 Hash 項目"
 
 #. TRANSLATOR: The first is an option name from sources.list manpage, the other two URI and Suite
@@ -3151,6 +3166,11 @@ msgstr ""
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
 msgid "Invalid value set for option %s regarding source %s %s (%s)"
+msgstr ""
+
+#: apt-pkg/deb/debmetaindex.cc
+#, c-format
+msgid "Conflicting values set for option %s regarding source %s %s: %s != %s"
 msgstr ""
 
 #: apt-pkg/deb/debrecords.cc apt-pkg/tagfile.cc
@@ -3218,7 +3238,7 @@ msgstr "正在執行安裝後套件後續處理程式 %s"
 msgid "Directory '%s' missing"
 msgstr "找不到 '%s' 目錄"
 
-#: apt-pkg/deb/dpkgpm.cc
+#: apt-pkg/deb/dpkgpm.cc apt-pkg/edsp.cc
 #, fuzzy, c-format
 msgid "Could not open file '%s'"
 msgstr "無法開啟檔案 %s"
@@ -3625,11 +3645,6 @@ msgid "Cannot convert %s to integer: out of range"
 msgstr ""
 
 #: apt-pkg/update.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "無法取得 %s，%s"
-
-#: apt-pkg/update.cc
 #, fuzzy
 msgid ""
 "Some index files failed to download. They have been ignored, or old ones "
@@ -3639,6 +3654,12 @@ msgstr "有一些索引檔不能下載，它們可能被略過了，或是替而
 #: apt-pkg/upgrade.cc
 msgid "Calculating upgrade"
 msgstr "籌備升級中"
+
+#~ msgid "(not found)"
+#~ msgstr "(未找到)"
+
+#~ msgid "  Package pin: "
+#~ msgstr "  套件鎖定："
 
 #~ msgid "There is no public key available for the following key IDs:\n"
 #~ msgstr "無法取得以下的密鑰 ID 的公鑰：\n"
