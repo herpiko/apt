@@ -694,6 +694,25 @@ string flAbsPath(string File)
    return AbsPath;
 }
 									/*}}}*/
+std::string flNormalize(std::string file)				/*{{{*/
+{
+   if (file.empty())
+      return file;
+   // do some normalisation by removing // and /./ from the path
+   size_t found = string::npos;
+   while ((found = file.find("/./")) != string::npos)
+      file.replace(found, 3, "/");
+   while ((found = file.find("//")) != string::npos)
+      file.replace(found, 2, "/");
+
+   if (APT::String::Startswith(file, "/dev/null"))
+   {
+      file.erase(strlen("/dev/null"));
+      return file;
+   }
+   return file;
+}
+									/*}}}*/
 // SetCloseExec - Set the close on exec flag				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -1258,9 +1277,8 @@ public:
 
 	 writebuffer.bufferstart += written;
       }
-
       writebuffer.reset();
-      return true;
+      return wrapped->InternalFlush();
    }
    virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
    {
@@ -2383,7 +2401,7 @@ FileFd::~FileFd()
    gracefully. */
 bool FileFd::Read(void *To,unsigned long long Size,unsigned long long *Actual)
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    ssize_t Res = 1;
    errno = 0;
@@ -2434,7 +2452,7 @@ bool FileFd::Read(void *To,unsigned long long Size,unsigned long long *Actual)
 char* FileFd::ReadLine(char *To, unsigned long long const Size)
 {
    *To = '\0';
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return nullptr;
    return d->InternalReadLine(To, Size);
 }
@@ -2442,6 +2460,8 @@ char* FileFd::ReadLine(char *To, unsigned long long const Size)
 // FileFd::Flush - Flush the file  					/*{{{*/
 bool FileFd::Flush()
 {
+   if (Failed())
+      return false;
    if (d == nullptr)
       return true;
 
@@ -2451,7 +2471,7 @@ bool FileFd::Flush()
 // FileFd::Write - Write to the file					/*{{{*/
 bool FileFd::Write(const void *From,unsigned long long Size)
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    ssize_t Res = 1;
    errno = 0;
@@ -2507,7 +2527,7 @@ bool FileFd::Write(int Fd, const void *From, unsigned long long Size)
 // FileFd::Seek - Seek in the file					/*{{{*/
 bool FileFd::Seek(unsigned long long To)
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    Flags &= ~HitEof;
    return d->InternalSeek(To);
@@ -2516,7 +2536,7 @@ bool FileFd::Seek(unsigned long long To)
 // FileFd::Skip - Skip over data in the file				/*{{{*/
 bool FileFd::Skip(unsigned long long Over)
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    return d->InternalSkip(Over);
 }
@@ -2524,7 +2544,7 @@ bool FileFd::Skip(unsigned long long Over)
 // FileFd::Truncate - Truncate the file					/*{{{*/
 bool FileFd::Truncate(unsigned long long To)
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    // truncating /dev/null is always successful - as we get an error otherwise
    if (To == 0 && FileName == "/dev/null")
@@ -2537,7 +2557,7 @@ bool FileFd::Truncate(unsigned long long To)
 /* */
 unsigned long long FileFd::Tell()
 {
-   if (d == nullptr)
+   if (d == nullptr || Failed())
       return false;
    off_t const Res = d->InternalTell();
    if (Res == (off_t)-1)
@@ -2600,7 +2620,7 @@ time_t FileFd::ModificationTime()
 unsigned long long FileFd::Size()
 {
    if (d == nullptr)
-      return false;
+      return 0;
    return d->InternalSize();
 }
 									/*}}}*/
@@ -2664,13 +2684,12 @@ bool FileFd::FileFdErrno(const char *Function, const char *Description,...)
    va_list args;
    size_t msgSize = 400;
    int const errsv = errno;
-   while (true)
-   {
+   bool retry;
+   do {
       va_start(args,Description);
-      if (_error->InsertErrno(GlobalError::ERROR, Function, Description, args, errsv, msgSize) == false)
-	 break;
+      retry = _error->InsertErrno(GlobalError::ERROR, Function, Description, args, errsv, msgSize);
       va_end(args);
-   }
+   } while (retry);
    return false;
 }
 									/*}}}*/
@@ -2679,13 +2698,12 @@ bool FileFd::FileFdError(const char *Description,...) {
    Flags |= Fail;
    va_list args;
    size_t msgSize = 400;
-   while (true)
-   {
+   bool retry;
+   do {
       va_start(args,Description);
-      if (_error->Insert(GlobalError::ERROR, Description, args, msgSize) == false)
-	 break;
+      retry = _error->Insert(GlobalError::ERROR, Description, args, msgSize);
       va_end(args);
-   }
+   } while (retry);
    return false;
 }
 									/*}}}*/

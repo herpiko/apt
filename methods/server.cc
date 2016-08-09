@@ -427,6 +427,8 @@ bool ServerMethod::Fetch(FetchItem *)
    decltype(PipelineDepth) CurrentDepth = 0;
    for (FetchItem const *I = Queue; I != QueueBack; I = I->Next)
       ++CurrentDepth;
+   if (CurrentDepth > AllowedDepth)
+      return true;
 
    do {
       // Make sure we stick with the same server
@@ -637,10 +639,7 @@ int ServerMethod::Loop()
 			// yes, he did! Disable pipelining and rewrite queue
 			if (Server->Pipeline == true)
 			{
-			   // FIXME: fake a warning message as we have no proper way of communicating here
-			   std::string out;
-			   strprintf(out, _("Automatically disabled %s due to incorrect response from server/proxy. (man 5 apt.conf)"), "Acquire::http::PipelineDepth");
-			   std::cerr << "W: " << out << std::endl;
+			   Warning(_("Automatically disabled %s due to incorrect response from server/proxy. (man 5 apt.conf)"), "Acquire::http::Pipeline-Depth");
 			   Server->Pipeline = false;
 			   Server->PipelineAllowed = false;
 			   // we keep the PipelineDepth value so that the rest of the queue can be fixed up as well

@@ -7,6 +7,7 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
+#include <apt-pkg/algorithms.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/depcache.h>
@@ -339,7 +340,7 @@ static bool WriteScenarioLimitedDependency(FileFd &output,
 static bool SkipUnavailableVersions(pkgDepCache &Cache, pkgCache::PkgIterator const &Pkg, pkgCache::VerIterator const &Ver)/*{{{*/
 {
    /* versions which aren't current and aren't available in
-      any "online" source file are bad, expect if they are the choosen
+      any "online" source file are bad, expect if they are the chosen
       candidate: The exception is for build-dep implementation as it creates
       such pseudo (package) versions and removes them later on again.
       We filter out versions at all so packages in 'rc' state only available
@@ -1016,32 +1017,38 @@ bool EDSP::ExecuteSolver(const char* const solver, int *solver_in, int *solver_o
    return true;
 }
 									/*}}}*/
+static bool CreateDumpFile(char const * const id, char const * const type, FileFd &output)/*{{{*/
+{
+	auto const dumpfile = _config->FindFile((std::string("Dir::Log::") + type).c_str());
+	if (dumpfile.empty())
+		return false;
+	auto const dumpdir = flNotFile(dumpfile);
+	_error->PushToStack();
+	bool errored_out = CreateAPTDirectoryIfNeeded(dumpdir, dumpdir) == false ||
+	   output.Open(dumpfile, FileFd::WriteOnly | FileFd::Exclusive | FileFd::Create, FileFd::Extension, 0644) == false;
+	std::vector<std::string> downgrademsgs;
+	while (_error->empty() == false)
+	{
+		std::string msg;
+		_error->PopMessage(msg);
+		downgrademsgs.emplace_back(std::move(msg));
+	}
+	_error->RevertToStack();
+	for (auto && msg : downgrademsgs)
+	   _error->Warning("%s", msg.c_str());
+	if (errored_out)
+		return _error->WarningE(id, _("Could not open file '%s'"), dumpfile.c_str());
+	return true;
+}
+									/*}}}*/
 // EDSP::ResolveExternal - resolve problems by asking external for help	{{{*/
 bool EDSP::ResolveExternal(const char* const solver, pkgDepCache &Cache,
 			 unsigned int const flags, OpProgress *Progress) {
 	if (strcmp(solver, "internal") == 0)
 	{
-		auto const dumpfile = _config->FindFile("Dir::Log::Solver");
-		if (dumpfile.empty())
-			return false;
-		auto const dumpdir = flNotFile(dumpfile);
 		FileFd output;
-		_error->PushToStack();
-		bool errored_out = CreateAPTDirectoryIfNeeded(dumpdir, dumpdir) == false ||
-		   output.Open(dumpfile, FileFd::WriteOnly | FileFd::Exclusive | FileFd::Create, FileFd::Extension, 0644) == false;
-		std::vector<std::string> downgrademsgs;
-		while (_error->empty() == false)
-		{
-		   std::string msg;
-		   _error->PopMessage(msg);
-		   downgrademsgs.emplace_back(std::move(msg));
-		}
-		_error->RevertToStack();
-		for (auto && msg : downgrademsgs)
-		   _error->Warning("%s", msg.c_str());
-		if (errored_out)
-			return _error->WarningE("EDSP::Resolve", _("Could not open file '%s'"), dumpfile.c_str());
-		bool Okay = EDSP::WriteRequest(Cache, output, flags, nullptr);
+		bool Okay = CreateDumpFile("EDSP::Resolve", "solver", output);
+		Okay &= EDSP::WriteRequest(Cache, output, flags, nullptr);
 		return Okay && EDSP::WriteScenario(Cache, output, nullptr);
 	}
 	int solver_in, solver_out;
@@ -1054,20 +1061,21 @@ bool EDSP::ResolveExternal(const char* const solver, pkgDepCache &Cache,
 		return _error->Errno("ResolveExternal", "Opening solver %s stdin on fd %d for writing failed", solver, solver_in);
 
 	bool Okay = output.Failed() == false;
-	if (Progress != NULL)
+	if (Okay && Progress != NULL)
 		Progress->OverallProgress(0, 100, 5, _("Execute external solver"));
 	Okay &= EDSP::WriteRequest(Cache, output, flags, Progress);
-	if (Progress != NULL)
+	if (Okay && Progress != NULL)
 		Progress->OverallProgress(5, 100, 20, _("Execute external solver"));
 	Okay &= EDSP::WriteScenario(Cache, output, Progress);
 	output.Close();
 
-	if (Progress != NULL)
+	if (Okay && Progress != NULL)
 		Progress->OverallProgress(25, 100, 75, _("Execute external solver"));
 	if (Okay && EDSP::ReadResponse(solver_out, Cache, Progress) == false)
 		return false;
 
-	return ExecWait(solver_pid, solver);
+	bool const waited = ExecWait(solver_pid, solver);
+	return Okay && waited;
 }
 bool EDSP::ResolveExternal(const char* const solver, pkgDepCache &Cache,
 			 bool const upgrade, bool const distUpgrade,
@@ -1088,27 +1096,16 @@ bool EIPP::OrderInstall(char const * const solver, pkgPackageManager * const PM,
 {
    if (strcmp(solver, "internal") == 0)
    {
-      auto const dumpfile = _config->FindFile("Dir::Log::Planner");
-      if (dumpfile.empty())
-	 return false;
-      auto const dumpdir = flNotFile(dumpfile);
       FileFd output;
       _error->PushToStack();
-      bool errored_out = CreateAPTDirectoryIfNeeded(dumpdir, dumpdir) == false ||
-	    output.Open(dumpfile, FileFd::WriteOnly | FileFd::Exclusive | FileFd::Create, FileFd::Extension, 0644) == false;
-      std::vector<std::string> downgrademsgs;
-      while (_error->empty() == false)
+      bool Okay = CreateDumpFile("EIPP::OrderInstall", "planner", output);
+      if (Okay == false && dynamic_cast<pkgSimulate*>(PM) != nullptr)
       {
-	 std::string msg;
-	 _error->PopMessage(msg);
-	 downgrademsgs.emplace_back(std::move(msg));
+	 _error->RevertToStack();
+	 return false;
       }
-      _error->RevertToStack();
-      for (auto && msg : downgrademsgs)
-	 _error->Warning("%s", msg.c_str());
-      if (errored_out)
-	 return _error->WarningE("EIPP::OrderInstall", _("Could not open file '%s'"), dumpfile.c_str());
-      bool Okay = EIPP::WriteRequest(PM->Cache, output, flags, nullptr);
+      _error->MergeWithStack();
+      Okay &= EIPP::WriteRequest(PM->Cache, output, flags, nullptr);
       return Okay && EIPP::WriteScenario(PM->Cache, output, nullptr);
    }
 
@@ -1122,28 +1119,32 @@ bool EIPP::OrderInstall(char const * const solver, pkgPackageManager * const PM,
       return _error->Errno("EIPP::OrderInstall", "Opening planner %s stdin on fd %d for writing failed", solver, solver_in);
 
    bool Okay = output.Failed() == false;
-   if (Progress != NULL)
+   if (Okay && Progress != NULL)
       Progress->OverallProgress(0, 100, 5, _("Execute external planner"));
    Okay &= EIPP::WriteRequest(PM->Cache, output, flags, Progress);
-   if (Progress != NULL)
+   if (Okay && Progress != NULL)
       Progress->OverallProgress(5, 100, 20, _("Execute external planner"));
    Okay &= EIPP::WriteScenario(PM->Cache, output, Progress);
    output.Close();
 
-   if (Progress != NULL)
-      Progress->OverallProgress(25, 100, 75, _("Execute external planner"));
-
-   // we don't tell the external planners about boring things
-   for (auto Pkg = PM->Cache.PkgBegin(); Pkg.end() == false; ++Pkg)
+   if (Okay)
    {
-      if (Pkg->CurrentState == pkgCache::State::ConfigFiles && PM->Cache[Pkg].Purge() == true)
-	 PM->Remove(Pkg, true);
+      if (Progress != nullptr)
+	 Progress->OverallProgress(25, 100, 75, _("Execute external planner"));
+
+      // we don't tell the external planners about boring things
+      for (auto Pkg = PM->Cache.PkgBegin(); Pkg.end() == false; ++Pkg)
+      {
+	 if (Pkg->CurrentState == pkgCache::State::ConfigFiles && PM->Cache[Pkg].Purge() == true)
+	    PM->Remove(Pkg, true);
+      }
    }
 
-   if (Okay && EIPP::ReadResponse(solver_out, PM, Progress) == false)
+   if (EIPP::ReadResponse(solver_out, PM, Progress) == false)
       return false;
 
-   return ExecWait(solver_pid, solver);
+   bool const waited = ExecWait(solver_pid, solver);
+   return Okay && waited;
 }
 									/*}}}*/
 bool EIPP::WriteRequest(pkgDepCache &Cache, FileFd &output,		/*{{{*/
