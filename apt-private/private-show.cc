@@ -24,7 +24,6 @@
 #include <apt-private/private-show.h>
 
 #include <stdio.h>
-#include <unistd.h>
 #include <ostream>
 #include <string>
 

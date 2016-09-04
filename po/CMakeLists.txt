@@ -1,5 +1,3 @@
-include(Translations)
-
 set(languages_excluded
     he  ## disabled by translator request #313283
 )

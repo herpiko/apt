@@ -29,7 +29,6 @@
 #include <string>
 #include <vector>
 
-#include <unistd.h>
 #include <stdlib.h>
 
 #include <apti18n.h>

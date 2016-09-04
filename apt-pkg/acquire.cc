@@ -80,7 +80,7 @@ void pkgAcquire::Initialize()
    if (getuid() == 0 && SandboxUser.empty() == false && SandboxUser != "root") // if we aren't root, we can't chown, so don't try it
    {
       struct passwd const * const pw = getpwnam(SandboxUser.c_str());
-      struct group const * const gr = getgrnam(ROOT_GROUP);
+      struct group const * const gr = getgrnam("root");
       if (pw != NULL && gr != NULL)
       {
 	 std::string const AuthConf = _config->FindFile("Dir::Etc::netrc");
@@ -106,7 +106,7 @@ static bool SetupAPTPartialDirectory(std::string const &grand, std::string const
    if (getuid() == 0 && SandboxUser.empty() == false && SandboxUser != "root") // if we aren't root, we can't chown, so don't try it
    {
       struct passwd const * const pw = getpwnam(SandboxUser.c_str());
-      struct group const * const gr = getgrnam(ROOT_GROUP);
+      struct group const * const gr = getgrnam("root");
       if (pw != NULL && gr != NULL)
       {
          // chown the partial dir
@@ -269,55 +269,12 @@ void pkgAcquire::Remove(Worker *Work)
    it is constructed which creates a queue (based on the current queue
    mode) and puts the item in that queue. If the system is running then
    the queue might be started. */
-static bool CheckForBadItemAndFailIt(pkgAcquire::Item * const Item,
-      pkgAcquire::MethodConfig const * const Config, pkgAcquireStatus * const Log)
-{
-   auto SavedDesc = Item->GetItemDesc();
-   if (Item->IsRedirectionLoop(SavedDesc.URI))
-   {
-      std::string const Message = "400 URI Failure"
-	 "\nURI: " + SavedDesc.URI +
-	 "\nFilename: " + Item->DestFile +
-	 "\nFailReason: RedirectionLoop";
-
-      Item->Status = pkgAcquire::Item::StatError;
-      Item->Failed(Message, Config);
-      if (Log != nullptr)
-	 Log->Fail(SavedDesc);
-      return true;
-   }
-
-   HashStringList const hsl = Item->GetExpectedHashes();
-   if (hsl.usable() == false && Item->HashesRequired() &&
-	 _config->Exists("Acquire::ForceHash") == false)
-   {
-      std::string const Message = "400 URI Failure"
-	 "\nURI: " + SavedDesc.URI +
-	 "\nFilename: " + Item->DestFile +
-	 "\nFailReason: WeakHashSums";
-
-      auto SavedDesc = Item->GetItemDesc();
-      Item->Status = pkgAcquire::Item::StatAuthError;
-      Item->Failed(Message, Config);
-      if (Log != nullptr)
-	 Log->Fail(SavedDesc);
-      return true;
-   }
-   return false;
-}
 void pkgAcquire::Enqueue(ItemDesc &Item)
 {
    // Determine which queue to put the item in
    const MethodConfig *Config;
    string Name = QueueName(Item.URI,Config);
    if (Name.empty() == true)
-      return;
-
-   /* the check for running avoids that we produce errors
-      in logging before we actually have started, which would
-      be easier to implement but would confuse users/implementations
-      so we check the items skipped here in #Startup */
-   if (Running && CheckForBadItemAndFailIt(Item.Owner, Config, Log))
       return;
 
    // Find the queue structure
@@ -955,20 +912,10 @@ bool pkgAcquire::Queue::Startup()
    if (Workers == 0)
    {
       URI U(Name);
-      pkgAcquire::MethodConfig * const Cnf = Owner->GetConfig(U.Access);
-      if (unlikely(Cnf == nullptr))
+      pkgAcquire::MethodConfig *Cnf = Owner->GetConfig(U.Access);
+      if (Cnf == 0)
 	 return false;
-
-      // now-running twin of the pkgAcquire::Enqueue call
-      for (QItem *I = Items; I != 0; )
-      {
-	 auto const INext = I->Next;
-	 for (auto &&O: I->Owners)
-	    CheckForBadItemAndFailIt(O, Cnf, Owner->Log);
-	 // if an item failed, it will be auto-dequeued invalidation our I here
-	 I = INext;
-      }
-
+      
       Workers = new Worker(this,Cnf,Owner->Log);
       Owner->Add(Workers);
       if (Workers->Start() == false)
@@ -1311,11 +1258,8 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
 	 snprintf(msg,sizeof(msg), _("Retrieving file %li of %li"), i, TotalItems);
 
       // build the status str
-      std::ostringstream str;
-      str.imbue(std::locale::classic());
-      str.precision(4);
-      str << "dlstatus" << ':' << std::fixed << i << ':' << Percent << ':' << msg << '\n';
-      auto const dlstatus = str.str();
+      std::string dlstatus;
+      strprintf(dlstatus, "dlstatus:%ld:%.4f:%s\n", i, Percent, msg);
       FileFd::Write(fd, dlstatus.data(), dlstatus.size());
    }
 
