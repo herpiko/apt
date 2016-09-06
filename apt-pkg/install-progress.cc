@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <stdio.h>
 #include <sstream>
-#include <cmath>
 
 #include <apti18n.h>
 
@@ -322,14 +321,19 @@ std::string
 PackageManagerFancy::GetTextProgressStr(float Percent, int OutputSize)
 {
    std::string output;
-   if (unlikely(OutputSize < 3))
+   int i;
+   
+   // should we raise a exception here instead?
+   if (Percent < 0.0 || Percent > 1.0 || OutputSize < 3)
       return output;
-
-   int const BarSize = OutputSize - 2; // bar without the leading "[" and trailing "]"
-   int const BarDone = std::max(0, std::min(BarSize, static_cast<int>(std::floor(Percent * BarSize))));
-   output.append("[");
-   std::fill_n(std::fill_n(std::back_inserter(output), BarDone, '#'), BarSize - BarDone, '.');
-   output.append("]");
+   
+   int BarSize = OutputSize - 2; // bar without the leading "[" and trailing "]"
+   output += "[";
+   for(i=0; i < BarSize*Percent; i++)
+      output += "#";
+   for (/*nothing*/; i < BarSize; i++)
+      output += ".";
+   output += "]";
    return output;
 }
 

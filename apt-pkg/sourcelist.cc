@@ -328,9 +328,6 @@ bool pkgSourceList::ReadMainList()
       // Only warn if there is no sources.list file.
       _error->WarningE("RealFileExists", _("Unable to read %s"), Main.c_str());
 
-   for (auto && file: _config->FindVector("APT::Sources::With"))
-      Res &= AddVolatileFile(file, nullptr);
-
    return Res;
 }
 									/*}}}*/
@@ -423,18 +420,18 @@ bool pkgSourceList::ParseFileOldStyle(std::string const &File)
 /* Returns: the number of stanzas parsed*/
 bool pkgSourceList::ParseFileDeb822(string const &File)
 {
+   unsigned int i = 1;
+
    // see if we can read the file
    FileFd Fd(File, FileFd::ReadOnly);
    pkgTagFile Sources(&Fd, pkgTagFile::SUPPORT_COMMENTS);
    if (Fd.IsOpen() == false || Fd.Failed())
-      return _error->Error(_("Malformed stanza %u in source list %s (type)"),0,File.c_str());
+      return _error->Error(_("Malformed stanza %u in source list %s (type)"),i,File.c_str());
 
    // read step by step
    pkgTagSection Tags;
-   unsigned int i = 0;
    while (Sources.Step(Tags) == true)
    {
-      ++i;
       if(Tags.Exists("Types") == false)
 	 return _error->Error(_("Malformed stanza %u in source list %s (type)"),i,File.c_str());
 
@@ -452,6 +449,8 @@ bool pkgSourceList::ParseFileDeb822(string const &File)
 
          if (!Parse->ParseStanza(SrcList, Tags, i, Fd))
             return false;
+
+         ++i;
       }
    }
    return true;
@@ -545,22 +544,6 @@ void pkgSourceList::AddVolatileFile(pkgIndexFile * const File)		/*{{{*/
       VolatileFiles.push_back(File);
 }
 									/*}}}*/
-static bool fileNameMatches(std::string const &filename, std::string const &idxtype)/*{{{*/
-{
-   for (auto && type: APT::Configuration::getCompressionTypes())
-   {
-      if (type == "uncompressed")
-      {
-	 if (filename == idxtype || APT::String::Endswith(filename, '_' + idxtype))
-	    return true;
-      }
-      else if (filename == idxtype + '.' + type ||
-	    APT::String::Endswith(filename, '_' + idxtype + '.' + type))
-	 return true;
-   }
-   return false;
-}
-									/*}}}*/
 bool pkgSourceList::AddVolatileFile(std::string const &File, std::vector<std::string> * const VolatileCmdL)/*{{{*/
 {
    // Note: FileExists matches directories and links, too!
@@ -591,20 +574,7 @@ bool pkgSourceList::AddVolatileFile(std::string const &File, std::vector<std::st
       return true;
    }
    else
-   {
-      auto const filename = flNotDir(File);
-      auto const Target = IndexTarget(File, filename, File, "file:" + File, false, true, {
-	 { "FILENAME", File },
-	 { "REPO_URI", "file:" + flAbsPath(flNotFile(File)) + '/' },
-	 { "COMPONENT", "volatile-packages-file" },
-      });
-      if (fileNameMatches(filename, "Packages"))
-	 AddVolatileFile(new debPackagesIndex(Target, true));
-      else if (fileNameMatches(filename, "Sources"))
-	 AddVolatileFile(new debSourcesIndex(Target, true));
-      else
-	 return false;
-   }
+      return false;
 
    if (VolatileCmdL != nullptr)
       VolatileCmdL->push_back(File);

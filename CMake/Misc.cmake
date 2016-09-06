@@ -4,7 +4,7 @@ include(CheckCXXCompilerFlag)
 function(flatify target headers)
     foreach(header ${headers})
         get_filename_component(tgt ${header} NAME)
-        configure_file(${header} ${target}/${tgt} COPYONLY)
+        configure_file(${header} ${target}/${tgt} @ONLY)
     endforeach(header ${headers})
 endfunction()
 

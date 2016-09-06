@@ -1908,12 +1908,11 @@ public:
 	       " but was forced to ignore it in favor of an external binary – which isn't installed.", compressor.Name.c_str());
 
       bool const Comp = (Mode & FileFd::WriteOnly) == FileFd::WriteOnly;
-      if (Comp == false && filefd->iFd != -1)
+      if (Comp == false)
       {
 	 // Handle 'decompression' of empty files
 	 struct stat Buf;
-	 if (fstat(filefd->iFd, &Buf) != 0)
-	    return filefd->FileFdErrno("fstat", "Could not stat fd %d for file %s", filefd->iFd, filefd->FileName.c_str());
+	 fstat(filefd->iFd, &Buf);
 	 if (Buf.st_size == 0 && S_ISFIFO(Buf.st_mode) == false)
 	    return true;
 

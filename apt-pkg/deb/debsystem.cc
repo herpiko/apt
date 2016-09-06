@@ -184,24 +184,26 @@ pkgPackageManager *debSystem::CreatePM(pkgDepCache *Cache) const
 // System::Initialize - Setup the configuration space..			/*{{{*/
 // ---------------------------------------------------------------------
 /* These are the Debian specific configuration variables.. */
-static std::string getDpkgStatusLocation(Configuration const &Cnf) {
-   Configuration PathCnf;
-   PathCnf.Set("Dir", Cnf.Find("Dir", "/"));
-   PathCnf.Set("Dir::State::status", "status");
+static std::string getDpkgStatusLocation(Configuration &Cnf) {
    auto const cnfstatedir = Cnf.Find("Dir::State", "var/lib/apt/");
-   // if the state dir ends in apt, replace it with dpkg -
-   // for the default this gives us the same as the fallback below.
-   // This can't be a ../dpkg as that would play bad with symlinks
    std::string statedir;
    if (APT::String::Endswith(cnfstatedir, "/apt/"))
       statedir.assign(cnfstatedir, 0, cnfstatedir.length() - 5);
    else if (APT::String::Endswith(cnfstatedir, "/apt"))
       statedir.assign(cnfstatedir, 0, cnfstatedir.length() - 4);
    if (statedir.empty())
-      PathCnf.Set("Dir::State", "var/lib/dpkg");
+      Cnf.Set("Dir::State", "var/lib/dpkg");
    else
-      PathCnf.Set("Dir::State", flCombine(statedir, "dpkg"));
-   return PathCnf.FindFile("Dir::State::status");
+      Cnf.Set("Dir::State", flCombine(statedir, "dpkg"));
+   auto const cnfrootdir = Cnf.Find("RootDir");
+   if (Cnf.Exists("RootDir") == true)
+      Cnf.Set("RootDir", "");
+   Cnf.Set("Dir::State::status", "status");
+   auto const statusfile = Cnf.FindFile("Dir::State::status");
+   if (cnfrootdir.empty() == false)
+      Cnf.Set("RootDir", cnfrootdir);
+   Cnf.Set("Dir::State", cnfstatedir);
+   return statusfile;
 }
 bool debSystem::Initialize(Configuration &Cnf)
 {

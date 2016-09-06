@@ -80,11 +80,7 @@ debPackagesIndex::debPackagesIndex(IndexTarget const &Target, bool const Trusted
 std::string debPackagesIndex::ArchiveInfo(pkgCache::VerIterator const &Ver) const
 {
    std::string Res = Target.Description;
-   {
-      auto const space = Target.Description.rfind(' ');
-      if (space != std::string::npos)
-	 Res.erase(space);
-   }
+   Res.erase(Target.Description.rfind(' '));
 
    Res += " ";
    Res += Ver.ParentPkg().Name();
