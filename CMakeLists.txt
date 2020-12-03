@@ -11,9 +11,15 @@ include_directories(${PROJECT_BINARY_DIR}/include)
 enable_testing()
 
 option(WITH_DOC "Build documentation." ON)
+option(WITH_TESTS "Build tests" ON)
 option(USE_NLS "Localisation support." ON)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMake")
+
+# Add coverage target
+set(CMAKE_CXX_FLAGS_COVERAGE "-g -fprofile-arcs -ftest-coverage")
+set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "-lgcov")
+set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "-lgcov")
 
 # Work around bug in GNUInstallDirs
 if (EXISTS "/etc/debian_version")
@@ -27,9 +33,17 @@ include(CheckFunctionExists)
 include(CheckStructHasMember)
 include(GNUInstallDirs)
 include(TestBigEndian)
-find_package(Threads)
+find_package(Threads REQUIRED)
 find_package(LFS REQUIRED)
 find_package(Iconv REQUIRED)
+
+find_package(Perl REQUIRED)
+
+find_program(TRIEHASH_EXECUTABLE NAMES triehash)
+
+if (NOT TRIEHASH_EXECUTABLE)
+  message(FATAL_ERROR "Could not find triehash executable")
+endif()
 
 if(USE_NLS)
   find_package(Intl REQUIRED)
@@ -43,7 +57,7 @@ add_definitions(${LFS_DEFINITIONS})
 link_libraries(${LFS_LIBRARIES})
 
 # Set compiler flags
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
@@ -61,18 +75,19 @@ add_optional_compile_options(Wmissing-include-dirs)
 add_optional_compile_options(Wnoexcept)
 add_optional_compile_options(Wsign-promo)
 add_optional_compile_options(Wundef)
-
+add_optional_compile_options(Wdouble-promotion)
+add_optional_compile_options(Wsuggest-override)
+add_optional_compile_options(Werror=suggest-override)
+add_optional_compile_options(Werror=return-type)
 # apt-ftparchive dependencies
-find_package(BerkeleyDB REQUIRED)
-if (BERKELEY_DB_FOUND)
+find_package(Berkeley REQUIRED)
+if (BERKELEY_FOUND)
   set(HAVE_BDB 1)
 endif()
 
-
-# apt-transport-https dependencies
-find_package(CURL REQUIRED)
-if (CURL_FOUND)
-  set(HAVE_CURL 1)
+find_package(GnuTLS REQUIRED)
+if (GNUTLS_FOUND)
+  set(HAVE_GNUTLS 1)
 endif()
 
 # (De)Compressor libraries
@@ -82,21 +97,44 @@ if (ZLIB_FOUND)
 endif()
 
 
-find_package(BZip2)
+find_package(BZip2 REQUIRED)
 if (BZIP2_FOUND)
   set(HAVE_BZ2 1)
 endif()
 
-find_package(LZMA)
+find_package(LZMA REQUIRED)
 if (LZMA_FOUND)
   set(HAVE_LZMA 1)
 endif()
 
 
-find_package(LZ4)
+find_package(LZ4 REQUIRED)
 if (LZ4_FOUND)
   set(HAVE_LZ4 1)
 endif()
+
+find_package(ZSTD)
+if (ZSTD_FOUND)
+  set(HAVE_ZSTD 1)
+endif()
+
+
+find_package(Udev)
+if (UDEV_FOUND)
+  set(HAVE_UDEV 1)
+endif()
+
+find_package(Systemd)
+if (SYSTEMD_FOUND)
+  set(HAVE_SYSTEMD 1)
+endif()
+
+find_package(SECCOMP)
+if (SECCOMP_FOUND)
+  set(HAVE_SECCOMP 1)
+endif()
+
+find_package(GCRYPT REQUIRED)
 
 # Mount()ing and stat()ing and friends
 check_symbol_exists(statfs sys/vfs.h HAVE_VFS_H)
@@ -108,7 +146,7 @@ endif()
 
 check_function_exists(statvfs HAVE_STATVFS)
 if (NOT HAVE_STATVFS)
-  configure_file(CMake/statvfs.h.in ${PROJECT_BINARY_DIR}/include/statvfs.h COPYONLY)
+  configure_file(CMake/statvfs.h.in ${PROJECT_BINARY_DIR}/include/sys/statvfs.h COPYONLY)
 endif()
 
 CHECK_STRUCT_HAS_MEMBER("struct statfs" f_type sys/vfs.h HAVE_STRUCT_STATFS_F_TYPE)
@@ -124,10 +162,6 @@ test_big_endian(WORDS_BIGENDIAN)
 
 # FreeBSD
 add_definitions(-D_WITH_GETLINE=1)
-
-if (CMAKE_USE_PTHREADS_INIT)
-  set(HAVE_PTHREAD 1)
-endif()
 
 CHECK_INCLUDE_FILES(machine/endian.h HAVE_MACHINE_ENDIAN_H)
 CHECK_INCLUDE_FILES(sys/endian.h HAVE_SYS_ENDIAN_H)
@@ -155,18 +189,30 @@ if (NOT HAVE_SIGHANDLER_T)
 endif()
 
 # Handle resolving
-check_function_exists(res_init HAVE_LIBC_RESOLV)
+check_function_exists(res_ninit HAVE_LIBC_RESOLV)
 if(HAVE_LIBC_RESOLV)
     set(RESOLV_LIBRARIES)
 else()
     set(RESOLV_LIBRARIES -lresolv)
 endif()
 
+# Check multiversioning
+include(CheckCxxTarget)
+check_cxx_target(HAVE_FMV_SSE42_AND_CRC32 "sse4.2" "__builtin_ia32_crc32si(0,i)|__builtin_ia32_crc32hi(0,i)|__builtin_ia32_crc32qi(0,i)")
+check_cxx_target(HAVE_FMV_SSE42_AND_CRC32DI "sse4.2" "__builtin_ia32_crc32di(0,i)")
+
 # Configure some variables like package, version and architecture.
 set(PACKAGE ${PROJECT_NAME})
 set(PACKAGE_MAIL "APT Development Team <deity@lists.debian.org>")
-set(PACKAGE_VERSION "1.3~rc4ubuntu1")
+set(PACKAGE_VERSION "2.1.12")
+string(REGEX MATCH "^[0-9.]+" PROJECT_VERSION ${PACKAGE_VERSION})
 
+if (NOT DEFINED DPKG_DATADIR)
+  execute_process(COMMAND ${PERL_EXECUTABLE} -MDpkg -e "print $Dpkg::DATADIR;"
+                  OUTPUT_VARIABLE DPKG_DATADIR_CMD OUTPUT_STRIP_TRAILING_WHITESPACE)
+  message(STATUS "Found dpkg data dir: ${DPKG_DATADIR_CMD}")
+  set(DPKG_DATADIR "${DPKG_DATADIR_CMD}" CACHE PATH "dpkg data directory")
+endif()
 if (NOT DEFINED COMMON_ARCH)
   execute_process(COMMAND dpkg-architecture -qDEB_HOST_ARCH
                   OUTPUT_VARIABLE COMMON_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -195,7 +241,6 @@ configure_file(CMake/apti18n.h.in ${PROJECT_BINARY_DIR}/include/apti18n.h)
 add_subdirectory(vendor)
 add_subdirectory(apt-pkg)
 add_subdirectory(apt-private)
-add_subdirectory(apt-inst)
 add_subdirectory(cmdline)
 add_subdirectory(completions)
 add_subdirectory(doc)
@@ -214,6 +259,7 @@ endif()
 # Create our directories.
 install_empty_directories(
   ${CONF_DIR}/apt.conf.d
+  ${CONF_DIR}/auth.conf.d
   ${CONF_DIR}/preferences.d
   ${CONF_DIR}/sources.list.d
   ${CONF_DIR}/trusted.gpg.d

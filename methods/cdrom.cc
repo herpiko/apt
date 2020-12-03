@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: cdrom.cc,v 1.20.2.1 2004/01/16 18:58:50 mdz Exp $
 /* ######################################################################
 
    CDROM URI method for APT
@@ -12,11 +11,11 @@
 
 #include <apt-pkg/cdrom.h>
 #include <apt-pkg/cdromutl.h>
-#include <apt-pkg/error.h>
 #include <apt-pkg/configuration.h>
+#include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
-#include <apt-pkg/strutl.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/strutl.h>
 
 #include "aptmethod.h"
 
@@ -44,9 +43,10 @@ class CDROMMethod : public aptMethod
    bool IsCorrectCD(URI want, string MountPath, string& NewID);
    bool AutoDetectAndMount(const URI, string &NewID);
    virtual bool Fetch(FetchItem *Itm) APT_OVERRIDE;
-   string GetID(string Name);
+   std::string GetID(std::string const &Name);
    virtual void Exit() APT_OVERRIDE;
-      
+   virtual bool Configuration(std::string Message) APT_OVERRIDE;
+
    public:
    
    CDROMMethod();
@@ -62,7 +62,6 @@ CDROMMethod::CDROMMethod() : aptMethod("cdrom", "1.0",SingleInstance | LocalOnly
 					  Debug(false),
                                           MountedByApt(false)
 {
-   UdevCdroms.Dlopen();
 }
 									/*}}}*/
 // CDROMMethod::Exit - Unmount the disc if necessary			/*{{{*/
@@ -77,7 +76,7 @@ void CDROMMethod::Exit()
 // CDROMMethod::GetID - Search the database for a matching string	/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-string CDROMMethod::GetID(string Name)
+std::string CDROMMethod::GetID(std::string const &Name)
 {
    // Search for an ID
    const Configuration::Item *Top = Database.Tree("CD");
@@ -96,7 +95,7 @@ string CDROMMethod::GetID(string Name)
 									/*}}}*/
 // CDROMMethod::AutoDetectAndMount                                      /*{{{*/
 // ---------------------------------------------------------------------
-/* Modifies class varaiable CDROM to the mountpoint */
+/* Modifies class variable CDROM to the mountpoint */
 bool CDROMMethod::AutoDetectAndMount(const URI Get, string &NewID)
 {
    vector<struct CdromDevice> v = UdevCdroms.Scan();
@@ -175,7 +174,7 @@ bool CDROMMethod::Fetch(FetchItem *Itm)
 {
    FetchResult Res;
 
-   URI Get = Itm->Uri;
+   URI Get(Itm->Uri);
    string File = Get.Path;
    Debug = DebugEnabled();
 
@@ -277,9 +276,14 @@ bool CDROMMethod::Fetch(FetchItem *Itm)
    return true;
 }
 									/*}}}*/
+bool CDROMMethod::Configuration(std::string Message)			/*{{{*/
+{
+   _config->CndSet("Binary::cdrom::Debug::NoDropPrivs", true);
+   return aptMethod::Configuration(Message);
+}
+									/*}}}*/
 
 int main()
 {
-   _config->CndSet("Binary::cdrom::Debug::NoDropPrivs", true);
    return CDROMMethod().Run();
 }

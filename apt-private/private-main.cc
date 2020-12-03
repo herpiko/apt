@@ -10,12 +10,11 @@
 #include <iostream>
 #include <locale>
 
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
-#include <signal.h>
 
 #include <apti18n.h>
-
 
 void InitLocale(APT_CMD const binary)				/*{{{*/
 {
@@ -34,6 +33,7 @@ void InitLocale(APT_CMD const binary)				/*{{{*/
       case APT_CMD::APT_HELPER:
       case APT_CMD::APT_GET:
       case APT_CMD::APT_MARK:
+      case APT_CMD::RRED:
 	 textdomain("apt");
 	 break;
       case APT_CMD::APT_EXTRACTTEMPLATES:
@@ -45,7 +45,6 @@ void InitLocale(APT_CMD const binary)				/*{{{*/
 	 break;
    }
 }
-void InitLocale() {}
 									/*}}}*/
 void InitSignals()							/*{{{*/
 {

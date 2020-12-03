@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: acquire.cc,v 1.50 2004/03/17 05:17:11 mdz Exp $
 /* ######################################################################
 
    Acquire - File Acquiration
@@ -15,35 +14,37 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/acquire.h>
 #include <apt-pkg/acquire-item.h>
 #include <apt-pkg/acquire-worker.h>
+#include <apt-pkg/acquire.h>
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
-#include <apt-pkg/strutl.h>
 #include <apt-pkg/fileutl.h>
+#include <apt-pkg/strutl.h>
 
 #include <algorithm>
+#include <chrono>
+#include <iomanip>
+#include <iostream>
+#include <memory>
 #include <numeric>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <memory>
+#include <cmath>
 
+#include <dirent.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <pwd.h>
-#include <grp.h>
-#include <dirent.h>
-#include <sys/time.h>
 #include <sys/select.h>
-#include <errno.h>
 #include <sys/stat.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -74,65 +75,57 @@ void pkgAcquire::Initialize()
       QueueMode = QueueHost;
    if (strcasecmp(Mode.c_str(),"access") == 0)
       QueueMode = QueueAccess;
-
-   // chown the auth.conf file as it will be accessed by our methods
-   std::string const SandboxUser = _config->Find("APT::Sandbox::User");
-   if (getuid() == 0 && SandboxUser.empty() == false && SandboxUser != "root") // if we aren't root, we can't chown, so don't try it
-   {
-      struct passwd const * const pw = getpwnam(SandboxUser.c_str());
-      struct group const * const gr = getgrnam(ROOT_GROUP);
-      if (pw != NULL && gr != NULL)
-      {
-	 std::string const AuthConf = _config->FindFile("Dir::Etc::netrc");
-	 if(AuthConf.empty() == false && RealFileExists(AuthConf) &&
-	       chown(AuthConf.c_str(), pw->pw_uid, gr->gr_gid) != 0)
-	    _error->WarningE("SetupAPTPartialDirectory", "chown to %s:root of file %s failed", SandboxUser.c_str(), AuthConf.c_str());
-      }
-   }
 }
 									/*}}}*/
 // Acquire::GetLock - lock directory and prepare for action		/*{{{*/
-static bool SetupAPTPartialDirectory(std::string const &grand, std::string const &parent)
+static bool SetupAPTPartialDirectory(std::string const &grand, std::string const &parent, std::string const &postfix, mode_t const mode)
 {
-   std::string const partial = parent + "partial";
-   mode_t const mode = umask(S_IWGRP | S_IWOTH);
-   bool const creation_fail = (CreateAPTDirectoryIfNeeded(grand, partial) == false &&
-	 CreateAPTDirectoryIfNeeded(parent, partial) == false);
-   umask(mode);
-   if (creation_fail == true)
-      return false;
+   if (_config->FindB("Debug::SetupAPTPartialDirectory::AssumeGood", false))
+      return true;
+   std::string const partial = parent + postfix;
+   bool const partialExists = DirectoryExists(partial);
+   if (partialExists == false)
+   {
+      mode_t const old_umask = umask(S_IWGRP | S_IWOTH);
+      bool const creation_fail = (CreateAPTDirectoryIfNeeded(grand, partial) == false &&
+	    CreateAPTDirectoryIfNeeded(parent, partial) == false);
+      umask(old_umask);
+      if (creation_fail == true)
+	 return false;
+   }
 
    std::string const SandboxUser = _config->Find("APT::Sandbox::User");
-   if (getuid() == 0 && SandboxUser.empty() == false && SandboxUser != "root") // if we aren't root, we can't chown, so don't try it
+   if (getuid() == 0)
    {
-      struct passwd const * const pw = getpwnam(SandboxUser.c_str());
-      struct group const * const gr = getgrnam(ROOT_GROUP);
-      if (pw != NULL && gr != NULL)
+      if (SandboxUser.empty() == false && SandboxUser != "root") // if we aren't root, we can't chown, so don't try it
       {
-         // chown the partial dir
-         if(chown(partial.c_str(), pw->pw_uid, gr->gr_gid) != 0)
-            _error->WarningE("SetupAPTPartialDirectory", "chown to %s:root of directory %s failed", SandboxUser.c_str(), partial.c_str());
+	 struct passwd const * const pw = getpwnam(SandboxUser.c_str());
+	 struct group const * const gr = getgrnam(ROOT_GROUP);
+	 if (pw != NULL && gr != NULL)
+	 {
+	    // chown the partial dir
+	    if(chown(partial.c_str(), pw->pw_uid, gr->gr_gid) != 0)
+	       _error->WarningE("SetupAPTPartialDirectory", "chown to %s:%s of directory %s failed", SandboxUser.c_str(), ROOT_GROUP, partial.c_str());
+	 }
       }
+      if (chmod(partial.c_str(), mode) != 0)
+	 _error->WarningE("SetupAPTPartialDirectory", "chmod 0%03o of directory %s failed", mode, partial.c_str());
+
    }
-   if (chmod(partial.c_str(), 0700) != 0)
-      _error->WarningE("SetupAPTPartialDirectory", "chmod 0700 of directory %s failed", partial.c_str());
+   else if (chmod(partial.c_str(), mode) != 0)
+   {
+      // if we haven't created the dir and aren't root, it is kinda expected that chmod doesn't work
+      if (partialExists == false)
+	 _error->WarningE("SetupAPTPartialDirectory", "chmod 0%03o of directory %s failed", mode, partial.c_str());
+   }
+
+   _error->PushToStack();
+   // remove 'old' FAILED files to stop us from collecting them for no reason
+   for (auto const &Failed: GetListOfFilesInDir(partial, "FAILED", false, false))
+      RemoveFile("SetupAPTPartialDirectory", Failed);
+   _error->RevertToStack();
 
    return true;
-}
-bool pkgAcquire::Setup(pkgAcquireStatus *Progress, string const &Lock)
-{
-   Log = Progress;
-   if (Lock.empty())
-   {
-      string const listDir = _config->FindDir("Dir::State::lists");
-      if (SetupAPTPartialDirectory(_config->FindDir("Dir::State"), listDir) == false)
-	 return _error->Errno("Acquire", _("List directory %spartial is missing."), listDir.c_str());
-      string const archivesDir = _config->FindDir("Dir::Cache::Archives");
-      if (SetupAPTPartialDirectory(_config->FindDir("Dir::Cache"), archivesDir) == false)
-	 return _error->Errno("Acquire", _("Archives directory %spartial is missing."), archivesDir.c_str());
-      return true;
-   }
-   return GetLock(Lock);
 }
 bool pkgAcquire::GetLock(std::string const &Lock)
 {
@@ -145,13 +138,20 @@ bool pkgAcquire::GetLock(std::string const &Lock)
 
    if (Lock == listDir)
    {
-      if (SetupAPTPartialDirectory(_config->FindDir("Dir::State"), listDir) == false)
-	 return _error->Errno("Acquire", _("List directory %spartial is missing."), listDir.c_str());
+      if (SetupAPTPartialDirectory(_config->FindDir("Dir::State"), listDir, "partial", 0700) == false)
+	 return _error->Errno("Acquire", _("List directory %s is missing."), (listDir + "partial").c_str());
    }
    if (Lock == archivesDir)
    {
-      if (SetupAPTPartialDirectory(_config->FindDir("Dir::Cache"), archivesDir) == false)
-	 return _error->Errno("Acquire", _("Archives directory %spartial is missing."), archivesDir.c_str());
+      if (SetupAPTPartialDirectory(_config->FindDir("Dir::Cache"), archivesDir, "partial", 0700) == false)
+	 return _error->Errno("Acquire", _("Archives directory %s is missing."), (archivesDir + "partial").c_str());
+   }
+   if (Lock == listDir || Lock == archivesDir)
+   {
+      if (SetupAPTPartialDirectory(_config->FindDir("Dir::State"), listDir, "auxfiles", 0755) == false)
+      {
+	 // not being able to create lists/auxfiles isn't critical as we will use a tmpdir then
+      }
    }
 
    if (_config->FindB("Debug::NoLocking", false) == true)
@@ -296,7 +296,6 @@ static bool CheckForBadItemAndFailIt(pkgAcquire::Item * const Item,
 	 "\nFilename: " + Item->DestFile +
 	 "\nFailReason: WeakHashSums";
 
-      auto SavedDesc = Item->GetItemDesc();
       Item->Status = pkgAcquire::Item::StatAuthError;
       Item->Failed(Message, Config);
       if (Log != nullptr)
@@ -308,10 +307,13 @@ static bool CheckForBadItemAndFailIt(pkgAcquire::Item * const Item,
 void pkgAcquire::Enqueue(ItemDesc &Item)
 {
    // Determine which queue to put the item in
-   const MethodConfig *Config;
+   const MethodConfig *Config = nullptr;
    string Name = QueueName(Item.URI,Config);
    if (Name.empty() == true)
+   {
+      Item.Owner->Status = pkgAcquire::Item::StatError;
       return;
+   }
 
    /* the check for running avoids that we produce errors
       in logging before we actually have started, which would
@@ -383,73 +385,99 @@ void pkgAcquire::Dequeue(Item *Itm)
    return http://foo.org or http */
 string pkgAcquire::QueueName(string Uri,MethodConfig const *&Config)
 {
+   constexpr int DEFAULT_HOST_LIMIT = 10;
    URI U(Uri);
-   
+
+   // Note that this gets written through the reference to the caller.
    Config = GetConfig(U.Access);
-   if (Config == 0)
-      return string();
-   
-   /* Single-Instance methods get exactly one queue per URI. This is
-      also used for the Access queue method  */
-   if (Config->SingleInstance == true || QueueMode == QueueAccess)
+   if (Config == nullptr)
+      return {};
+
+   // Access mode forces all methods to be Single-Instance
+   if (QueueMode == QueueAccess)
       return U.Access;
 
-   string AccessSchema = U.Access + ':';
-   string FullQueueName;
+   // Single-Instance methods get exactly one queue per URI
+   if (Config->SingleInstance == true)
+      return U.Access;
 
+   // Host-less methods like rred, store, …
    if (U.Host.empty())
    {
-      long existing = 0;
+      int existing = 0;
       // check how many queues exist already and reuse empty ones
+      auto const AccessSchema = U.Access + ':';
       for (Queue const *I = Queues; I != 0; I = I->Next)
-	 if (I->Name.compare(0, AccessSchema.length(), AccessSchema) == 0)
+	 if (APT::String::Startswith(I->Name, AccessSchema))
 	 {
 	    if (I->Items == nullptr)
 	       return I->Name;
 	    ++existing;
 	 }
 
+      int const Limit = _config->FindI("Acquire::QueueHost::Limit",
 #ifdef _SC_NPROCESSORS_ONLN
-      long cpuCount = sysconf(_SC_NPROCESSORS_ONLN) * 2;
+	    sysconf(_SC_NPROCESSORS_ONLN) * 2
 #else
-      long cpuCount = 10;
+	    DEFAULT_HOST_LIMIT
 #endif
-      cpuCount = _config->FindI("Acquire::QueueHost::Limit", cpuCount);
+      );
 
-      if (cpuCount <= 0 || existing < cpuCount)
-	 strprintf(FullQueueName, "%s%ld", AccessSchema.c_str(), existing);
-      else
-      {
-	 long const randomQueue = random() % cpuCount;
-	 strprintf(FullQueueName, "%s%ld", AccessSchema.c_str(), randomQueue);
-      }
+      // create a new worker if we don't have too many yet
+      if (Limit <= 0 || existing < Limit)
+	 return AccessSchema + std::to_string(existing);
 
-      if (Debug)
-         clog << "Chose random queue " << FullQueueName << " for " << Uri << endl;
-   } else
+      // find the worker with the least to do
+      // we already established that there are no empty and we can't spawn new
+      Queue const *selected = nullptr;
+      auto selected_backlog = std::numeric_limits<decltype(HashStringList().FileSize())>::max();
+      for (Queue const *Q = Queues; Q != nullptr; Q = Q->Next)
+	 if (APT::String::Startswith(Q->Name, AccessSchema))
+	 {
+	    decltype(selected_backlog) current_backlog = 0;
+	    for (auto const *I = Q->Items; I != nullptr; I = I->Next)
+	    {
+	       auto const hashes = I->Owner->GetExpectedHashes();
+	       if (not hashes.empty())
+		  current_backlog += hashes.FileSize();
+	       else
+		  current_backlog += I->Owner->FileSize;
+	    }
+	    if (current_backlog < selected_backlog)
+	    {
+	       selected = Q;
+	       selected_backlog = current_backlog;
+	    }
+	 }
+
+      if (unlikely(selected == nullptr))
+	 return AccessSchema + "0";
+      return selected->Name;
+   }
+   // most methods talking to remotes like http
+   else
    {
-      FullQueueName = AccessSchema + U.Host;
-   }
-   unsigned int Instances = 0, SchemaLength = AccessSchema.length();
-
-   Queue *I = Queues;
-   for (; I != 0; I = I->Next) {
+      auto const FullQueueName = U.Access + ':' + U.Host;
       // if the queue already exists, re-use it
-      if (I->Name == FullQueueName)
-	 return FullQueueName;
+      for (Queue const *Q = Queues; Q != nullptr; Q = Q->Next)
+	 if (Q->Name == FullQueueName)
+	    return FullQueueName;
 
-      if (I->Name.compare(0, SchemaLength, AccessSchema) == 0)
-	 Instances++;
+      int existing = 0;
+      // check how many queues exist already and reuse empty ones
+      auto const AccessSchema = U.Access + ':';
+      for (Queue const *Q = Queues; Q != nullptr; Q = Q->Next)
+	 if (APT::String::Startswith(Q->Name, AccessSchema))
+	    ++existing;
+
+      int const Limit = _config->FindI("Acquire::QueueHost::Limit", DEFAULT_HOST_LIMIT);
+      // if we have too many hosts open use a single generic for the rest
+      if (existing >= Limit)
+	 return U.Access;
+
+      // we can still create new named queues
+      return FullQueueName;
    }
-
-   if (Debug) {
-      clog << "Found " << Instances << " instances of " << U.Access << endl;
-   }
-
-   if (Instances >= (unsigned int)_config->FindI("Acquire::QueueHost::Limit",10))
-      return U.Access;
-
-   return FullQueueName;
 }
 									/*}}}*/
 // Acquire::GetConfig - Fetch the configuration information		/*{{{*/
@@ -468,13 +496,16 @@ pkgAcquire::MethodConfig *pkgAcquire::GetConfig(string Access)
    // Create the new config class
    Conf = new MethodConfig;
    Conf->Access = Access;
-   Conf->Next = Configs;
-   Configs = Conf;
 
    // Create the worker to fetch the configuration
    Worker Work(Conf);
    if (Work.Start() == false)
-      return 0;
+   {
+      delete Conf;
+      return nullptr;
+   }
+   Conf->Next = Configs;
+   Configs = Conf;
 
    /* if a method uses DownloadLimit, we switch to SingleInstance mode */
    if(_config->FindI("Acquire::"+Access+"::Dl-Limit",0) > 0)
@@ -505,18 +536,12 @@ void pkgAcquire::SetFds(int &Fd,fd_set *RSet,fd_set *WSet)
    }
 }
 									/*}}}*/
-// Acquire::RunFds - compatibility remove on next abi/api break		/*{{{*/
-void pkgAcquire::RunFds(fd_set *RSet,fd_set *WSet)
-{
-   RunFdsSane(RSet, WSet);
-}
-									/*}}}*/
-// Acquire::RunFdsSane - Deal with active FDs				/*{{{*/
+// Acquire::RunFds - Deal with active FDs				/*{{{*/
 // ---------------------------------------------------------------------
 /* Dispatch active FDs over to the proper workers. It is very important
    that a worker never be erased while this is running! The queue class
    should never erase a worker except during shutdown processing. */
-bool pkgAcquire::RunFdsSane(fd_set *RSet,fd_set *WSet)
+bool pkgAcquire::RunFds(fd_set *RSet,fd_set *WSet)
 {
    bool Res = true;
 
@@ -622,7 +647,7 @@ static void CheckDropPrivsMustBeDisabled(pkgAcquire const &Fetcher)
       // if destination file is inaccessible all hope is lost for privilege dropping
       if (IsAccessibleBySandboxUser((*I)->DestFile, true) == false)
       {
-	 _error->WarningE("pkgAcquire::Run", _("Can't drop privileges for downloading as file '%s' couldn't be accessed by user '%s'."),
+	 _error->WarningE("pkgAcquire::Run", _("Download is performed unsandboxed as root as file '%s' couldn't be accessed by user '%s'."),
 	       (*I)->DestFile.c_str(), SandboxUser.c_str());
 	 _config->Set("APT::Sandbox::User", "");
 	 break;
@@ -630,7 +655,7 @@ static void CheckDropPrivsMustBeDisabled(pkgAcquire const &Fetcher)
 
       // if its the source file (e.g. local sources) we might be lucky
       // by dropping the dropping only for some methods.
-      URI const source = (*I)->DescURI();
+      URI const source((*I)->DescURI());
       if (source.Access == "file" || source.Access == "copy")
       {
 	 std::string const conf = "Binary::" + source.Access + "::APT::Sandbox::User";
@@ -639,7 +664,7 @@ static void CheckDropPrivsMustBeDisabled(pkgAcquire const &Fetcher)
 
 	 if (IsAccessibleBySandboxUser(source.Path, false) == false)
 	 {
-	    _error->NoticeE("pkgAcquire::Run", _("Can't drop privileges for downloading as file '%s' couldn't be accessed by user '%s'."),
+	    _error->NoticeE("pkgAcquire::Run", _("Download is performed unsandboxed as root as file '%s' couldn't be accessed by user '%s'."),
 		  source.Path.c_str(), SandboxUser.c_str());
 	    _config->CndSet("Binary::file::APT::Sandbox::User", "root");
 	    _config->CndSet("Binary::copy::APT::Sandbox::User", "root");
@@ -660,12 +685,12 @@ pkgAcquire::RunResult pkgAcquire::Run(int PulseIntervall)
    CheckDropPrivsMustBeDisabled(*this);
 
    Running = true;
-   
-   for (Queue *I = Queues; I != 0; I = I->Next)
-      I->Startup();
-   
+
    if (Log != 0)
       Log->Start();
+
+   for (Queue *I = Queues; I != 0; I = I->Next)
+      I->Startup();
    
    bool WasCancelled = false;
 
@@ -695,7 +720,7 @@ pkgAcquire::RunResult pkgAcquire::Run(int PulseIntervall)
 	 break;
       }
 
-      if(RunFdsSane(&RFds,&WFds) == false)
+      if(RunFds(&RFds,&WFds) == false)
          break;
 
       // Timeout, notify the log class
@@ -764,42 +789,35 @@ bool pkgAcquire::Clean(string Dir)
    if(Dir == "/")
       return _error->Error(_("Clean of %s is not supported"), Dir.c_str());
 
-   DIR *D = opendir(Dir.c_str());   
-   if (D == 0)
+   int const dirfd = open(Dir.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+   if (dirfd == -1)
+      return _error->Errno("open",_("Unable to read %s"),Dir.c_str());
+   DIR * const D = fdopendir(dirfd);
+   if (D == nullptr)
       return _error->Errno("opendir",_("Unable to read %s"),Dir.c_str());
-   
-   string StartDir = SafeGetCWD();
-   if (chdir(Dir.c_str()) != 0)
+
+   for (struct dirent *E = readdir(D); E != nullptr; E = readdir(D))
    {
-      closedir(D);
-      return _error->Errno("chdir",_("Unable to change to %s"),Dir.c_str());
-   }
-   
-   for (struct dirent *Dir = readdir(D); Dir != 0; Dir = readdir(D))
-   {
-      // Skip some files..
-      if (strcmp(Dir->d_name,"lock") == 0 ||
-	  strcmp(Dir->d_name,"partial") == 0 ||
-	  strcmp(Dir->d_name,"lost+found") == 0 ||
-	  strcmp(Dir->d_name,".") == 0 ||
-	  strcmp(Dir->d_name,"..") == 0)
+      // Skip some entries
+      if (strcmp(E->d_name, "lock") == 0 ||
+	  strcmp(E->d_name, "partial") == 0 ||
+	  strcmp(E->d_name, "auxfiles") == 0 ||
+	  strcmp(E->d_name, "lost+found") == 0 ||
+	  strcmp(E->d_name, ".") == 0 ||
+	  strcmp(E->d_name, "..") == 0)
 	 continue;
-      
-      // Look in the get list
-      ItemCIterator I = Items.begin();
-      for (; I != Items.end(); ++I)
-	 if (flNotDir((*I)->DestFile) == Dir->d_name)
-	    break;
-      
-      // Nothing found, nuke it
-      if (I == Items.end())
-	 RemoveFile("Clean", Dir->d_name);
-   };
-   
+
+      // Look in the get list and if not found nuke
+      if (std::any_of(Items.cbegin(), Items.cend(),
+	     [&E](pkgAcquire::Item const * const I) {
+		return flNotDir(I->DestFile) == E->d_name;
+	     }) == false)
+      {
+	 RemoveFileAt("pkgAcquire::Clean", dirfd, E->d_name);
+      }
+   }
    closedir(D);
-   if (chdir(StartDir.c_str()) != 0)
-      return _error->Errno("chdir",_("Unable to change to %s"),StartDir.c_str());
-   return true;   
+   return true;
 }
 									/*}}}*/
 // Acquire::TotalNeeded - Number of bytes to fetch			/*{{{*/
@@ -858,12 +876,25 @@ pkgAcquire::UriIterator pkgAcquire::UriEnd()
 }
 									/*}}}*/
 // Acquire::MethodConfig::MethodConfig - Constructor			/*{{{*/
-// ---------------------------------------------------------------------
-/* */
-pkgAcquire::MethodConfig::MethodConfig() : d(NULL), Next(0), SingleInstance(false),
-   Pipeline(false), SendConfig(false), LocalOnly(false), NeedsCleanup(false),
-   Removable(false)
+class pkgAcquire::MethodConfig::Private
 {
+   public:
+   bool AuxRequests = false;
+};
+pkgAcquire::MethodConfig::MethodConfig() : d(new Private()), Next(0), SingleInstance(false),
+					   Pipeline(false), SendConfig(false), LocalOnly(false), NeedsCleanup(false),
+					   Removable(false)
+{
+}
+									/*}}}*/
+bool pkgAcquire::MethodConfig::GetAuxRequests() const /*{{{*/
+{
+   return d->AuxRequests;
+}
+									/*}}}*/
+void pkgAcquire::MethodConfig::SetAuxRequests(bool const value) /*{{{*/
+{
+   d->AuxRequests = value;
 }
 									/*}}}*/
 // Queue::Queue - Constructor						/*{{{*/
@@ -894,11 +925,27 @@ pkgAcquire::Queue::~Queue()
 /* */
 bool pkgAcquire::Queue::Enqueue(ItemDesc &Item)
 {
+   // MetaKeysMatch checks whether the two items have no non-matching
+   // meta-keys. If the items are not transaction items, it returns
+   // true, so other items can still be merged.
+   auto MetaKeysMatch = [](pkgAcquire::ItemDesc const &A, pkgAcquire::Queue::QItem const *B) {
+      auto OwnerA = dynamic_cast<pkgAcqTransactionItem*>(A.Owner);
+      if (OwnerA == nullptr)
+	 return true;
+
+      for (auto const & OwnerBUncast : B->Owners) {
+	 auto OwnerB = dynamic_cast<pkgAcqTransactionItem*>(OwnerBUncast);
+
+	 if (OwnerB != nullptr && OwnerA->GetMetaKey() != OwnerB->GetMetaKey())
+	    return false;
+      }
+      return true;
+   };
    QItem **OptimalI = &Items;
    QItem **I = &Items;
    // move to the end of the queue and check for duplicates here
    for (; *I != 0; ) {
-      if (Item.URI == (*I)->URI)
+      if (Item.URI == (*I)->URI && MetaKeysMatch(Item, *I))
       {
 	 if (_config->FindB("Debug::pkgAcquire::Worker",false) == true)
 	    std::cerr << " @ Queue: Action combined for " << Item.URI << " and " << (*I)->URI << std::endl;
@@ -1072,7 +1119,7 @@ bool pkgAcquire::Queue::Cycle()
    // Look for a queable item
    QItem *I = Items;
    int ActivePriority = 0;
-   while (PipeDepth < (signed)MaxPipeDepth)
+   while (PipeDepth < static_cast<decltype(PipeDepth)>(MaxPipeDepth))
    {
       for (; I != 0; I = I->Next) {
 	 if (I->Owner->Status == pkgAcquire::Item::StatFetching)
@@ -1119,22 +1166,15 @@ HashStringList pkgAcquire::Queue::QItem::GetExpectedHashes() const	/*{{{*/
    for (pkgAcquire::Queue::QItem::owner_iterator O = Owners.begin(); O != Owners.end(); ++O)
    {
       HashStringList const hsl = (*O)->GetExpectedHashes();
-      if (hsl.usable() == false)
-	 continue;
-      if (superhsl.usable() == false)
-	 superhsl = hsl;
-      else
-      {
-	 // we merge both lists - if we find disagreement send no hashes
-	 HashStringList::const_iterator hs = hsl.begin();
-	 for (; hs != hsl.end(); ++hs)
-	    if (superhsl.push_back(*hs) == false)
-	       break;
-	 if (hs != hsl.end())
-	 {
-	    superhsl.clear();
+      // we merge both lists - if we find disagreement send no hashes
+      HashStringList::const_iterator hs = hsl.begin();
+      for (; hs != hsl.end(); ++hs)
+	 if (superhsl.push_back(*hs) == false)
 	    break;
-	 }
+      if (hs != hsl.end())
+      {
+	 superhsl.clear();
+	 break;
       }
    }
    return superhsl;
@@ -1154,7 +1194,7 @@ APT_PURE unsigned long long pkgAcquire::Queue::QItem::GetMaximumSize() const	/*{
    return Maximum;
 }
 									/*}}}*/
-APT_PURE int pkgAcquire::Queue::QItem::GetPriority() const	/*{{{*/
+APT_PURE int pkgAcquire::Queue::QItem::GetPriority() const		/*{{{*/
 {
    int Priority = 0;
    for (auto const &O: Owners)
@@ -1218,6 +1258,13 @@ pkgAcquireStatus::pkgAcquireStatus() : d(NULL), Percent(-1), Update(true), MoreP
 /* This computes some internal state variables for the derived classes to
    use. It generates the current downloaded bytes and total bytes to download
    as well as the current CPS estimate. */
+static struct timeval GetTimevalFromSteadyClock()
+{
+   auto const Time = std::chrono::steady_clock::now().time_since_epoch();
+   auto const Time_sec = std::chrono::duration_cast<std::chrono::seconds>(Time);
+   auto const Time_usec = std::chrono::duration_cast<std::chrono::microseconds>(Time - Time_sec);
+   return { Time_sec.count(), Time_usec.count() };
+}
 bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
 {
    TotalBytes = 0;
@@ -1255,13 +1302,13 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
    {
       if (I->CurrentItem != 0 && I->CurrentItem->Owner->Complete == false)
       {
-	 CurrentBytes += I->CurrentSize;
-	 ResumeSize += I->ResumePoint;
+	 CurrentBytes += I->CurrentItem->CurrentSize;
+	 ResumeSize += I->CurrentItem->ResumePoint;
 
 	 // Files with unknown size always have 100% completion
 	 if (I->CurrentItem->Owner->FileSize == 0 &&
 	     I->CurrentItem->Owner->Complete == false)
-	    TotalBytes += I->CurrentSize;
+	    TotalBytes += I->CurrentItem->CurrentSize;
       }
    }
    
@@ -1276,21 +1323,22 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
       CurrentBytes = TotalBytes;
 
    // Compute the CPS
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);
+   struct timeval NewTime = GetTimevalFromSteadyClock();
+
    if ((NewTime.tv_sec - Time.tv_sec == 6 && NewTime.tv_usec > Time.tv_usec) ||
        NewTime.tv_sec - Time.tv_sec > 6)
-   {    
-      double Delta = NewTime.tv_sec - Time.tv_sec + 
-	             (NewTime.tv_usec - Time.tv_usec)/1000000.0;
-      
+   {
+      std::chrono::duration<double> Delta =
+	 std::chrono::seconds(NewTime.tv_sec - Time.tv_sec) +
+	 std::chrono::microseconds(NewTime.tv_usec - Time.tv_usec);
+
       // Compute the CPS value
-      if (Delta < 0.01)
+      if (Delta < std::chrono::milliseconds(10))
 	 CurrentCPS = 0;
       else
-	 CurrentCPS = ((CurrentBytes - ResumeSize) - LastBytes)/Delta;
+	 CurrentCPS = ((CurrentBytes - ResumeSize) - LastBytes)/ Delta.count();
       LastBytes = CurrentBytes - ResumeSize;
-      ElapsedTime = (unsigned long long)Delta;
+      ElapsedTime = llround(Delta.count());
       Time = NewTime;
    }
 
@@ -1300,8 +1348,8 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
       Percent = 0;
    else
       // use both files and bytes because bytes can be unreliable
-      Percent = (0.8 * (CurrentBytes/float(TotalBytes)*100.0) +
-                 0.2 * (CurrentItems/float(TotalItems)*100.0));
+      Percent = (0.8 * (CurrentBytes/double(TotalBytes)*100.0) +
+                 0.2 * (CurrentItems/double(TotalItems)*100.0));
 
    // debug
    if (_config->FindB("Debug::acquire::progress", false) == true)
@@ -1322,21 +1370,19 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
       return true;
 
    int fd = _config->FindI("APT::Status-Fd",-1);
-   if(fd > 0) 
+   if(fd > 0)
    {
-      ostringstream status;
-
-      char msg[200];
-      long i = CurrentItems < TotalItems ? CurrentItems + 1 : CurrentItems;
       unsigned long long ETA = 0;
-      if(CurrentCPS > 0)
+      if(CurrentCPS > 0 && TotalBytes > CurrentBytes)
          ETA = (TotalBytes - CurrentBytes) / CurrentCPS;
 
+      std::string msg;
+      long i = CurrentItems < TotalItems ? CurrentItems + 1 : CurrentItems;
       // only show the ETA if it makes sense
-      if (ETA > 0 && ETA < 172800 /* two days */ )
-	 snprintf(msg,sizeof(msg), _("Retrieving file %li of %li (%s remaining)"), i, TotalItems, TimeToStr(ETA).c_str());
+      if (ETA > 0 && ETA < std::chrono::seconds(std::chrono::hours(24 * 2)).count())
+	 strprintf(msg, _("Retrieving file %li of %li (%s remaining)"), i, TotalItems, TimeToStr(ETA).c_str());
       else
-	 snprintf(msg,sizeof(msg), _("Retrieving file %li of %li"), i, TotalItems);
+	 strprintf(msg, _("Retrieving file %li of %li"), i, TotalItems);
 
       // build the status str
       std::ostringstream str;
@@ -1355,8 +1401,7 @@ bool pkgAcquireStatus::Pulse(pkgAcquire *Owner)
 /* We just reset the counters */
 void pkgAcquireStatus::Start()
 {
-   gettimeofday(&Time,0);
-   gettimeofday(&StartTime,0);
+   Time = StartTime = GetTimevalFromSteadyClock();
    LastBytes = 0;
    CurrentCPS = 0;
    CurrentBytes = 0;
@@ -1373,29 +1418,51 @@ void pkgAcquireStatus::Start()
 void pkgAcquireStatus::Stop()
 {
    // Compute the CPS and elapsed time
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);
-   
-   double Delta = NewTime.tv_sec - StartTime.tv_sec + 
-                  (NewTime.tv_usec - StartTime.tv_usec)/1000000.0;
-   
+   struct timeval NewTime = GetTimevalFromSteadyClock();
+
+   std::chrono::duration<double> Delta =
+      std::chrono::seconds(NewTime.tv_sec - StartTime.tv_sec) +
+      std::chrono::microseconds(NewTime.tv_usec - StartTime.tv_usec);
+
    // Compute the CPS value
-   if (Delta < 0.01)
+   if (Delta < std::chrono::milliseconds(10))
       CurrentCPS = 0;
    else
-      CurrentCPS = FetchedBytes/Delta;
+      CurrentCPS = FetchedBytes / Delta.count();
    LastBytes = CurrentBytes;
-   ElapsedTime = (unsigned long long)Delta;
+   ElapsedTime = llround(Delta.count());
 }
 									/*}}}*/
 // AcquireStatus::Fetched - Called when a byte set has been fetched	/*{{{*/
 // ---------------------------------------------------------------------
 /* This is used to get accurate final transfer rate reporting. */
 void pkgAcquireStatus::Fetched(unsigned long long Size,unsigned long long Resume)
-{   
+{
    FetchedBytes += Size - Resume;
 }
 									/*}}}*/
+bool pkgAcquireStatus::ReleaseInfoChanges(metaIndex const * const LastRelease, metaIndex const * const CurrentRelease, std::vector<ReleaseInfoChange> &&Changes)/*{{{*/
+{
+   (void) LastRelease;
+   (void) CurrentRelease;
+   return ReleaseInfoChangesAsGlobalErrors(std::move(Changes));
+}
+									/*}}}*/
+bool pkgAcquireStatus::ReleaseInfoChangesAsGlobalErrors(std::vector<ReleaseInfoChange> &&Changes)/*{{{*/
+{
+   bool AllOkay = true;
+   for (auto const &c: Changes)
+      if (c.DefaultAction)
+	 _error->Notice("%s", c.Message.c_str());
+      else
+      {
+	 _error->Error("%s", c.Message.c_str());
+	 AllOkay = false;
+      }
+   return AllOkay;
+}
+									/*}}}*/
+
 
 pkgAcquire::UriIterator::UriIterator(pkgAcquire::Queue *Q) : d(NULL), CurQ(Q), CurItem(0)
 {
@@ -1406,6 +1473,6 @@ pkgAcquire::UriIterator::UriIterator(pkgAcquire::Queue *Q) : d(NULL), CurQ(Q), C
    }
 }
 
-APT_CONST pkgAcquire::UriIterator::~UriIterator() {}
-APT_CONST pkgAcquire::MethodConfig::~MethodConfig() {}
-APT_CONST pkgAcquireStatus::~pkgAcquireStatus() {}
+pkgAcquire::UriIterator::~UriIterator() {}
+pkgAcquire::MethodConfig::~MethodConfig() { delete d; }
+pkgAcquireStatus::~pkgAcquireStatus() {}

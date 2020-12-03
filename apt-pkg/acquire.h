@@ -10,11 +10,11 @@
    
    Each file to download is represented by an Acquire::Item class subclassed
    into a specialization. The Item class can add itself to several URI
-   acquire queues each prioritized by the download scheduler. When the 
-   system is run the proper URI handlers are spawned and the the acquire 
+   acquire queues each prioritized by the download scheduler. When the
+   system is run the proper URI handlers are spawned and the acquire
    queues are fed into the handlers by the schedular until the queues are
    empty. This allows for an Item to be downloaded from an alternate source
-   if the first try turns out to fail. It also alows concurrent downloading
+   if the first try turns out to fail. It also allows concurrent downloading
    of multiple items from multiple sources as well as dynamic balancing
    of load between the sources.
    
@@ -65,27 +65,21 @@
 #ifndef PKGLIB_ACQUIRE_H
 #define PKGLIB_ACQUIRE_H
 
+#include <apt-pkg/hashes.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/weakptr.h>
-#include <apt-pkg/hashes.h>
 
 #include <string>
 #include <vector>
 
 #include <stddef.h>
-#include <sys/time.h>
 #include <sys/select.h>
+#include <sys/time.h>
 
-#ifndef APT_10_CLEANER_HEADERS
-#include <unistd.h>
-#endif
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::vector;
-using std::string;
-#endif
 
 class pkgAcquireStatus;
+class metaIndex;
 
 /** \brief The core download scheduler.					{{{
  *
@@ -95,7 +89,7 @@ class pkgAcquireStatus;
  *
  *  \todo Why all the protected data items and methods?
  */
-class pkgAcquire
+class APT_PUBLIC pkgAcquire
 {   
    private:
    /** \brief FD of the Lock file we acquire in Setup (if any) */
@@ -239,12 +233,7 @@ class pkgAcquire
     *
     * \return false if there is an error condition on one of the fds
     */
-   bool RunFdsSane(fd_set *RSet,fd_set *WSet);
-
-   // just here for compatbility, needs to be removed on the next
-   // ABI/API break. RunFdsSane() is what should be used as it
-   // returns if there is an error condition on one of the fds
-   virtual void RunFds(fd_set *RSet,fd_set *WSet);
+   virtual bool RunFds(fd_set *RSet,fd_set *WSet);
 
    /** \brief Check for idle queues with ready-to-fetch items.
     *
@@ -352,20 +341,6 @@ class pkgAcquire
     */
    unsigned long long PartialPresent();
 
-   /** \brief Delayed constructor
-    *
-    *  \param Progress indicator associated with this download or
-    *  \b NULL for none.  This object is not owned by the
-    *  download process and will not be deleted when the pkgAcquire
-    *  object is destroyed.  Naturally, it should live for at least as
-    *  long as the pkgAcquire object does.
-    *  \param Lock defines a lock file that should be acquired to ensure
-    *  only one Acquire class is in action at the time or an empty string
-    *  if no lock file should be used. If set also all needed directories
-    *  will be created.
-    */
-   APT_DEPRECATED_MSG("Use constructors, .SetLog and .GetLock as needed") bool Setup(pkgAcquireStatus *Progress = NULL, std::string const &Lock = "");
-
    void SetLog(pkgAcquireStatus *Progress) { Log = Progress; }
 
    /** \brief acquire lock and perform directory setup
@@ -395,9 +370,9 @@ class pkgAcquire
 /** \brief Represents a single download source from which an item
  *  should be downloaded.
  *
- *  An item may have several assocated ItemDescs over its lifetime.
+ *  An item may have several associated ItemDescs over its lifetime.
  */
-struct pkgAcquire::ItemDesc : public WeakPointable
+struct APT_PUBLIC pkgAcquire::ItemDesc : public WeakPointable
 {
    /** \brief URI from which to download this item. */
    std::string URI;
@@ -413,7 +388,7 @@ struct pkgAcquire::ItemDesc : public WeakPointable
  *
  *  \todo Why so many protected values?
  */
-class pkgAcquire::Queue
+class APT_PUBLIC pkgAcquire::Queue
 {
    friend class pkgAcquire;
    friend class pkgAcquire::UriIterator;
@@ -437,6 +412,21 @@ class pkgAcquire::Queue
 
       /** \brief The underlying items interested in the download */
       std::vector<Item*> Owners;
+
+      /** \brief How many bytes of the file have been downloaded.  Zero
+       *  if the current progress of the file cannot be determined.
+       */
+      unsigned long long CurrentSize = 0;
+
+      /** \brief The total number of bytes to be downloaded.  Zero if the
+       *  total size of the final is unknown.
+       */
+      unsigned long long TotalSize = 0;
+
+      /** \brief How much of the file was already downloaded prior to
+       *  starting this worker.
+       */
+      unsigned long long ResumePoint = 0;
 
       typedef std::vector<Item*>::const_iterator owner_iterator;
 
@@ -596,7 +586,7 @@ class pkgAcquire::Queue
 };
 									/*}}}*/
 /** \brief Iterates over all the URIs being fetched by a pkgAcquire object.	{{{*/
-class pkgAcquire::UriIterator
+class APT_PUBLIC pkgAcquire::UriIterator
 {
    /** \brief dpointer placeholder (for later in case we need it) */
    void * const d;
@@ -633,11 +623,12 @@ class pkgAcquire::UriIterator
 };
 									/*}}}*/
 /** \brief Information about the properties of a single acquire method.	{{{*/
-struct pkgAcquire::MethodConfig
+struct APT_PUBLIC pkgAcquire::MethodConfig
 {
+   class Private;
    /** \brief dpointer placeholder (for later in case we need it) */
-   void * const d;
-   
+   Private *const d;
+
    /** \brief The next link on the acquire method list.
     *
     *  \todo Why not an STL container?
@@ -687,6 +678,9 @@ struct pkgAcquire::MethodConfig
     */
    MethodConfig();
 
+   APT_HIDDEN bool GetAuxRequests() const;
+   APT_HIDDEN void SetAuxRequests(bool const value);
+
    virtual ~MethodConfig();
 };
 									/*}}}*/
@@ -694,7 +688,7 @@ struct pkgAcquire::MethodConfig
  *
  *  \todo Why protected members?
  */
-class pkgAcquireStatus
+class APT_PUBLIC pkgAcquireStatus
 {
    /** \brief dpointer placeholder (for later in case we need it) */
    void * const d;
@@ -794,7 +788,35 @@ class pkgAcquireStatus
     *  with prejudice.
     */
    virtual bool MediaChange(std::string Media,std::string Drive) = 0;
-   
+
+   struct ReleaseInfoChange
+   {
+      std::string Type; /*!< Type of the change like "Origin", "Codename", "Version", … */
+      std::string From; /*!< old value */
+      std::string To; /*!< new value */
+      std::string Message; /*!< translated message describing the change */
+      bool DefaultAction; /*!< true if the change is informational, false if it must be explicitly confirmed */
+   };
+   /** \brief ask the user for confirmation of changes to infos about a repository
+    *
+    *  This method should present the user with a choice of accepting the change
+    *  or not and indicate the user opinion via the return value. If DefaultAction is true
+    *  it is acceptable to only notify the user about the change, but to accept the change
+    *  automatically on behalf of the user.
+    *
+    *  The default implementation will fail if any Change has DefaultAction == false. Regardless of
+    *  success it will print for each change the message attached to it via GlobalError either as an
+    *  error (if DefaultAction == false) or as a notice otherwise.
+    *
+    *  @param LastRelease can be used to extract further information from the previous Release file
+    *  @param CurrentRelease can be used to extract further information from the current Release file
+    *  @param Changes is an array of changes alongside explanatory messages
+    *                 which should be presented in some way to the user.
+    *  @return \b true if all changes are accepted by user, otherwise or if user can't be asked \b false
+    */
+   virtual bool ReleaseInfoChanges(metaIndex const * const LastRelease, metaIndex const * const CurrentRelease, std::vector<ReleaseInfoChange> &&Changes);
+   APT_HIDDEN static bool ReleaseInfoChangesAsGlobalErrors(std::vector<ReleaseInfoChange> &&Changes);
+
    /** \brief Invoked when an item is confirmed to be up-to-date.
 
     * For instance, when an HTTP download is informed that the file on

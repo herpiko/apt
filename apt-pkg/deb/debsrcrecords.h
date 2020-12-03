@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: debsrcrecords.h,v 1.8 2004/03/17 05:58:54 mdz Exp $
 /* ######################################################################
    
    Debian Source Package Records - Parser implementation for Debian style
@@ -11,13 +10,13 @@
 #ifndef PKGLIB_DEBSRCRECORDS_H
 #define PKGLIB_DEBSRCRECORDS_H
 
+#include <apt-pkg/fileutl.h>
 #include <apt-pkg/srcrecords.h>
 #include <apt-pkg/tagfile.h>
-#include <apt-pkg/fileutl.h>
 
-#include <stddef.h>
 #include <string>
 #include <vector>
+#include <stddef.h>
 
 class pkgIndexFile;
 
@@ -54,7 +53,6 @@ class APT_HIDDEN debSrcRecordParser : public pkgSrcRecords::Parser
       return std::string(Start,Stop);
    };
    virtual bool Files(std::vector<pkgSrcRecords::File> &F) APT_OVERRIDE;
-   bool Files2(std::vector<pkgSrcRecords::File2> &F);
 
    debSrcRecordParser(std::string const &File,pkgIndexFile const *Index);
    virtual ~debSrcRecordParser();

@@ -1,16 +1,17 @@
 #include <config.h>
 
+#include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include <gtest/gtest.h>
 
 #include "file-helpers.h"
 
-#define P(x)	std::string(tempdir).append("/").append(x)
+#define P(x)	tempdir + "/" + x
 
 TEST(FileUtlTest,GetListOfFilesInDir)
 {
@@ -49,14 +50,15 @@ TEST(FileUtlTest,GetListOfFilesInDir)
    createLink(tempdir, "non-existing-file", "brokenlink.list");
 
    // Files with no extension
+   _error->PushToStack();
    std::vector<std::string> files = GetListOfFilesInDir(tempdir, "", true);
-   ASSERT_EQ(2, files.size());
+   ASSERT_EQ(2u, files.size());
    EXPECT_EQ(P("01yet-anothernormalfile"), files[0]);
    EXPECT_EQ(P("anormalfile"), files[1]);
 
    // Files with no extension - should be the same as above
    files = GetListOfFilesInDir(tempdir, "", true, true);
-   ASSERT_EQ(2, files.size());
+   ASSERT_EQ(2u, files.size());
    EXPECT_EQ(P("01yet-anothernormalfile"), files[0]);
    EXPECT_EQ(P("anormalfile"), files[1]);
 
@@ -66,13 +68,13 @@ TEST(FileUtlTest,GetListOfFilesInDir)
 
    // Files with impossible or no extension
    files = GetListOfFilesInDir(tempdir, "impossible", true, true);
-   ASSERT_EQ(2, files.size());
+   ASSERT_EQ(2u, files.size());
    EXPECT_EQ(P("01yet-anothernormalfile"), files[0]);
    EXPECT_EQ(P("anormalfile"), files[1]);
 
    // Files with list extension - nothing more
    files = GetListOfFilesInDir(tempdir, "list", true);
-   ASSERT_EQ(4, files.size());
+   ASSERT_EQ(4u, files.size());
    EXPECT_EQ(P("01yet-anotherapt.list"), files[0]);
    EXPECT_EQ(P("anormalapt.list"), files[1]);
    EXPECT_EQ(P("linkedfile.list"), files[2]);
@@ -80,7 +82,7 @@ TEST(FileUtlTest,GetListOfFilesInDir)
 
    // Files with conf or no extension
    files = GetListOfFilesInDir(tempdir, "conf", true, true);
-   ASSERT_EQ(5, files.size());
+   ASSERT_EQ(5u, files.size());
    EXPECT_EQ(P("01yet-anotherapt.conf"), files[0]);
    EXPECT_EQ(P("01yet-anothernormalfile"), files[1]);
    EXPECT_EQ(P("anormalapt.conf"), files[2]);
@@ -89,19 +91,24 @@ TEST(FileUtlTest,GetListOfFilesInDir)
 
    // Files with disabled extension - nothing more
    files = GetListOfFilesInDir(tempdir, "disabled", true);
-   ASSERT_EQ(3, files.size());
+   ASSERT_EQ(3u, files.size());
    EXPECT_EQ(P("disabledfile.conf.disabled"), files[0]);
    EXPECT_EQ(P("disabledfile.disabled"), files[1]);
    EXPECT_EQ(P("disabledfile.list.disabled"), files[2]);
 
    // Files with disabled or no extension
    files = GetListOfFilesInDir(tempdir, "disabled", true, true);
-   ASSERT_EQ(5, files.size());
+   ASSERT_EQ(5u, files.size());
    EXPECT_EQ(P("01yet-anothernormalfile"), files[0]);
    EXPECT_EQ(P("anormalfile"), files[1]);
    EXPECT_EQ(P("disabledfile.conf.disabled"), files[2]);
    EXPECT_EQ(P("disabledfile.disabled"), files[3]);
    EXPECT_EQ(P("disabledfile.list.disabled"), files[4]);
 
+   // discard the unknown file extension messages
+   if (_error->PendingError())
+      _error->MergeWithStack();
+   else
+      _error->RevertToStack();
    removeDirectory(tempdir);
 }

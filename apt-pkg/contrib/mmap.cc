@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: mmap.cc,v 1.22 2001/05/27 05:19:30 jgg Exp $
 /* ######################################################################
    
    MMap Class - Provides 'real' mmap or a faked mmap using read().
@@ -19,17 +18,16 @@
 #define _DEFAULT_SOURCE
 #include <config.h>
 
-#include <apt-pkg/mmap.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/mmap.h>
 
-#include <string>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
 #include <cstring>
+#include <string>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -156,9 +154,9 @@ bool MMap::Close(bool DoSync)
    return true;
 }
 									/*}}}*/
-// MMap::Sync - Syncronize the map with the disk			/*{{{*/
+// MMap::Sync - Synchronize the map with the disk			/*{{{*/
 // ---------------------------------------------------------------------
-/* This is done in syncronous mode - the docs indicate that this will 
+/* This is done in synchronous mode - the docs indicate that this will 
    not return till all IO is complete */
 bool MMap::Sync()
 {
@@ -183,7 +181,7 @@ bool MMap::Sync()
    return true;
 }
 									/*}}}*/
-// MMap::Sync - Syncronize a section of the file to disk		/*{{{*/
+// MMap::Sync - Synchronize a section of the file to disk		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
 bool MMap::Sync(unsigned long Start,unsigned long Stop)
@@ -359,25 +357,26 @@ unsigned long DynamicMMap::Allocate(unsigned long ItemSize)
 
    // Look for a matching pool entry
    Pool *I;
-   Pool *Empty = 0;
    for (I = Pools; I != Pools + PoolCount; ++I)
    {
-      if (I->ItemSize == 0)
-	 Empty = I;
       if (I->ItemSize == ItemSize)
 	 break;
    }
-   // No pool is allocated, use an unallocated one
-   if (I == Pools + PoolCount)
+   // No pool is allocated, use an unallocated one.
+   if (unlikely(I == Pools + PoolCount))
    {
+      for (I = Pools; I != Pools + PoolCount; ++I)
+      {
+	 if (I->ItemSize == 0)
+	    break;
+      }
       // Woops, we ran out, the calling code should allocate more.
-      if (Empty == 0)
+      if (I == Pools + PoolCount)
       {
 	 _error->Error("Ran out of allocation pools");
 	 return 0;
       }
-      
-      I = Empty;
+
       I->ItemSize = ItemSize;
       I->Count = 0;
    }
@@ -415,7 +414,7 @@ unsigned long DynamicMMap::Allocate(unsigned long ItemSize)
 unsigned long DynamicMMap::WriteString(const char *String,
 				       unsigned long Len)
 {
-   if (Len == (unsigned long)-1)
+   if (Len == std::numeric_limits<unsigned long>::max())
       Len = strlen(String);
 
    _error->PushToStack();

@@ -11,16 +11,19 @@ static const char *iTFRewritePackageOrder[] = {
    "Architecture",
    "Subarchitecture", // Used only by d-i
    "Version",
-   "Revision",         // Obsolete (warning in dpkg)
+   "Revision",	       // Obsolete (warning in dpkg)
    "Package-Revision", // Obsolete (warning in dpkg)
    "Package_Revision", // Obsolete (warning in dpkg)
-   "Kernel-Version", // Used only by d-i
+   "Kernel-Version",   // Used only by d-i
    "Built-Using",
    "Built-For-Profiles",
+   "Auto-Built-Package",
    "Multi-Arch",
    "Status",
    "Priority",
    "Class", // dpkg nickname for Priority
+   "Build-Essential",
+   "Protected",
    "Essential",
    "Installer-Menu-Item", // Used only by d-i
    "Section",
@@ -56,7 +59,7 @@ static const char *iTFRewritePackageOrder[] = {
    "Description",
    "Tag",
    "Task",
-   0
+   0,
 };
 static const char *iTFRewriteSourceOrder[] = {
    "Package",
@@ -83,6 +86,7 @@ static const char *iTFRewriteSourceOrder[] = {
    "Testsuite",
    "Testsuite-Triggers",
    "Homepage",
+   "Description",
    "Vcs-Browser",
    "Vcs-Browse", // dak only (nickname?)
    "Vcs-Arch",
@@ -100,7 +104,7 @@ static const char *iTFRewriteSourceOrder[] = {
    "Checksums-Sha1",
    "Checksums-Sha256",
    "Checksums-Sha512",
-   0
+   0,
 };
 
 /* Two levels of initialization are used because gcc will set the symbol

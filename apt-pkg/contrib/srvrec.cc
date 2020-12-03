@@ -10,21 +10,21 @@
 
 #include <netdb.h>
 
-#include <netinet/in.h>
 #include <arpa/nameser.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <resolv.h>
 #include <time.h>
 
 #include <algorithm>
+#include <memory>
 #include <tuple>
 
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/strutl.h>
 
-
 #include "srvrec.h"
-
 
 bool SrvRec::operator==(SrvRec const &other) const
 {
@@ -34,6 +34,15 @@ bool SrvRec::operator==(SrvRec const &other) const
 
 bool GetSrvRecords(std::string host, int port, std::vector<SrvRec> &Result)
 {
+   // try SRV only for hostnames, not for IP addresses
+   {
+      struct in_addr addr4;
+      struct in6_addr addr6;
+      if (inet_pton(AF_INET, host.c_str(), &addr4) == 1 ||
+	  inet_pton(AF_INET6, host.c_str(), &addr6) == 1)
+	 return true;
+   }
+
    std::string target;
    int res;
    struct servent s_ent_buf;
@@ -53,11 +62,15 @@ bool GetSrvRecords(std::string name, std::vector<SrvRec> &Result)
    unsigned char answer[PACKETSZ];
    int answer_len, compressed_name_len;
    int answer_count;
+   struct __res_state res;
 
-   if (res_init() != 0)
+   if (res_ninit(&res) != 0)
       return _error->Errno("res_init", "Failed to init resolver");
 
-   answer_len = res_query(name.c_str(), C_IN, T_SRV, answer, sizeof(answer));
+   // Close on return
+   std::shared_ptr<void> guard(&res, res_nclose);
+
+   answer_len = res_nquery(&res, name.c_str(), C_IN, T_SRV, answer, sizeof(answer));
    if (answer_len == -1)
       return false;
    if (answer_len < (int)sizeof(HEADER))
@@ -124,17 +137,12 @@ bool GetSrvRecords(std::string name, std::vector<SrvRec> &Result)
    // sort them by priority
    std::stable_sort(Result.begin(), Result.end());
 
-   for(std::vector<SrvRec>::iterator I = Result.begin();
-      I != Result.end(); ++I)
-   {
-      if (_config->FindB("Debug::Acquire::SrvRecs", false) == true)
-      {
-         std::cerr << "SrvRecs: got " << I->target
-                   << " prio: " << I->priority
-                   << " weight: " << I->weight
-                   << std::endl;
-      }
-   }
+   if (_config->FindB("Debug::Acquire::SrvRecs", false))
+      for(auto const &R : Result)
+	 std::cerr << "SrvRecs: got " << R.target
+		   << " prio: " << R.priority
+		   << " weight: " << R.weight
+		   << '\n';
 
    return true;
 }

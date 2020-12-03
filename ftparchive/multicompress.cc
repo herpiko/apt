@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: multicompress.cc,v 1.4 2003/02/10 07:34:41 doogie Exp $
 /* ######################################################################
 
    MultiCompressor
@@ -16,19 +15,20 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/fileutl.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/error.h>
-#include <apt-pkg/md5.h>
 #include <apt-pkg/aptconfiguration.h>
-#include <apt-pkg/hashsum_template.h>
+#include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
+#include <apt-pkg/hashes.h>
+#include <apt-pkg/strutl.h>
 
 #include <ctype.h>
-#include <vector>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
+
+#include <algorithm>
+#include <vector>
 
 #include "multicompress.h"
 #include <apti18n.h>
@@ -36,50 +36,46 @@
 
 using namespace std;
 
+static std::vector<APT::Configuration::Compressor>::const_iterator findMatchingCompressor(std::string::const_iterator &I,
+      std::string::const_iterator const &End, std::vector<APT::Configuration::Compressor> const &Compressors)
+{
+      // Grab a word (aka: a compressor name)
+      for (; I != End && isspace(*I); ++I);
+      string::const_iterator Start = I;
+      for (; I != End && !isspace(*I); ++I);
+
+      auto const Comp = std::find_if(Compressors.begin(), Compressors.end(),
+	    [&](APT::Configuration::Compressor const &C) { return stringcmp(Start, I, C.Name.c_str()) == 0;
+      });
+      if (Comp == Compressors.end())
+	 _error->Warning(_("Unknown compression algorithm '%s'"),string(Start,I).c_str());
+      return Comp;
+}
 
 // MultiCompress::MultiCompress - Constructor				/*{{{*/
 // ---------------------------------------------------------------------
 /* Setup the file outputs, compression modes and fork the writer child */
-MultiCompress::MultiCompress(string const &Output,string const &Compress,
-			     mode_t const &Permissions,bool const &Write) :
-			Permissions(Permissions)
+MultiCompress::MultiCompress(string const &Output, string const &Compress,
+			     mode_t const &Permissions, bool const &Write) : Outputter{-1}, Permissions(Permissions)
 {
    Outputs = 0;
-   Outputter = -1;
    UpdateMTime = 0;
 
-   /* Parse the compression string, a space separated lists of compresison
-      types */
-   string::const_iterator I = Compress.begin();
-   for (; I != Compress.end();)
+   auto const Compressors = APT::Configuration::getCompressors();
+   // Parse the compression string, a space separated lists of compression types
+   for (auto I = Compress.cbegin(); I != Compress.cend();)
    {
-      for (; I != Compress.end() && isspace(*I); ++I);
-      
-      // Grab a word
-      string::const_iterator Start = I;
-      for (; I != Compress.end() && !isspace(*I); ++I);
-
-      // Find the matching compressor
-      std::vector<APT::Configuration::Compressor> Compressors = APT::Configuration::getCompressors();
-      std::vector<APT::Configuration::Compressor>::const_iterator Comp = Compressors.begin();
-      for (; Comp != Compressors.end(); ++Comp)
-	 if (stringcmp(Start,I,Comp->Name.c_str()) == 0)
-	    break;
-
-      // Hmm.. unknown.
+      auto const Comp = findMatchingCompressor(I, Compress.cend(), Compressors);
       if (Comp == Compressors.end())
-      {
-	 _error->Warning(_("Unknown compression algorithm '%s'"),string(Start,I).c_str());
 	 continue;
-      }
-      
-      // Create and link in a new output 
+
+      // Create and link in a new output
       Files *NewOut = new Files;
       NewOut->Next = Outputs;
       Outputs = NewOut;
       NewOut->CompressProg = *Comp;
-      NewOut->Output = Output+Comp->Extension;
-      
+      NewOut->Output = Output + Comp->Extension;
+
       struct stat St;
       if (stat(NewOut->Output.c_str(),&St) == 0)
 	 NewOut->OldMTime = St.st_mtime;
@@ -128,34 +124,21 @@ MultiCompress::~MultiCompress()
    one or more of the files is missing. */
 bool MultiCompress::GetStat(string const &Output,string const &Compress,struct stat &St)
 {
-   /* Parse the compression string, a space separated lists of compresison
-      types */
-   string::const_iterator I = Compress.begin();
+   auto const Compressors = APT::Configuration::getCompressors();
+
+   // Parse the compression string, a space separated lists of compression types
    bool DidStat = false;
-   for (; I != Compress.end();)
+   for (auto I = Compress.cbegin(); I != Compress.cend();)
    {
-      for (; I != Compress.end() && isspace(*I); ++I);
-      
-      // Grab a word
-      string::const_iterator Start = I;
-      for (; I != Compress.end() && !isspace(*I); ++I);
-
-      // Find the matching compressor
-      std::vector<APT::Configuration::Compressor> Compressors = APT::Configuration::getCompressors();
-      std::vector<APT::Configuration::Compressor>::const_iterator Comp = Compressors.begin();
-      for (; Comp != Compressors.end(); ++Comp)
-	 if (stringcmp(Start,I,Comp->Name.c_str()) == 0)
-	    break;
-
-      // Hmm.. unknown.
+      auto const Comp = findMatchingCompressor(I, Compress.cend(), Compressors);
       if (Comp == Compressors.end())
 	 continue;
 
-      string Name = Output+Comp->Extension;
+      string Name = Output + Comp->Extension;
       if (stat(Name.c_str(),&St) != 0)
 	 return false;
       DidStat = true;
-   }   
+   }
    return DidStat;
 }
 									/*}}}*/
@@ -283,7 +266,7 @@ bool MultiCompress::Child(int const &FD)
    SetNonBlock(FD,false);
    unsigned char Buffer[32*1024];
    unsigned long long FileSize = 0;
-   MD5Summation MD5;
+   Hashes MD5(Hashes::MD5SUM);
    while (1)
    {
       WaitFd(FD,false);
@@ -331,7 +314,7 @@ bool MultiCompress::Child(int const &FD)
       }
 
       // Compute the hash
-      MD5Summation OldMD5;
+      Hashes OldMD5(Hashes::MD5SUM);
       unsigned long long NewFileSize = 0;
       while (1)
       {
@@ -346,7 +329,7 @@ bool MultiCompress::Child(int const &FD)
       CompFd.Close();
 
       // Check the hash
-      if (OldMD5.Result() == MD5.Result() &&
+      if (OldMD5.GetHashString(Hashes::MD5SUM) == MD5.GetHashString(Hashes::MD5SUM) &&
 	  FileSize == NewFileSize)
       {
 	 for (Files *I = Outputs; I != 0; I = I->Next)

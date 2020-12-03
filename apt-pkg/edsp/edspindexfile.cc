@@ -16,9 +16,10 @@
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/pkgrecords.h>
 
+#include <memory>
+#include <string>
 #include <stddef.h>
 #include <unistd.h>
-#include <string>
 									/*}}}*/
 
 // EDSP-like Index							/*{{{*/
@@ -61,12 +62,12 @@ std::string edspIndex::GetComponent() const
 pkgCacheListParser * edspIndex::CreateListParser(FileFd &Pkg)
 {
    if (Pkg.IsOpen() == false)
-      return NULL;
+      return nullptr;
    _error->PushToStack();
-   pkgCacheListParser * const Parser = new edspListParser(&Pkg);
+   std::unique_ptr<pkgCacheListParser> Parser(new edspListParser(&Pkg));
    bool const newError = _error->PendingError();
    _error->MergeWithStack();
-   return newError ? NULL : Parser;
+   return newError ? nullptr : Parser.release();
 }
 									/*}}}*/
 // EIPP Index								/*{{{*/
@@ -80,12 +81,12 @@ std::string eippIndex::GetComponent() const
 pkgCacheListParser * eippIndex::CreateListParser(FileFd &Pkg)
 {
    if (Pkg.IsOpen() == false)
-      return NULL;
+      return nullptr;
    _error->PushToStack();
-   pkgCacheListParser * const Parser = new eippListParser(&Pkg);
+   std::unique_ptr<pkgCacheListParser> Parser(new eippListParser(&Pkg));
    bool const newError = _error->PendingError();
    _error->MergeWithStack();
-   return newError ? NULL : Parser;
+   return newError ? nullptr : Parser.release();
 }
 									/*}}}*/
 
@@ -95,7 +96,7 @@ class APT_HIDDEN edspIFType: public pkgIndexFile::Type
    public:
    virtual pkgRecords::Parser *CreatePkgParser(pkgCache::PkgFileIterator const &) const APT_OVERRIDE
    {
-      // we don't have a record parser for this type as the file is not presistent
+      // we don't have a record parser for this type as the file is not persistent
       return NULL;
    };
    edspIFType() {Label = "EDSP scenario file";};
@@ -111,7 +112,7 @@ class APT_HIDDEN eippIFType: public pkgIndexFile::Type
    public:
    virtual pkgRecords::Parser *CreatePkgParser(pkgCache::PkgFileIterator const &) const APT_OVERRIDE
    {
-      // we don't have a record parser for this type as the file is not presistent
+      // we don't have a record parser for this type as the file is not persistent
       return NULL;
    };
    eippIFType() {Label = "EIPP scenario file";};

@@ -1,10 +1,11 @@
-#include <string>
 #include <sstream>
+#include <string>
 
 // for memcpy
 #include <cstring>
 
 #include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
 #include <apt-pkg/gpgv.h>
 
 #include "sources.h"

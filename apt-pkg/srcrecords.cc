@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: srcrecords.cc,v 1.7.2.2 2003/12/26 16:27:34 mdz Exp $
 /* ######################################################################
    
    Source Package Records - Allows access to source package records
@@ -11,19 +10,19 @@
    ##################################################################### */
 									/*}}}*/
 // Include Files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
-#include <apt-pkg/srcrecords.h>
 #include <apt-pkg/debsrcrecords.h>
 #include <apt-pkg/error.h>
-#include <apt-pkg/sourcelist.h>
-#include <apt-pkg/metaindex.h>
 #include <apt-pkg/indexfile.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/metaindex.h>
+#include <apt-pkg/sourcelist.h>
+#include <apt-pkg/srcrecords.h>
 
-#include <string.h>
 #include <string>
 #include <vector>
+#include <string.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -53,7 +52,7 @@ pkgSrcRecords::pkgSrcRecords(pkgSourceList &List) : d(NULL), Files(0)
    // Doesn't work without any source index files
    if (Files.empty() == true)
    {
-      _error->Error(_("You must put some 'source' URIs"
+      _error->Error(_("You must put some 'deb-src' URIs"
 		    " in your sources.list"));
       return;
    }   
@@ -139,40 +138,12 @@ const char *pkgSrcRecords::Parser::BuildDepType(unsigned char const &Type)
    const char *fields[] = {"Build-Depends",
 			   "Build-Depends-Indep",
 			   "Build-Conflicts",
-			   "Build-Conflicts-Indep"};
+			   "Build-Conflicts-Indep",
+			   "Build-Depends-Arch",
+			   "Build-Conflicts-Arch"};
    if (unlikely(Type >= sizeof(fields)/sizeof(fields[0])))
       return "";
    return fields[Type];
-}
-									/*}}}*/
-bool pkgSrcRecords::Parser::Files2(std::vector<pkgSrcRecords::File2> &F2)/*{{{*/
-{
-   debSrcRecordParser * const deb = dynamic_cast<debSrcRecordParser*>(this);
-   if (deb != NULL)
-      return deb->Files2(F2);
-
-   std::vector<pkgSrcRecords::File> F;
-   if (Files(F) == false)
-      return false;
-   for (std::vector<pkgSrcRecords::File>::const_iterator f = F.begin(); f != F.end(); ++f)
-   {
-      pkgSrcRecords::File2 f2;
-#if __GNUC__ >= 4
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-      f2.MD5Hash = f->MD5Hash;
-      f2.Size = f->Size;
-      f2.Hashes.push_back(HashString("MD5Sum", f->MD5Hash));
-      f2.FileSize = f->Size;
-#if __GNUC__ >= 4
-	#pragma GCC diagnostic pop
-#endif
-      f2.Path = f->Path;
-      f2.Type = f->Type;
-      F2.push_back(f2);
-   }
-   return true;
 }
 									/*}}}*/
 

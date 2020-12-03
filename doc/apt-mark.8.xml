@@ -14,7 +14,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2015-09-25T00:00:00Z</date>
+   <date>2018-12-11T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -66,6 +66,14 @@
        </para></listitem>
      </varlistentry>
 
+     <varlistentry><term><option>minimize-manual</option></term>
+	 <listitem><para><literal>minimize-manual</literal> is used to mark
+      (transitive) dependencies of metapackages as automatically installed.
+      This can be used after an installation for example, to minimize the
+      number of manually installed packages; or continuously on systems
+      managed by system configuration metapackages.
+       </para></listitem>
+     </varlistentry>
        <varlistentry><term><option>showauto</option></term>
 	 <listitem><para><literal>showauto</literal> is used to print a
      list of automatically installed packages with each package on a new line.
@@ -90,7 +98,7 @@
 	 <listitem><para>
 	   Read/Write package stats from the filename given with the parameter
 	   &synopsis-param-filename; instead of from the default location, which
-	   is <filename>extended_status</filename> in the directory defined
+	   is <filename>extended_states</filename> in the directory defined
 	   by the Configuration Item: <literal>Dir::State</literal>.
 	 </para></listitem>
        </varlistentry>

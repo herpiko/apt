@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: orderlist.cc,v 1.14 2001/05/07 05:49:43 jgg Exp $
 /* ######################################################################
 
    Order List - Represents and Manipulates an ordered list of packages.
@@ -13,7 +12,7 @@
 
    This is a modified version of Manoj's Routine B. It consists of four
    independent ordering algorithms that can be applied at for different
-   points in the ordering. By appling progressivly fewer ordering
+   points in the ordering. By applying progressivly fewer ordering
    operations it is possible to give each consideration it's own
    priority and create an order that satisfies the lowest applicable
    consideration.
@@ -57,25 +56,24 @@
    There are complications in this algorithm when presented with cycles.
    For all known practical cases it works, all cases where it doesn't work
    is fixable by tweaking the package descriptions. However, it should be
-   possible to impove this further to make some better choices when 
+   possible to improve this further to make some better choices when 
    presented with cycles. 
    
    ##################################################################### */
 									/*}}}*/
 // Include Files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
-#include <apt-pkg/orderlist.h>
+#include <apt-pkg/configuration.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/error.h>
-#include <apt-pkg/configuration.h>
-#include <apt-pkg/cacheiterators.h>
+#include <apt-pkg/orderlist.h>
 #include <apt-pkg/pkgcache.h>
 
-#include <stdlib.h>
-#include <string.h>
 #include <algorithm>
 #include <iostream>
+#include <stdlib.h>
+#include <string.h>
 									/*}}}*/
 
 using namespace std;
@@ -93,7 +91,7 @@ pkgOrderList::pkgOrderList(pkgDepCache *pCache) : d(NULL), Cache(*pCache),
 
    /* Construct the arrays, egcs 1.0.1 bug requires the package count
       hack */
-   unsigned long Size = Cache.Head().PackageCount;
+   auto const Size = Cache.Head().PackageCount;
    Flags = new unsigned short[Size];
    End = List = new Package *[Size];
    memset(Flags,0,sizeof(*Flags)*Size);
@@ -134,7 +132,7 @@ bool pkgOrderList::IsMissing(PkgIterator Pkg)
 									/*}}}*/
 // OrderList::DoRun - Does an order run					/*{{{*/
 // ---------------------------------------------------------------------
-/* The caller is expeted to have setup the desired probe state */
+/* The caller is expected to have setup the desired probe state */
 bool pkgOrderList::DoRun()
 {   
    // Temp list
@@ -564,7 +562,7 @@ bool pkgOrderList::VisitProvides(DepIterator D,bool Critical)
 // OrderList::VisitNode - Recursive ordering director			/*{{{*/
 // ---------------------------------------------------------------------
 /* This is the core ordering routine. It calls the set dependency
-   consideration functions which then potentialy call this again. Finite
+   consideration functions which then potentially call this again. Finite
    depth is achieved through the colouring mechinism. */
 bool pkgOrderList::VisitNode(PkgIterator Pkg, char const* from)
 {
@@ -587,7 +585,7 @@ bool pkgOrderList::VisitNode(PkgIterator Pkg, char const* from)
 
    DepFunc Old = Primary;
    
-   // Perform immedate configuration of the package if so flagged.
+   // Perform immediate configuration of the package if so flagged.
    if (IsFlag(Pkg,Immediate) == true && Primary != &pkgOrderList::DepUnPackPre)
       Primary = &pkgOrderList::DepUnPackPreD;
 
@@ -666,7 +664,7 @@ bool pkgOrderList::DepUnPackCrit(DepIterator D)
 	    continue;
 	 
 	 /* For reverse dependencies we wish to check if the
-	    dependency is satisifed in the install state. The
+	    dependency is satisfied in the install state. The
 	    target package (caller) is going to be in the installed
 	    state. */
 	 if (CheckDep(D) == true)
@@ -875,7 +873,7 @@ bool pkgOrderList::DepUnPackDep(DepIterator D)
    orders configuration so that when a package comes to be configured it's
    dependents are configured. 
  
-   Loops are ingored. Depends loop entry points are chaotic. */
+   Loops are ignored. Depends loop entry points are chaotic. */
 bool pkgOrderList::DepConfigure(DepIterator D)
 {
    // Never consider reverse configuration dependencies.
@@ -891,7 +889,7 @@ bool pkgOrderList::DepConfigure(DepIterator D)
 									/*}}}*/
 // OrderList::DepRemove - Removal ordering				/*{{{*/
 // ---------------------------------------------------------------------
-/* Checks all given dependencies if they are broken by the remove of a
+/* Checks all given dependencies if they are broken by the removal of a
    package and if so fix it by visiting another provider or or-group
    member to ensure that the dependee keeps working which is especially
    important for Immediate packages like e.g. those depending on an
@@ -1056,8 +1054,8 @@ bool pkgOrderList::AddLoop(DepIterator D)
 /* */
 void pkgOrderList::WipeFlags(unsigned long F)
 {
-   unsigned long Size = Cache.Head().PackageCount;
-   for (unsigned long I = 0; I != Size; I++)
+   auto Size = Cache.Head().PackageCount;
+   for (decltype(Size) I = 0; I != Size; ++I)
       Flags[I] &= ~F;
 }
 									/*}}}*/

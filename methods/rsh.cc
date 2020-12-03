@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: rsh.cc,v 1.6.2.1 2004/01/16 18:58:50 mdz Exp $
 /* ######################################################################
 
    RSH method - Transfer files via rsh compatible program
@@ -13,27 +12,27 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
+#include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/hashes.h>
-#include <apt-pkg/configuration.h>
 #include <apt-pkg/strutl.h>
 
+#include "rsh.h"
+#include <errno.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <signal.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdarg.h>
-#include "rsh.h"
 
 #include <apti18n.h>
 									/*}}}*/
 
-unsigned long TimeOut = 120;
+unsigned long TimeOut = 30;
 Configuration::Item const *RshOptions = 0;
 time_t RSHMethod::FailTime = 0;
 std::string RSHMethod::FailFile;
@@ -91,7 +90,7 @@ bool RSHConn::Open()
 // RSHConn::Connect - Fire up rsh and connect				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool RSHConn::Connect(std::string Host, unsigned int Port, std::string User)
+bool RSHConn::Connect(std::string const &Host, unsigned int Port, std::string const &User)
 {
    char *PortStr = NULL;
    if (Port != 0)
@@ -170,7 +169,7 @@ bool RSHConn::Connect(std::string Host, unsigned int Port, std::string User)
    
    return true;
 }
-bool RSHConn::Connect(std::string Host, std::string User)
+bool RSHConn::Connect(std::string const &Host, std::string const &User)
 {
    return Connect(Host, 0, User);
 }
@@ -434,7 +433,7 @@ void RSHMethod::SigTerm(int)
 /* */
 bool RSHMethod::Fetch(FetchItem *Itm)
 {
-   URI Get = Itm->Uri;
+   URI Get(Itm->Uri);
    const char *File = Get.Path.c_str();
    FetchResult Res;
    Res.Filename = Itm->DestFile;

@@ -12,38 +12,27 @@
 #ifndef PKGLIB_SRCRECORDS_H
 #define PKGLIB_SRCRECORDS_H
 
-#include <apt-pkg/macros.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/macros.h>
 
 #include <string>
 #include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-using std::vector;
-#endif
 
 class pkgSourceList;
 class pkgIndexFile;
-class pkgSrcRecords
+class APT_PUBLIC pkgSrcRecords
 {
    public:
 
-APT_IGNORE_DEPRECATED_PUSH
    // Describes a single file
    struct File
    {
-      APT_DEPRECATED_MSG("Use Hashes member instead of hardcoded hash algorithm") std::string MD5Hash;
-      APT_DEPRECATED_MSG("Use FileSize member instead") unsigned long Size;
       std::string Path;
       std::string Type;
-   };
-   struct File2 : public File
-   {
       unsigned long long FileSize;
       HashStringList Hashes;
    };
-APT_IGNORE_DEPRECATED_POP
 
    // Abstract parser for each source record
    class Parser
@@ -56,7 +45,8 @@ APT_IGNORE_DEPRECATED_POP
       public:
 
       enum BuildDep {BuildDepend=0x0,BuildDependIndep=0x1,
-	             BuildConflict=0x2,BuildConflictIndep=0x3};
+	             BuildConflict=0x2,BuildConflictIndep=0x3,
+	             BuildDependArch=0x4,BuildConflictArch=0x5};
 
       struct BuildDepRec 
       {
@@ -85,7 +75,6 @@ APT_IGNORE_DEPRECATED_POP
       static const char *BuildDepType(unsigned char const &Type) APT_PURE;
 
       virtual bool Files(std::vector<pkgSrcRecords::File> &F) = 0;
-      bool Files2(std::vector<pkgSrcRecords::File2> &F);
 
       explicit Parser(const pkgIndexFile *Index);
       virtual ~Parser();

@@ -15,7 +15,7 @@ apt_add_translation_domain(
     TARGETS apt apt-cache apt-get apt-config apt-cdrom apt-helper apt-mark
             apt-private
             # Methods
-            file copy store gpgv cdrom http https ftp rred rsh mirror
+            connectlib file copy store gpgv cdrom http ftp rred rsh mirror
     SCRIPTS ../dselect/install ../dselect/update
     EXCLUDE_LANGUAGES ${languages_excluded}
 )
@@ -31,18 +31,11 @@ apt_add_translation_domain(
     EXCLUDE_LANGUAGES ${languages_excluded}
 )
 
-apt_add_translation_domain(
-    DOMAIN libapt-inst${APT_INST_MAJOR}
-    TARGETS apt-inst
-    EXCLUDE_LANGUAGES ${languages_excluded}
-)
-
 apt_add_update_po(
     TEMPLATE
         apt-all
     DOMAINS
         libapt-pkg${APT_PKG_MAJOR}
-        libapt-inst${APT_INST_MAJOR}
         apt
         apt-utils
     EXCLUDE_LANGUAGES

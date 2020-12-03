@@ -1,32 +1,83 @@
 #include <config.h>
 
-#include <apt-pkg/error.h>
-#include <apt-pkg/debmetaindex.h>
-#include <apt-pkg/debindexfile.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/fileutl.h>
 #include <apt-pkg/acquire-item.h>
-#include <apt-pkg/configuration.h>
 #include <apt-pkg/aptconfiguration.h>
-#include <apt-pkg/sourcelist.h>
+#include <apt-pkg/configuration.h>
+#include <apt-pkg/debindexfile.h>
+#include <apt-pkg/debmetaindex.h>
+#include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
+#include <apt-pkg/gpgv.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/macros.h>
 #include <apt-pkg/metaindex.h>
 #include <apt-pkg/pkgcachegen.h>
+#include <apt-pkg/sourcelist.h>
+#include <apt-pkg/strutl.h>
 #include <apt-pkg/tagfile.h>
-#include <apt-pkg/gpgv.h>
-#include <apt-pkg/macros.h>
 
+#include <algorithm>
 #include <map>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
-#include <algorithm>
-#include <sstream>
 
-#include <sys/stat.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <apti18n.h>
+
+static std::string transformFingergrpints(std::string finger) /*{{{*/
+{
+   std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
+   if (finger.length() == 40)
+   {
+      if (finger.find_first_not_of("0123456789ABCDEF") == std::string::npos)
+	 return finger;
+   }
+   else if (finger.length() == 41)
+   {
+      auto bang = finger.find_first_not_of("0123456789ABCDEF");
+      if (bang == 40 && finger[bang] == '!')
+	 return finger;
+   }
+   return "";
+}
+									/*}}}*/
+static std::string transformFingergrpintsWithFilenames(std::string const &finger) /*{{{*/
+{
+   // no check for existence as we could be chrooting later or such things
+   if (finger.empty() == false && finger[0] == '/')
+      return finger;
+   return transformFingergrpints(finger);
+}
+									/*}}}*/
+static std::string NormalizeSignedBy(std::string SignedBy, bool const SupportFilenames) /*{{{*/
+{
+   // we could go all fancy and allow short/long/string matches as gpgv/apt-key does,
+   // but fingerprints are harder to fake than the others and this option is set once,
+   // not interactively all the time so easy to type is not really a concern.
+   std::transform(SignedBy.begin(), SignedBy.end(), SignedBy.begin(), [](char const c) {
+      return (isspace_ascii(c) == 0) ? c : ',';
+   });
+   auto fingers = VectorizeString(SignedBy, ',');
+   auto const isAnEmptyString = [](std::string const &s) { return s.empty(); };
+   fingers.erase(std::remove_if(fingers.begin(), fingers.end(), isAnEmptyString), fingers.end());
+   if (unlikely(fingers.empty()))
+      return "";
+   if (SupportFilenames)
+      std::transform(fingers.begin(), fingers.end(), fingers.begin(), transformFingergrpintsWithFilenames);
+   else
+      std::transform(fingers.begin(), fingers.end(), fingers.begin(), transformFingergrpints);
+   if (std::any_of(fingers.begin(), fingers.end(), isAnEmptyString))
+      return "";
+   std::stringstream os;
+   std::copy(fingers.begin(), fingers.end() - 1, std::ostream_iterator<std::string>(os, ","));
+   os << *fingers.rbegin();
+   return os.str();
+}
+									/*}}}*/
 
 class APT_HIDDEN debReleaseIndexPrivate					/*{{{*/
 {
@@ -49,11 +100,16 @@ class APT_HIDDEN debReleaseIndexPrivate					/*{{{*/
    time_t ValidUntilMin;
    time_t ValidUntilMax;
 
+   metaIndex::TriState CheckDate;
+   time_t DateMaxFuture;
+   time_t NotBefore;
+
    std::vector<std::string> Architectures;
    std::vector<std::string> NoSupportForAll;
+   std::vector<std::string> SupportedComponents;
    std::map<std::string, std::string> const ReleaseOptions;
 
-   debReleaseIndexPrivate(std::map<std::string, std::string> const &Options) : CheckValidUntil(metaIndex::TRI_UNSET), ValidUntilMin(0), ValidUntilMax(0), ReleaseOptions(Options) {}
+   explicit debReleaseIndexPrivate(std::map<std::string, std::string> const &Options) : CheckValidUntil(metaIndex::TRI_UNSET), ValidUntilMin(0), ValidUntilMax(0), CheckDate(metaIndex::TRI_UNSET), DateMaxFuture(0), NotBefore(0), ReleaseOptions(Options) {}
 };
 									/*}}}*/
 // ReleaseIndex::MetaIndex* - display helpers				/*{{{*/
@@ -117,8 +173,6 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 {
    bool const flatArchive = (Dist[Dist.length() - 1] == '/');
    std::string const baseURI = constructMetaIndexURI(URI, Dist, "");
-   std::string const Release = (Dist == "/") ? "" : Dist;
-   std::string const Site = ::URI::ArchiveOnly(URI);
 
    std::string DefCompressionTypes;
    {
@@ -207,8 +261,7 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 		  constexpr static auto BreakPoint = "$(NATIVE_ARCHITECTURE)";
 		  // available in templates
 		  std::map<std::string, std::string> Options;
-		  Options.insert(std::make_pair("SITE", Site));
-		  Options.insert(std::make_pair("RELEASE", Release));
+		  Options.insert(ReleaseOptions.begin(), ReleaseOptions.end());
 		  if (tplMetaKey.find("$(COMPONENT)") != std::string::npos)
 		     Options.emplace("COMPONENT", E->Name);
 		  if (tplMetaKey.find("$(LANGUAGE)") != std::string::npos)
@@ -274,11 +327,14 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 		     if (dup != IndexTargets.end())
 		     {
 			std::string const dupEntry = dup->Option(IndexTarget::SOURCESENTRY);
-			//TRANSLATOR: an identifier like Packages; Releasefile key indicating
-			// a file like main/binary-amd64/Packages; filename and linenumber of
-			// two sources.list entries
-			_error->Warning(_("Target %s (%s) is configured multiple times in %s and %s"),
-			      T->c_str(), MetaKey.c_str(), dupEntry.c_str(), E->sourcesEntry.c_str());
+			if (T->find("legacy") == std::string::npos)
+			{
+			   //TRANSLATOR: an identifier like Packages; Releasefile key indicating
+			   // a file like main/binary-amd64/Packages; filename and linenumber of
+			   // two sources.list entries
+			   _error->Warning(_("Target %s (%s) is configured multiple times in %s and %s"),
+					   T->c_str(), MetaKey.c_str(), dupEntry.c_str(), E->sourcesEntry.c_str());
+			}
 			if (tplMetaKey.find(BreakPoint) == std::string::npos)
 			   break;
 			continue;
@@ -286,7 +342,6 @@ static void GetIndexTargetsFor(char const * const Type, std::string const &URI, 
 		  }
 
 		  // not available in templates, but in the indextarget
-		  Options.insert(ReleaseOptions.begin(), ReleaseOptions.end());
 		  Options.insert(std::make_pair("IDENTIFIER", Identifier));
 		  Options.insert(std::make_pair("TARGET_OF", Type));
 		  Options.insert(std::make_pair("CREATED_BY", *T));
@@ -392,8 +447,12 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
    // FIXME: find better tag name
    SupportsAcquireByHash = Section.FindB("Acquire-By-Hash", false);
 
+   Origin = Section.FindS("Origin");
+   Label = Section.FindS("Label");
+   Version = Section.FindS("Version");
    Suite = Section.FindS("Suite");
    Codename = Section.FindS("Codename");
+   ReleaseNotes = Section.FindS("Release-Notes");
    {
       std::string const archs = Section.FindS("Architectures");
       if (archs.empty() == false)
@@ -403,6 +462,29 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
       std::string const targets = Section.FindS("No-Support-for-Architecture-all");
       if (targets.empty() == false)
 	 d->NoSupportForAll = VectorizeString(targets, ' ');
+   }
+   for (auto const &comp: VectorizeString(Section.FindS("Components"), ' '))
+   {
+      if (comp.empty())
+	 continue;
+      auto const pos = comp.find_last_of('/');
+      if (pos != std::string::npos) // e.g. security.debian.org uses this style
+	 d->SupportedComponents.push_back(comp.substr(pos + 1));
+      d->SupportedComponents.push_back(std::move(comp));
+   }
+   {
+      decltype(pkgCache::ReleaseFile::Flags) flags = 0;
+      Section.FindFlag("NotAutomatic", flags, pkgCache::Flag::NotAutomatic);
+      signed short defaultpin = 500;
+      if ((flags & pkgCache::Flag::NotAutomatic) == pkgCache::Flag::NotAutomatic)
+      {
+	 Section.FindFlag("ButAutomaticUpgrades", flags, pkgCache::Flag::ButAutomaticUpgrades);
+	 if ((flags & pkgCache::Flag::ButAutomaticUpgrades) == pkgCache::Flag::ButAutomaticUpgrades)
+	    defaultpin = 100;
+	 else
+	    defaultpin = 1;
+      }
+      DefaultPin = defaultpin;
    }
 
    bool FoundHashSum = false;
@@ -428,8 +510,7 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
             Sum->MetaKeyFilename = Name;
             Sum->Size = Size;
 	    Sum->Hashes.FileSize(Size);
-            APT_IGNORE_DEPRECATED(Sum->Hash = hs;)
-            Entries[Name] = Sum;
+	    Entries[Name] = Sum;
          }
          Entries[Name]->Hashes.push_back(hs);
          FoundHashSum = true;
@@ -447,60 +528,83 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
       AuthPossible = true;
 
    std::string const StrDate = Section.FindS("Date");
-   if (RFC1123StrToTime(StrDate.c_str(), Date) == false)
+   if (RFC1123StrToTime(StrDate, Date) == false)
    {
       _error->Warning( _("Invalid '%s' entry in Release file %s"), "Date", Filename.c_str());
       Date = 0;
    }
 
-   bool CheckValidUntil = _config->FindB("Acquire::Check-Valid-Until", true);
-   if (d->CheckValidUntil == metaIndex::TRI_NO)
-      CheckValidUntil = false;
-   else if (d->CheckValidUntil == metaIndex::TRI_YES)
-      CheckValidUntil = true;
+   bool CheckDate = _config->FindB("Acquire::Check-Date", true);
+   if (d->CheckDate == metaIndex::TRI_NO)
+      CheckDate = false;
+   else if (d->CheckDate == metaIndex::TRI_YES)
+      CheckDate = true;
 
-   if (CheckValidUntil == true)
+   if (CheckDate)
    {
-      std::string const Label = Section.FindS("Label");
-      std::string const StrValidUntil = Section.FindS("Valid-Until");
-
-      // if we have a Valid-Until header in the Release file, use it as default
-      if (StrValidUntil.empty() == false)
+      auto const Label = GetLabel();
+      // get the user settings for this archive
+      time_t MaxFuture = d->DateMaxFuture;
+      if (MaxFuture == 0)
       {
-	 if(RFC1123StrToTime(StrValidUntil.c_str(), ValidUntil) == false)
+	 MaxFuture = _config->FindI("Acquire::Max-FutureTime", 10);
+	 if (Label.empty() == false)
+	    MaxFuture = _config->FindI(("Acquire::Max-FutureTime::" + Label).c_str(), MaxFuture);
+      }
+
+      d->NotBefore = Date - MaxFuture;
+
+      bool CheckValidUntil = _config->FindB("Acquire::Check-Valid-Until", true);
+      if (d->CheckValidUntil == metaIndex::TRI_NO)
+	 CheckValidUntil = false;
+      else if (d->CheckValidUntil == metaIndex::TRI_YES)
+	 CheckValidUntil = true;
+
+      if (CheckValidUntil == true)
+      {
+	 std::string const StrValidUntil = Section.FindS("Valid-Until");
+
+	 // if we have a Valid-Until header in the Release file, use it as default
+	 if (StrValidUntil.empty() == false)
 	 {
-	    if (ErrorText != NULL)
-	       strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Valid-Until", Filename.c_str());
-	    return false;
+	    if (RFC1123StrToTime(StrValidUntil, ValidUntil) == false)
+	    {
+	       if (ErrorText != NULL)
+		  strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Valid-Until", Filename.c_str());
+	       return false;
+	    }
 	 }
-      }
-      // get the user settings for this archive and use what expires earlier
-      time_t MaxAge = d->ValidUntilMax;
-      if (MaxAge == 0)
-      {
-	 MaxAge = _config->FindI("Acquire::Max-ValidTime", 0);
-	 if (Label.empty() == false)
-	    MaxAge = _config->FindI(("Acquire::Max-ValidTime::" + Label).c_str(), MaxAge);
-      }
-      time_t MinAge = d->ValidUntilMin;
-      if (MinAge == 0)
-      {
-	 MinAge = _config->FindI("Acquire::Min-ValidTime", 0);
-	 if (Label.empty() == false)
-	    MinAge = _config->FindI(("Acquire::Min-ValidTime::" + Label).c_str(), MinAge);
-      }
+	 auto const Label = GetLabel();
+	 // get the user settings for this archive and use what expires earlier
+	 time_t MaxAge = d->ValidUntilMax;
+	 if (MaxAge == 0)
+	 {
+	    MaxAge = _config->FindI("Acquire::Max-ValidTime", 0);
+	    if (Label.empty() == false)
+	       MaxAge = _config->FindI(("Acquire::Max-ValidTime::" + Label).c_str(), MaxAge);
+	 }
+	 time_t MinAge = d->ValidUntilMin;
+	 if (MinAge == 0)
+	 {
+	    MinAge = _config->FindI("Acquire::Min-ValidTime", 0);
+	    if (Label.empty() == false)
+	       MinAge = _config->FindI(("Acquire::Min-ValidTime::" + Label).c_str(), MinAge);
+	 }
 
-      if (MinAge != 0 || ValidUntil != 0 || MaxAge != 0)
-      {
-	 if (MinAge != 0 && ValidUntil != 0) {
-	    time_t const min_date = Date + MinAge;
-	    if (ValidUntil < min_date)
-	       ValidUntil = min_date;
-	 }
-	 if (MaxAge != 0 && Date != 0) {
-	    time_t const max_date = Date + MaxAge;
-	    if (ValidUntil == 0 || ValidUntil > max_date)
-	       ValidUntil = max_date;
+	 if (MinAge != 0 || ValidUntil != 0 || MaxAge != 0)
+	 {
+	    if (MinAge != 0 && ValidUntil != 0)
+	    {
+	       time_t const min_date = Date + MinAge;
+	       if (ValidUntil < min_date)
+		  ValidUntil = min_date;
+	    }
+	    if (MaxAge != 0 && Date != 0)
+	    {
+	       time_t const max_date = Date + MaxAge;
+	       if (ValidUntil == 0 || ValidUntil > max_date)
+		  ValidUntil = max_date;
+	    }
 	 }
       }
    }
@@ -510,31 +614,19 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
    auto Sign = Section.FindS("Signed-By");
    if (Sign.empty() == false)
    {
-      std::transform(Sign.begin(), Sign.end(), Sign.begin(), [&](char const c) {
-	 return (isspace(c) == 0) ? c : ',';
-      });
-      auto fingers = VectorizeString(Sign, ',');
-      std::transform(fingers.begin(), fingers.end(), fingers.begin(), [&](std::string finger) {
-	 std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
-	 if (finger.length() != 40 || finger.find_first_not_of("0123456789ABCDEF") != std::string::npos)
-	 {
-	    if (ErrorText != NULL)
-	       strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Signed-By", Filename.c_str());
-	    return std::string();
-	 }
-	 return finger;
-      });
-      if (fingers.empty() == false && std::find(fingers.begin(), fingers.end(), "") == fingers.end())
-      {
-	 std::stringstream os;
-	 std::copy(fingers.begin(), fingers.end(), std::ostream_iterator<std::string>(os, ","));
-	 SignedBy = os.str();
-      }
+      SignedBy = NormalizeSignedBy(Sign, false);
+      if (SignedBy.empty() && ErrorText != NULL)
+	 strprintf(*ErrorText, _("Invalid '%s' entry in Release file %s"), "Signed-By", Filename.c_str());
    }
 
    if (AuthPossible)
       LoadedSuccessfully = TRI_YES;
    return AuthPossible;
+}
+									/*}}}*/
+time_t debReleaseIndex::GetNotBefore() const /*{{{*/
+{
+   return d->NotBefore;
 }
 									/*}}}*/
 metaIndex * debReleaseIndex::UnloadedClone() const			/*{{{*/
@@ -656,42 +748,35 @@ bool debReleaseIndex::SetValidUntilMax(time_t const Valid)
       return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), "Max-ValidTime", URI.c_str(), Dist.c_str());
    return true;
 }
+bool debReleaseIndex::SetCheckDate(TriState const pCheckDate)
+{
+   if (d->CheckDate == TRI_UNSET)
+      d->CheckDate = pCheckDate;
+   else if (d->CheckDate != pCheckDate)
+      return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), "Check-Date", URI.c_str(), Dist.c_str());
+   return true;
+}
+bool debReleaseIndex::SetDateMaxFuture(time_t const DateMaxFuture)
+{
+   if (d->DateMaxFuture == 0)
+      d->DateMaxFuture = DateMaxFuture;
+   else if (d->DateMaxFuture != DateMaxFuture)
+      return _error->Error(_("Conflicting values set for option %s regarding source %s %s"), "Date-Max-Future", URI.c_str(), Dist.c_str());
+   return true;
+}
 bool debReleaseIndex::SetSignedBy(std::string const &pSignedBy)
 {
    if (SignedBy.empty() == true && pSignedBy.empty() == false)
    {
-      if (pSignedBy[0] == '/') // no check for existence as we could be chrooting later or such things
-	 SignedBy = pSignedBy; // absolute path to a keyring file
-      else
-      {
-	 // we could go all fancy and allow short/long/string matches as gpgv/apt-key does,
-	 // but fingerprints are harder to fake than the others and this option is set once,
-	 // not interactively all the time so easy to type is not really a concern.
-	 auto fingers = VectorizeString(pSignedBy, ',');
-	 std::transform(fingers.begin(), fingers.end(), fingers.begin(), [&](std::string finger) {
-	    std::transform(finger.begin(), finger.end(), finger.begin(), ::toupper);
-	    if (finger.length() != 40 || finger.find_first_not_of("0123456789ABCDEF") != std::string::npos)
-	    {
-	       _error->Error(_("Invalid value set for option %s regarding source %s %s (%s)"), "Signed-By", URI.c_str(), Dist.c_str(), "not a fingerprint");
-	       return std::string();
-	    }
-	    return finger;
-	 });
-	 std::stringstream os;
-	 std::copy(fingers.begin(), fingers.end(), std::ostream_iterator<std::string>(os, ","));
-	 SignedBy = os.str();
-      }
-      // Normalize the string: Remove trailing commas
-      while (SignedBy[SignedBy.size() - 1] == ',')
-	 SignedBy.resize(SignedBy.size() - 1);
+      SignedBy = NormalizeSignedBy(pSignedBy, true);
+      if (SignedBy.empty())
+	 _error->Error(_("Invalid value set for option %s regarding source %s %s (%s)"), "Signed-By", URI.c_str(), Dist.c_str(), "not a fingerprint");
    }
-   else {
-      // Only compare normalized strings
-      auto pSignedByView = APT::StringView(pSignedBy);
-      while (pSignedByView[pSignedByView.size() - 1] == ',')
-	 pSignedByView = pSignedByView.substr(0, pSignedByView.size() - 1);
-      if (pSignedByView != SignedBy)
-	 return _error->Error(_("Conflicting values set for option %s regarding source %s %s: %s != %s"), "Signed-By", URI.c_str(), Dist.c_str(), SignedBy.c_str(), pSignedByView.to_string().c_str());
+   else
+   {
+      auto const normalSignedBy = NormalizeSignedBy(pSignedBy, true);
+      if (normalSignedBy != SignedBy)
+	 return _error->Error(_("Conflicting values set for option %s regarding source %s %s: %s != %s"), "Signed-By", URI.c_str(), Dist.c_str(), SignedBy.c_str(), normalSignedBy.c_str());
    }
    return true;
 }
@@ -731,6 +816,13 @@ bool debReleaseIndex::IsArchitectureAllSupportedFor(IndexTarget const &target) c
    if (d->NoSupportForAll.empty())
       return true;
    return std::find(d->NoSupportForAll.begin(), d->NoSupportForAll.end(), target.Option(IndexTarget::CREATED_BY)) == d->NoSupportForAll.end();
+}
+									/*}}}*/
+bool debReleaseIndex::HasSupportForComponent(std::string const &component) const/*{{{*/
+{
+   if (d->SupportedComponents.empty())
+      return true;
+   return std::find(d->SupportedComponents.begin(), d->SupportedComponents.end(), component) != d->SupportedComponents.end();
 }
 									/*}}}*/
 std::vector <pkgIndexFile *> *debReleaseIndex::GetIndexFiles()		/*{{{*/
@@ -893,7 +985,7 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 		  return std::find(minus.begin(), minus.end(), v) != minus.end();
 		  }), Values.end());
       }
-      return Values;
+      return std::move(Values);
    }
    static std::vector<std::string> parsePlusMinusOptions(std::string const &Name,
 	 std::map<std::string, std::string> const &Options, std::vector<std::string> const &defaultValues)
@@ -959,6 +1051,7 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 	    auto const tv = *t;
 	    mytargets.erase(t);
 	    mytargets.emplace_back(tv);
+	    break;
 	 }
 	 if (Changed == false)
 	    break;
@@ -1001,8 +1094,8 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
    {
       std::vector<std::string> ret;
       ret.reserve(Options.size());
-      for (auto &&O: Options)
-	 ret.emplace_back(O.first);
+      std::transform(Options.begin(), Options.end(), std::back_inserter(ret),
+		     [](auto &&O) { return O.first; });
       std::sort(ret.begin(), ret.end());
       return ret;
    }
@@ -1030,7 +1123,7 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
       }
       for (auto&& key: KeysA)
       {
-	 if (key == "BASE_URI" || key == "REPO_URI")
+	 if (key == "BASE_URI" || key == "REPO_URI" || key == "SITE" || key == "RELEASE")
 	    continue;
 	 auto const a = OptionsA.find(key);
 	 auto const b = OptionsB.find(key);
@@ -1043,9 +1136,11 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
    static debReleaseIndex * GetDebReleaseIndexBy(std::vector<metaIndex *> &List, std::string const &URI,
 			   std::string const &Dist, std::map<std::string, std::string> const &Options)
    {
-      std::map<std::string,std::string> ReleaseOptions = {{
-	 { "BASE_URI", constructMetaIndexURI(URI, Dist, "") },
-	 { "REPO_URI", URI },
+      std::map<std::string, std::string> ReleaseOptions{{
+	 {"BASE_URI", constructMetaIndexURI(URI, Dist, "")},
+	 {"REPO_URI", URI},
+	 {"SITE", ::URI::ArchiveOnly(URI)},
+	 {"RELEASE", (Dist == "/") ? "" : Dist},
       }};
       if (GetBoolOption(Options, "allow-insecure", _config->FindB("Acquire::AllowInsecureRepositories")))
 	 ReleaseOptions.emplace("ALLOW_INSECURE", "true");
@@ -1053,6 +1148,10 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 	 ReleaseOptions.emplace("ALLOW_WEAK", "true");
       if (GetBoolOption(Options, "allow-downgrade-to-insecure", _config->FindB("Acquire::AllowDowngradeToInsecureRepositories")))
 	 ReleaseOptions.emplace("ALLOW_DOWNGRADE_TO_INSECURE", "true");
+
+      auto InReleasePath = Options.find("inrelease-path");
+      if (InReleasePath != Options.end())
+	 ReleaseOptions.emplace("INRELEASE_PATH", InReleasePath->second);
 
       debReleaseIndex * Deb = nullptr;
       std::string const FileName = URItoFileName(constructMetaIndexURI(URI, Dist, "Release"));
@@ -1094,6 +1193,8 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 			   bool const &IsSrc, std::map<std::string, std::string> const &Options) const
    {
       auto const Deb = GetDebReleaseIndexBy(List, URI, Dist, Options);
+      if (Deb == nullptr)
+	 return false;
 
       bool const UsePDiffs = GetBoolOption(Options, "pdiffs", _config->FindB("Acquire::PDiffs", true));
 
@@ -1101,8 +1202,11 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
       UseByHash = _config->Find("Acquire::By-Hash", UseByHash);
       {
 	 std::string const host = ::URI(URI).Host;
-	 UseByHash = _config->Find("APT::Acquire::" + host + "::By-Hash", UseByHash);
-	 UseByHash = _config->Find("Acquire::" + host + "::By-Hash", UseByHash);
+	 if (host.empty() == false)
+	 {
+	    UseByHash = _config->Find("APT::Acquire::" + host + "::By-Hash", UseByHash);
+	    UseByHash = _config->Find("Acquire::" + host + "::By-Hash", UseByHash);
+	 }
 	 std::map<std::string, std::string>::const_iterator const opt = Options.find("by-hash");
 	 if (opt != Options.end())
 	    UseByHash = opt->second;
@@ -1121,9 +1225,11 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
 	    );
 
       if (Deb->SetTrusted(GetTriStateOption(Options, "trusted")) == false ||
-	 Deb->SetCheckValidUntil(GetTriStateOption(Options, "check-valid-until")) == false ||
-	 Deb->SetValidUntilMax(GetTimeOption(Options, "valid-until-max")) == false ||
-	 Deb->SetValidUntilMin(GetTimeOption(Options, "valid-until-min")) == false)
+	  Deb->SetCheckValidUntil(GetTriStateOption(Options, "check-valid-until")) == false ||
+	  Deb->SetValidUntilMax(GetTimeOption(Options, "valid-until-max")) == false ||
+	  Deb->SetValidUntilMin(GetTimeOption(Options, "valid-until-min")) == false ||
+	  Deb->SetCheckDate(GetTriStateOption(Options, "check-date")) == false ||
+	  Deb->SetDateMaxFuture(GetTimeOption(Options, "date-max-future")) == false)
 	 return false;
 
       std::map<std::string, std::string>::const_iterator const signedby = Options.find("signed-by");

@@ -1,19 +1,13 @@
 #ifndef PKGLIB_DEBMETAINDEX_H
 #define PKGLIB_DEBMETAINDEX_H
 
-#include <apt-pkg/metaindex.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/metaindex.h>
 
 #include <map>
 #include <string>
 #include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/sourcelist.h>
-#endif
-#ifndef APT_10_CLEANER_HEADERS
-#include <apt-pkg/init.h>
-#endif
 
 class pkgAcquire;
 class pkgIndexFile;
@@ -55,12 +49,17 @@ class APT_HIDDEN debReleaseIndex : public metaIndex
    bool SetCheckValidUntil(TriState const Trusted);
    bool SetValidUntilMin(time_t const Valid);
    bool SetValidUntilMax(time_t const Valid);
+   bool SetCheckDate(TriState const CheckDate);
+   bool SetDateMaxFuture(time_t const DateMaxFuture);
    bool SetSignedBy(std::string const &SignedBy);
    std::map<std::string, std::string> GetReleaseOptions();
 
    virtual bool IsTrusted() const APT_OVERRIDE;
-   bool IsArchitectureSupported(std::string const &arch) const;
-   bool IsArchitectureAllSupportedFor(IndexTarget const &target) const;
+   bool IsArchitectureSupported(std::string const &arch) const override;
+   bool IsArchitectureAllSupportedFor(IndexTarget const &target) const override;
+   bool HasSupportForComponent(std::string const &component) const override;
+
+   APT_PURE time_t GetNotBefore() const override;
 
    void AddComponent(std::string const &sourcesEntry,
 	 bool const isSrc, std::string const &Name,

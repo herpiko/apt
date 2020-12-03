@@ -13,7 +13,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2016-07-07T00:00:00Z</date>
+   <date>2020-05-06T00:00:00Z</date>
  </refentryinfo>
 
  <refmeta>
@@ -25,7 +25,7 @@
  <!-- Man page title -->
  <refnamediv>
     <refname>apt-key</refname>
-    <refpurpose>APT key management utility</refpurpose>
+    <refpurpose>Deprecated APT key management utility</refpurpose>
  </refnamediv>
 
  &synopsis-command-apt-key;
@@ -37,19 +37,35 @@
    authenticated using these keys will be considered trusted.
    </para>
    <para>
-   Note that if usage of <command>apt-key</command> is desired the additional
+   Use of <command>apt-key</command> is deprecated, except for the use of
+   <command>apt-key del</command> in maintainer scripts to remove existing
+   keys from the main keyring.
+   If such usage of <command>apt-key</command> is desired the additional
    installation of the GNU Privacy Guard suite (packaged in
-   <package>gnupg</package>) is required. For this reason alone the programmatic
-   usage (especially in package maintainerscripts!) is strongly discouraged.
-   Further more the output format of all commands is undefined and can and does
-   change whenever the underlying commands change. <command>apt-key</command> will
-   try to detect such usage and generates warnings on stderr in these cases.
+   <package>gnupg</package>) is required.
    </para>
+   <para>
+   apt-key(8) will last be available in Debian 11 and Ubuntu 22.04.
+   </para>
+</refsect1>
+
+<refsect1><title>Supported keyring files</title>
+<para>apt-key supports only the binary OpenPGP format (also known as "GPG key
+   public ring") in files with the "<literal>gpg</literal>" extension, not
+   the keybox database format introduced in newer &gpg; versions as default
+   for keyring files. Binary keyring files intended to be used with any apt
+   version should therefore always be created with <command>gpg --export</command>.
+</para>
+<para>Alternatively, if all systems which should be using the created keyring
+   have at least apt version >= 1.4 installed, you can use the ASCII armored
+   format with the "<literal>asc</literal>" extension instead which can be
+   created with <command>gpg --armor --export</command>.
+</para>
 </refsect1>
 
 <refsect1><title>Commands</title>
    <variablelist>
-     <varlistentry><term><option>add</option> <option>&synopsis-param-filename;</option></term>
+     <varlistentry><term><option>add</option> <option>&synopsis-param-filename;</option>  (deprecated)</term>
      <listitem>
      <para>
        Add a new key to the list of trusted keys.
@@ -63,15 +79,15 @@
      otherwise the &apt-secure; infrastructure is completely undermined.
      </para>
      <para>
-       Instead of using this command a keyring can be placed directly in the
-       <filename>/etc/apt/trusted.gpg.d/</filename> directory with a descriptive name
-       (same rules for filename apply as for &apt-conf; files) and "<literal>gpg</literal>"
-       as file extension.
+       <emphasis>Note</emphasis>: Instead of using this command a keyring
+       should be placed directly in the <filename>/etc/apt/trusted.gpg.d/</filename>
+       directory with a descriptive name and either "<literal>gpg</literal>" or
+       "<literal>asc</literal>" as file extension.
      </para>
      </listitem>
      </varlistentry>
 
-     <varlistentry><term><option>del</option> <option>&synopsis-param-keyid;</option></term>
+     <varlistentry><term><option>del</option> <option>&synopsis-param-keyid;</option>  (mostly deprecated)</term>
      <listitem>
      <para>
 
@@ -82,7 +98,7 @@
      </listitem>
      </varlistentry>
 
-     <varlistentry><term><option>export</option> <option>&synopsis-param-keyid;</option></term>
+     <varlistentry><term><option>export</option> <option>&synopsis-param-keyid;</option>  (deprecated)</term>
      <listitem>
      <para>
 
@@ -93,7 +109,7 @@
      </listitem>
      </varlistentry>
 
-     <varlistentry><term><option>exportall</option></term>
+     <varlistentry><term><option>exportall</option>  (deprecated)</term>
      <listitem>
      <para>
 
@@ -104,7 +120,7 @@
      </listitem>
      </varlistentry>
 
-     <varlistentry><term><option>list</option>, <option>finger</option></term>
+     <varlistentry><term><option>list</option>, <option>finger</option>  (deprecated)</term>
      <listitem>
      <para>
 
@@ -115,11 +131,11 @@
      </listitem>
      </varlistentry>
 
-     <varlistentry><term><option>adv</option></term>
+     <varlistentry><term><option>adv</option>  (deprecated)</term>
      <listitem>
      <para>
      Pass advanced options to gpg. With <command>adv --recv-key</command> you
-     can e.g. download key from keyservers directly into the the trusted set of
+     can e.g. download key from keyservers directly into the trusted set of
      keys. Note that there are <emphasis>no</emphasis> checks performed, so it is
      easy to completely undermine the &apt-secure; infrastructure if used without
      care.
@@ -139,14 +155,14 @@
      <para>
        Note that a distribution does not need to and in fact should not use
        this command any longer and instead ship keyring files in the
-       <filename>/etc/apt/trusted.gpg</filename> directory directly as this
+       <filename>/etc/apt/trusted.gpg.d/</filename> directory directly as this
        avoids a dependency on <package>gnupg</package> and it is easier to manage
        keys by simply adding and removing files for maintainers and users alike.
      </para>
      </listitem>
      </varlistentry>
      
-     <varlistentry><term><option>net-update</option></term>
+     <varlistentry><term><option>net-update</option>  (deprecated)</term>
      <listitem>
      <para>
 
@@ -169,7 +185,7 @@
  <refsect1><title>Options</title>
 <para>Note that options need to be defined before the commands described in the previous section.</para>
    <variablelist>
-      <varlistentry><term><option>--keyring</option> <option>&synopsis-param-filename;</option></term>
+      <varlistentry><term><option>--keyring</option> <option>&synopsis-param-filename;</option>  (deprecated)</term>
       <listitem><para>With this option it is possible to specify a particular keyring
       file the command should operate on. The default is that a command is executed
       on the <filename>trusted.gpg</filename> file as well as on all parts in the

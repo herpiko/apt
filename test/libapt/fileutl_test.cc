@@ -1,10 +1,10 @@
 #include <config.h>
 
+#include <apt-pkg/aptconfiguration.h>
+#include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/strutl.h>
-#include <apt-pkg/aptconfiguration.h>
-#include <apt-pkg/configuration.h>
 
 #include <algorithm>
 #include <string>
@@ -23,13 +23,12 @@ static void TestFileFd(mode_t const a_umask, mode_t const ExpectedFilePermission
    strprintf(trace, "TestFileFd: Compressor: %s umask: %#o permission: %#o mode: %d", compressor.Name.c_str(), a_umask, ExpectedFilePermission, filemode);
    SCOPED_TRACE(trace);
 
-   static const char* fname = "apt-filefd-test.txt";
-   if (FileExists(fname) == true)
-      EXPECT_EQ(0, unlink(fname));
+   auto const file = createTemporaryFile("filefd-test");
+   EXPECT_TRUE(RemoveFile("TestFileFd", file.Name()));
 
    FileFd f;
    umask(a_umask);
-   EXPECT_TRUE(f.Open(fname, filemode, compressor));
+   EXPECT_TRUE(f.Open(file.Name(), filemode, compressor));
    EXPECT_TRUE(f.IsOpen());
    EXPECT_FALSE(f.Failed());
    EXPECT_EQ(umask(a_umask), a_umask);
@@ -43,11 +42,11 @@ static void TestFileFd(mode_t const a_umask, mode_t const ExpectedFilePermission
    EXPECT_FALSE(f.IsOpen());
    EXPECT_FALSE(f.Failed());
 
-   EXPECT_TRUE(f.Open(fname, FileFd::ReadOnly, compressor));
+   EXPECT_TRUE(f.Open(file.Name(), FileFd::ReadOnly, compressor));
    EXPECT_TRUE(f.IsOpen());
    EXPECT_FALSE(f.Failed());
    EXPECT_FALSE(f.Eof());
-   EXPECT_NE(0, f.FileSize());
+   EXPECT_NE(0u, f.FileSize());
    EXPECT_FALSE(f.Failed());
    EXPECT_NE(0, f.ModificationTime());
    EXPECT_FALSE(f.Failed());
@@ -94,7 +93,7 @@ static void TestFileFd(mode_t const a_umask, mode_t const ExpectedFilePermission
       EXPECT_FALSE(f.Failed());
       EXPECT_FALSE(f.Eof());
       EXPECT_N_STR(expect, readback);
-      EXPECT_EQ(7, f.Tell());
+      EXPECT_EQ(7u, f.Tell());
    }
    {
       APT_INIT_READBACK
@@ -150,6 +149,19 @@ static void TestFileFd(mode_t const a_umask, mode_t const ExpectedFilePermission
       EXPECT_EQ(strlen(expect), f.Tell());
    }
 #undef APT_INIT_READBACK
+   {
+      test.erase(test.length() - 1);
+      EXPECT_TRUE(f.Seek(0));
+      EXPECT_FALSE(f.Eof());
+      std::string line;
+      EXPECT_TRUE(f.ReadLine(line));
+      EXPECT_FALSE(f.Failed());
+      EXPECT_FALSE(f.Eof());
+      EXPECT_EQ(line.length(), test.length());
+      EXPECT_EQ(line.length() + 1, f.Tell());
+      EXPECT_EQ(f.Size(), f.Tell());
+      EXPECT_EQ(line, test);
+   }
 
    f.Close();
    EXPECT_FALSE(f.IsOpen());
@@ -157,15 +169,14 @@ static void TestFileFd(mode_t const a_umask, mode_t const ExpectedFilePermission
 
    // regression test for permission bug LP: #1304657
    struct stat buf;
-   EXPECT_EQ(0, stat(fname, &buf));
-   EXPECT_EQ(0, unlink(fname));
+   EXPECT_EQ(0, stat(file.Name().c_str(), &buf));
    EXPECT_EQ(ExpectedFilePermission, buf.st_mode & 0777);
 }
 
 static void TestFileFd(unsigned int const filemode)
 {
    auto const compressors = APT::Configuration::getCompressors();
-   EXPECT_EQ(7, compressors.size());
+   EXPECT_EQ(8u, compressors.size());
    bool atLeastOneWasTested = false;
    for (auto const &c: compressors)
    {
@@ -189,7 +200,7 @@ TEST(FileUtlTest, FileFD)
    _config->Set("APT::Compressor::rev::Binary", "rev");
    _config->Set("APT::Compressor::rev::Cost", 10);
    auto const compressors = APT::Configuration::getCompressors(false);
-   EXPECT_EQ(7, compressors.size());
+   EXPECT_EQ(8u, compressors.size());
    EXPECT_TRUE(std::any_of(compressors.begin(), compressors.end(), [](APT::Configuration::Compressor const &c) { return c.Name == "rev"; }));
 
    std::string const startdir = SafeGetCWD();
@@ -217,7 +228,7 @@ TEST(FileUtlTest, Glob)
    std::vector<std::string> files;
    // normal match
    files = Glob("*MakeLists.txt");
-   EXPECT_EQ(1, files.size());
+   EXPECT_EQ(1u, files.size());
 
    // not there
    files = Glob("xxxyyyzzz");
@@ -226,7 +237,7 @@ TEST(FileUtlTest, Glob)
 
    // many matches (number is a bit random)
    files = Glob("*.cc");
-   EXPECT_LT(10, files.size());
+   EXPECT_LT(10u, files.size());
 }
 TEST(FileUtlTest, GetTempDir)
 {
@@ -281,7 +292,7 @@ TEST(FileUtlTest, Popen)
    EXPECT_TRUE(Popen(Args, Fd, Child, FileFd::ReadOnly));
    EXPECT_TRUE(Fd.Read(buf, sizeof(buf)-1, &n));
    buf[n] = 0;
-   EXPECT_NE(n, 0);
+   EXPECT_NE(n, 0u);
    EXPECT_STREQ(buf, "meepmeep\n");
 
    // wait for the child to exit and cleanup
@@ -290,7 +301,9 @@ TEST(FileUtlTest, Popen)
 
    // ensure that after a close all is good again
    if(FileExists("/proc/self/fd"))
+   {
       EXPECT_EQ(Glob("/proc/self/fd/*").size(), OpenFds.size());
+   }
 
    // ReadWrite is not supported
    _error->PushToStack();
@@ -368,24 +381,19 @@ static void TestFailingAtomicKeepsFile(char const * const label, std::string con
 }
 TEST(FileUtlTest, FailingAtomic)
 {
-   FileFd fd;
-   std::string filename;
-   createTemporaryFile("failingatomic", fd, &filename, TESTSTRING);
-   TestFailingAtomicKeepsFile("init", filename);
+   auto const file = createTemporaryFile("failingatomic", TESTSTRING);
+   TestFailingAtomicKeepsFile("init", file.Name());
 
    FileFd f;
-   EXPECT_TRUE(f.Open(filename, FileFd::ReadWrite | FileFd::Atomic));
+   EXPECT_TRUE(f.Open(file.Name(), FileFd::ReadWrite | FileFd::Atomic));
    f.EraseOnFailure();
    EXPECT_FALSE(f.Failed());
    EXPECT_TRUE(f.IsOpen());
-   TestFailingAtomicKeepsFile("before-fail", filename);
+   TestFailingAtomicKeepsFile("before-fail", file.Name());
    EXPECT_TRUE(f.Write("Bad file write", 10));
    f.OpFail();
    EXPECT_TRUE(f.Failed());
-   TestFailingAtomicKeepsFile("after-fail", filename);
+   TestFailingAtomicKeepsFile("after-fail", file.Name());
    EXPECT_TRUE(f.Close());
-   TestFailingAtomicKeepsFile("closed", filename);
-
-   if (filename.empty() == false)
-      unlink(filename.c_str());
+   TestFailingAtomicKeepsFile("closed", file.Name());
 }

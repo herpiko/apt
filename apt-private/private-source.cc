@@ -6,7 +6,6 @@
 #include <apt-pkg/algorithms.h>
 #include <apt-pkg/aptconfiguration.h>
 #include <apt-pkg/cachefile.h>
-#include <apt-pkg/cacheiterators.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
 #include <apt-pkg/configuration.h>
@@ -17,11 +16,11 @@
 #include <apt-pkg/indexfile.h>
 #include <apt-pkg/metaindex.h>
 #include <apt-pkg/pkgcache.h>
+#include <apt-pkg/policy.h>
 #include <apt-pkg/sourcelist.h>
 #include <apt-pkg/srcrecords.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/version.h>
-#include <apt-pkg/policy.h>
 
 #include <apt-private/private-cachefile.h>
 #include <apt-private/private-cacheset.h>
@@ -30,6 +29,7 @@
 #include <apt-private/private-source.h>
 
 #include <apt-pkg/debindexfile.h>
+#include <apt-pkg/deblistparser.h>
 
 #include <stddef.h>
 #include <stdio.h>
@@ -39,8 +39,8 @@
 #include <unistd.h>
 
 #include <iostream>
-#include <sstream>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -209,12 +209,7 @@ static pkgSrcRecords::Parser *FindSrc(const char *Name,
 	 // or RelTag
 	 if (Cache.BuildPolicy() == false)
 	    return nullptr;
-	 pkgPolicy * Policy = dynamic_cast<pkgPolicy*>(Cache.GetPolicy());
-	 if (Policy == nullptr)
-	 {
-	    _error->Fatal("Implementation error: dynamic up-casting policy engine failed in FindSrc!");
-	    return nullptr;
-	 }
+	 pkgPolicy * const Policy = Cache.GetPolicy();
 	 pkgCache::VerIterator const Ver = Policy->GetCandidateVer(Pkg);
 	 if (Ver.end() == false)
 	 {
@@ -306,7 +301,7 @@ static pkgSrcRecords::Parser *FindSrc(const char *Name,
 									/*}}}*/
 // DoSource - Fetch a source archive					/*{{{*/
 // ---------------------------------------------------------------------
-/* Fetch souce packages */
+/* Fetch source packages */
 struct DscFile
 {
    std::string Package;
@@ -328,7 +323,8 @@ bool DoSource(CommandLine &CmdL)
    if (_error->PendingError() == true)
       return false;
 
-   std::unique_ptr<DscFile[]> Dsc(new DscFile[CmdL.FileSize()]);
+   std::vector<DscFile> Dsc;
+   Dsc.reserve(CmdL.FileSize());
 
    // insert all downloaded uris into this set to avoid downloading them
    // twice
@@ -343,12 +339,11 @@ bool DoSource(CommandLine &CmdL)
 
    // Load the requestd sources into the fetcher
    aptAcquireWithTextStatus Fetcher;
-   unsigned J = 0;
    std::vector<std::string> UntrustedList;
-   for (const char **I = CmdL.FileList + 1; *I != 0; I++, J++)
+   for (const char **cmdl = CmdL.FileList + 1; *cmdl != 0; ++cmdl)
    {
       std::string Src;
-      pkgSrcRecords::Parser *Last = FindSrc(*I,SrcRecs,Src,Cache);
+      pkgSrcRecords::Parser *Last = FindSrc(*cmdl, SrcRecs, Src, Cache);
       if (Last == 0) {
 	 return _error->Error(_("Unable to find a source package for %s"),Src.c_str());
       }
@@ -389,21 +384,22 @@ bool DoSource(CommandLine &CmdL)
       }
 
       // Back track
-      std::vector<pkgSrcRecords::File2> Lst;
-      if (Last->Files2(Lst) == false) {
+      std::vector<pkgSrcRecords::File> Lst;
+      if (Last->Files(Lst) == false) {
 	 return false;
       }
 
+      DscFile curDsc;
       // Load them into the fetcher
-      for (std::vector<pkgSrcRecords::File2>::const_iterator I = Lst.begin();
+      for (std::vector<pkgSrcRecords::File>::const_iterator I = Lst.begin();
 	    I != Lst.end(); ++I)
       {
 	 // Try to guess what sort of file it is we are getting.
 	 if (I->Type == "dsc")
 	 {
-	    Dsc[J].Package = Last->Package();
-	    Dsc[J].Version = Last->Version();
-	    Dsc[J].Dsc = flNotDir(I->Path);
+	    curDsc.Package = Last->Package();
+	    curDsc.Version = Last->Version();
+	    curDsc.Dsc = flNotDir(I->Path);
 	 }
 
 	 // Handle the only options so that multiple can be used at once
@@ -438,13 +434,14 @@ bool DoSource(CommandLine &CmdL)
 	 {
 	    ioprintf(c1out, "Skipping download of file '%s' as requested hashsum is not available for authentication\n",
 		  localFile.c_str());
-	    Dsc[J].Dsc.clear();
+	    curDsc.Dsc.clear();
 	    continue;
 	 }
 
 	 new pkgAcqFile(&Fetcher,Last->Index().ArchiveURI(I->Path),
 	       I->Hashes, I->FileSize, Last->Index().SourceInfo(*Last,*I), Src);
       }
+      Dsc.push_back(std::move(curDsc));
    }
 
    // Display statistics
@@ -469,8 +466,8 @@ bool DoSource(CommandLine &CmdL)
 
    if (_config->FindB("APT::Get::Simulate",false) == true)
    {
-      for (unsigned I = 0; I != J; I++)
-	 ioprintf(std::cout,_("Fetch source %s\n"),Dsc[I].Package.c_str());
+      for (auto const &D: Dsc)
+	 ioprintf(std::cout, _("Fetch source %s\n"), D.Package.c_str());
       return true;
    }
 
@@ -491,89 +488,79 @@ bool DoSource(CommandLine &CmdL)
    // Run it
    bool Failed = false;
    if (AcquireRun(Fetcher, 0, &Failed, NULL) == false || Failed == true)
-   {
       return _error->Error(_("Failed to fetch some archives."));
-   }
 
-   if (_config->FindB("APT::Get::Download-only",false) == true)
+   if (diffOnly || tarOnly || dscOnly || _config->FindB("APT::Get::Download-only",false) == true)
    {
       c1out << _("Download complete and in download only mode") << std::endl;
       return true;
    }
 
-   // Unpack the sources
-   pid_t Process = ExecFork();
-
-   if (Process == 0)
+   bool const fixBroken = _config->FindB("APT::Get::Fix-Broken", false);
+   bool SaidCheckIfDpkgDev = false;
+   for (auto const &D: Dsc)
    {
-      bool const fixBroken = _config->FindB("APT::Get::Fix-Broken", false);
-      for (unsigned I = 0; I != J; ++I)
+      if (unlikely(D.Dsc.empty() == true))
+	 continue;
+      std::string const Dir = D.Package + '-' + Cache.GetPkgCache()->VS->UpstreamVersion(D.Version.c_str());
+
+      // See if the package is already unpacked
+      struct stat Stat;
+      if (fixBroken == false && stat(Dir.c_str(),&Stat) == 0 &&
+	    S_ISDIR(Stat.st_mode) != 0)
       {
-	 std::string Dir = Dsc[I].Package + '-' + Cache.GetPkgCache()->VS->UpstreamVersion(Dsc[I].Version.c_str());
-
-	 // Diff only mode only fetches .diff files
-	 if (_config->FindB("APT::Get::Diff-Only",false) == true ||
-	       _config->FindB("APT::Get::Tar-Only",false) == true ||
-	       Dsc[I].Dsc.empty() == true)
+	 ioprintf(c0out ,_("Skipping unpack of already unpacked source in %s\n"),
+	       Dir.c_str());
+      }
+      else
+      {
+	 // Call dpkg-source
+	 std::string const sourceopts = _config->Find("DPkg::Source-Options", "--no-check -x");
+	 std::string S;
+	 strprintf(S, "%s %s %s",
+	       _config->Find("Dir::Bin::dpkg-source","dpkg-source").c_str(),
+	       sourceopts.c_str(), D.Dsc.c_str());
+	 if (system(S.c_str()) != 0)
+	 {
+	    _error->Error(_("Unpack command '%s' failed.\n"), S.c_str());
+	    if (SaidCheckIfDpkgDev == false)
+	    {
+	       _error->Notice(_("Check if the 'dpkg-dev' package is installed.\n"));
+	       SaidCheckIfDpkgDev = true;
+	    }
 	    continue;
-
-	 // See if the package is already unpacked
-	 struct stat Stat;
-	 if (fixBroken == false && stat(Dir.c_str(),&Stat) == 0 &&
-	       S_ISDIR(Stat.st_mode) != 0)
-	 {
-	    ioprintf(c0out ,_("Skipping unpack of already unpacked source in %s\n"),
-		  Dir.c_str());
-	 }
-	 else
-	 {
-	    // Call dpkg-source
-	    std::string const sourceopts = _config->Find("DPkg::Source-Options", "-x");
-	    std::string S;
-	    strprintf(S, "%s %s %s",
-		  _config->Find("Dir::Bin::dpkg-source","dpkg-source").c_str(),
-		  sourceopts.c_str(), Dsc[I].Dsc.c_str());
-	    if (system(S.c_str()) != 0)
-	    {
-	       fprintf(stderr, _("Unpack command '%s' failed.\n"), S.c_str());
-	       fprintf(stderr, _("Check if the 'dpkg-dev' package is installed.\n"));
-	       _exit(1);
-	    }
-	 }
-
-	 // Try to compile it with dpkg-buildpackage
-	 if (_config->FindB("APT::Get::Compile",false) == true)
-	 {
-	    std::string buildopts = _config->Find("APT::Get::Host-Architecture");
-	    if (buildopts.empty() == false)
-	       buildopts = "-a" + buildopts + " ";
-
-	    // get all active build profiles
-	    std::string const profiles = APT::Configuration::getBuildProfilesString();
-	    if (profiles.empty() == false)
-	       buildopts.append(" -P").append(profiles).append(" ");
-
-	    buildopts.append(_config->Find("DPkg::Build-Options","-b -uc"));
-
-	    // Call dpkg-buildpackage
-	    std::string S;
-	    strprintf(S, "cd %s && %s %s",
-		  Dir.c_str(),
-		  _config->Find("Dir::Bin::dpkg-buildpackage","dpkg-buildpackage").c_str(),
-		  buildopts.c_str());
-
-	    if (system(S.c_str()) != 0)
-	    {
-	       fprintf(stderr, _("Build command '%s' failed.\n"), S.c_str());
-	       _exit(1);
-	    }
 	 }
       }
 
-      _exit(0);
-   }
+      // Try to compile it with dpkg-buildpackage
+      if (_config->FindB("APT::Get::Compile",false) == true)
+      {
+	 std::string buildopts = _config->Find("APT::Get::Host-Architecture");
+	 if (buildopts.empty() == false)
+	    buildopts = "-a" + buildopts + " ";
 
-   return ExecWait(Process, "dpkg-source");
+	 // get all active build profiles
+	 std::string const profiles = APT::Configuration::getBuildProfilesString();
+	 if (profiles.empty() == false)
+	    buildopts.append(" -P").append(profiles).append(" ");
+
+	 buildopts.append(_config->Find("DPkg::Build-Options","-b -uc"));
+
+	 // Call dpkg-buildpackage
+	 std::string S;
+	 strprintf(S, "cd %s && %s %s",
+	       Dir.c_str(),
+	       _config->Find("Dir::Bin::dpkg-buildpackage","dpkg-buildpackage").c_str(),
+	       buildopts.c_str());
+
+	 if (system(S.c_str()) != 0)
+	 {
+	    _error->Error(_("Build command '%s' failed.\n"), S.c_str());
+	    continue;
+	 }
+      }
+   }
+   return true;
 }
 									/*}}}*/
 // DoBuildDep - Install/removes packages to satisfy build dependencies  /*{{{*/
@@ -616,11 +603,18 @@ static void WriteBuildDependencyPackage(std::ostringstream &buildDepsPkgFile,
       << "Architecture: " << Arch << "\n"
       << "Version: 1\n";
 
+   bool const IndepOnly = _config->FindB("APT::Get::Indep-Only", false);
    std::string depends, conflicts;
    for (auto const &dep: Dependencies)
    {
+      // ArchOnly is handled while parsing the dependencies on input
+      if (IndepOnly && (dep.Type == pkgSrcRecords::Parser::BuildDependArch ||
+	       dep.Type == pkgSrcRecords::Parser::BuildConflictArch))
+	 continue;
       std::string * type;
-      if (dep.Type == pkgSrcRecords::Parser::BuildConflict || dep.Type == pkgSrcRecords::Parser::BuildConflictIndep)
+      if (dep.Type == pkgSrcRecords::Parser::BuildConflict ||
+		  dep.Type == pkgSrcRecords::Parser::BuildConflictIndep ||
+		  dep.Type == pkgSrcRecords::Parser::BuildConflictArch)
 	 type = &conflicts;
       else
 	 type = &depends;
@@ -643,15 +637,6 @@ static void WriteBuildDependencyPackage(std::ostringstream &buildDepsPkgFile,
 }
 bool DoBuildDep(CommandLine &CmdL)
 {
-   CacheFile Cache;
-   std::vector<std::string> VolatileCmdL;
-   Cache.GetSourceList()->AddVolatileFiles(CmdL, &VolatileCmdL);
-
-   _config->Set("APT::Install-Recommends", false);
-
-   if (CmdL.FileSize() <= 1 && VolatileCmdL.empty())
-      return _error->Error(_("Must specify at least one package to check builddeps for"));
-
    bool StripMultiArch;
    std::string hostArch = _config->Find("APT::Get::Host-Architecture");
    if (hostArch.empty() == false)
@@ -663,68 +648,143 @@ bool DoBuildDep(CommandLine &CmdL)
    }
    else
       StripMultiArch = true;
+   auto const nativeArch = _config->Find("APT::Architecture");
+   std::string const pseudoArch = hostArch.empty() ? nativeArch : hostArch;
+
+   CacheFile Cache;
+   auto VolatileCmdL = GetPseudoPackages(Cache.GetSourceList(), CmdL, AddVolatileSourceFile, pseudoArch);
+   auto AreDoingSatisfy = strcasecmp(CmdL.FileList[0], "satisfy") == 0;
+
+   if (not AreDoingSatisfy)
+      _config->Set("APT::Install-Recommends", false);
+
+   if (CmdL.FileSize() <= 1 && VolatileCmdL.empty())
+      return _error->Error(_("Must specify at least one package to check builddeps for"));
 
    std::ostringstream buildDepsPkgFile;
-   std::vector<std::pair<std::string,std::string>> pseudoPkgs;
+   std::vector<PseudoPkg> pseudoPkgs;
    // deal with the build essentials first
+   if (not AreDoingSatisfy)
    {
       std::vector<pkgSrcRecords::Parser::BuildDepRec> BuildDeps;
-      Configuration::Item const *Opts = _config->Tree("APT::Build-Essential");
-      if (Opts)
-	 Opts = Opts->Child;
-      for (; Opts; Opts = Opts->Next)
+      for (auto && opt: _config->FindVector("APT::Build-Essential"))
       {
-	 if (Opts->Value.empty() == true)
+	 if (opt.empty())
 	    continue;
-
 	 pkgSrcRecords::Parser::BuildDepRec rec;
-	 rec.Package = Opts->Value;
+	 rec.Package = std::move(opt);
 	 rec.Type = pkgSrcRecords::Parser::BuildDependIndep;
 	 rec.Op = 0;
 	 BuildDeps.push_back(rec);
       }
       std::string const pseudo = "builddeps:essentials";
-      std::string const nativeArch = _config->Find("APT::Architecture");
       WriteBuildDependencyPackage(buildDepsPkgFile, pseudo, nativeArch, BuildDeps);
-      pseudoPkgs.emplace_back(pseudo, nativeArch);
+      pseudoPkgs.emplace_back(pseudo, nativeArch, "");
+   }
+
+   if (AreDoingSatisfy)
+   {
+      std::vector<pkgSrcRecords::Parser::BuildDepRec> BuildDeps;
+      for (unsigned i = 1; i < CmdL.FileSize(); i++)
+      {
+	 const char *Start = CmdL.FileList[i];
+	 const char *Stop = Start + strlen(Start);
+	 auto Type = pkgSrcRecords::Parser::BuildDependIndep;
+
+	 // Reject '>' and '<' as operators, as they have strange meanings.
+	 bool insideVersionRestriction = false;
+	 for (auto C = Start; C + 1 < Stop; C++)
+	 {
+	    if (*C == '(')
+	       insideVersionRestriction = true;
+	    else if (*C == ')')
+	       insideVersionRestriction = false;
+	    else if (insideVersionRestriction && (*C == '<' || *C == '>'))
+	    {
+	       if (C[1] != *C && C[1] != '=')
+		  return _error->Error(_("Invalid operator '%c' at offset %d, did you mean '%c%c' or '%c='? - in: %s"), *C, (int)(C - Start), *C, *C, *C, Start);
+	       C++;
+	    }
+	 }
+
+	 if (APT::String::Startswith(Start, "Conflicts:"))
+	 {
+	    Type = pkgSrcRecords::Parser::BuildConflictIndep;
+	    Start += strlen("Conflicts:");
+	 }
+	 while (1)
+	 {
+	    pkgSrcRecords::Parser::BuildDepRec rec;
+	    Start = debListParser::ParseDepends(Start, Stop,
+						rec.Package, rec.Version, rec.Op, true, false, true, pseudoArch);
+
+	    if (Start == 0)
+	       return _error->Error("Problem parsing dependency: %s", CmdL.FileList[i]);
+	    rec.Type = Type;
+
+	    // We parsed a package that was ignored (wrong architecture restriction
+	    // or something).
+	    if (rec.Package.empty())
+	    {
+	       // If we are in an OR group, we need to set the "Or" flag of the
+	       // previous entry to our value.
+	       if (BuildDeps.empty() == false && (BuildDeps[BuildDeps.size() - 1].Op & pkgCache::Dep::Or) == pkgCache::Dep::Or)
+	       {
+		  BuildDeps[BuildDeps.size() - 1].Op &= ~pkgCache::Dep::Or;
+		  BuildDeps[BuildDeps.size() - 1].Op |= (rec.Op & pkgCache::Dep::Or);
+	       }
+	    }
+	    else
+	    {
+	       BuildDeps.emplace_back(std::move(rec));
+	    }
+
+	    if (Start == Stop)
+	       break;
+	 }
+      }
+      std::string const pseudo = "command line argument";
+      WriteBuildDependencyPackage(buildDepsPkgFile, pseudo, pseudoArch, BuildDeps);
+      pseudoPkgs.emplace_back(pseudo, pseudoArch, "");
    }
 
    // Read the source list
    if (Cache.BuildSourceList() == false)
       return false;
    pkgSourceList *List = Cache.GetSourceList();
-   std::string const pseudoArch = hostArch.empty() ? _config->Find("APT::Architecture") : hostArch;
 
-   // FIXME: Avoid volatile sources == cmdline assumption
+   if (not AreDoingSatisfy)
    {
       auto const VolatileSources = List->GetVolatileFiles();
-      if (VolatileSources.size() == VolatileCmdL.size())
+      for (auto &&pkg : VolatileCmdL)
       {
-	 for (size_t i = 0; i < VolatileSources.size(); ++i)
+	 if (unlikely(pkg.index == -1))
 	 {
-	    auto const Src = VolatileCmdL[i];
-	    if (DirectoryExists(Src))
-	       ioprintf(c1out, _("Note, using directory '%s' to get the build dependencies\n"), Src.c_str());
-	    else
-	       ioprintf(c1out, _("Note, using file '%s' to get the build dependencies\n"), Src.c_str());
-	    std::unique_ptr<pkgSrcRecords::Parser> Last(VolatileSources[i]->CreateSrcParser());
-	    if (Last == nullptr)
-	       return _error->Error(_("Unable to find a source package for %s"), Src.c_str());
-
-	    std::string const pseudo = std::string("builddeps:") + Src;
-	    WriteBuildDependencyPackage(buildDepsPkgFile, pseudo, pseudoArch,
-		  GetBuildDeps(Last.get(), Src.c_str(), StripMultiArch, hostArch));
-	    pseudoPkgs.emplace_back(pseudo, pseudoArch);
+	    _error->Error(_("Unable to find a source package for %s"), pkg.name.c_str());
+	    continue;
 	 }
+	 if (DirectoryExists(pkg.name))
+	    ioprintf(c1out, _("Note, using directory '%s' to get the build dependencies\n"), pkg.name.c_str());
+	 else
+	    ioprintf(c1out, _("Note, using file '%s' to get the build dependencies\n"), pkg.name.c_str());
+	 std::unique_ptr<pkgSrcRecords::Parser> Last(VolatileSources[pkg.index]->CreateSrcParser());
+	 if (Last == nullptr)
+	 {
+	    _error->Error(_("Unable to find a source package for %s"), pkg.name.c_str());
+	    continue;
+	 }
+
+	 auto pseudo = std::string("builddeps:") + pkg.name;
+	 WriteBuildDependencyPackage(buildDepsPkgFile, pseudo, pseudoArch,
+				     GetBuildDeps(Last.get(), pkg.name.c_str(), StripMultiArch, hostArch));
+	 pkg.name = std::move(pseudo);
+	 pseudoPkgs.push_back(std::move(pkg));
       }
-      else
-	 return _error->Error("Implementation error: Volatile sources (%lu) and"
-	       "commandline elements (%lu) do not match!", VolatileSources.size(),
-	       VolatileCmdL.size());
+      VolatileCmdL.clear();
    }
 
    bool const WantLock = _config->FindB("APT::Get::Print-URIs", false) == false;
-   if (CmdL.FileList[1] != 0)
+   if (CmdL.FileList[1] != 0 && not AreDoingSatisfy)
    {
       if (Cache.BuildCaches(WantLock) == false)
 	 return false;
@@ -742,7 +802,13 @@ bool DoBuildDep(CommandLine &CmdL)
 	 std::string const pseudo = std::string("builddeps:") + Src;
 	 WriteBuildDependencyPackage(buildDepsPkgFile, pseudo, pseudoArch,
 	       GetBuildDeps(Last, Src.c_str(), StripMultiArch, hostArch));
-	 pseudoPkgs.emplace_back(pseudo, pseudoArch);
+	 std::string reltag = *I;
+	 size_t found = reltag.find_last_of("/");
+	 if (found == std::string::npos)
+	    reltag.clear();
+	 else
+	    reltag.erase(0, found + 1);
+	 pseudoPkgs.emplace_back(pseudo, pseudoArch, std::move(reltag));
       }
    }
 
@@ -756,12 +822,24 @@ bool DoBuildDep(CommandLine &CmdL)
    {
       pkgDepCache::ActionGroup group(Cache);
       TryToInstall InstallAction(Cache, &Fix, false);
+      std::list<std::pair<pkgCache::VerIterator, std::string>> candSwitch;
       for (auto const &pkg: pseudoPkgs)
       {
-	 pkgCache::PkgIterator const Pkg = Cache->FindPkg(pkg.first, pkg.second);
+	 pkgCache::PkgIterator const Pkg = Cache->FindPkg(pkg.name, pkg.arch);
 	 if (Pkg.end())
 	    continue;
-	 Cache->SetCandidateVersion(Pkg.VersionList());
+	 if (pkg.release.empty())
+	    Cache->SetCandidateVersion(Pkg.VersionList());
+	 else
+	    candSwitch.emplace_back(Pkg.VersionList(), pkg.release);
+      }
+      if (candSwitch.empty() == false)
+	 InstallAction.propergateReleaseCandiateSwitching(candSwitch, c0out);
+      for (auto const &pkg: pseudoPkgs)
+      {
+	 pkgCache::PkgIterator const Pkg = Cache->FindPkg(pkg.name, pkg.arch);
+	 if (Pkg.end())
+	    continue;
 	 InstallAction(Cache[Pkg].CandidateVerIter(Cache));
 	 removeAgain.push_back(Pkg);
       }
@@ -779,7 +857,7 @@ bool DoBuildDep(CommandLine &CmdL)
 
    {
       pkgDepCache::ActionGroup group(Cache);
-      if (_config->FindB("APT::Get::Build-Dep-Automatic", false) == false)
+      if (_config->FindB(AreDoingSatisfy ? "APT::Get::Satisfy-Automatic" : "APT::Get::Build-Dep-Automatic", false) == false)
       {
 	 for (auto const &pkg: removeAgain)
 	 {

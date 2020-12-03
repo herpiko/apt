@@ -1,20 +1,20 @@
 // Include files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
 #include <apt-pkg/algorithms.h>
-#include <apt-pkg/upgrade.h>
-#include <apt-pkg/error.h>
+#include <apt-pkg/cacheset.h>
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/depcache.h>
+#include <apt-pkg/error.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheset.h>
+#include <apt-pkg/upgrade.h>
 
-#include <apt-private/private-output.h>
 #include <apt-private/private-cachefile.h>
+#include <apt-private/private-output.h>
 
-#include <string.h>
-#include <ostream>
 #include <cstdlib>
+#include <ostream>
+#include <string.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -22,7 +22,7 @@
 using namespace std;
 
 static bool SortPackagesByName(pkgCache * const Owner,
-      map_pointer_t const A, map_pointer_t const B)
+      map_pointer<pkgCache::Group> const A, map_pointer<pkgCache::Group> const B)
 {
    if (A == 0)
       return false;
@@ -42,7 +42,7 @@ void SortedPackageUniverse::LazyInit() const
       return;
    pkgCache * const Owner = data();
    // In Multi-Arch systems Grps are easier to sort than Pkgs
-   std::vector<map_pointer_t> GrpList;
+   std::vector<map_pointer<pkgCache::Group>> GrpList;
    List.reserve(Owner->Head().GroupCount);
    for (pkgCache::GrpIterator I{Owner->GrpBegin()}; I.end() != true; ++I)
       GrpList.emplace_back(I - Owner->GrpP);
@@ -108,10 +108,9 @@ bool CacheFile::CheckDeps(bool AllowBroken)
    }
    else
    {
-      c1out << _("You might want to run 'apt-get -f install' to correct these.") << endl;
+      c1out << _("You might want to run 'apt --fix-broken install' to correct these.") << endl;
       ShowBroken(c1out,*this,true);
-
-      return _error->Error(_("Unmet dependencies. Try using -f."));
+      return _error->Error(_("Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution)."));
    }
       
    return true;

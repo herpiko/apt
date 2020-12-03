@@ -9,41 +9,29 @@
 #include <string>
 #include <vector>
 
-#ifndef APT_10_CLEANER_HEADERS
-#include <apt-pkg/pkgcache.h>
-class pkgCacheGenerator;
-class OpProgress;
-#endif
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/srcrecords.h>
-#include <apt-pkg/pkgrecords.h>
-using std::string;
-#endif
 
 class pkgAcquire;
 class IndexTarget;
 class pkgCacheGenerator;
 class OpProgress;
 
-class metaIndex
+class metaIndexPrivate;
+
+class APT_PUBLIC metaIndex
 {
 public:
-   APT_IGNORE_DEPRECATED_PUSH
    struct checkSum
    {
       std::string MetaKeyFilename;
       HashStringList Hashes;
       unsigned long long Size;
-
-      APT_DEPRECATED_MSG("Use the HashStringList member Hashes instead of a hardcoded HashString") HashString Hash;
    };
-   APT_IGNORE_DEPRECATED_POP
 
    enum APT_HIDDEN TriState {
       TRI_YES, TRI_DONTCARE, TRI_NO, TRI_UNSET
    };
 private:
-   void * const d;
+   metaIndexPrivate * const d;
 protected:
    std::vector <pkgIndexFile *> *Indexes;
    // parsed from the sources.list
@@ -56,6 +44,11 @@ protected:
    // parsed from a file
    std::string Suite;
    std::string Codename;
+   std::string Origin;
+   std::string Label;
+   std::string Version;
+   signed short DefaultPin;
+   std::string ReleaseNotes;
    time_t Date;
    time_t ValidUntil;
    bool SupportsAcquireByHash;
@@ -70,11 +63,17 @@ public:
    TriState GetTrusted() const;
    std::string GetSignedBy() const;
 
+   std::string GetOrigin() const;
+   std::string GetLabel() const;
+   std::string GetVersion() const;
    std::string GetCodename() const;
    std::string GetSuite() const;
+   std::string GetReleaseNotes() const;
+   signed short GetDefaultPin() const;
    bool GetSupportsAcquireByHash() const;
    time_t GetValidUntil() const;
    time_t GetDate() const;
+   virtual time_t GetNotBefore() const = 0;
 
    std::string GetExpectedDist() const;
    bool CheckDist(std::string const &MaybeDist) const;
@@ -108,9 +107,9 @@ public:
              char const * const Type);
    virtual ~metaIndex();
 
-   // FIXME: make virtual on next abi break
-   bool IsArchitectureSupported(std::string const &arch) const;
-   bool IsArchitectureAllSupportedFor(IndexTarget const &target) const;
+   virtual bool IsArchitectureSupported(std::string const &arch) const;
+   virtual bool IsArchitectureAllSupportedFor(IndexTarget const &target) const;
+   virtual bool HasSupportForComponent(std::string const &component) const;
 };
 
 #endif

@@ -3,13 +3,12 @@
 
 #include <apt-pkg/algorithms.h>
 #include <apt-pkg/configuration.h>
+#include <apt-pkg/depcache.h>
 #include <apt-pkg/edsp.h>
 #include <apt-pkg/error.h>
+#include <apt-pkg/pkgcache.h>
 #include <apt-pkg/progress.h>
 #include <apt-pkg/upgrade.h>
-#include <apt-pkg/depcache.h>
-#include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
 
 #include <string>
 
@@ -120,12 +119,7 @@ static bool pkgDistUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
    if (Progress != NULL)
       Progress->Done();
    return success;
-}
-bool pkgDistUpgrade(pkgDepCache &Cache)
-{
-   return pkgDistUpgrade(Cache, NULL);
-}
-									/*}}}*/
+}									/*}}}*/
 // AllUpgradeNoNewPackages - Upgrade but no removals or new pkgs        /*{{{*/
 static bool pkgAllUpgradeNoNewPackages(pkgDepCache &Cache, OpProgress * const Progress)
 {
@@ -210,7 +204,7 @@ static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache, OpProgress * const 
    if (Progress != NULL)
       Progress->Progress(50);
 
-   // ... but it may remove stuff, we we need to clean up afterwards again
+   // ... but it may remove stuff, we need to clean up afterwards again
    for (pkgCache::PkgIterator I = Cache.PkgBegin(); I.end() == false; ++I)
       if (Cache[I].Delete() == true)
 	 Cache.MarkKeep(I, false, false);
@@ -223,20 +217,6 @@ static bool pkgAllUpgradeWithNewPackages(pkgDepCache &Cache, OpProgress * const 
    if (Progress != NULL)
       Progress->Done();
    return success;
-}
-									/*}}}*/
-// AllUpgrade - Upgrade as many packages as possible			/*{{{*/
-// ---------------------------------------------------------------------
-/* Right now the system must be consistent before this can be called.
-   It also will not change packages marked for install, it only tries
-   to install packages not marked for install */
-static bool pkgAllUpgrade(pkgDepCache &Cache, OpProgress * const Progress)
-{
-   return pkgAllUpgradeNoNewPackages(Cache, Progress);
-}
-bool pkgAllUpgrade(pkgDepCache &Cache)
-{
-   return pkgAllUpgrade(Cache, NULL);
 }
 									/*}}}*/
 // MinimizeUpgrade - Minimizes the set of packages to be upgraded	/*{{{*/
@@ -287,7 +267,6 @@ bool pkgMinimizeUpgrade(pkgDepCache &Cache)
 // APT::Upgrade::Upgrade - Upgrade using a specific strategy		/*{{{*/
 bool APT::Upgrade::Upgrade(pkgDepCache &Cache, int mode, OpProgress * const Progress)
 {
-APT_IGNORE_DEPRECATED_PUSH
    if (mode == ALLOW_EVERYTHING)
       return pkgDistUpgrade(Cache, Progress);
    else if ((mode & ~FORBID_REMOVE_PACKAGES) == 0)
@@ -296,7 +275,6 @@ APT_IGNORE_DEPRECATED_PUSH
       return pkgAllUpgradeNoNewPackages(Cache, Progress);
    else
       _error->Error("pkgAllUpgrade called with unsupported mode %i", mode);
-APT_IGNORE_DEPRECATED_POP
    return false;
 }
 									/*}}}*/

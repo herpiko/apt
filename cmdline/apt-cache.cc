@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: apt-cache.cc,v 1.72 2004/04/30 04:34:03 mdz Exp $
 /* ######################################################################
    
    apt-cache - Manages the cache files
@@ -13,47 +12,40 @@
    ##################################################################### */
 									/*}}}*/
 // Include Files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
 #include <apt-pkg/algorithms.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
+#include <apt-pkg/configuration.h>
+#include <apt-pkg/depcache.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/indexfile.h>
 #include <apt-pkg/init.h>
+#include <apt-pkg/macros.h>
 #include <apt-pkg/metaindex.h>
+#include <apt-pkg/mmap.h>
+#include <apt-pkg/pkgcache.h>
 #include <apt-pkg/pkgrecords.h>
 #include <apt-pkg/pkgsystem.h>
 #include <apt-pkg/policy.h>
 #include <apt-pkg/progress.h>
 #include <apt-pkg/sourcelist.h>
-#include <apt-pkg/sptr.h>
 #include <apt-pkg/srcrecords.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/tagfile.h>
 #include <apt-pkg/version.h>
-#include <apt-pkg/cacheiterators.h>
-#include <apt-pkg/configuration.h>
-#include <apt-pkg/depcache.h>
-#include <apt-pkg/macros.h>
-#include <apt-pkg/mmap.h>
-#include <apt-pkg/pkgcache.h>
 
 #include <apt-private/private-cacheset.h>
 #include <apt-private/private-cmndline.h>
 #include <apt-private/private-depends.h>
-#include <apt-private/private-show.h>
-#include <apt-private/private-search.h>
-#include <apt-private/private-unmet.h>
 #include <apt-private/private-main.h>
+#include <apt-private/private-search.h>
+#include <apt-private/private-show.h>
+#include <apt-private/private-unmet.h>
 
-#include <regex.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <algorithm>
 #include <cstring>
 #include <iomanip>
@@ -63,6 +55,11 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <regex.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -137,14 +134,14 @@ static bool DumpPackage(CommandLine &CmdL)
 // ShowHashTableStats - Show stats about a hashtable			/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-static map_pointer_t PackageNext(pkgCache::Package const * const P) { return P->NextPackage; }
-static map_pointer_t GroupNext(pkgCache::Group const * const G) { return G->Next; }
-template<class T>
-static void ShowHashTableStats(std::string Type,
-                               T *StartP,
-                               map_pointer_t *Hashtable,
-                               unsigned long Size,
-			       map_pointer_t(*Next)(T const * const))
+static map_pointer<pkgCache::Package> PackageNext(pkgCache::Package const * const P) { return P->NextPackage; }
+static map_pointer<pkgCache::Group> GroupNext(pkgCache::Group const * const G) { return G->Next; }
+template <class T>
+static void ShowHashTableStats(char const *const Type,
+			       T *StartP,
+			       map_pointer<T> *Hashtable,
+			       unsigned long Size,
+			       map_pointer<T> (*Next)(T const *const))
 {
    // hashtable stats for the HashTable
    unsigned long NumBuckets = Size;
@@ -184,7 +181,7 @@ static void ShowHashTableStats(std::string Type,
 static bool Stats(CommandLine &CmdL)
 {
    if (CmdL.FileSize() > 1) {
-      _error->Error(_("apt-cache stats does not take any arguments"));
+      _error->Error(_("%s does not take any arguments"), "apt-cache stats");
       return false;
    }
 
@@ -204,8 +201,7 @@ static bool Stats(CommandLine &CmdL)
    int NVirt = 0;
    int DVirt = 0;
    int Missing = 0;
-   pkgCache::PkgIterator I = Cache->PkgBegin();
-   for (;I.end() != true; ++I)
+   for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() != true; ++I)
    {
       if (I->VersionList != 0 && I->ProvidesList == 0)
       {
@@ -404,7 +400,7 @@ static bool DumpAvail(CommandLine &)
    if (unlikely(Cache == NULL || CacheFile.BuildPolicy() == false))
       return false;
 
-   unsigned long Count = Cache->HeaderP->PackageCount+1;
+   auto const Count = Cache->HeaderP->PackageCount+1;
    pkgCache::VerFile **VFList = new pkgCache::VerFile *[Count];
    memset(VFList,0,sizeof(*VFList)*Count);
    
@@ -471,13 +467,8 @@ static bool DumpAvail(CommandLine &)
    char *Buffer = new char[Cache->HeaderP->MaxVerFileSize+10];
    for (pkgCache::VerFile **J = VFList; *J != 0;)
    {
-      pkgCache::PkgFileIterator File(*Cache,(*J)->File + Cache->PkgFileP);
-      if (File.IsOk() == false)
-      {
-	 _error->Error(_("Package file %s is out of sync."),File.FileName());
-	 break;
-      }
-
+      pkgCache::PkgFileIterator File(*Cache, Cache->PkgFileP + (*J)->File);
+      // FIXME: Add support for volatile/with-source files
       FileFd PkgF(File.FileName(),FileFd::ReadOnly, FileFd::Extension);
       if (_error->PendingError() == true)
 	 break;
@@ -490,7 +481,7 @@ static bool DumpAvail(CommandLine &)
       unsigned long Pos = 0;
       for (; *J != 0; J++)
       {
-	 if ((*J)->File + Cache->PkgFileP != File)
+	 if (Cache->PkgFileP + (*J)->File != File)
 	    break;
 	 
 	 const pkgCache::VerFile &VF = **J;
@@ -565,18 +556,19 @@ static bool XVcg(CommandLine &CmdL)
       0 = None */
    enum States {None=0, ToShow, ToShowNR, DoneNR, Done};
    enum TheFlags {ForceNR=(1<<0)};
-   unsigned char *Show = new unsigned char[Cache->Head().PackageCount];
-   unsigned char *Flags = new unsigned char[Cache->Head().PackageCount];
-   unsigned char *ShapeMap = new unsigned char[Cache->Head().PackageCount];
+   auto PackageCount = Cache->Head().PackageCount;
+   unsigned char *Show = new unsigned char[PackageCount];
+   unsigned char *Flags = new unsigned char[PackageCount];
+   unsigned char *ShapeMap = new unsigned char[PackageCount];
    
    // Show everything if no arguments given
    if (CmdL.FileList[1] == 0)
-      for (unsigned long I = 0; I != Cache->Head().PackageCount; I++)
+      for (decltype(PackageCount) I = 0; I != PackageCount; ++I)
 	 Show[I] = ToShow;
    else
-      for (unsigned long I = 0; I != Cache->Head().PackageCount; I++)
+      for (decltype(PackageCount) I = 0; I != PackageCount; ++I)
 	 Show[I] = None;
-   memset(Flags,0,sizeof(*Flags)*Cache->Head().PackageCount);
+   memset(Flags,0,sizeof(*Flags)*PackageCount);
    
    // Map the shapes
    for (pkgCache::PkgIterator Pkg = Cache->PkgBegin(); Pkg.end() == false; ++Pkg)
@@ -602,8 +594,8 @@ static bool XVcg(CommandLine &CmdL)
    // Load the list of packages from the command line into the show list
    APT::CacheSetHelper helper(true, GlobalError::NOTICE);
    std::list<APT::CacheSetHelper::PkgModifier> mods;
-   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::PackageSet::Modifier::POSTFIX));
-   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::PackageSet::Modifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::CacheSetHelper::PkgModifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::CacheSetHelper::PkgModifier::POSTFIX));
    std::map<unsigned short, APT::PackageSet> pkgsets =
 		APT::PackageSet::GroupedFromCommandLine(CacheFile, CmdL.FileList + 1, mods, 0, helper);
 
@@ -777,18 +769,19 @@ static bool Dotty(CommandLine &CmdL)
       0 = None */
    enum States {None=0, ToShow, ToShowNR, DoneNR, Done};
    enum TheFlags {ForceNR=(1<<0)};
-   unsigned char *Show = new unsigned char[Cache->Head().PackageCount];
-   unsigned char *Flags = new unsigned char[Cache->Head().PackageCount];
-   unsigned char *ShapeMap = new unsigned char[Cache->Head().PackageCount];
+   auto PackageCount = Cache->Head().PackageCount;
+   unsigned char *Show = new unsigned char[PackageCount];
+   unsigned char *Flags = new unsigned char[PackageCount];
+   unsigned char *ShapeMap = new unsigned char[PackageCount];
    
    // Show everything if no arguments given
    if (CmdL.FileList[1] == 0)
-      for (unsigned long I = 0; I != Cache->Head().PackageCount; I++)
+      for (decltype(PackageCount) I = 0; I != PackageCount; ++I)
 	 Show[I] = ToShow;
    else
-      for (unsigned long I = 0; I != Cache->Head().PackageCount; I++)
+      for (decltype(PackageCount) I = 0; I != PackageCount; ++I)
 	 Show[I] = None;
-   memset(Flags,0,sizeof(*Flags)*Cache->Head().PackageCount);
+   memset(Flags,0,sizeof(*Flags)*PackageCount);
    
    // Map the shapes
    for (pkgCache::PkgIterator Pkg = Cache->PkgBegin(); Pkg.end() == false; ++Pkg)
@@ -814,8 +807,8 @@ static bool Dotty(CommandLine &CmdL)
    // Load the list of packages from the command line into the show list
    APT::CacheSetHelper helper(true, GlobalError::NOTICE);
    std::list<APT::CacheSetHelper::PkgModifier> mods;
-   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::PackageSet::Modifier::POSTFIX));
-   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::PackageSet::Modifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::CacheSetHelper::PkgModifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::CacheSetHelper::PkgModifier::POSTFIX));
    std::map<unsigned short, APT::PackageSet> pkgsets =
 		APT::PackageSet::GroupedFromCommandLine(CacheFile, CmdL.FileList + 1, mods, 0, helper);
 
@@ -987,15 +980,13 @@ static bool ShowPkgNames(CommandLine &CmdL)
    if (unlikely(CacheFile.BuildCaches(NULL, false) == false))
       return false;
    pkgCache::GrpIterator I = CacheFile.GetPkgCache()->GrpBegin();
-   bool const All = _config->FindB("APT::Cache::AllNames","false");
+   bool const All = _config->FindB("APT::Cache::AllNames", false);
 
    if (CmdL.FileList[1] != 0)
    {
       for (;I.end() != true; ++I)
       {
-	 if (All == false && I->FirstPackage == 0)
-	    continue;
-	 if (I.FindPkg("any")->VersionList == 0)
+	 if (All == false && (I.PackageList().end() || I.PackageList()->VersionList == 0))
 	    continue;
 	 if (strncmp(I.Name(),CmdL.FileList[1],strlen(CmdL.FileList[1])) == 0)
 	    cout << I.Name() << endl;
@@ -1007,13 +998,11 @@ static bool ShowPkgNames(CommandLine &CmdL)
    // Show all pkgs
    for (;I.end() != true; ++I)
    {
-      if (All == false && I->FirstPackage == 0)
-	 continue;
-      if (I.FindPkg("any")->VersionList == 0)
+      if (All == false && (I.PackageList().end() || I.PackageList()->VersionList == 0))
 	 continue;
       cout << I.Name() << endl;
    }
-   
+
    return true;
 }
 									/*}}}*/

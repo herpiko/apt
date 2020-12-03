@@ -10,22 +10,26 @@
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
+#include <apt-pkg/configuration.h>
+#include <apt-pkg/depcache.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/init.h>
-#include <apt-pkg/pkgsystem.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/statechanges.h>
-#include <apt-pkg/cacheiterators.h>
-#include <apt-pkg/configuration.h>
-#include <apt-pkg/depcache.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/pkgcache.h>
+#include <apt-pkg/pkgsystem.h>
+#include <apt-pkg/statechanges.h>
+#include <apt-pkg/strutl.h>
 
 #include <apt-private/private-cmndline.h>
-#include <apt-private/private-output.h>
 #include <apt-private/private-main.h>
+#include <apt-private/private-output.h>
 
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 #include <errno.h>
 #include <fcntl.h>
 #include <stddef.h>
@@ -34,11 +38,6 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -57,7 +56,8 @@ static bool DoAuto(CommandLine &CmdL)
       return _error->Error(_("No packages found"));
 
    bool MarkAuto = strcasecmp(CmdL.FileList[0],"auto") == 0;
-   int AutoMarkChanged = 0;
+
+   vector<string> PackagesMarked;
 
    for (APT::PackageList::const_iterator Pkg = pkgset.begin(); Pkg != pkgset.end(); ++Pkg)
    {
@@ -75,16 +75,27 @@ static bool DoAuto(CommandLine &CmdL)
 	 continue;
       }
 
-      if (MarkAuto == false)
-	 ioprintf(c1out,_("%s set to manually installed.\n"), Pkg.FullName(true).c_str());
-      else
-	 ioprintf(c1out,_("%s set to automatically installed.\n"), Pkg.FullName(true).c_str());
-
+      PackagesMarked.push_back(Pkg.FullName(true));
       DepCache->MarkAuto(Pkg, MarkAuto);
-      ++AutoMarkChanged;
    }
-   if (AutoMarkChanged > 0 && _config->FindB("APT::Mark::Simulate", false) == false)
-      return DepCache->writeStateFile(NULL);
+
+   bool MarkWritten = false;
+   bool IsSimulation = _config->FindB("APT::Mark::Simulate", false);
+   if (PackagesMarked.size() > 0 && !IsSimulation) {
+      MarkWritten = DepCache->writeStateFile(NULL);
+      if(!MarkWritten) {
+         return MarkWritten;
+      }
+   }
+
+   if(IsSimulation || MarkWritten) {
+      for (vector<string>::const_iterator I = PackagesMarked.begin(); I != PackagesMarked.end(); ++I) {
+         if (MarkAuto == false)
+            ioprintf(c1out,_("%s set to manually installed.\n"), (*I).c_str());
+         else
+            ioprintf(c1out,_("%s set to automatically installed.\n"), (*I).c_str());
+      }
+   }
    return true;
 }
 									/*}}}*/
@@ -126,6 +137,127 @@ static bool DoMarkAuto(CommandLine &CmdL)
    return true;
 }
 									/*}}}*/
+// helper for Install-Recommends-Sections and Never-MarkAuto-Sections	/*{{{*/
+static bool
+ConfigValueInSubTree(const char *SubTree, const char *needle)
+{
+   // copied from depcache.cc
+   Configuration::Item const *Opts;
+   Opts = _config->Tree(SubTree);
+   if (Opts != 0 && Opts->Child != 0)
+   {
+      Opts = Opts->Child;
+      for (; Opts != 0; Opts = Opts->Next)
+      {
+	 if (Opts->Value.empty() == true)
+	    continue;
+	 if (strcmp(needle, Opts->Value.c_str()) == 0)
+	    return true;
+      }
+   }
+   return false;
+}
+									/*}}}*/
+/* DoMinimize - minimize manually installed	{{{*/
+/* Traverses dependencies of meta packages and marks them as manually
+ * installed. */
+static bool DoMinimize(CommandLine &CmdL)
+{
+
+   pkgCacheFile CacheFile;
+   pkgDepCache *const DepCache = CacheFile.GetDepCache();
+   if (unlikely(DepCache == nullptr))
+      return false;
+
+   if (CmdL.FileList[1] != nullptr)
+      return _error->Error(_("%s does not take any arguments"), "apt-mark minimize-manual");
+
+   auto Debug = _config->FindB("Debug::AptMark::Minimize", false);
+   auto is_root = [&DepCache](pkgCache::PkgIterator const &pkg) {
+      auto ver = pkg.CurrentVer();
+      return ver.end() == false && ((*DepCache)[pkg].Flags & pkgCache::Flag::Auto) == 0 &&
+	     ver->Section != 0 &&
+	     ConfigValueInSubTree("APT::Never-MarkAuto-Sections", ver.Section());
+   };
+
+   APT::PackageSet roots;
+   for (auto Pkg = DepCache->PkgBegin(); Pkg.end() == false; ++Pkg)
+   {
+      if (is_root(Pkg))
+      {
+	 if (Debug)
+	    std::clog << "Found root " << Pkg.Name() << std::endl;
+	 roots.insert(Pkg);
+      }
+   }
+
+   APT::PackageSet workset(roots);
+   APT::PackageSet seen;
+   APT::PackageSet changed;
+
+   pkgDepCache::ActionGroup group(*DepCache);
+
+   while (workset.empty() == false)
+   {
+      if (Debug)
+	 std::clog << "Iteration\n";
+
+      APT::PackageSet workset2;
+      for (auto &Pkg : workset)
+      {
+	 if (seen.find(Pkg) != seen.end())
+	    continue;
+
+	 seen.insert(Pkg);
+
+	 if (Debug)
+	    std::cerr << "    Visiting " << Pkg.FullName(true) << "\n";
+	 if (roots.find(Pkg) == roots.end() && ((*DepCache)[Pkg].Flags & pkgCache::Flag::Auto) == 0)
+	 {
+	    DepCache->MarkAuto(Pkg, true);
+	    changed.insert(Pkg);
+	 }
+
+	 // Visit dependencies, add them to next working set
+	 for (auto Dep = Pkg.CurrentVer().DependsList(); !Dep.end(); ++Dep)
+	 {
+	    if (DepCache->IsImportantDep(Dep) == false)
+	       continue;
+	    std::unique_ptr<pkgCache::Version *[]> targets(Dep.AllTargets());
+	    for (int i = 0; targets[i] != nullptr; i++)
+	    {
+	       pkgCache::VerIterator Tgt(*DepCache, targets[i]);
+	       if (Tgt.ParentPkg()->CurrentVer != 0 && Tgt.ParentPkg().CurrentVer()->ID == Tgt->ID)
+		  workset2.insert(Tgt.ParentPkg());
+	    }
+	 }
+      }
+
+      workset = std::move(workset2);
+   }
+
+   if (changed.empty()) {
+      cout << _("No changes necessary") << endl;
+      return true;
+   }
+
+   ShowList(c1out, _("The following packages will be marked as automatically installed:"), changed,
+	    [](const pkgCache::PkgIterator &) { return true; },
+	    &PrettyFullName,
+	    &PrettyFullName);
+
+   if (_config->FindB("APT::Mark::Simulate", false) == false)
+   {
+      if (YnPrompt(_("Do you want to continue?"), false) == false)
+	 return true;
+
+      return DepCache->writeStateFile(NULL);
+   }
+
+   return true;
+}
+									/*}}}*/
+
 /* ShowAuto - show automatically installed packages (sorted)		{{{*/
 static bool ShowAuto(CommandLine &CmdL)
 {
@@ -245,7 +377,7 @@ static bool ShowSelection(CommandLine &CmdL)				/*{{{*/
    else if (strncasecmp(CmdL.FileList[0], "showdeinstall", strlen("showdeinstall")) == 0 ||
 	 strncasecmp(CmdL.FileList[0], "showremove", strlen("showremove")) == 0)
       selector = pkgCache::State::DeInstall;
-   else if (strncasecmp(CmdL.FileList[0], "showhold", strlen("showhold")) == 0)
+   else if (strncasecmp(CmdL.FileList[0], "showhold", strlen("showhold")) == 0 || strncasecmp(CmdL.FileList[0], "showheld", strlen("showheld")) == 0)
       selector = pkgCache::State::Hold;
    else //if (strcasecmp(CmdL.FileList[0], "showinstall", strlen("showinstall")) == 0)
       selector = pkgCache::State::Install;
@@ -294,6 +426,7 @@ static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
    return {
       {"auto",&DoAuto, _("Mark the given packages as automatically installed")},
       {"manual",&DoAuto, _("Mark the given packages as manually installed")},
+      {"minimize-manual", &DoMinimize, _("Mark all dependencies of meta packages as automatically installed.")},
       {"hold",&DoSelection, _("Mark a package as held back")},
       {"unhold",&DoSelection, _("Unset a package set as held back")},
       {"install",&DoSelection, nullptr},
@@ -302,7 +435,7 @@ static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
       {"purge",&DoSelection, nullptr},
       {"showauto",&ShowAuto, _("Print the list of automatically installed packages")},
       {"showmanual",&ShowAuto, _("Print the list of manually installed packages")},
-      {"showhold",&ShowSelection, _("Print the list of package on hold")}, {"showholds",&ShowSelection, nullptr},
+      {"showhold",&ShowSelection, _("Print the list of packages on hold")}, {"showholds",&ShowSelection, nullptr}, {"showheld",&ShowSelection, nullptr},
       {"showinstall",&ShowSelection, nullptr}, {"showinstalls",&ShowSelection, nullptr},
       {"showdeinstall",&ShowSelection, nullptr}, {"showdeinstalls",&ShowSelection, nullptr},
       {"showremove",&ShowSelection, nullptr}, {"showremoves",&ShowSelection, nullptr},

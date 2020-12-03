@@ -1,7 +1,7 @@
 #ifndef APT_PRETTYPRINTERS_H
 #define APT_PRETTYPRINTERS_H
-#include <apt-pkg/pkgcache.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/pkgcache.h>
 
 class pkgDepCache;
 
@@ -31,7 +31,7 @@ struct PrettyDep
 };
 
 }
-std::ostream& operator<<(std::ostream& os, const APT::PrettyPkg& pp);
-std::ostream& operator<<(std::ostream& os, const APT::PrettyDep& pd);
+APT_PUBLIC std::ostream& operator<<(std::ostream& os, const APT::PrettyPkg& pp);
+APT_PUBLIC std::ostream& operator<<(std::ostream& os, const APT::PrettyDep& pd);
 
 #endif

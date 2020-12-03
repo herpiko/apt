@@ -8,7 +8,7 @@
    standard 'Version 0' engine is included inside the DepCache which is
    it's historical location.
    
-   The V4 engine allows the user to completly control all aspects of
+   The V4 engine allows the user to completely control all aspects of
    version selection. There are three primary means to choose a version
     * Selection by version match
     * Selection by Release file match
@@ -34,17 +34,13 @@
 
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
 #include <apt-pkg/versionmatch.h>
 
-#include <vector>
 #include <string>
+#include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::vector;
-#endif
 
-class pkgPolicy : public pkgDepCache::Policy
+class APT_PUBLIC pkgPolicy : public pkgDepCache::Policy
 {
    protected:
 
@@ -61,8 +57,7 @@ class pkgPolicy : public pkgDepCache::Policy
       std::string Pkg;
       explicit PkgPin(std::string const &Pkg) : Pin(), Pkg(Pkg) {};
    };
-   
-   Pin *Pins;
+
    Pin *VerPins;
    signed short *PFPriority;
    std::vector<Pin> Defaults;
@@ -75,14 +70,14 @@ class pkgPolicy : public pkgDepCache::Policy
    // Things for manipulating pins
    void CreatePin(pkgVersionMatch::MatchType Type,std::string Pkg,
 		  std::string Data,signed short Priority);
-   pkgCache::VerIterator GetMatch(pkgCache::PkgIterator const &Pkg);
 
    // Things for the cache interface.
    virtual pkgCache::VerIterator GetCandidateVer(pkgCache::PkgIterator const &Pkg) APT_OVERRIDE;
-   virtual signed short GetPriority(pkgCache::PkgIterator const &Pkg) APT_OVERRIDE;
    virtual signed short GetPriority(pkgCache::VerIterator const &Ver, bool ConsiderFiles = true) APT_OVERRIDE;
    virtual signed short GetPriority(pkgCache::PkgFileIterator const &File) APT_OVERRIDE;
 
+   void SetPriority(pkgCache::VerIterator const &Ver, signed short Priority);
+   void SetPriority(pkgCache::PkgFileIterator const &File, signed short Priority);
    bool InitDefaults();
    
    explicit pkgPolicy(pkgCache *Owner);
@@ -91,7 +86,7 @@ class pkgPolicy : public pkgDepCache::Policy
    void * const d;
 };
 
-bool ReadPinFile(pkgPolicy &Plcy, std::string File = "");
-bool ReadPinDir(pkgPolicy &Plcy, std::string Dir = "");
+APT_PUBLIC bool ReadPinFile(pkgPolicy &Plcy, std::string File = "");
+APT_PUBLIC bool ReadPinDir(pkgPolicy &Plcy, std::string Dir = "");
 
 #endif

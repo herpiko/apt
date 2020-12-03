@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 cd "$(readlink -f $(dirname $0))"
@@ -11,7 +11,6 @@ VERSION=$(dpkg-parsechangelog | sed -n -e '/^Version:/s/^Version: //p')
 DISTRIBUTION=$(dpkg-parsechangelog | sed -n -e '/^Distribution:/s/^Distribution: //p')
 
 LIBAPTPKGVERSION="$(awk -v ORS='.' '/^\#define APT_PKG_M/ {print $3}' apt-pkg/contrib/macros.h | sed 's/\.$//')"
-LIBAPTINSTVERSION="$(sed -nr 's/set\(MAJOR ([^)]*)\)/\1/p' apt-inst/CMakeLists.txt)"
 
 librarysymbolsfromfile() {
 	local MISSING="$(grep '^+#MISSING' "$1")"
@@ -39,8 +38,11 @@ test_deb_control() {
 	) | tr '\n' ' '\
 	  | sed -r -e 's#<[^,<>()@]*>##g' \
 	           -e 's#@[^,<>()@]*@##g' \
+	           -e 's#\[linux-any\]*##g' \
+	           -e 's#\[[^][]*\]*##g' \
 	           -e 's#dpkg-dev \([^)]*\)#dpkg-dev#g' \
 	           -e 's#debhelper \([^)]*\)#debhelper#g' \
+	           -e 's#g\+\+ \([^)]*\)#g++#g' \
 	           -e 's#@##g' \
 	           -e 's#,(\s+,)+#, #g' \
 	           -e 's#\s+# #g'
@@ -61,7 +63,6 @@ if [ "$1" = 'pre-export' ]; then
 	}
 
 	libraryversioncheck 'libapt-pkg' "$LIBAPTPKGVERSION"
-	libraryversioncheck 'libapt-inst' "$LIBAPTINSTVERSION"
 
 
 	if [ "$DISTRIBUTION" = 'sid' ]; then
@@ -78,10 +79,11 @@ if [ "$1" = 'pre-export' ]; then
 
 	# update the last-modification field of manpages based on git changes
 	grep --files-with-matches '<date>' doc/*.xml | while read file; do \
-		LASTMOD="$(date -d "@$(git log --format='%at' --max-count=1 --invert-grep --fixed-strings --grep 'review
+		LASTMOD="$(date -d "@$(git log -i --format='%at' --max-count=1 --invert-grep --fixed-strings --grep 'review
 typo
 release
-Git-Dch: Ignore' "$file")" '+%Y-%m-%dT00:00:00Z')"
+Git-Dch: Ignore
+Gbp-Dch: ignore' "$file")" '+%Y-%m-%dT00:00:00Z')"
 		sed -i -e "s#^\([ ]\+\)<date>.*</date>\$#\1<date>$LASTMOD</date>#" "$file"
 	done
 
@@ -100,6 +102,12 @@ elif [ "$1" = 'pre-build' ]; then
 		if [ "$VERSION" != "$CONFVERSION" ]; then
 			echo "changelog (${VERSION}) and CMakeLists.txt (${CONFVERSION}) talk about different versions!"
 			echo "You probably want to run »./prepare-release pre-export« to fix this."
+			exit 1
+		fi
+		NEWSDISTRIBUTION=$(dpkg-parsechangelog -l debian/NEWS | sed -n -e '/^Distribution:/s/^Distribution: //p')
+		if [ "$NEWSDISTRIBUTION" = 'UNRELEASED' ]; then
+			 echo "changelog (${VERSION}) has a distribution (${DISTRIBUTION}) set, while the NEWS file hasn't!"
+			echo "You probably want to edit »debian/NEWS« to fix this."
 			exit 1
 		fi
 	fi
@@ -171,7 +179,6 @@ elif [ "$1" = 'library' ]; then
 	}
 	librarysymbols 'libapt-pkg' "${LIBAPTPKGVERSION}"
 	echo
-	librarysymbols 'libapt-inst' "${LIBAPTINSTVERSION}"
 elif [ "$1" = 'buildlog' ]; then
 	while [ -n "$2" ]; do
 		librarysymbolsfromfile "$2" 'UNKNOWN'
@@ -185,7 +192,7 @@ elif [ "$1" = 'travis-ci' ]; then
 	gdebi -n apt-test-depends_1.0_all.deb
 elif [ "$1" = 'coverage' ]; then
 	DIR="${2:-./coverage}"
-	git clean -dfX # remove ignored build artefacts for a clean start
+	git clean -dfX # remove ignored build artifacts for a clean start
 	make CFLAGS+='--coverage' CXXFLAGS+='--coverage'
 	LCOVRC='--rc geninfo_checksum=1 --rc lcov_branch_coverage=1'
 	mkdir "$DIR"
@@ -212,9 +219,150 @@ elif [ "$1" = 'coverage' ]; then
 	}
 	grep 'build/include/' "${DIR}/apt.coverage.fixed" | sed "s#^SF:$(pwd)/##" | while read file; do
 		rewritefile "$file" 'apt-pkg' 'apt-pkg/deb' 'apt-pkg/edsp' 'apt-pkg/contrib' \
-		   'apt-inst' 'apt-inst/deb' 'apt-inst/contrib' 'apt-private'
+		  'apt-private'
 	done
 	genhtml --output-directory "${DIR}" "${DIR}/apt.coverage.fixed" ${LCOVRC}
+elif [ "$1" = 'spellcheckers' -o "$1" = 'lint' ]; then
+	is_available() {
+		if dpkg-checkbuilddeps -d "$1" 2>/dev/null; then
+			return 0
+		fi
+		echo "### SKIPPING ${2:-$1} functionality as ${1} isn't installed"
+	}
+	if is_available 'codespell'; then
+		echo '### codespell in source directories:'
+		codespell --enable-colors $(find . -mindepth 1 -maxdepth 1 -type d \! -name '.git' \! -name 'doc' \! -name 'po' \! -name 'build' \! -name 'test') \
+			| grep -v -e '^.*debian/changelog.*Troup.*==>.*Troupe.*$' \
+				-e '^.*debian/changelog.*readd.*==>.*readd.*$' \
+				-e '^.*debian/changelog.*Tim.*==>.*Time.*$' \
+				-e '^.*apt-pkg/contrib/fileutl\.cc.*creat.*==>.*create.*$' \
+				-e '^.*apt-pkg/pkgcache\.h.*mmaped.*==>.*mapped.*$' \
+				-e '^.*apt-pkg/pkgcachegen\.cc.*mmaped.*==>.*mapped.*$' \
+				-e '^.*apt-pkg/contrib/mmap\.h.*mmaped.*==>.*mapped.*$' \
+				-e '^.*cmdline/apt-key\.in.*dashs.*==>.*dashes.*$' \
+				-e '^.*methods/aptmethod\.h.*creat.*==>.*create.*$' \
+				-e '^.*dselect/install.*ans.*==>.*and.*$' \
+				-e '^.*ftparchive/writer\.h.*Delink.*==>.*Unlink.*$' \
+				-e '^.*ftparchive/writer\.cc.*De[Ll]ink.*==>.*[Uu]nlink.*$' \
+			|| true
+		echo '### codespell in testcases:'
+		codespell --enable-colors $(find test -type f \! -name 'status-*' \! -name 'Packages-*' \! -name '*.deb' \! -name '*.sec' \! -name '*.pub' \! -name '*.db') \
+			| grep -v -e '^.*test/libapt/file-helpers\.cc.*creat.*==>.*create.*$' \
+				-e '^.*test/libapt/tagfile_test\.cc.*tyes.*==>.*types.*$' \
+				-e '^.*test/libapt/strutil_test\.cc.*Fiel.*==>.*Feel.*$' \
+				-e '^.*test/libapt/cdromfindpackages_test\.cc.*Signatur.*==>.*Signature.*$' \
+				-e '^.*test/integration/skip-bug-601016-description-translation.*Paket.*==>.*Packet.*$' \
+				-e '^.*test/integration/skip-bug-601016-description-translation.*Wege.*==>.*Wedge.*$' \
+				-e '^.*test/integration/skip-bug-601016-description-translation.*Methoden.*==>.*Methods.*$' \
+				-e '^.*test/integration/test-apt-update-not-modified.*readd.*==>.*readd.*$' \
+			|| true
+		echo '### codespell in documentation:'
+		codespell --enable-colors doc/*.xml doc/*.txt doc/*.dbk doc/*.ent doc/*.cmake.in doc/xml.add doc/po4a.conf doc/examples doc/po/apt-doc.pot \
+			po/apt-all.pot README.* COPYING \
+			| grep -v -e '^.*po/apt-all\.pot.*DeLink.*==>.*unlink.*$' \
+			|| true
+	fi
+	if is_available 'lintian' 'spellintian'; then
+	   echo '### spellintian in source directories:'
+		{
+			for DIR in $(find . -mindepth 1 -maxdepth 1 -type d \! -name '.git' \! -name 'doc' \! -name 'po' \! -name 'build' \! -name 'test'); do
+				spellintian $(find "$DIR" -type f)
+			done
+		} \
+			| grep -v \
+				-e '^.*: long long (duplicate word) -> long$' \
+				-e '^./apt-pkg/pkgcache.h: ID ID (duplicate word) -> ID$' \
+				-e '^./apt-pkg/contrib/mmap.cc: WorkSpace WorkSpace (duplicate word) -> WorkSpace$' \
+				-e '^./apt-pkg/contrib/md5.cc: z z (duplicate word) -> z$' \
+				-e '^./apt-pkg/metaindex.cc: const const (duplicate word) -> const$' \
+				-e '^./apt-pkg/acquire-method.cc: QueueBack QueueBack (duplicate word) -> QueueBack$' \
+				-e '^./CMake/Translations.cmake: domain domain (duplicate word) -> domain$' \
+				-e '^./CMake/apti18n.h.in: m m (duplicate word) -> m$' \
+				-e '^./CMake/run_if_exists.sh: fi fi (duplicate word) -> fi$' \
+				-e '^./ftparchive/byhash.cc: ByHash ByHash (duplicate word) -> ByHash$' \
+				-e '^./ftparchive/writer.cc: this Packages -> these packages$' \
+				-e '^./ftparchive/byhash.h: ByHash ByHash (duplicate word) -> ByHash$' \
+				-e '^./cmdline/apt-key.in: done done (duplicate word) -> done$' \
+				-e '^./cmdline/apt-key.in: fi fi (duplicate word) -> fi$' \
+				-e '^./cmdline/apt-key.in: echo echo (duplicate word) -> echo$' \
+				-e '^./triehash/.travis.yml: perl perl (duplicate word) -> perl$' \
+				-e '^./triehash/README.md: Performance Performance (duplicate word) -> Performance$' \
+				-e '^./debian/apt.apt-compat.cron.daily: fi fi (duplicate word) -> fi$' \
+				-e '^./debian/apt.auto-removal.sh: done done (duplicate word) -> done$' \
+				-e '^./debian/apt.systemd.daily: fi fi (duplicate word) -> fi$' \
+				-e '^./debian/apt.postinst: fi fi (duplicate word) -> fi$' \
+				-e '^./methods/http.cc: Sz Sz (duplicate word) -> Sz$' \
+				-e '^./methods/ftp.cc: AFMap AFMap (duplicate word) -> AFMap$' \
+				-e '^./dselect/install: fi fi (duplicate word) -> fi$' \
+				-e '^./CMake/Documentation.cmake: endforeach endforeach (duplicate word) -> endforeach$' \
+				-e '^./apt-pkg/deb/deblistparser.cc: c c (duplicate word) -> c$' \
+				-e '^./apt-private/private-install.cc: result result (duplicate word) -> result$' \
+				-e '^./debian/changelog: the the (duplicate word) -> the$' \
+				-e '^./debian/changelog: procceed -> proceed$' \
+				-e '^./methods/aptmethod.h: QueueBack QueueBack (duplicate word) -> QueueBack$' \
+			|| true
+		echo '### spellintian in testcases:'
+		spellintian $(find test -type f \! -name 'status-*' \! -name 'Packages-*' \! -name '*.deb' \! -name '*.sec' \! -name '*.pub' \! -name '*.db') \
+			| grep -v \
+				-e '^.*: long long (duplicate word) -> long$' \
+				-e '^test/integration/.*: fi fi (duplicate word) -> fi$' \
+				-e '^test/integration/.*: done done (duplicate word) -> done$' \
+				-e '^test/integration/.*: echo echo (duplicate word) -> echo$' \
+				-e '^test/integration/test-00-commands-have-help: moo moo (duplicate word) -> moo$' \
+				-e '^test/integration/test-apt-cache: bar bar (duplicate word) -> bar$' \
+				-e '^test/integration/test-sourceslist-trusted-options: everythingsucceeds everythingsucceeds (duplicate word) -> everythingsucceeds$' \
+				-e '^test/integration/test-sourceslist-trusted-options: everythingfails everythingfails (duplicate word) -> everythingfails$' \
+				-e '^test/integration/test-apt-get-changelog: foo foo (duplicate word) -> foo$' \
+				-e '^test/integration/test-ubuntu-bug-761175-remove-purge: testround testround (duplicate word) -> testround$' \
+				-e '^test/integration/test-apt-get-download: apt apt (duplicate word) -> apt$' \
+				-e '^test/integration/test-apt-showlist-orgroup-in-recommends: zzz zzz (duplicate word) -> zzz$' \
+				-e '^test/integration/test-bug-691453-apt-cache-search-multi-pattern: bar bar (duplicate word) -> bar$' \
+				-e '^test/integration/test-allow: hold hold (duplicate word) -> hold$' \
+				-e '^test/integration/test-apt-by-hash-update: ensureitsbroken ensureitsbroken (duplicate word) -> ensureitsbroken$' \
+				-e '^test/integration/test-apt-source-and-build-dep: foo foo (duplicate word) -> foo$' \
+			|| true
+		echo '### spellintian in documentation:'
+		spellintian doc/*.xml doc/*.txt doc/*.dbk doc/*.ent doc/*.cmake.in doc/xml.add doc/po4a.conf doc/examples/* doc/po/apt-doc.pot po/apt-all.pot README.* COPYING \
+			| grep -v \
+				-e '^doc/examples/configure-index: https https (duplicate word) -> https$' \
+			|| true
+	fi
+
+	# stay true to the old name
+	if [ "$1" = 'spellcheckers' ]; then exit; fi
+
+	if is_available 'i18nspector'; then
+		echo '### i18nspector on translation files:'
+		i18nspector po/*.po po/*.pot doc/po/*.pot doc/po/*.po \
+			| grep -v \
+				-e '^I: po/es.po: duplicate-header-field X-POFile-SpellExtra$' \
+			|| true
+	fi
+elif [ "$1" = "merge-translations" ]; then
+	if [ -z "$2" ]; then
+		echo "Usage:\t$0 $1 <branch to merge from>" >&2
+		exit 1
+	fi
+	for i in {doc/,}po/*.po ; do
+		# 1. concatenate the translations, picking new translations
+		# 2. merge the translations so we only have matching translations left
+		# 3. remove any newly introduced obsolete translations (only in $2)
+		# 4. concatenate again to restore "old" obsolete translations
+		# 5. write output
+		msgcat --use-first <(git show $2:$i) $i \
+			| msgmerge --no-fuzzy --previous - $i \
+			| msgattrib --no-obsolete -  \
+			| msgcat --use-first - $i \
+			| sponge $i
+	done
+elif [ "$1" = "bump-abi" ]; then
+	LIBAPTPKGVERSION=${2:-${LIBAPTPKGVERSION}}
+	rename s/libapt-pkg[0-9.]+[0-9]/libapt-pkg${LIBAPTPKGVERSION}/g $(find debian/ -type f)
+	sed -i \
+		-re s/libapt-pkg[0-9.]+[0-9]/libapt-pkg${LIBAPTPKGVERSION}/g \
+		-re s/APTPKG_[0-9.]+[0-9]/APTPKG_${LIBAPTPKGVERSION}/g \
+		-re s/libapt-pkg.so.[0-9.]+[0-9]/libapt-pkg.so.${LIBAPTPKGVERSION}/g \
+		$(find debian/ -type f -and -not -name changelog)
 else
 	echo >&1 "Usage:\t$0 pre-export
 \t$0 pre-build
@@ -242,6 +390,15 @@ Both will format the diff properly.
 used by .travis.yml.
 »coverage« does a clean build with the right flags for coverage reporting,
 runs all tests and generates a html report in the end.
+
+\t$0 spellcheckers
+
+»spellcheckers« runs »codespell« and »spellintian« on the appropiate files and
+filters out obvious false positives.
+
+\t$0 merge-translations branch
+
+Merge translations from the given branch.
 "
 
 fi

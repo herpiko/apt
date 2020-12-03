@@ -7,22 +7,23 @@
    ##################################################################### */
 									/*}}}*/
 // Include files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
-#include <apt-pkg/acquire.h>
 #include <apt-pkg/acquire-item.h>
 #include <apt-pkg/acquire-worker.h>
+#include <apt-pkg/acquire.h>
 #include <apt-pkg/configuration.h>
-#include <apt-pkg/strutl.h>
 #include <apt-pkg/error.h>
+#include <apt-pkg/strutl.h>
 
 #include <apt-private/acqprogress.h>
+#include <apt-private/private-output.h>
 
-#include <string.h>
-#include <stdio.h>
-#include <signal.h>
 #include <iostream>
 #include <sstream>
+#include <signal.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <apti18n.h>
@@ -220,21 +221,21 @@ bool AcqTextStatus::Pulse(pkgAcquire *Owner)
 	 enum {Long = 0,Medium,Short} Mode = Medium;
 	 // Add the current progress
 	 if (Mode == Long)
-	    S << " " << std::to_string(I->CurrentSize);
+	    S << " " << std::to_string(I->CurrentItem->CurrentSize);
 	 else
 	 {
-	    if (Mode == Medium || I->TotalSize == 0)
-	       S << " " << SizeToStr(I->CurrentSize) << "B";
+	    if (Mode == Medium || I->CurrentItem->TotalSize == 0)
+	       S << " " << SizeToStr(I->CurrentItem->CurrentSize) << "B";
 	 }
 
 	 // Add the total size and percent
-	 if (I->TotalSize > 0 && I->CurrentItem->Owner->Complete == false)
+	 if (I->CurrentItem->TotalSize > 0 && I->CurrentItem->Owner->Complete == false)
 	 {
 	    if (Mode == Short)
-	       ioprintf(S, " %.0f%%", (I->CurrentSize*100.0)/I->TotalSize);
+	       ioprintf(S, " %.0f%%", (I->CurrentItem->CurrentSize*100.0)/I->CurrentItem->TotalSize);
 	    else
-	       ioprintf(S, "/%sB %.0f%%", SizeToStr(I->TotalSize).c_str(),
-		     (I->CurrentSize*100.0)/I->TotalSize);
+	       ioprintf(S, "/%sB %.0f%%", SizeToStr(I->CurrentItem->TotalSize).c_str(),
+		     (I->CurrentItem->CurrentSize*100.0)/I->CurrentItem->TotalSize);
 	 }
 	 S << "]";
       }
@@ -328,6 +329,25 @@ bool AcqTextStatus::MediaChange(std::string Media, std::string Drive)
    if(bStatus)
       Update = true;
    return bStatus;
+}
+									/*}}}*/
+bool AcqTextStatus::ReleaseInfoChanges(metaIndex const * const L, metaIndex const * const N, std::vector<ReleaseInfoChange> &&Changes)/*{{{*/
+{
+   if (Quiet >= 2 || isatty(STDOUT_FILENO) != 1 || isatty(STDIN_FILENO) != 1 ||
+	 _config->FindB("APT::Get::Update::InteractiveReleaseInfoChanges", false) == false)
+      return pkgAcquireStatus::ReleaseInfoChanges(nullptr, nullptr, std::move(Changes));
+
+   _error->PushToStack();
+   auto const confirmed = pkgAcquireStatus::ReleaseInfoChanges(L, N, std::move(Changes));
+   if (confirmed == true)
+   {
+      _error->MergeWithStack();
+      return true;
+   }
+   clearLastLine();
+   _error->DumpErrors(out, GlobalError::NOTICE, false);
+   _error->RevertToStack();
+   return YnPrompt(_("Do you want to accept these changes and continue updating from this repository?"), false, false, out, out);
 }
 									/*}}}*/
 void AcqTextStatus::clearLastLine() {					/*{{{*/
