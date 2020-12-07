@@ -1,8 +1,9 @@
-libapt-pkg v2 to v3 incorperates several source-incompatible changes that
-people need to be aware of.. Many of this changes are done so that most old
-source will continue to function, but perhaps at reduced functionality.
+libapt-pkg v2 to v3 incorporates several source-incompatible changes
+that people need to be aware of.. Many of these changes are done so that
+most old source will continue to function, but perhaps at reduced
+functionality.
 
-* pkgDepCache is no longer self initilizing, you have to call the Init
+* pkgDepCache is no longer self initializing, you have to call the Init
   method separately after constructing it. Users of pkgCacheFile do not
   need to worry about this
 * GetCandidateVer/etc is gone from the pkgCache. It exists only in the 
@@ -33,12 +34,12 @@ source will continue to function, but perhaps at reduced functionality.
   by the Cache or _system structures.
 * Initialization is now two stage (define APT_COMPATIBILITY..) The first
   stage, pkgInitConfig is called before commandline parsing, and
-  pkgInitSystem is called after. This gives the user the oppertunity to
+  pkgInitSystem is called after. This gives the user the opportunity to
   override default settings from the config files before startup has been
   finalized.
 * pkgSourceList has been gutted. All the junk that was in there before is
   cleaned up and put in the pkgIndexFile class. There is very little API
-  corrispondence here.. 
+  correspondence here..
 * pkgMakeStatusCacheMem is gone, pkgMakeStatusCache does the same thing if
   you set the AllowMem flag. Also, you can get a copy of the map used to
   store the cache to advoid having to remap it in the calling code. A bunch

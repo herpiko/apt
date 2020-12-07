@@ -11,20 +11,20 @@
 
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/configuration.h>
+#include <apt-pkg/debsystem.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/dpkgpm.h>
-#include <apt-pkg/debsystem.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/install-progress.h>
-#include <apt-pkg/packagemanager.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/statechanges.h>
-#include <apt-pkg/cacheiterators.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/packagemanager.h>
 #include <apt-pkg/pkgcache.h>
+#include <apt-pkg/statechanges.h>
+#include <apt-pkg/strutl.h>
 #include <apt-pkg/version.h>
 
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <grp.h>
@@ -37,9 +37,8 @@
 #include <sys/select.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/wait.h>
 #include <sys/types.h>
-#include <dirent.h>
+#include <sys/wait.h>
 #include <termios.h>
 #include <time.h>
 #include <unistd.h>
@@ -49,14 +48,14 @@
 #include <cstring>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <set>
+#include <sstream>
 #include <string>
 #include <type_traits>
-#include <utility>
 #include <unordered_set>
+#include <utility>
 #include <vector>
-#include <sstream>
-#include <numeric>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -103,8 +102,8 @@ APT_PURE static unsigned int EnvironmentSize()				/*{{{*/
 class pkgDPkgPMPrivate							/*{{{*/
 {
 public:
-   pkgDPkgPMPrivate() : stdin_is_dev_null(false), dpkgbuf_pos(0),
-			term_out(NULL), history_out(NULL),
+   pkgDPkgPMPrivate() : stdin_is_dev_null(false), status_fd_reached_end_of_file(false),
+			dpkgbuf_pos(0), term_out(NULL), history_out(NULL),
 			progress(NULL), tt_is_valid(false), master(-1),
 			slave(NULL), protect_slave_from_dying(-1),
 			direct_stdin(false)
@@ -115,6 +114,7 @@ public:
    {
    }
    bool stdin_is_dev_null;
+   bool status_fd_reached_end_of_file;
    // the buffer we use for the dpkg status-fd reading
    char dpkgbuf[1024];
    size_t dpkgbuf_pos;
@@ -142,10 +142,12 @@ namespace
   // Maps the dpkg "processing" info to human readable names.  Entry 0
   // of each array is the key, entry 1 is the value.
   const std::pair<const char *, const char *> PackageProcessingOps[] = {
-    std::make_pair("install",   N_("Installing %s")),
-    std::make_pair("configure", N_("Configuring %s")),
-    std::make_pair("remove",    N_("Removing %s")),
-    std::make_pair("purge",    N_("Completely removing %s")),
+    std::make_pair("install",   N_("Preparing %s")),
+    // we don't care for the difference
+    std::make_pair("upgrade",   N_("Preparing %s")),
+    std::make_pair("configure", N_("Preparing to configure %s")),
+    std::make_pair("remove",    N_("Preparing for removal of %s")),
+    std::make_pair("purge",     N_("Preparing to completely remove %s")),
     std::make_pair("disappear", N_("Noting disappearance of %s")),
     std::make_pair("trigproc",  N_("Running post-installation trigger %s"))
   };
@@ -299,10 +301,6 @@ bool pkgDPkgPM::Remove(PkgIterator Pkg,bool Purge)
 // ---------------------------------------------------------------------
 /* This is part of the helper script communication interface, it sends
    very complete information down to the other end of the pipe.*/
-bool pkgDPkgPM::SendV2Pkgs(FILE *F)
-{
-   return SendPkgsInfo(F, 2);
-}
 bool pkgDPkgPM::SendPkgsInfo(FILE * const F, unsigned int const &Version)
 {
    // This version of APT supports only v3, so don't sent higher versions
@@ -479,6 +477,9 @@ bool pkgDPkgPM::RunScriptsWithPkgs(const char *Cnf)
 	 strprintf(hookfd, "%d", InfoFD);
 	 setenv("APT_HOOK_INFO_FD", hookfd.c_str(), 1);
 
+	 if (_system != nullptr && _system->IsLocked() == true && stringcasecmp(Cnf, "DPkg::Pre-Install-Pkgs") == 0)
+	    setenv("DPKG_FRONTEND_LOCKED", "true", 1);
+
 	 debSystem::DpkgChrootDirectory();
 	 const char *Args[4];
 	 Args[0] = "/bin/sh";
@@ -615,68 +616,169 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
    {
       pkgname = APT::String::Strip(list[2]);
       action = APT::String::Strip(list[1]);
-      // we don't care for the difference (as dpkg doesn't really either)
-      if (action == "upgrade")
-	 action = "install";
    }
    // "status" has the form: "status: pkg: state"
-   // with state in ["half-installed", "unpacked", "half-configured", 
+   // with state in ["half-installed", "unpacked", "half-configured",
    //                "installed", "config-files", "not-installed"]
    else if (prefix == "status")
    {
       pkgname = APT::String::Strip(list[1]);
       action = APT::String::Strip(list[2]);
+
+      /* handle the special cases first:
+
+	 errors look like this:
+	 'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data
+	 and conffile-prompt like this
+	 'status:/etc/compiz.conf/compiz.conf :  conffile-prompt: 'current-conffile' 'new-conffile' useredited distedited
+	 */
+      if(action == "error")
+      {
+         d->progress->Error(pkgname, PackagesDone, PackagesTotal, list[3]);
+         ++pkgFailures;
+         WriteApportReport(pkgname.c_str(), list[3].c_str());
+         return;
+      }
+      else if(action == "conffile-prompt")
+      {
+         d->progress->ConffilePrompt(pkgname, PackagesDone, PackagesTotal, list[3]);
+         return;
+      }
    } else {
       if (Debug == true)
 	 std::clog << "unknown prefix '" << prefix << "'" << std::endl;
       return;
    }
 
-
-   /* handle the special cases first:
-
-      errors look like this:
-      'status: /var/cache/apt/archives/krecipes_0.8.1-0ubuntu1_i386.deb : error : trying to overwrite `/usr/share/doc/kde/HTML/en/krecipes/krectip.png', which is also in package krecipes-data 
-      and conffile-prompt like this
-      'status:/etc/compiz.conf/compiz.conf :  conffile-prompt: 'current-conffile' 'new-conffile' useredited distedited
-   */
-   if (prefix == "status")
-   {
-      if(action == "error")
-      {
-         d->progress->Error(pkgname, PackagesDone, PackagesTotal,
-                            list[3]);
-         pkgFailures++;
-         WriteApportReport(pkgname.c_str(), list[3].c_str());
-         return;
-      }
-      else if(action == "conffile-prompt")
-      {
-         d->progress->ConffilePrompt(pkgname, PackagesDone, PackagesTotal,
-                                     list[3]);
-         return;
-      }
-   }
-
-   // at this point we know that we should have a valid pkgname, so build all 
-   // the info from it
-
-   // dpkg does not always send "pkgname:arch" so we add it here if needed
+   // At this point we have a pkgname, but it might not be arch-qualified !
    if (pkgname.find(":") == std::string::npos)
    {
-      // find the package in the group that is touched by dpkg
-      // if there are multiple pkgs dpkg would send us a full pkgname:arch
-      pkgCache::GrpIterator Grp = Cache.FindGrp(pkgname);
-      if (Grp.end() == false)
-	 for (auto P = Grp.PackageList(); P.end() != true; P = Grp.NextPkg(P))
-	    if(Cache[P].Keep() == false || Cache[P].ReInstall() == true)
+      pkgCache::GrpIterator const Grp = Cache.FindGrp(pkgname);
+      if (unlikely(Grp.end()== true))
+      {
+	 if (Debug == true)
+	    std::clog << "unable to figure out which package is dpkg referring to with '" << pkgname << "'! (0)" << std::endl;
+	 return;
+      }
+      /* No arch means that dpkg believes there can only be one package
+         this can refer to so lets see what could be candidates here: */
+      std::vector<pkgCache::PkgIterator> candset;
+      for (auto P = Grp.PackageList(); P.end() != true; P = Grp.NextPkg(P))
+      {
+	 if (PackageOps.find(P.FullName()) != PackageOps.end())
+	    candset.push_back(P);
+	 // packages can disappear without them having any interaction itself
+	 // so we have to consider these as candidates, too
+	 else if (P->CurrentVer != 0 && action == "disappear")
+	    candset.push_back(P);
+      }
+      if (unlikely(candset.empty()))
+      {
+	 if (Debug == true)
+	    std::clog << "unable to figure out which package is dpkg referring to with '" << pkgname << "'! (1)" << std::endl;
+	 return;
+      }
+      else if (candset.size() == 1) // we are lucky
+	 pkgname = candset.cbegin()->FullName();
+      else
+      {
+	 /* here be dragons^Wassumptions about dpkg:
+	    - an M-A:same version is always arch-qualified
+	    - a package from a foreign arch is (in newer versions) */
+	 size_t installedInstances = 0, wannabeInstances = 0;
+	 for (auto const &P: candset)
+	 {
+	    if (P->CurrentVer != 0)
 	    {
-	       auto fullname = P.FullName();
-	       if (Cache[P].Delete() && PackageOps[fullname].size() <= PackageOpsDone[fullname])
+	       ++installedInstances;
+	       if (Cache[P].Delete() == false)
+		  ++wannabeInstances;
+	    }
+	    else if (Cache[P].Install())
+	       ++wannabeInstances;
+	 }
+	 // the package becomes M-A:same, so we are still talking about current
+	 if (installedInstances == 1 && wannabeInstances >= 2)
+	 {
+	    for (auto const &P: candset)
+	    {
+	       if (P->CurrentVer == 0)
 		  continue;
-	       pkgname = std::move(fullname);
+	       pkgname = P.FullName();
 	       break;
 	    }
+	 }
+	 // the package was M-A:same, it isn't now, so we can only talk about that
+	 else if (installedInstances >= 2 && wannabeInstances == 1)
+	 {
+	    for (auto const &P: candset)
+	    {
+	       auto const IV = Cache[P].InstVerIter(Cache);
+	       if (IV.end())
+		  continue;
+	       pkgname = P.FullName();
+	       break;
+	    }
+	 }
+	 // that is a crossgrade
+	 else if (installedInstances == 1 && wannabeInstances == 1 && candset.size() == 2)
+	 {
+	    auto const PkgHasCurrentVersion = [](pkgCache::PkgIterator const &P) { return P->CurrentVer != 0; };
+	    auto const P = std::find_if(candset.begin(), candset.end(), PkgHasCurrentVersion);
+	    if (unlikely(P == candset.end()))
+	    {
+	       if (Debug == true)
+		  std::clog << "situation for '" << pkgname << "' looked like a crossgrade, but no current version?!" << std::endl;
+	       return;
+	    }
+	    auto fullname = P->FullName();
+	    if (PackageOps[fullname].size() != PackageOpsDone[fullname])
+	       pkgname = std::move(fullname);
+	    else
+	    {
+	       auto const pkgi = std::find_if_not(candset.begin(), candset.end(), PkgHasCurrentVersion);
+	       if (unlikely(pkgi == candset.end()))
+	       {
+		  if (Debug == true)
+		     std::clog << "situation for '" << pkgname << "' looked like a crossgrade, but all are installed?!" << std::endl;
+		  return;
+	       }
+	       pkgname = pkgi->FullName();
+	    }
+	 }
+	 // we are desperate: so "just" take the native one, but that might change mid-air,
+	 // so we have to ask dpkg what it believes native is at the moment… all the time
+	 else
+	 {
+	    std::vector<std::string> sArgs = debSystem::GetDpkgBaseCommand();
+	    sArgs.push_back("--print-architecture");
+	    int outputFd = -1;
+	    pid_t const dpkgNativeArch = debSystem::ExecDpkg(sArgs, nullptr, &outputFd, true);
+	    if (unlikely(dpkgNativeArch == -1))
+	    {
+	       if (Debug == true)
+		  std::clog << "calling dpkg failed to ask it for its current native architecture to expand '" << pkgname << "'!" << std::endl;
+	       return;
+	    }
+	    FILE *dpkg = fdopen(outputFd, "r");
+	    if(dpkg != NULL)
+	    {
+	       char* buf = NULL;
+	       size_t bufsize = 0;
+	       if (getline(&buf, &bufsize, dpkg) != -1)
+		  pkgname += ':' + bufsize;
+	       free(buf);
+	       fclose(dpkg);
+	    }
+	    ExecWait(dpkgNativeArch, "dpkg --print-architecture", true);
+	    if (pkgname.find(':') != std::string::npos)
+	    {
+	       if (Debug == true)
+		  std::clog << "unable to figure out which package is dpkg referring to with '" << pkgname << "'! (2)" << std::endl;
+	       return;
+	    }
+	 }
+      }
    }
 
    std::string arch = "";
@@ -690,10 +792,7 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
    // 'processing: action: pkg'
    if(prefix == "processing")
    {
-      const std::pair<const char *, const char *> * const iter =
-	std::find_if(PackageProcessingOpsBegin,
-		     PackageProcessingOpsEnd,
-		     MatchProcessingOp(action.c_str()));
+      auto const iter = std::find_if(PackageProcessingOpsBegin, PackageProcessingOpsEnd, MatchProcessingOp(action.c_str()));
       if(iter == PackageProcessingOpsEnd)
       {
 	 if (Debug == true)
@@ -709,24 +808,15 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
       //         short pkgnames?
       if (action == "disappear")
 	 handleDisappearAction(pkgname);
+      else if (action == "upgrade")
+	 handleCrossUpgradeAction(pkgname);
       return;
    }
 
    if (prefix == "status")
    {
       std::vector<struct DpkgState> &states = PackageOps[pkgname];
-      if (action == "triggers-pending")
-      {
-	 if (Debug == true)
-	    std::clog << "(parsed from dpkg) pkg: " << pkgname
-	       << " action: " << action << " (prefix 2 to "
-	       << PackageOpsDone[pkgname] << " of " << states.size() << ")" << endl;
-
-	 states.insert(states.begin(), {"installed", N_("Installed %s")});
-	 states.insert(states.begin(), {"half-configured", N_("Configuring %s")});
-	 PackagesTotal += 2;
-      }
-      else if(PackageOpsDone[pkgname] < states.size())
+      if(PackageOpsDone[pkgname] < states.size())
       {
 	 char const * next_action = states[PackageOpsDone[pkgname]].state;
 	 if (next_action)
@@ -763,35 +853,18 @@ void pkgDPkgPM::ProcessDpkgStatusLine(char *line)
 	       strprintf(msg, translation, i18n_pkgname.c_str());
 	       d->progress->StatusChanged(pkgname, PackagesDone, PackagesTotal, msg);
 	    }
-	    else if (action == "unpacked" && strcmp(next_action, "config-files") == 0)
-	    {
-	       // in a crossgrade what looked like a remove first is really an unpack over it
-	       ++PackageOpsDone[pkgname];
-	       ++PackagesDone;
-
-	       auto const Pkg = Cache.FindPkg(pkgname);
-	       if (likely(Pkg.end() == false))
-	       {
-		  auto const Grp = Pkg.Group();
-		  if (likely(Grp.end() == false))
-		  {
-		     for (auto P = Grp.PackageList(); P.end() != true; P = Grp.NextPkg(P))
-			if(Cache[P].Install())
-			{
-			   auto && Ops = PackageOps[P.FullName()];
-			   auto const unpackOp = std::find_if(Ops.cbegin(), Ops.cend(), [](DpkgState const &s) { return strcmp(s.state, "unpacked") == 0; });
-			   if (unpackOp != Ops.cend())
-			   {
-			      auto const skipped = std::distance(Ops.cbegin(), unpackOp);
-			      PackagesDone += skipped;
-			      PackageOpsDone[P.FullName()] += skipped;
-			      break;
-			   }
-			}
-		  }
-	       }
-	    }
 	 }
+      }
+      else if (action == "triggers-pending")
+      {
+	 if (Debug == true)
+	    std::clog << "(parsed from dpkg) pkg: " << pkgname
+	       << " action: " << action << " (prefix 2 to "
+	       << PackageOpsDone[pkgname] << " of " << states.size() << ")" << endl;
+
+	 states.insert(states.begin(), {"installed", N_("Installed %s")});
+	 states.insert(states.begin(), {"half-configured", N_("Configuring %s")});
+	 PackagesTotal += 2;
       }
    }
 }
@@ -802,6 +875,12 @@ void pkgDPkgPM::handleDisappearAction(string const &pkgname)
    pkgCache::PkgIterator Pkg = Cache.FindPkg(pkgname);
    if (unlikely(Pkg.end() == true))
       return;
+
+   // a disappeared package has no further actions
+   auto const ROps = PackageOps[Pkg.FullName()].size();
+   auto && ROpsDone = PackageOpsDone[Pkg.FullName()];
+   PackagesDone += ROps - ROpsDone;
+   ROpsDone = ROps;
 
    // record the package name for display and stuff later
    disappearedPkgs.insert(Pkg.FullName(true));
@@ -844,14 +923,54 @@ void pkgDPkgPM::handleDisappearAction(string const &pkgname)
    }
 }
 									/*}}}*/
+void pkgDPkgPM::handleCrossUpgradeAction(string const &pkgname)		/*{{{*/
+{
+   // in a crossgrade what looked like a remove first is really an unpack over it
+   auto const Pkg = Cache.FindPkg(pkgname);
+   if (likely(Pkg.end() == false) && Cache[Pkg].Delete())
+   {
+      auto const Grp = Pkg.Group();
+      if (likely(Grp.end() == false))
+      {
+	 for (auto P = Grp.PackageList(); P.end() != true; P = Grp.NextPkg(P))
+	    if(Cache[P].Install())
+	    {
+	       auto && Ops = PackageOps[P.FullName()];
+	       auto const unpackOp = std::find_if(Ops.cbegin(), Ops.cend(), [](DpkgState const &s) { return strcmp(s.state, "unpacked") == 0; });
+	       if (unpackOp != Ops.cend())
+	       {
+		  // skip ahead in the crossgraded packages
+		  auto const skipped = std::distance(Ops.cbegin(), unpackOp);
+		  PackagesDone += skipped;
+		  PackageOpsDone[P.FullName()] += skipped;
+		  // finish the crossremoved package
+		  auto const ROps = PackageOps[Pkg.FullName()].size();
+		  auto && ROpsDone = PackageOpsDone[Pkg.FullName()];
+		  PackagesDone += ROps - ROpsDone;
+		  ROpsDone = ROps;
+		  break;
+	       }
+	    }
+      }
+   }
+}
+									/*}}}*/
 // DPkgPM::DoDpkgStatusFd						/*{{{*/
 void pkgDPkgPM::DoDpkgStatusFd(int statusfd)
 {
-   ssize_t const len = read(statusfd, &d->dpkgbuf[d->dpkgbuf_pos],
-	 (sizeof(d->dpkgbuf)/sizeof(d->dpkgbuf[0])) - d->dpkgbuf_pos);
-   if(len <= 0)
-      return;
-   d->dpkgbuf_pos += (len / sizeof(d->dpkgbuf[0]));
+   auto const remainingBuffer = (sizeof(d->dpkgbuf) / sizeof(d->dpkgbuf[0])) - d->dpkgbuf_pos;
+   if (likely(remainingBuffer > 0) && d->status_fd_reached_end_of_file == false)
+   {
+      auto const len = read(statusfd, &d->dpkgbuf[d->dpkgbuf_pos], remainingBuffer);
+      if (len < 0)
+	 return;
+      else if (len == 0 && d->dpkgbuf_pos == 0)
+      {
+	 d->status_fd_reached_end_of_file = true;
+	 return;
+      }
+      d->dpkgbuf_pos += (len / sizeof(d->dpkgbuf[0]));
+   }
 
    // process line by line from the buffer
    char *p = d->dpkgbuf, *q = nullptr;
@@ -888,7 +1007,8 @@ void pkgDPkgPM::WriteHistoryTag(string const &tag, string value)
 // DPkgPM::OpenLog							/*{{{*/
 bool pkgDPkgPM::OpenLog()
 {
-   string const logdir = _config->FindDir("Dir::Log");
+   string const logfile_name =  _config->FindFile("Dir::Log::Terminal", "/dev/null");
+   string logdir = flNotFile(logfile_name);
    if(CreateAPTDirectoryIfNeeded(logdir, logdir) == false)
       // FIXME: use a better string after freeze
       return _error->Error(_("Directory '%s' missing"), logdir.c_str());
@@ -901,9 +1021,7 @@ bool pkgDPkgPM::OpenLog()
    strftime(timestr, sizeof(timestr), "%F  %T", tmp);
 
    // open terminal log
-   string const logfile_name = flCombine(logdir,
-				   _config->Find("Dir::Log::Terminal"));
-   if (!logfile_name.empty())
+   if (logfile_name != "/dev/null")
    {
       d->term_out = fopen(logfile_name.c_str(),"a");
       if (d->term_out == NULL)
@@ -923,9 +1041,11 @@ bool pkgDPkgPM::OpenLog()
    }
 
    // write your history
-   string const history_name = flCombine(logdir,
-				   _config->Find("Dir::Log::History"));
-   if (!history_name.empty())
+   string const history_name = _config->FindFile("Dir::Log::History", "/dev/null");
+   string logdir2 = flNotFile(logfile_name);
+   if(logdir != logdir2 && CreateAPTDirectoryIfNeeded(logdir2, logdir2) == false)
+      return _error->Error(_("Directory '%s' missing"), logdir.c_str());
+   if (history_name != "/dev/null")
    {
       d->history_out = fopen(history_name.c_str(),"a");
       if (d->history_out == NULL)
@@ -1033,30 +1153,26 @@ void pkgDPkgPM::BuildPackagesProgressMap()
 {
    // map the dpkg states to the operations that are performed
    // (this is sorted in the same way as Item::Ops)
-   static const std::array<std::array<DpkgState, 3>, 4> DpkgStatesOpMap = {{
+   static const std::array<std::array<DpkgState, 2>, 4> DpkgStatesOpMap = {{
       // Install operation
       {{
-	 {"half-installed", N_("Preparing %s")},
-	 {"unpacked", N_("Unpacking %s") },
-	 {nullptr, nullptr}
+	 {"half-installed", N_("Unpacking %s")},
+	 {"unpacked", N_("Installing %s") },
       }},
       // Configure operation
       {{
-	 {"unpacked",N_("Preparing to configure %s") },
 	 {"half-configured", N_("Configuring %s") },
 	 { "installed", N_("Installed %s")},
       }},
       // Remove operation
       {{
-	 {"half-configured", N_("Preparing for removal of %s")},
+	 {"half-configured", N_("Removing %s")},
 	 {"half-installed", N_("Removing %s")},
-	 {"config-files",  N_("Removed %s")},
       }},
       // Purge operation
       {{
-	 {"config-files", N_("Preparing to completely remove %s")},
+	 {"config-files", N_("Completely removing %s")},
 	 {"not-installed", N_("Completely removed %s")},
-	 {nullptr, nullptr}
       }},
    }};
    static_assert(Item::Purge == 3, "Enum item has unexpected index for mapping array");
@@ -1072,21 +1188,28 @@ void pkgDPkgPM::BuildPackagesProgressMap()
 
       string const name = I.Pkg.FullName();
       PackageOpsDone[name] = 0;
-      auto AddToPackageOps = std::back_inserter(PackageOps[name]);
-      if (I.Op == Item::Purge && I.Pkg->CurrentVer != 0)
-      {
-	 // purging a package which is installed first passes through remove states
-	 auto const DpkgOps = DpkgStatesOpMap[Item::Remove];
-	 std::copy(DpkgOps.begin(), DpkgOps.end(), AddToPackageOps);
+      auto AddToPackageOps = [&](decltype(I.Op) const Op) {
+	 auto const DpkgOps = DpkgStatesOpMap[Op];
+	 std::copy(DpkgOps.begin(), DpkgOps.end(), std::back_inserter(PackageOps[name]));
 	 PackagesTotal += DpkgOps.size();
+      };
+      // purging a package which is installed first passes through remove states
+      if (I.Op == Item::Purge && I.Pkg->CurrentVer != 0)
+	 AddToPackageOps(Item::Remove);
+      AddToPackageOps(I.Op);
+
+      if ((I.Op == Item::Remove || I.Op == Item::Purge) && I.Pkg->CurrentVer != 0)
+      {
+	 if (I.Pkg->CurrentState == pkgCache::State::UnPacked ||
+	       I.Pkg->CurrentState == pkgCache::State::HalfInstalled)
+	 {
+	    if (likely(strcmp(PackageOps[name][0].state, "half-configured") == 0))
+	    {
+	       ++PackageOpsDone[name];
+	       --PackagesTotal;
+	    }
+	 }
       }
-      auto const DpkgOps = DpkgStatesOpMap[I.Op];
-      std::copy_if(DpkgOps.begin(), DpkgOps.end(), AddToPackageOps, [&](DpkgState const &state) {
-	 if (state.state == nullptr)
-	    return false;
-	 ++PackagesTotal;
-	 return true;
-      });
    }
    /* one extra: We don't want the progress bar to reach 100%, especially not
       if we call dpkg --configure --pending and process a bunch of triggers
@@ -1096,17 +1219,6 @@ void pkgDPkgPM::BuildPackagesProgressMap()
    ++PackagesTotal;
 }
                                                                         /*}}}*/
-bool pkgDPkgPM::Go(int StatusFd)					/*{{{*/
-{
-   APT::Progress::PackageManager *progress = NULL;
-   if (StatusFd == -1)
-      progress = APT::Progress::PackageManagerProgressFactory();
-   else
-      progress = new APT::Progress::PackageManagerProgressFd(StatusFd);
-
-   return Go(progress);
-}
-									/*}}}*/
 void pkgDPkgPM::StartPtyMagic()						/*{{{*/
 {
    if (_config->FindB("Dpkg::Use-Pty", true) == false)
@@ -1304,6 +1416,15 @@ static bool ItemIsEssential(pkgDPkgPM::Item const &I)
       return true;
    return (I.Pkg->Flags & pkgCache::Flag::Essential) != 0;
 }
+static bool ItemIsProtected(pkgDPkgPM::Item const &I)
+{
+   static auto const cachegen = _config->Find("pkgCacheGen::Protected");
+   if (cachegen == "none" || cachegen == "native")
+      return true;
+   if (unlikely(I.Pkg.end()))
+      return true;
+   return (I.Pkg->Flags & pkgCache::Flag::Important) != 0;
+}
 bool pkgDPkgPM::ExpandPendingCalls(std::vector<Item> &List, pkgDepCache &Cache)
 {
    {
@@ -1327,7 +1448,8 @@ bool pkgDPkgPM::ExpandPendingCalls(std::vector<Item> &List, pkgDepCache &Cache)
 	 if (I.Op == Item::Install && alreadyConfigured.insert(I.Pkg->ID).second == true)
 	    AppendList.emplace_back(Item::Configure, I.Pkg);
       for (auto Pkg = Cache.PkgBegin(); Pkg.end() == false; ++Pkg)
-	 if (Pkg.State() == pkgCache::PkgIterator::NeedsConfigure && alreadyConfigured.insert(Pkg->ID).second == true)
+	 if (Pkg.State() == pkgCache::PkgIterator::NeedsConfigure &&
+	       Cache[Pkg].Delete() == false && alreadyConfigured.insert(Pkg->ID).second == true)
 	    AppendList.emplace_back(Item::Configure, Pkg);
       std::move(AppendList.begin(), AppendList.end(), std::back_inserter(List));
    }
@@ -1335,7 +1457,22 @@ bool pkgDPkgPM::ExpandPendingCalls(std::vector<Item> &List, pkgDepCache &Cache)
 }
 bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 {
-   // explicitely remove&configure everything for hookscripts and progress building
+   struct Inhibitor
+   {
+      int Fd = -1;
+      Inhibitor()
+      {
+	 if (_config->FindB("DPkg::Inhibit-Shutdown", true))
+	    Fd = Inhibit("shutdown", "APT", "APT is installing or removing packages", "block");
+      }
+      ~Inhibitor()
+      {
+	 if (Fd > 0)
+	    close(Fd);
+      }
+   } inhibitor;
+
+   // explicitly remove&configure everything for hookscripts and progress building
    // we need them only temporarily through, so keep the length and erase afterwards
    decltype(List)::const_iterator::difference_type explicitIdx =
       std::distance(List.cbegin(), List.cend());
@@ -1397,7 +1534,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	 dpkg_recursive_install = Cache.VS().CmpVersion("1.18.5", dpkgpkg.CurrentVer().VerStr()) <= 0;
    }
    // no point in doing this dance for a handful of packages only
-   unsigned int const dpkg_recursive_install_min = _config->FindB("dpkg::install::recursive::minimum", 5);
+   unsigned int const dpkg_recursive_install_min = _config->FindI("dpkg::install::recursive::minimum", 5);
    // FIXME: workaround for dpkg bug, see our ./test-bug-740843-versioned-up-down-breaks test
    bool const dpkg_recursive_install_numbered = _config->FindB("dpkg::install::recursive::numbered", true);
 
@@ -1428,11 +1565,30 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	    continue;
 
 	 auto const Grp = I->Pkg.Group();
-	 size_t installedInstances = 0;
+	 size_t installedInstances = 0, wannabeInstances = 0;
+	 bool multiArchInstances = false;
 	 for (auto Pkg = Grp.PackageList(); Pkg.end() == false; Pkg = Grp.NextPkg(Pkg))
-	    if (Pkg->CurrentVer != 0 || Cache[Pkg].Install())
+	 {
+	    if (Pkg->CurrentVer != 0)
+	    {
 	       ++installedInstances;
-	 if (installedInstances == 2)
+	       if (Cache[Pkg].Delete() == false)
+		  ++wannabeInstances;
+	    }
+	    else if (PackageOps.find(Pkg.FullName()) != PackageOps.end())
+	       ++wannabeInstances;
+	    if (multiArchInstances == false)
+	    {
+	       auto const V = Cache[Pkg].InstVerIter(Cache);
+	       if (V.end() == false && (Pkg->CurrentVer == 0 || V != Pkg.CurrentVer()))
+		  multiArchInstances = ((V->MultiArch & pkgCache::Version::Same) == pkgCache::Version::Same);
+	    }
+	 }
+	 /* theoretically the installed check would be enough as some wannabe will
+	    be first and hence be the crossgrade we were looking for, but #844300
+	    prevents this so we keep these situations explicit removes.
+	    It is also the reason why neither of them can be a M-A:same package */
+	 if (installedInstances == 1 && wannabeInstances == 1 && multiArchInstances == false)
 	 {
 	    auto const FirstInstall = std::find_if_not(I, List.end(),
 		  [](Item const &i) { return i.Op == Item::Remove || i.Op == Item::Purge; });
@@ -1478,9 +1634,9 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	    approvedStates.Remove(*Ver);
 	    Purges.erase(Ver);
 	    auto && RemOp = PackageOps[C.first->Pkg.FullName()];
-	    if (RemOp.size() == 5)
+	    if (RemOp.size() == 4)
 	    {
-	       RemOp.erase(std::next(RemOp.begin(), 3), RemOp.end());
+	       RemOp.erase(std::next(RemOp.begin(), 2), RemOp.end());
 	       PackagesTotal -= 2;
 	    }
 	    else
@@ -1564,7 +1720,8 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
    // create log
    OpenLog();
 
-   bool dpkgMultiArch = debSystem::SupportsMultiArch();
+   bool dpkgMultiArch = _system->MultiArchSupported();
+   bool dpkgProtectedField = debSystem::AssertFeature("protected-field");
 
    // start pty magic before the loop
    StartPtyMagic();
@@ -1628,8 +1785,15 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	 case Item::Remove:
 	 case Item::Purge:
 	 ADDARGC("--force-depends");
+	 ADDARGC("--abort-after=1");
 	 if (std::any_of(I, J, ItemIsEssential))
+	 {
 	    ADDARGC("--force-remove-essential");
+	 }
+	 if (dpkgProtectedField && std::any_of(I, J, ItemIsProtected))
+	 {
+	    ADDARGC("--force-remove-protected");
+	 }
 	 ADDARGC("--remove");
 	 break;
 
@@ -1779,7 +1943,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	       ADDARG(fullname);
 	    }
 	 }
-	 // skip configure action if all sheduled packages disappeared
+	 // skip configure action if all scheduled packages disappeared
 	 if (oldSize == Size)
 	    continue;
       }
@@ -1864,6 +2028,12 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	 else
 	    setenv("DPKG_COLORS", "never", 0);
 
+	 if (_system->IsLocked() == true) {
+	    setenv("DPKG_FRONTEND_LOCKED", "true", 1);
+	 }
+	 if (_config->Find("DPkg::Path", "").empty() == false)
+	    setenv("PATH", _config->Find("DPkg::Path", "").c_str(), 1);
+
 	 execvp(Args[0], (char**) &Args[0]);
 	 cerr << "Could not exec dpkg!" << endl;
 	 _exit(100);
@@ -1872,6 +2042,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
       // we read from dpkg here
       int const _dpkgin = fd[0];
       close(fd[1]);                        // close the write end of the pipe
+      d->status_fd_reached_end_of_file = false;
 
       // apply ionice
       if (_config->FindB("DPkg::UseIoNice", false) == true)
@@ -1891,14 +2062,24 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
       int Status = 0;
       int res;
       bool waitpid_failure = false;
-      while ((res=waitpid(Child,&Status, WNOHANG)) != Child) {
-	 if(res < 0) {
-	    // error handling, waitpid returned -1
-	    if (errno == EINTR)
-	       continue;
-	    waitpid_failure = true;
-	    break;
+      bool dpkg_finished = false;
+      do
+      {
+	 if (dpkg_finished == false)
+	 {
+	    if ((res = waitpid(Child, &Status, WNOHANG)) == Child)
+	       dpkg_finished = true;
+	    else if (res < 0)
+	    {
+	       // error handling, waitpid returned -1
+	       if (errno == EINTR)
+		  continue;
+	       waitpid_failure = true;
+	       break;
+	    }
 	 }
+	 if (dpkg_finished && d->status_fd_reached_end_of_file)
+	    break;
 
 	 // wait for input or output here
 	 FD_ZERO(&rfds);
@@ -1928,7 +2109,8 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 	    DoStdin(d->master);
 	 if(FD_ISSET(_dpkgin, &rfds))
 	    DoDpkgStatusFd(_dpkgin);
-      }
+
+      } while (true);
       close(_dpkgin);
 
       // Restore sig int/quit
@@ -1971,7 +2153,7 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 
    if (d->dpkg_error.empty() == false)
    {
-      // no point in reseting packages we already completed removal for
+      // no point in resetting packages we already completed removal for
       StripAlreadyDoneFrom(approvedStates.Remove());
       StripAlreadyDoneFrom(approvedStates.Purge());
       APT::StateChanges undo;
@@ -1994,6 +2176,24 @@ bool pkgDPkgPM::Go(APT::Progress::PackageManager *progress)
 
    if (noopDPkgInvocation == false)
    {
+      if (d->dpkg_error.empty() && (PackagesDone + 1) != PackagesTotal)
+      {
+	 std::string pkglist;
+	 for (auto const &PO: PackageOps)
+	    if (PO.second.size() != PackageOpsDone[PO.first])
+	    {
+	       if (pkglist.empty() == false)
+		  pkglist.append(" ");
+	       pkglist.append(PO.first);
+	    }
+	 /* who cares about correct progress? As we depend on it for skipping actions
+	    our parsing should be correct. People will no doubt be confused if they see
+	    this message, but the dpkg warning about unknown packages isn't much better
+	    from a user POV and combined we might have a chance to figure out what is wrong */
+	 _error->Warning("APT had planned for dpkg to do more than it reported back (%u vs %u).\n"
+	       "Affected packages: %s", PackagesDone, PackagesTotal, pkglist.c_str());
+      }
+
       std::string const oldpkgcache = _config->FindFile("Dir::cache::pkgcache");
       if (oldpkgcache.empty() == false && RealFileExists(oldpkgcache) == true &&
 	  RemoveFile("pkgDPkgPM::Go", oldpkgcache))
@@ -2203,8 +2403,8 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
       fflush(d->term_out);
 
    // attach terminal log it if we have it
-   string logfile_name = _config->FindFile("Dir::Log::Terminal");
-   if (!logfile_name.empty())
+   string logfile_name = _config->FindFile("Dir::Log::Terminal", "/dev/null");
+   if (logfile_name != "/dev/null")
    {
       FILE *log = NULL;
 
@@ -2221,8 +2421,8 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    }
 
    // attach history log it if we have it
-   string histfile_name = _config->FindFile("Dir::Log::History");
-   if (!histfile_name.empty())
+   string histfile_name = _config->FindFile("Dir::Log::History", "/dev/null");
+   if (histfile_name != "/dev/null")
    {
       fprintf(report, "DpkgHistoryLog:\n");
       FILE* log = fopen(histfile_name.c_str(),"r");
@@ -2274,7 +2474,7 @@ void pkgDPkgPM::WriteApportReport(const char *pkgpath, const char *errormsg)
    {
 
       fprintf(report, "Df:\n");
-      FILE *log = popen("/bin/df -l","r");
+      FILE *log = popen("/bin/df -l -x squashfs","r");
       if(log != NULL)
       {
 	 char buf[1024];

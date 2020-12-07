@@ -21,27 +21,20 @@
 #ifndef PKGLIB_INDEXFILE_H
 #define PKGLIB_INDEXFILE_H
 
-#include <apt-pkg/srcrecords.h>
-#include <apt-pkg/pkgrecords.h>
-#include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/pkgcache.h>
+#include <apt-pkg/pkgrecords.h>
+#include <apt-pkg/srcrecords.h>
 
 #include <map>
 #include <string>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
-#ifndef APT_10_CLEANER_HEADERS
-class pkgAcquire;
-#endif
 
 class pkgCacheGenerator;
 class pkgCacheListParser;
 class OpProgress;
 
-class IndexTarget							/*{{{*/
+class APT_PUBLIC IndexTarget							/*{{{*/
 /** \brief Information about an index file. */
 {
    public:
@@ -73,7 +66,8 @@ class IndexTarget							/*{{{*/
 	 std::string const &LongDesc, std::string const &URI, bool const IsOptional,
 	 bool const KeepCompressed, std::map<std::string, std::string> const &Options);
 
-   enum OptionKeys {
+   enum OptionKeys
+   {
       SITE,
       RELEASE,
       COMPONENT,
@@ -96,6 +90,7 @@ class IndexTarget							/*{{{*/
       ALLOW_INSECURE,
       ALLOW_WEAK,
       ALLOW_DOWNGRADE_TO_INSECURE,
+      INRELEASE_PATH,
    };
    std::string Option(OptionKeys const Key) const;
    bool OptionBool(OptionKeys const Key) const;
@@ -103,7 +98,7 @@ class IndexTarget							/*{{{*/
 };
 									/*}}}*/
 
-class pkgIndexFile
+class APT_PUBLIC pkgIndexFile
 {
    void * const d;
    protected:
@@ -111,7 +106,7 @@ class pkgIndexFile
 
    public:
 
-   class Type
+   class APT_PUBLIC Type
    {
       public:
 
@@ -149,22 +144,13 @@ class pkgIndexFile
    virtual bool Merge(pkgCacheGenerator &/*Gen*/, OpProgress* const /*Prog*/) { return true; };
    virtual pkgCache::PkgFileIterator FindInCache(pkgCache &Cache) const;
 
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static bool TranslationsAvailable();
-   /* No intern need for this method anymore as the check for correctness
-      is already done in getLanguages(). Note also that this check is
-      rather bad (doesn't take three character like ast into account).*/
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static bool CheckLanguageCode(const char * const Lang);
-   /* As we have now possibly more than one LanguageCode this method is
-      superseeded by a) private classmembers or b) getLanguages() */
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static std::string LanguageCode();
-
    bool IsTrusted() const { return Trusted; };
 
    explicit pkgIndexFile(bool const Trusted);
    virtual ~pkgIndexFile();
 };
 
-class pkgDebianIndexFile : public pkgIndexFile
+class APT_PUBLIC pkgDebianIndexFile : public pkgIndexFile
 {
 protected:
    virtual std::string IndexFileName() const = 0;
@@ -183,7 +169,7 @@ public:
    virtual ~pkgDebianIndexFile();
 };
 
-class pkgDebianIndexTargetFile : public pkgDebianIndexFile
+class APT_PUBLIC pkgDebianIndexTargetFile : public pkgDebianIndexFile
 {
    void * const d;
 protected:
@@ -200,12 +186,13 @@ public:
    virtual std::string Describe(bool const Short = false) const APT_OVERRIDE;
    virtual bool Exists() const APT_OVERRIDE;
    virtual unsigned long Size() const APT_OVERRIDE;
+   IndexTarget GetIndexTarget() const APT_HIDDEN;
 
    pkgDebianIndexTargetFile(IndexTarget const &Target, bool const Trusted);
    virtual ~pkgDebianIndexTargetFile();
 };
 
-class pkgDebianIndexRealFile : public pkgDebianIndexFile
+class APT_PUBLIC pkgDebianIndexRealFile : public pkgDebianIndexFile
 {
    void * const d;
 protected:

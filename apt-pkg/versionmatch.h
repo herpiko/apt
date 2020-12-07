@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: versionmatch.h,v 1.4 2001/05/29 03:07:12 jgg Exp $
 /* ######################################################################
 
    Version Matching
@@ -36,15 +35,11 @@
 #define PKGLIB_VERSIONMATCH_H
 
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
 
 #include <string>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
 
-class pkgVersionMatch
+class APT_PUBLIC pkgVersionMatch
 {
    // Version Matching
    std::string VerStr;

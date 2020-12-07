@@ -1,12 +1,11 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: debrecords.h,v 1.8 2001/03/13 06:51:46 jgg Exp $
 /* ######################################################################
    
    Debian Package Records - Parser for debian package records
    
-   This provides display-type parsing for the Packages file. This is 
-   different than the the list parser which provides cache generation
+   This provides display-type parsing for the Packages file. This is
+   different than the list parser which provides cache generation
    services. There should be no overlap between these two.
    
    ##################################################################### */
@@ -14,16 +13,13 @@
 #ifndef PKGLIB_DEBRECORDS_H
 #define PKGLIB_DEBRECORDS_H
 
-#include <apt-pkg/pkgrecords.h>
-#include <apt-pkg/tagfile.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/pkgcache.h>
+#include <apt-pkg/pkgrecords.h>
+#include <apt-pkg/tagfile.h>
 
 #include <string>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/indexfile.h>
-#endif
 
 class APT_HIDDEN debRecordParserBase : public pkgRecords::Parser
 {
@@ -86,7 +82,7 @@ class APT_HIDDEN debDebFileRecordParser : public debRecordParserBase
  public:
    virtual std::string FileName() APT_OVERRIDE;
 
-   debDebFileRecordParser(std::string FileName);
+   explicit debDebFileRecordParser(std::string FileName);
    virtual ~debDebFileRecordParser();
 };
 

@@ -4,26 +4,19 @@ APT
   {
 	"^firmware-linux.*";
 	"^linux-firmware$";
+	"^linux-image-[a-z0-9]*$";
+	"^linux-image-[a-z0-9]*-[a-z0-9]*$";
   };
 
   VersionedKernelPackages
   {
-	# linux kernels
-	"linux-image";
-	"linux-headers";
-	"linux-image-extra";
-	"linux-signed-image";
-	# kfreebsd kernels
-	"kfreebsd-image";
-	"kfreebsd-headers";
-	# hurd kernels
-	"gnumach-image";
+	# kernels
+	"linux-.*";
+	"kfreebsd-.*";
+	"gnumach-.*";
 	# (out-of-tree) modules
 	".*-modules";
 	".*-kernel";
-	"linux-backports-modules-.*";
-        # tools
-        "linux-tools";
   };
 
   Never-MarkAuto-Sections

@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: apt-ftparchive.cc,v 1.8.2.3 2004/01/02 22:01:48 mdz Exp $
 /* ######################################################################
 
    apt-ftparchive - Efficient work-alike for dpkg-scanpackages
@@ -12,33 +11,35 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/error.h>
-#include <apt-pkg/configuration.h>
 #include <apt-pkg/cmndline.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/init.h>
+#include <apt-pkg/configuration.h>
+#include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
+#include <apt-pkg/init.h>
+#include <apt-pkg/strutl.h>
 
 #include <apt-private/private-cmndline.h>
-#include <apt-private/private-output.h>
 #include <apt-private/private-main.h>
+#include <apt-private/private-output.h>
 
 #include <algorithm>
+#include <chrono>
 #include <climits>
-#include <sys/time.h>
-#include <locale.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <time.h>
 #include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <locale.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <time.h>
+#include <math.h>
 
-#include "cachedb.h"
-#include "override.h"
 #include "apt-ftparchive.h"
+#include "cachedb.h"
 #include "multicompress.h"
+#include "override.h"
 #include "writer.h"
 
 #include <apti18n.h>
@@ -46,6 +47,24 @@
 
 using namespace std;
 unsigned Quiet = 0;
+
+static struct timeval GetTimevalFromSteadyClock()			/*{{{*/
+{
+   auto const Time = std::chrono::steady_clock::now().time_since_epoch();
+   auto const Time_sec = std::chrono::duration_cast<std::chrono::seconds>(Time);
+   auto const Time_usec = std::chrono::duration_cast<std::chrono::microseconds>(Time - Time_sec);
+   return { Time_sec.count(), Time_usec.count() };
+}
+									/*}}}*/
+static auto GetTimeDeltaSince(struct timeval StartTime)			/*{{{*/
+{
+   auto const NewTime = GetTimevalFromSteadyClock();
+   std::chrono::duration<double> Delta =
+      std::chrono::seconds(NewTime.tv_sec - StartTime.tv_sec) +
+      std::chrono::microseconds(NewTime.tv_usec - StartTime.tv_usec);
+   return llround(Delta.count());
+}
+									/*}}}*/
 
 // struct PackageMap - List of all package files in the config file	/*{{{*/
 // ---------------------------------------------------------------------
@@ -174,9 +193,8 @@ bool PackageMap::GenPackages(Configuration &Setup,struct CacheDB::Stats &Stats)
    string OverrideDir = Setup.FindDir("Dir::OverrideDir");
    string CacheDir = Setup.FindDir("Dir::CacheDir");
 
-   struct timeval StartTime;
-   gettimeofday(&StartTime,0);   
-   
+   struct timeval StartTime = GetTimevalFromSteadyClock();
+
    PkgDone = true;
    
    // Create a package writer object.
@@ -232,16 +250,11 @@ bool PackageMap::GenPackages(Configuration &Setup,struct CacheDB::Stats &Stats)
              << SizeToStr(Size) << "B ";
    else
       c0out << ' ';
-   
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);
-   double Delta = NewTime.tv_sec - StartTime.tv_sec + 
-                  (NewTime.tv_usec - StartTime.tv_usec)/1000000.0;
 
    c0out << Packages.Stats.Packages << " files " <<
 /*      SizeToStr(Packages.Stats.MD5Bytes) << "B/" << */
       SizeToStr(Packages.Stats.Bytes) << "B " <<
-      TimeToStr((long)Delta) << endl;
+      TimeToStr(GetTimeDeltaSince(StartTime)) << endl;
 
    if(_config->FindB("APT::FTPArchive::ShowCacheMisses", false) == true)
      c0out << " Misses in Cache: " << Packages.Stats.Misses<< endl;
@@ -265,9 +278,7 @@ bool PackageMap::GenSources(Configuration &Setup,struct CacheDB::Stats &Stats)
    string OverrideDir = Setup.FindDir("Dir::OverrideDir");
    string CacheDir = Setup.FindDir("Dir::CacheDir");
 
-   struct timeval StartTime;
-   gettimeofday(&StartTime,0);   
-   
+   struct timeval StartTime = GetTimevalFromSteadyClock();
    SrcDone = true;
    
    // Create a package writer object.
@@ -321,13 +332,8 @@ bool PackageMap::GenSources(Configuration &Setup,struct CacheDB::Stats &Stats)
    else
       c0out << ' ';
    
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);
-   double Delta = NewTime.tv_sec - StartTime.tv_sec +
-                  (NewTime.tv_usec - StartTime.tv_usec)/1000000.0;
-   
    c0out << Sources.Stats.Packages << " pkgs in " <<
-      TimeToStr((long)Delta) << endl;
+      TimeToStr(GetTimeDeltaSince(StartTime)) << endl;
 
    if(_config->FindB("APT::FTPArchive::ShowCacheMisses", false) == true)
      c0out << " Misses in Cache: " << Sources.Stats.Misses << endl;
@@ -357,10 +363,9 @@ bool PackageMap::GenContents(Configuration &Setup,
    string ArchiveDir = Setup.FindDir("Dir::ArchiveDir");
    string CacheDir = Setup.FindDir("Dir::CacheDir");
    string OverrideDir = Setup.FindDir("Dir::OverrideDir");
-   
-   struct timeval StartTime;
-   gettimeofday(&StartTime,0);   
-   
+
+   struct timeval StartTime = GetTimevalFromSteadyClock();
+
    // Create a package writer object.
    MultiCompress Comp(flCombine(ArchiveDir,this->Contents),
 		      CntCompress,Permissions);
@@ -438,17 +443,12 @@ bool PackageMap::GenContents(Configuration &Setup,
    else
       c0out << ' ';
    
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);   
-   double Delta = NewTime.tv_sec - StartTime.tv_sec + 
-                  (NewTime.tv_usec - StartTime.tv_usec)/1000000.0;
-   
    if(_config->FindB("APT::FTPArchive::ShowCacheMisses", false) == true)
      c0out << " Misses in Cache: " << Contents.Stats.Misses<< endl;
 
    c0out << Contents.Stats.Packages << " files " <<
       SizeToStr(Contents.Stats.Bytes) << "B " <<
-      TimeToStr((long)Delta) << endl;
+      TimeToStr(GetTimeDeltaSince(StartTime)) << endl;
    
    return true;
 }
@@ -927,8 +927,7 @@ static bool Generate(CommandLine &CmdL)
    if (CmdL.FileSize() < 2)
       return ShowHelp(CmdL);
 
-   struct timeval StartTime;
-   gettimeofday(&StartTime,0);
+   struct timeval StartTime = GetTimevalFromSteadyClock();
    struct CacheDB::Stats Stats;
    
    // Read the configuration file.
@@ -965,12 +964,8 @@ static bool Generate(CommandLine &CmdL)
 	 return false;
       }
 
-   struct timeval NewTime;
-   gettimeofday(&NewTime,0);
-   double Delta = NewTime.tv_sec - StartTime.tv_sec +
-                  (NewTime.tv_usec - StartTime.tv_usec)/1000000.0;
    c1out << "Done. " << SizeToStr(Stats.Bytes) << "B in " << Stats.Packages
-         << " archives. Took " << TimeToStr((long)Delta) << endl;
+         << " archives. Took " << TimeToStr(GetTimeDeltaSince(StartTime)) << endl;
 
    UnloadTree(TransList);
    return true;
@@ -1002,7 +997,7 @@ static bool Clean(CommandLine &CmdL)
    stable_sort(PkgList.begin(),PkgList.end(),PackageMap::SrcDBCompare());
 
    string CacheDir = Setup.FindDir("Dir::CacheDir");
-   
+
    for (vector<PackageMap>::iterator I = PkgList.begin(); I != PkgList.end(); )
    {
       if(I->BinCacheDB != "")
@@ -1016,15 +1011,11 @@ static bool Clean(CommandLine &CmdL)
       if (DB_SRC.Clean() == false)
 	 _error->DumpErrors();
 
-      string CacheDB = I->BinCacheDB;
-      string SrcCacheDB = I->SrcCacheDB;
-      while(I != PkgList.end() && 
-            I->BinCacheDB == CacheDB && 
-            I->SrcCacheDB == SrcCacheDB)
-         ++I;
+      I = std::find_if(I, PkgList.end(),
+	    [&](PackageMap const &PM) { return PM.BinCacheDB != I->BinCacheDB || PM.SrcCacheDB != I->SrcCacheDB;
+      });
    }
 
-  
    return true;
 }
 									/*}}}*/

@@ -5,21 +5,20 @@
 #include <apt-pkg/cachefilter.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
-#include <apt-pkg/pkgrecords.h>
-#include <apt-pkg/progress.h>
-#include <apt-pkg/strutl.h>
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
+#include <apt-pkg/pkgrecords.h>
+#include <apt-pkg/progress.h>
+#include <apt-pkg/strutl.h>
 
 #include <apt-private/private-cacheset.h>
 #include <apt-private/private-list.h>
 #include <apt-private/private-output.h>
 
 #include <iostream>
-#include <sstream>
 #include <map>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -40,17 +39,27 @@ struct PackageSortAlphabetic						/*{{{*/
 
 class PackageNameMatcher : public Matcher
 {
+   static constexpr const char *const isfnmatch_strict = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-.:*";
+   pkgCacheFile &cacheFile;
   public:
-   explicit PackageNameMatcher(const char **patterns)
+   explicit PackageNameMatcher(pkgCacheFile &cacheFile, const char **patterns)
+   : cacheFile(cacheFile)
    {
       for(int i=0; patterns[i] != NULL; ++i)
       {
          std::string pattern = patterns[i];
-         APT::CacheFilter::PackageMatcher *cachefilter = NULL;
+         APT::CacheFilter::Matcher *cachefilter = NULL;
          if(_config->FindB("APT::Cmd::Use-Regexp", false) == true)
             cachefilter = new APT::CacheFilter::PackageNameMatchesRegEx(pattern);
-         else
+         else if (pattern.find_first_not_of(isfnmatch_strict) == std::string::npos)
             cachefilter = new APT::CacheFilter::PackageNameMatchesFnmatch(pattern);
+	 else
+	    cachefilter = APT::CacheFilter::ParsePattern(pattern, &cacheFile).release();
+
+         if (cachefilter == nullptr) {
+            return;
+            filters.clear();
+         }
          filters.push_back(cachefilter);
       }
    }
@@ -63,7 +72,7 @@ class PackageNameMatcher : public Matcher
    {
       for(J=filters.begin(); J != filters.end(); ++J)
       {
-         APT::CacheFilter::PackageMatcher *cachefilter = *J;
+         APT::CacheFilter::Matcher *cachefilter = *J;
          if((*cachefilter)(P)) 
             return true;
       }
@@ -71,8 +80,8 @@ class PackageNameMatcher : public Matcher
    }
 
 private:
-   std::vector<APT::CacheFilter::PackageMatcher*> filters;   
-   std::vector<APT::CacheFilter::PackageMatcher*>::const_iterator J;
+   std::vector<APT::CacheFilter::Matcher*> filters;
+   std::vector<APT::CacheFilter::Matcher*>::const_iterator J;
    #undef PackageMatcher
 };
 									/*}}}*/
@@ -112,7 +121,7 @@ bool DoList(CommandLine &Cmd)
    if (_config->FindB("APT::Cmd::List-Include-Summary", false) == true)
       format += "\n  ${Description}\n";
 
-   PackageNameMatcher matcher(patterns);
+   PackageNameMatcher matcher(CacheFile, patterns);
    LocalitySortedVersionSet bag;
    OpTextProgress progress(*_config);
    progress.OverallProgress(0,
@@ -130,7 +139,7 @@ bool DoList(CommandLine &Cmd)
       else
          ListSingleVersion(CacheFile, records, V, outs, format);
       output_map.insert(std::make_pair<std::string, std::string>(
-	       V.ParentPkg().Name(), outs.str()));
+	       V.ParentPkg().FullName(), outs.str()));
    }
 
    // FIXME: SORT! and make sorting flexible (alphabetic, by pkg status)

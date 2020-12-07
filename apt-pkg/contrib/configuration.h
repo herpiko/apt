@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: configuration.h,v 1.16 2002/11/11 06:55:50 doogie Exp $
 /* ######################################################################
 
    Configuration Class
@@ -30,17 +29,14 @@
 
 #include <regex.h>
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include <apt-pkg/macros.h>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
 
-class Configuration
+class APT_PUBLIC Configuration
 {
    public:
    
@@ -66,7 +62,7 @@ class Configuration
    Item *Lookup(const char *Name,const bool &Create);
    inline const Item *Lookup(const char *Name) const
    {
-      return ((Configuration *)this)->Lookup(Name,false);
+      return const_cast<Configuration *>(this)->Lookup(Name,false);
    }  
    
    public:
@@ -120,7 +116,7 @@ class Configuration
    void Dump(std::ostream& str, char const * const root,
 	     char const * const format, bool const emptyValue);
 
-   Configuration(const Item *Root);
+   explicit Configuration(const Item *Root);
    Configuration();
    ~Configuration();
 
@@ -131,7 +127,7 @@ class Configuration
      APT_HIDDEN void clearPatterns();
 
    public:
-     MatchAgainstConfig(char const * Config);
+     explicit MatchAgainstConfig(char const * Config);
      virtual ~MatchAgainstConfig();
 
      /** \brief Returns \b true for a string matching one of the patterns */
@@ -143,13 +139,13 @@ class Configuration
    };
 };
 
-extern Configuration *_config;
+APT_PUBLIC extern Configuration *_config;
 
-bool ReadConfigFile(Configuration &Conf,const std::string &FName,
+APT_PUBLIC bool ReadConfigFile(Configuration &Conf,const std::string &FName,
 		    bool const &AsSectional = false,
 		    unsigned const &Depth = 0);
 
-bool ReadConfigDir(Configuration &Conf,const std::string &Dir,
+APT_PUBLIC bool ReadConfigDir(Configuration &Conf,const std::string &Dir,
 		   bool const &AsSectional = false,
 		   unsigned const &Depth = 0);
 

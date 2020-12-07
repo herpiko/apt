@@ -1,41 +1,40 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/acquire.h>
 #include <apt-pkg/acquire-item.h>
+#include <apt-pkg/acquire.h>
 #include <apt-pkg/algorithms.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
+#include <apt-pkg/configuration.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
-#include <apt-pkg/pkgrecords.h>
-#include <apt-pkg/pkgsystem.h>
-#include <apt-pkg/sptr.h>
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/cacheiterators.h>
-#include <apt-pkg/configuration.h>
+#include <apt-pkg/install-progress.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/packagemanager.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/upgrade.h>
-#include <apt-pkg/install-progress.h>
+#include <apt-pkg/pkgrecords.h>
+#include <apt-pkg/pkgsystem.h>
 #include <apt-pkg/prettyprinters.h>
+#include <apt-pkg/strutl.h>
+#include <apt-pkg/upgrade.h>
 
-#include <stdlib.h>
-#include <string.h>
 #include <algorithm>
 #include <iostream>
+#include <map>
 #include <set>
 #include <vector>
-#include <map>
+#include <stdlib.h>
+#include <string.h>
 
 #include <apt-private/acqprogress.h>
-#include <apt-private/private-install.h>
 #include <apt-private/private-cachefile.h>
 #include <apt-private/private-cacheset.h>
 #include <apt-private/private-download.h>
+#include <apt-private/private-install.h>
+#include <apt-private/private-json-hooks.h>
 #include <apt-private/private-output.h>
 
 #include <apti18n.h>
@@ -47,6 +46,10 @@ bool CheckNothingBroken(CacheFile &Cache)				/*{{{*/
    // Now we check the state of the packages,
    if (Cache->BrokenCount() == 0)
       return true;
+
+   // FIXME: if an external solver showed an error, we shouldn't show one here
+   if (_error->PendingError() && _config->Find("APT::Solver") == "dump")
+      return false;
 
    c1out <<
       _("Some packages could not be installed. This may mean that you have\n"
@@ -99,12 +102,15 @@ static void RemoveDownloadNeedingItemsFromFetcher(pkgAcquire &Fetcher, bool &Tra
 }
 bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 {
+   if (not RunScripts("APT::Install::Pre-Invoke"))
+      return false;
    if (_config->FindB("APT::Get::Purge", false) == true)
       for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() == false; ++I)
 	 if (Cache[I].Delete() == true && Cache[I].Purge() == false)
 	    Cache->MarkDelete(I,true);
 
    // Create the download object
+   auto const DownloadAllowed = _config->FindB("APT::Get::Download",true);
    aptAcquireWithTextStatus Fetcher;
    if (_config->FindB("APT::Get::Print-URIs", false) == true)
    {
@@ -132,16 +138,19 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
        _error->PendingError() == true)
       return false;
 
-   if (_config->FindB("APT::Get::Fix-Missing",false) == true &&
-	 _config->FindB("APT::Get::Download",true) == false)
+   if (DownloadAllowed == false)
    {
       bool Missing = false;
       RemoveDownloadNeedingItemsFromFetcher(Fetcher, Missing);
       if (Missing)
-	 PM->FixMissing();
+      {
+	 if (_config->FindB("APT::Get::Fix-Missing",false))
+	    PM->FixMissing();
+	 else
+	    return _error->Error(_("Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?"));
+      }
       Fetcher.Shutdown();
-      if (PM->GetArchives(&Fetcher,List,&Recs) == false ||
-	    _error->PendingError() == true)
+      if (_error->PendingError() == true)
 	 return false;
    }
 
@@ -170,7 +179,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 
    if (Cache->DelCount() == 0 && Cache->InstCount() == 0 &&
        Cache->BadCount() == 0)
-      return true;
+      return RunScripts("APT::Install::Post-Invoke-Success");
 
    // No remove flag
    if (Cache->DelCount() != 0 && _config->FindB("APT::Get::Remove",true) == false)
@@ -181,10 +190,6 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
    if (_config->FindI("quiet",0) >= 2 ||
        _config->FindB("APT::Get::Assume-Yes",false) == true)
    {
-      if (_config->FindB("APT::Get::Force-Yes",false) == true) {
-	 _error->Warning(_("--force-yes is deprecated, use one of the options starting with --allow instead."));
-      }
-
       if (Fail == true && _config->FindB("APT::Get::Force-Yes",false) == false) {
 	 if (Essential == true && _config->FindB("APT::Get::allow-remove-essential", false) == false)
 	    return _error->Error(_("Essential packages were removed and -y was used without --allow-remove-essential."));
@@ -211,27 +216,30 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       return true;
    }
 
-   // Display statistics
-   auto const FetchBytes = Fetcher.FetchNeeded();
-   auto const FetchPBytes = Fetcher.PartialPresent();
-   auto const DebBytes = Fetcher.TotalNeeded();
-   if (DebBytes != Cache->DebSize())
+   auto const FetchBytes = DownloadAllowed ? Fetcher.FetchNeeded() : 0;
+   auto const FetchPBytes = DownloadAllowed ? Fetcher.PartialPresent() : 0;
+   if (DownloadAllowed)
    {
-      c0out << DebBytes << ',' << Cache->DebSize() << std::endl;
-      c0out << _("How odd... The sizes didn't match, email apt@packages.debian.org") << std::endl;
-   }
-   
-   // Number of bytes
-   if (DebBytes != FetchBytes)
-      //TRANSLATOR: The required space between number and unit is already included
-      // in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-      ioprintf(c1out,_("Need to get %sB/%sB of archives.\n"),
+      // Display statistics
+      auto const DebBytes = Fetcher.TotalNeeded();
+      if (DebBytes != Cache->DebSize())
+      {
+	 c0out << "E: " << DebBytes << ',' << Cache->DebSize() << std::endl;
+	 c0out << "E: " << _("How odd... The sizes didn't match, email apt@packages.debian.org") << std::endl;
+      }
+
+      // Number of bytes
+      if (DebBytes != FetchBytes)
+	 //TRANSLATOR: The required space between number and unit is already included
+	 // in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
+	 ioprintf(c1out,_("Need to get %sB/%sB of archives.\n"),
 	       SizeToStr(FetchBytes).c_str(),SizeToStr(DebBytes).c_str());
-   else if (DebBytes != 0)
-      //TRANSLATOR: The required space between number and unit is already included
-      // in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-      ioprintf(c1out,_("Need to get %sB of archives.\n"),
+      else if (DebBytes != 0)
+	 //TRANSLATOR: The required space between number and unit is already included
+	 // in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+	 ioprintf(c1out,_("Need to get %sB of archives.\n"),
 	       SizeToStr(DebBytes).c_str());
+   }
 
    // Size delta
    if (Cache->UsrSize() >= 0)
@@ -245,8 +253,9 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       ioprintf(c1out,_("After this operation, %sB disk space will be freed.\n"),
 	       SizeToStr(-1*Cache->UsrSize()).c_str());
 
-   if (CheckFreeSpaceBeforeDownload(_config->FindDir("Dir::Cache::Archives"), (FetchBytes - FetchPBytes)) == false)
-      return false;
+   if (DownloadAllowed)
+      if (CheckFreeSpaceBeforeDownload(_config->FindDir("Dir::Cache::Archives"), (FetchBytes - FetchPBytes)) == false)
+	 return false;
 
    if (_error->PendingError() == true)
       return false;
@@ -338,7 +347,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       }
 
       auto const progress = APT::Progress::PackageManagerProgressFactory();
-      _system->UnLock();
+      _system->UnLockInner();
       pkgPackageManager::OrderResult const Res = PM->DoInstall(progress);
       delete progress;
 
@@ -347,7 +356,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       if (Res == pkgPackageManager::Completed)
 	 break;
 
-      _system->Lock();
+      _system->LockInner();
 
       // Reload the fetcher object and loop again for media swapping
       Fetcher.Shutdown();
@@ -355,7 +364,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 	 return false;
 
       Failed = false;
-      if (_config->FindB("APT::Get::Download",true) == false)
+      if (DownloadAllowed == false)
 	 RemoveDownloadNeedingItemsFromFetcher(Fetcher, Failed);
    }
 
@@ -384,6 +393,9 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
       }
    }
 
+   if (not RunScripts("APT::Install::Post-Invoke-Success"))
+      return false;
+
    return true;
 }
 									/*}}}*/
@@ -392,7 +404,7 @@ bool InstallPackages(CacheFile &Cache,bool ShwKept,bool Ask, bool Safety)
 /* Remove unused automatic packages */
 bool DoAutomaticRemove(CacheFile &Cache)
 {
-   bool Debug = _config->FindI("Debug::pkgAutoRemove",false);
+   bool Debug = _config->FindB("Debug::pkgAutoRemove",false);
    bool doAutoRemove = _config->FindB("APT::Get::AutomaticRemove", false);
    bool hideAutoRemove = _config->FindB("APT::Get::HideAutoRemove");
 
@@ -422,11 +434,11 @@ bool DoAutomaticRemove(CacheFile &Cache)
       {
 	 if(Pkg.CurrentVer() != 0 || Cache[Pkg].Install())
 	    if(Debug)
-	       std::cout << "We could delete %s" <<  Pkg.FullName(true).c_str() << std::endl;
+	       std::cout << "We could delete " <<  APT::PrettyPkg(Cache, Pkg) << std::endl;
 
 	 if (doAutoRemove)
 	 {
-	    if(Pkg.CurrentVer() != 0 && 
+	    if(Pkg.CurrentVer() != 0 &&
 	       Pkg->CurrentState != pkgCache::State::ConfigFiles)
 	       Cache->MarkDelete(Pkg, purgePkgs, 0, false);
 	    else
@@ -471,11 +483,25 @@ bool DoAutomaticRemove(CacheFile &Cache)
 		  if (R.IsNegative() == true ||
 		      Cache->IsImportantDep(R) == false)
 		     continue;
-		 pkgCache::PkgIterator N = R.ParentPkg();
-		 if (N.end() == true || (N->CurrentVer == 0 && (*Cache)[N].Install() == false))
+		 auto const RV = R.ParentVer();
+		 if (unlikely(RV.end() == true))
+		    continue;
+		 auto const RP = RV.ParentPkg();
+		 // check if that dependency comes from an interesting version
+		 if (RP.CurrentVer() == RV)
+		 {
+		    if ((*Cache)[RP].Keep() == false)
+		       continue;
+		 }
+		 else if (Cache[RP].CandidateVerIter(Cache) == RV)
+		 {
+		    if ((*Cache)[RP].NewInstall() == false && (*Cache)[RP].Upgrade() == false)
+		       continue;
+		 }
+		 else // ignore dependency from a non-candidate version
 		    continue;
 		 if (Debug == true)
-		    std::clog << "Save " << APT::PrettyPkg(Cache, Pkg) << " as another installed garbage package depends on it" << std::endl;
+		    std::clog << "Save " << APT::PrettyPkg(Cache, Pkg) << " as another installed package depends on it: " << APT::PrettyPkg(Cache, RP) << std::endl;
 		 Cache->MarkInstall(Pkg, false, 0, false);
 		 if (hideAutoRemove == false)
 		    ++autoRemoveCount;
@@ -491,6 +517,8 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	 }
       } while (Changed == true);
    }
+   // trigger marking now so that the package list below is correct
+   group.release();
 
    // Now see if we had destroyed anything (if we had done anything)
    if (Cache->BrokenCount() != 0)
@@ -540,16 +568,17 @@ static const unsigned short MOD_INSTALL = 2;
 
 bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, CacheFile &Cache, int UpgradeMode)
 {
-   std::vector<std::string> VolatileCmdL;
+   std::vector<PseudoPkg> VolatileCmdL;
    return DoCacheManipulationFromCommandLine(CmdL, VolatileCmdL, Cache, UpgradeMode);
 }
-bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::string> &VolatileCmdL, CacheFile &Cache, int UpgradeMode)
+bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<PseudoPkg> &VolatileCmdL, CacheFile &Cache, int UpgradeMode)
 {
    std::map<unsigned short, APT::VersionSet> verset;
-   return DoCacheManipulationFromCommandLine(CmdL, VolatileCmdL, Cache, verset, UpgradeMode);
+   std::set<std::string> UnknownPackages;
+   return DoCacheManipulationFromCommandLine(CmdL, VolatileCmdL, Cache, verset, UpgradeMode, UnknownPackages);
 }
-bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::string> &VolatileCmdL, CacheFile &Cache,
-                                        std::map<unsigned short, APT::VersionSet> &verset, int UpgradeMode)
+bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<PseudoPkg> &VolatileCmdL, CacheFile &Cache,
+					std::map<unsigned short, APT::VersionSet> &verset, int UpgradeMode, std::set<std::string> &UnknownPackages)
 {
    // Enter the special broken fixing mode if the user specified arguments
    bool BrokenFix = false;
@@ -561,7 +590,9 @@ bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::stri
       Fix.reset(new pkgProblemResolver(Cache));
 
    unsigned short fallback = MOD_INSTALL;
-   if (strcasecmp(CmdL.FileList[0],"remove") == 0)
+   if (strcasecmp(CmdL.FileList[0], "reinstall") == 0)
+      _config->Set("APT::Get::ReInstall", "true");
+   else if (strcasecmp(CmdL.FileList[0],"remove") == 0)
       fallback = MOD_REMOVE;
    else if (strcasecmp(CmdL.FileList[0], "purge") == 0)
    {
@@ -572,6 +603,12 @@ bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::stri
 	    strcasecmp(CmdL.FileList[0], "auto-remove") == 0)
    {
       _config->Set("APT::Get::AutomaticRemove", "true");
+      fallback = MOD_REMOVE;
+   }
+   else if (strcasecmp(CmdL.FileList[0], "autopurge") == 0)
+   {
+      _config->Set("APT::Get::AutomaticRemove", "true");
+      _config->Set("APT::Get::Purge", true);
       fallback = MOD_REMOVE;
    }
 
@@ -586,17 +623,24 @@ bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::stri
 
    for (auto const &I: VolatileCmdL)
    {
-      pkgCache::PkgIterator const P = Cache->FindPkg(I);
+      pkgCache::PkgIterator const P = Cache->FindPkg(I.name);
       if (P.end())
 	 continue;
 
       // Set any version providing the .deb as the candidate.
       for (auto Prv = P.ProvidesList(); Prv.end() == false; Prv++)
-	 Cache.GetDepCache()->SetCandidateVersion(Prv.OwnerVer());
+      {
+	 if (I.release.empty())
+	    Cache.GetDepCache()->SetCandidateVersion(Prv.OwnerVer());
+	 else
+	    Cache.GetDepCache()->SetCandidateRelease(Prv.OwnerVer(), I.release);
+      }
 
       // via cacheset to have our usual virtual handling
       APT::VersionContainerInterface::FromPackage(&(verset[MOD_INSTALL]), Cache, P, APT::CacheSetHelper::CANDIDATE, helper);
    }
+
+   UnknownPackages = helper.notFound;
 
    if (_error->PendingError() == true)
    {
@@ -637,9 +681,9 @@ bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::stri
 	 packages */
       if (BrokenFix == true && Cache->BrokenCount() != 0)
       {
-	 c1out << _("You might want to run 'apt-get -f install' to correct these:") << std::endl;
+	 c1out << _("You might want to run 'apt --fix-broken install' to correct these.") << std::endl;
 	 ShowBroken(c1out,Cache,false);
-	 return _error->Error(_("Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a solution)."));
+	 return _error->Error(_("Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution)."));
       }
 
       if (Fix != NULL)
@@ -676,6 +720,81 @@ bool DoCacheManipulationFromCommandLine(CommandLine &CmdL, std::vector<std::stri
    return true;
 }
 									/*}}}*/
+bool AddVolatileSourceFile(pkgSourceList *const SL, PseudoPkg &&pkg, std::vector<PseudoPkg> &VolatileCmdL)/*{{{*/
+{
+   auto const ext = flExtension(pkg.name);
+   if (ext != "dsc" && FileExists(pkg.name + "/debian/control") == false)
+      return false;
+   std::vector<std::string> files;
+   SL->AddVolatileFile(pkg.name, &files);
+   std::transform(files.begin(), files.end(), std::back_inserter(VolatileCmdL), [&](auto &&f) { return PseudoPkg{std::move(f), pkg.arch, pkg.release, pkg.index}; });
+   return true;
+
+}
+									/*}}}*/
+bool AddVolatileBinaryFile(pkgSourceList *const SL, PseudoPkg &&pkg, std::vector<PseudoPkg> &VolatileCmdL)/*{{{*/
+{
+   auto const ext = flExtension(pkg.name);
+   if (ext != "deb" && ext != "ddeb" && ext != "changes")
+      return false;
+   std::vector<std::string> files;
+   SL->AddVolatileFile(pkg.name, &files);
+   std::transform(files.begin(), files.end(), std::back_inserter(VolatileCmdL), [&](auto &&f) { return PseudoPkg{std::move(f), pkg.arch, pkg.release, pkg.index}; });
+   return true;
+}
+									/*}}}*/
+static bool AddIfVolatile(pkgSourceList *const SL, std::vector<PseudoPkg> &VolatileCmdL, bool (*Add)(pkgSourceList *const, PseudoPkg &&, std::vector<PseudoPkg> &), char const * const I, std::string const &pseudoArch)/*{{{*/
+{
+   if (I != nullptr && (I[0] == '/' || (I[0] == '.' && (I[1] == '\0' || (I[1] == '.' && (I[2] == '\0' || I[2] == '/')) || I[1] == '/'))))
+   {
+      PseudoPkg pkg(I, pseudoArch, "", SL->GetVolatileFiles().size());
+      if (FileExists(I)) // this accepts directories and symlinks, too
+      {
+	 if (Add(SL, std::move(pkg), VolatileCmdL))
+	    ;
+	 else
+	    _error->Error(_("Unsupported file %s given on commandline"), I);
+	 return true;
+      }
+      else
+      {
+	 auto const found = pkg.name.rfind("/");
+	 if (found == pkg.name.find("/"))
+	    _error->Error(_("Unsupported file %s given on commandline"), I);
+	 else
+	 {
+	    pkg.release = pkg.name.substr(found + 1);
+	    pkg.name.erase(found);
+	    if (Add(SL, std::move(pkg), VolatileCmdL))
+	       ;
+	    else
+	       _error->Error(_("Unsupported file %s given on commandline"), I);
+	 }
+	 return true;
+      }
+   }
+   return false;
+}
+									/*}}}*/
+std::vector<PseudoPkg> GetAllPackagesAsPseudo(pkgSourceList *const SL, CommandLine &CmdL, bool (*Add)(pkgSourceList *const, PseudoPkg &&, std::vector<PseudoPkg> &), std::string const &pseudoArch)/*{{{*/
+{
+   std::vector<PseudoPkg> PkgCmdL;
+   std::for_each(CmdL.FileList + 1, CmdL.FileList + CmdL.FileSize(), [&](char const *const I) {
+      if (AddIfVolatile(SL, PkgCmdL, Add, I, pseudoArch) == false)
+	 PkgCmdL.emplace_back(I, pseudoArch, "", -1);
+   });
+   return PkgCmdL;
+}
+									/*}}}*/
+std::vector<PseudoPkg> GetPseudoPackages(pkgSourceList *const SL, CommandLine &CmdL, bool (*Add)(pkgSourceList *const, PseudoPkg &&, std::vector<PseudoPkg> &), std::string const &pseudoArch)/*{{{*/
+{
+   std::vector<PseudoPkg> VolatileCmdL;
+   std::remove_if(CmdL.FileList + 1, CmdL.FileList + 1 + CmdL.FileSize(), [&](char const *const I) {
+      return AddIfVolatile(SL, VolatileCmdL, Add, I, pseudoArch);
+   });
+   return VolatileCmdL;
+}
+									/*}}}*/
 // DoInstall - Install packages from the command line			/*{{{*/
 // ---------------------------------------------------------------------
 /* Install named packages */
@@ -694,8 +813,7 @@ struct PkgIsExtraInstalled {
 bool DoInstall(CommandLine &CmdL)
 {
    CacheFile Cache;
-   std::vector<std::string> VolatileCmdL;
-   Cache.GetSourceList()->AddVolatileFiles(CmdL, &VolatileCmdL);
+   auto VolatileCmdL = GetPseudoPackages(Cache.GetSourceList(), CmdL, AddVolatileBinaryFile, "");
 
    // then open the cache
    if (Cache.OpenForInstall() == false || 
@@ -703,8 +821,13 @@ bool DoInstall(CommandLine &CmdL)
       return false;
 
    std::map<unsigned short, APT::VersionSet> verset;
-   if(!DoCacheManipulationFromCommandLine(CmdL, VolatileCmdL, Cache, verset, 0))
+   std::set<std::string> UnknownPackages;
+
+   if (!DoCacheManipulationFromCommandLine(CmdL, VolatileCmdL, Cache, verset, 0, UnknownPackages))
+   {
+      RunJsonHook("AptCli::Hooks::Install", "org.debian.apt.hooks.install.fail", CmdL.FileList, Cache, UnknownPackages);
       return false;
+   }
 
    /* Print out a list of packages that are going to be installed extra
       to what the user asked */
@@ -805,12 +928,22 @@ bool DoInstall(CommandLine &CmdL)
 	    always_true, string_ident, verbose_show_candidate);
    }
 
+   RunJsonHook("AptCli::Hooks::Install", "org.debian.apt.hooks.install.pre-prompt", CmdL.FileList, Cache);
+
+   bool result;
    // See if we need to prompt
    // FIXME: check if really the packages in the set are going to be installed
    if (Cache->InstCount() == verset[MOD_INSTALL].size() && Cache->DelCount() == 0)
-      return InstallPackages(Cache,false,false);
+      result = InstallPackages(Cache, false, false);
+   else
+      result = InstallPackages(Cache, false);
 
-   return InstallPackages(Cache,false);
+   if (result)
+      result = RunJsonHook("AptCli::Hooks::Install", "org.debian.apt.hooks.install.post", CmdL.FileList, Cache);
+   else
+      /* not a result */ RunJsonHook("AptCli::Hooks::Install", "org.debian.apt.hooks.install.fail", CmdL.FileList, Cache);
+
+   return result;
 }
 									/*}}}*/
 
@@ -903,13 +1036,21 @@ bool TryToInstall::propergateReleaseCandiateSwitching(std::list<std::pair<pkgCac
 	 c != Changed.end(); ++c)
    {
       if (c->second.end() == true)
+      {
+	 auto const pkgname = c->first.ParentPkg().FullName(true);
+	 if (APT::String::Startswith(pkgname, "builddeps:"))
+	    continue;
 	 ioprintf(out, _("Selected version '%s' (%s) for '%s'\n"),
-	       c->first.VerStr(), c->first.RelStr().c_str(), c->first.ParentPkg().FullName(true).c_str());
+	       c->first.VerStr(), c->first.RelStr().c_str(), pkgname.c_str());
+      }
       else if (c->first.ParentPkg()->Group != c->second.ParentPkg()->Group)
       {
+	 auto pkgname = c->second.ParentPkg().FullName(true);
+	 if (APT::String::Startswith(pkgname, "builddeps:"))
+	    pkgname.replace(0, strlen("builddeps"), "src");
 	 pkgCache::VerIterator V = (*Cache)[c->first.ParentPkg()].CandidateVerIter(*Cache);
 	 ioprintf(out, _("Selected version '%s' (%s) for '%s' because of '%s'\n"), V.VerStr(),
-	       V.RelStr().c_str(), V.ParentPkg().FullName(true).c_str(), c->second.ParentPkg().FullName(true).c_str());
+	       V.RelStr().c_str(), V.ParentPkg().FullName(true).c_str(), pkgname.c_str());
       }
    }
    return Success;

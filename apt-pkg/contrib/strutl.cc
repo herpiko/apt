@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: strutl.cc,v 1.48 2003/07/18 14:15:11 mdz Exp $
 /* ######################################################################
 
    String Util - Some useful string functions.
@@ -17,29 +16,31 @@
 // Includes								/*{{{*/
 #include <config.h>
 
-#include <apt-pkg/strutl.h>
-#include <apt-pkg/fileutl.h>
 #include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
+#include <apt-pkg/strutl.h>
 
-#include <array>
 #include <algorithm>
+#include <array>
 #include <iomanip>
 #include <locale>
+#include <sstream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <time.h>
 #include <ctype.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <regex.h>
 #include <errno.h>
-#include <stdarg.h>
 #include <iconv.h>
+#include <regex.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <wchar.h>
 
 #include <apti18n.h>
 									/*}}}*/
@@ -83,6 +84,64 @@ bool Startswith(const std::string &s, const std::string &start)
    if (start.size() > s.size())
       return false;
    return (s.compare(0, start.size(), start) == 0);
+}
+
+std::string Join(std::vector<std::string> list, const std::string &sep)
+{
+   std::ostringstream oss;
+   for (auto it = list.begin(); it != list.end(); it++)
+   {
+      if (it != list.begin()) oss << sep;
+      oss << *it;
+   }
+   return oss.str();
+}
+
+// Returns string display length honoring multi-byte characters
+size_t DisplayLength(StringView str)
+{
+   size_t len = 0;
+
+   const char *p = str.data();
+   const char *const end = str.end();
+
+   mbstate_t state{};
+   while (p < end)
+   {
+      wchar_t wch;
+      size_t res = mbrtowc(&wch, p, end - p, &state);
+      switch (res)
+      {
+      case 0:
+         // Null wide character (i.e. L'\0') - stop
+         p = end;
+         break;
+
+      case static_cast<size_t>(-1):
+         // Byte sequence is invalid. Assume that it's
+         // a single-byte single-width character.
+         len += 1;
+         p += 1;
+
+         // state is undefined in this case - reset it
+         state = {};
+
+         break;
+
+      case static_cast<size_t>(-2):
+         // Byte sequence is too short. Assume that it's
+         // an incomplete single-width character and stop.
+         len += 1;
+         p = end;
+         break;
+
+      default:
+         len += wcwidth(wch);
+         p += res;
+      }
+   }
+
+   return len;
 }
 
 }
@@ -228,7 +287,8 @@ bool ParseQuoteWord(const char *&String,string &Res)
 {
    // Skip leading whitespace
    const char *C = String;
-   for (;*C != 0 && *C == ' '; C++);
+   for (; *C == ' '; C++)
+      ;
    if (*C == 0)
       return false;
    
@@ -276,7 +336,8 @@ bool ParseQuoteWord(const char *&String,string &Res)
    Res = Buffer;
    
    // Skip ending white space
-   for (;*C != 0 && isspace(*C) != 0; C++);
+   for (; isspace(*C) != 0; C++)
+      ;
    String = C;
    return true;
 }
@@ -289,7 +350,8 @@ bool ParseCWord(const char *&String,string &Res)
 {
    // Skip leading whitespace
    const char *C = String;
-   for (;*C != 0 && *C == ' '; C++);
+   for (; *C == ' '; C++)
+      ;
    if (*C == 0)
       return false;
    
@@ -680,42 +742,88 @@ int stringcasecmp(string::const_iterator A,string::const_iterator AEnd,
 }
 #endif
 									/*}}}*/
-// LookupTag - Lookup the value of a tag in a taged string		/*{{{*/
+// LookupTag - Lookup the value of a tag in a tagged string		/*{{{*/
 // ---------------------------------------------------------------------
-/* The format is like those used in package files and the method 
+/* The format is like those used in package files and the method
    communication system */
-string LookupTag(const string &Message,const char *Tag,const char *Default)
+std::string LookupTag(const std::string &Message, const char *TagC, const char *Default)
 {
-   // Look for a matching tag.
-   int Length = strlen(Tag);
-   for (string::const_iterator I = Message.begin(); I + Length < Message.end(); ++I)
+   std::string tag = std::string("\n") + TagC + ":";
+   if (Default == nullptr)
+      Default = "";
+   if (Message.length() < tag.length())
+      return Default;
+   std::transform(tag.begin(), tag.end(), tag.begin(), tolower_ascii);
+   auto valuestart = Message.cbegin();
+   // maybe the message starts directly with tag
+   if (Message[tag.length() - 2] == ':')
    {
-      // Found the tag
-      if (I[Length] == ':' && stringcasecmp(I,I+Length,Tag) == 0)
+      std::string lowstart = std::string("\n") + Message.substr(0, tag.length() - 1);
+      std::transform(lowstart.begin(), lowstart.end(), lowstart.begin(), tolower_ascii);
+      if (lowstart == tag)
+	 valuestart = std::next(valuestart, tag.length() - 1);
+   }
+   // the tag is somewhere in the message
+   if (valuestart == Message.cbegin())
+   {
+      auto const tagbegin = std::search(Message.cbegin(), Message.cend(), tag.cbegin(), tag.cend(),
+					[](char const a, char const b) { return tolower_ascii(a) == b; });
+      if (tagbegin == Message.cend())
+	 return Default;
+      valuestart = std::next(tagbegin, tag.length());
+   }
+   auto const is_whitespace = [](char const c) { return isspace_ascii(c) != 0 && c != '\n'; };
+   auto const is_newline = [](char const c) { return c == '\n'; };
+   std::string result;
+   valuestart = std::find_if_not(valuestart, Message.cend(), is_whitespace);
+   // is the first line of the value empty?
+   if (valuestart != Message.cend() && *valuestart == '\n')
+   {
+      valuestart = std::next(valuestart);
+      if (valuestart != Message.cend() && *valuestart == ' ')
+	 valuestart = std::next(valuestart);
+   }
+   // extract the value over multiple lines removing trailing whitespace
+   while (valuestart < Message.cend())
+   {
+      auto const linebreak = std::find_if(valuestart, Message.cend(), is_newline);
+      auto valueend = std::prev(linebreak);
+      // skip spaces at the end of the line
+      while (valueend > valuestart && is_whitespace(*valueend))
+	 valueend = std::prev(valueend);
+      // append found line to result
       {
-	 // Find the end of line and strip the leading/trailing spaces
-	 string::const_iterator J;
-	 I += Length + 1;
-	 for (; isspace_ascii(*I) != 0 && I < Message.end(); ++I);
-	 for (J = I; *J != '\n' && J < Message.end(); ++J);
-	 for (; J > I && isspace_ascii(J[-1]) != 0; --J);
-	 
-	 return string(I,J);
+	 std::string tmp(valuestart, std::next(valueend));
+	 if (tmp != ".")
+	 {
+	    if (result.empty())
+	       result.assign(std::move(tmp));
+	    else
+	       result.append(tmp);
+	 }
       }
-      
-      for (; *I != '\n' && I < Message.end(); ++I);
-   }   
-   
-   // Failed to find a match
-   if (Default == 0)
-      return string();
-   return Default;
+      // see if the value is multiline
+      if (linebreak == Message.cend())
+	 break;
+      valuestart = std::next(linebreak);
+      if (valuestart == Message.cend() || *valuestart != ' ')
+	 break;
+      result.append("\n");
+      // skip the space leading a multiline (Keep all other whitespaces in the value)
+      valuestart = std::next(valuestart);
+   }
+   auto const valueend = result.find_last_not_of("\n");
+   if (valueend == std::string::npos)
+      result.clear();
+   else
+      result.erase(valueend + 1);
+   return result;
 }
 									/*}}}*/
 // StringToBool - Converts a string into a boolean			/*{{{*/
 // ---------------------------------------------------------------------
 /* This inspects the string to see if it is true or if it is false and
-   then returns the result. Several varients on true/false are checked. */
+   then returns the result. Several variants on true/false are checked. */
 int StringToBool(const string &Text,int Default)
 {
    char *ParseEnd;
@@ -748,11 +856,7 @@ int StringToBool(const string &Text,int Default)
 // TimeRFC1123 - Convert a time_t into RFC1123 format			/*{{{*/
 // ---------------------------------------------------------------------
 /* This converts a time_t into a string time representation that is
-   year 2000 complient and timezone neutral */
-string TimeRFC1123(time_t Date)
-{
-   return TimeRFC1123(Date, false);
-}
+   year 2000 compliant and timezone neutral */
 string TimeRFC1123(time_t Date, bool const NumericTimezone)
 {
    struct tm Conv;
@@ -932,7 +1036,7 @@ static time_t timegm(struct tm *t)
 }
 #endif
 									/*}}}*/
-// RFC1123StrToTime - Converts a HTTP1.1 full date strings into a time_t	/*{{{*/
+// RFC1123StrToTime - Converts an HTTP1.1 full date strings into a time_t	/*{{{*/
 // ---------------------------------------------------------------------
 /* tries to parses a full date as specified in RFC7231 §7.1.1.1
    with one exception: HTTP/1.1 valid dates need to have GMT as timezone.
@@ -940,10 +1044,10 @@ static time_t timegm(struct tm *t)
    we allow them here to to be able to reuse the method. Either way, a date
    must be in UTC or parsing will fail. Previous implementations of this
    method used to ignore the timezone and assume always UTC. */
-bool RFC1123StrToTime(const char* const str,time_t &time)
+bool RFC1123StrToTime(std::string const &str,time_t &time)
 {
    unsigned short day = 0;
-   signed int year = 0; // yes, Y23K problem – we gonna worry then…
+   signed int year = 0; // yes, Y23K problem – we going to worry then…
    std::string weekday, month, datespec, timespec, zone;
    std::istringstream ss(str);
    auto const &posix = std::locale::classic();
@@ -1039,57 +1143,6 @@ bool FTPMDTMStrToTime(const char* const str,time_t &time)
       return false;
 
    time = timegm(&Tm);
-   return true;
-}
-									/*}}}*/
-// StrToTime - Converts a string into a time_t				/*{{{*/
-// ---------------------------------------------------------------------
-/* This handles all 3 popular time formats including RFC 1123, RFC 1036
-   and the C library asctime format. It requires the GNU library function
-   'timegm' to convert a struct tm in UTC to a time_t. For some bizzar
-   reason the C library does not provide any such function :< This also
-   handles the weird, but unambiguous FTP time format*/
-bool StrToTime(const string &Val,time_t &Result)
-{
-   struct tm Tm;
-   char Month[10];
-
-   // Skip the day of the week
-   const char *I = strchr(Val.c_str(), ' ');
-
-   // Handle RFC 1123 time
-   Month[0] = 0;
-   if (sscanf(I," %2d %3s %4d %2d:%2d:%2d GMT",&Tm.tm_mday,Month,&Tm.tm_year,
-	      &Tm.tm_hour,&Tm.tm_min,&Tm.tm_sec) != 6)
-   {
-      // Handle RFC 1036 time
-      if (sscanf(I," %2d-%3s-%3d %2d:%2d:%2d GMT",&Tm.tm_mday,Month,
-		 &Tm.tm_year,&Tm.tm_hour,&Tm.tm_min,&Tm.tm_sec) == 6)
-	 Tm.tm_year += 1900;
-      else
-      {
-	 // asctime format
-	 if (sscanf(I," %3s %2d %2d:%2d:%2d %4d",Month,&Tm.tm_mday,
-		    &Tm.tm_hour,&Tm.tm_min,&Tm.tm_sec,&Tm.tm_year) != 6)
-	 {
-	    // 'ftp' time
-	    if (sscanf(Val.c_str(),"%4d%2d%2d%2d%2d%2d",&Tm.tm_year,&Tm.tm_mon,
-		       &Tm.tm_mday,&Tm.tm_hour,&Tm.tm_min,&Tm.tm_sec) != 6)
-	       return false;
-	    Tm.tm_mon--;
-	 }	 
-      }
-   }
-   
-   Tm.tm_isdst = 0;
-   if (Month[0] != 0)
-      Tm.tm_mon = MonthConv(Month);
-   else
-      Tm.tm_mon = 0; // we don't have a month, so pick something
-   Tm.tm_year -= 1900;
-   
-   // Convert to local time and then to GMT
-   Result = timegm(&Tm);
    return true;
 }
 									/*}}}*/
@@ -1200,11 +1253,6 @@ static int HexDigit(int c)
 // Hex2Num - Convert a long hex number into a buffer			/*{{{*/
 // ---------------------------------------------------------------------
 /* The length of the buffer must be exactly 1/2 the length of the string. */
-bool Hex2Num(const string &Str,unsigned char *Num,unsigned int Length)
-{
-   return Hex2Num(APT::StringView(Str), Num, Length);
-}
-
 bool Hex2Num(const APT::StringView Str,unsigned char *Num,unsigned int Length)
 {
    if (Str.length() != Length*2)
@@ -1466,11 +1514,11 @@ string StripEpoch(const string &VerStr)
 // tolower_ascii - tolower() function that ignores the locale		/*{{{*/
 // ---------------------------------------------------------------------
 /* This little function is the most called method we have and tries
-   therefore to do the absolut minimum - and is notable faster than
+   therefore to do the absolute minimum - and is notable faster than
    standard tolower/toupper and as a bonus avoids problems with different
    locales - we only operate on ascii chars anyway. */
 #undef tolower_ascii
-int tolower_ascii(int const c) APT_CONST APT_COLD;
+int tolower_ascii(int const c) APT_PURE APT_COLD;
 int tolower_ascii(int const c)
 {
    return tolower_ascii_inline(c);
@@ -1480,11 +1528,11 @@ int tolower_ascii(int const c)
 // isspace_ascii - isspace() function that ignores the locale		/*{{{*/
 // ---------------------------------------------------------------------
 /* This little function is one of the most called methods we have and tries
-   therefore to do the absolut minimum - and is notable faster than
+   therefore to do the absolute minimum - and is notable faster than
    standard isspace() and as a bonus avoids problems with different
    locales - we only operate on ascii chars anyway. */
 #undef isspace_ascii
-int isspace_ascii(int const c) APT_CONST APT_COLD;
+int isspace_ascii(int const c) APT_PURE APT_COLD;
 int isspace_ascii(int const c)
 {
    return isspace_ascii_inline(c);
@@ -1723,7 +1771,7 @@ URI::operator string()
       {
 	 // FIXME: Technically userinfo is permitted even less
 	 // characters than these, but this is not conveniently
-	 // expressed with a blacklist.
+	 // expressed with a denylist.
 	 Res << QuoteString(User, ":/?#[]@");
 	 if (Password.empty() == false)
 	    Res << ":" << QuoteString(Password, ":/?#[]@");

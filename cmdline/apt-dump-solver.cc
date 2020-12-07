@@ -99,6 +99,7 @@ int main(int argc,const char *argv[])					/*{{{*/
    FileFd forward;
    if (is_forwarding_dumper)
    {
+      signal(SIGPIPE, SIG_IGN);
       int external[] = {-1, -1};
       if (pipe(external) != 0)
 	 return 250;
@@ -133,11 +134,10 @@ int main(int argc,const char *argv[])					/*{{{*/
       return WriteError("ERR_READ_ERROR", out, stdoutfd, Solver);
    }
 
-   constexpr size_t BufSize = 64 * 1024;
-   std::unique_ptr<char[]> Buf(new char[BufSize]);
+   std::unique_ptr<char[]> Buf(new char[APT_BUFFER_SIZE]);
    unsigned long long ToRead = 0;
    do {
-      if (input.Read(Buf.get(),BufSize, &ToRead) == false)
+      if (input.Read(Buf.get(), APT_BUFFER_SIZE, &ToRead) == false)
       {
 	 std::ostringstream out;
 	 out << "Writing EDSP solver input to file '" << filename << "' failed as reading from stdin failed!\n";
@@ -153,13 +153,6 @@ int main(int argc,const char *argv[])					/*{{{*/
    input.Close();
    forward.Close();
    dump.Close();
-
-   if (_error->PendingError())
-   {
-      std::ostringstream out;
-      out << "Writing EDSP solver input to file '" << filename << "' failed due to write errors!\n";
-      return WriteError("ERR_WRITE_ERROR", out, stdoutfd, Solver);
-   }
 
    if (is_forwarding_dumper)
    {
@@ -178,6 +171,12 @@ int main(int argc,const char *argv[])					/*{{{*/
 	 return WEXITSTATUS(Status);
       else
 	 return 255;
+   }
+   else if (_error->PendingError())
+   {
+      std::ostringstream out;
+      out << "Writing EDSP solver input to file '" << filename << "' failed due to write errors!\n";
+      return WriteError("ERR_WRITE_ERROR", out, stdoutfd, Solver);
    }
    else
       EDSP::WriteError("ERR_JUST_DUMPING", "I am too dumb, i can just dump!\nPlease use one of my friends instead!", stdoutfd);

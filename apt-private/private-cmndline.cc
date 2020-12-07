@@ -3,46 +3,40 @@
 
 #include <apt-pkg/cmndline.h>
 #include <apt-pkg/configuration.h>
-#include <apt-pkg/fileutl.h>
-#include <apt-pkg/pkgsystem.h>
-#include <apt-pkg/init.h>
 #include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
+#include <apt-pkg/init.h>
+#include <apt-pkg/pkgsystem.h>
 #include <apt-pkg/strutl.h>
 
 #include <apt-private/private-cmndline.h>
 #include <apt-private/private-main.h>
 
 #include <stdarg.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include <vector>
+#include <algorithm>
 #include <iomanip>
+#include <vector>
 
 #include <apti18n.h>
 									/*}}}*/
 
-APT_SENTINEL static bool strcmp_match_in_list(char const * const Cmd, ...)		/*{{{*/
+APT_NONNULL(1, 2)
+static bool CmdMatches_fn(char const *const Cmd, char const *const Match)
 {
-   if (Cmd == nullptr)
-      return false;
-   va_list args;
-   bool found = false;
-   va_start(args, Cmd);
-   char const * Match = NULL;
-   while ((Match = va_arg(args, char const *)) != NULL)
-   {
-      if (strcmp(Cmd, Match) != 0)
-	 continue;
-      found = true;
-      break;
-   }
-   va_end(args);
-   return found;
+   return strcmp(Cmd, Match) == 0;
 }
-									/*}}}*/
-#define addArg(w,x,y,z) Args.push_back(CommandLine::MakeArgs(w,x,y,z))
-#define CmdMatches(...) strcmp_match_in_list(Cmd, __VA_ARGS__, NULL)
+template <typename... Tail>
+APT_NONNULL(1, 2)
+static bool CmdMatches_fn(char const *const Cmd, char const *const Match, Tail... MoreMatches)
+{
+   return CmdMatches_fn(Cmd, Match) || CmdMatches_fn(Cmd, MoreMatches...);
+}
+#define addArg(w, x, y, z) Args.emplace_back(CommandLine::MakeArgs(w, x, y, z))
+#define CmdMatches(...) (Cmd != nullptr && CmdMatches_fn(Cmd, __VA_ARGS__))
+
 static bool addArgumentsAPTCache(std::vector<CommandLine::Args> &Args, char const * const Cmd)/*{{{*/
 {
    if (CmdMatches("depends", "rdepends", "xvcg", "dotty"))
@@ -65,7 +59,7 @@ static bool addArgumentsAPTCache(std::vector<CommandLine::Args> &Args, char cons
       addArg('n', "names-only", "APT::Cache::NamesOnly", 0);
       addArg('f', "full", "APT::Cache::ShowFull", 0);
    }
-   else if (CmdMatches("show"))
+   else if (CmdMatches("show") | CmdMatches("info"))
    {
       addArg('a', "all-versions", "APT::Cache::AllVersions", 0);
    }
@@ -182,8 +176,8 @@ static bool addArgumentsAPTHelper(std::vector<CommandLine::Args> &Args, char con
 									/*}}}*/
 static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const * const Cmd)/*{{{*/
 {
-   if (CmdMatches("install", "remove", "purge", "upgrade", "dist-upgrade",
-	    "dselect-upgrade", "autoremove", "full-upgrade"))
+   if (CmdMatches("install", "reinstall", "remove", "purge", "upgrade", "dist-upgrade",
+	    "dselect-upgrade", "autoremove", "autopurge", "full-upgrade"))
    {
       addArg(0, "show-progress", "DpkgPM::Progress", 0);
       addArg('f', "fix-broken", "APT::Get::Fix-Broken", 0);
@@ -203,6 +197,15 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
    else if (CmdMatches("update"))
    {
       addArg(0, "list-cleanup", "APT::Get::List-Cleanup", 0);
+      addArg(0, "allow-insecure-repositories", "Acquire::AllowInsecureRepositories", 0);
+      addArg(0, "allow-weak-repositories", "Acquire::AllowWeakRepositories", 0);
+      addArg(0, "allow-releaseinfo-change", "Acquire::AllowReleaseInfoChange", 0);
+      addArg(0, "allow-releaseinfo-change-origin", "Acquire::AllowReleaseInfoChange::Origin", 0);
+      addArg(0, "allow-releaseinfo-change-label", "Acquire::AllowReleaseInfoChange::Label", 0);
+      addArg(0, "allow-releaseinfo-change-version", "Acquire::AllowReleaseInfoChange::Version", 0);
+      addArg(0, "allow-releaseinfo-change-codename", "Acquire::AllowReleaseInfoChange::Codename", 0);
+      addArg(0, "allow-releaseinfo-change-suite", "Acquire::AllowReleaseInfoChange::Suite", 0);
+      addArg(0, "allow-releaseinfo-change-defaultpin", "Acquire::AllowReleaseInfoChange::DefaultPin", 0);
    }
    else if (CmdMatches("source"))
    {
@@ -214,12 +217,17 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
       addArg(0, "tar-only", "APT::Get::Tar-Only", 0);
       addArg(0, "dsc-only", "APT::Get::Dsc-Only", 0);
    }
-   else if (CmdMatches("build-dep"))
+   else if (CmdMatches("build-dep") || CmdMatches("satisfy"))
    {
       addArg('a', "host-architecture", "APT::Get::Host-Architecture", CommandLine::HasArg);
       addArg('P', "build-profiles", "APT::Build-Profiles", CommandLine::HasArg);
       addArg(0, "purge", "APT::Get::Purge", 0);
       addArg(0, "solver", "APT::Solver", CommandLine::HasArg);
+      if (CmdMatches("build-dep"))
+      {
+         addArg(0,"arch-only","APT::Get::Arch-Only",0);
+         addArg(0,"indep-only","APT::Get::Indep-Only",0);
+      }
       // this has no effect *but* sbuild is using it (see LP: #1255806)
       // once sbuild is fixed, this option can be removed
       addArg('f', "fix-broken", "APT::Get::Fix-Broken", 0);
@@ -235,9 +243,9 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
    else if (CmdMatches("moo"))
       addArg(0, "color", "APT::Moo::Color", 0);
 
-   if (CmdMatches("install", "remove", "purge", "upgrade", "dist-upgrade",
-	    "dselect-upgrade", "autoremove", "auto-remove", "clean", "autoclean", "auto-clean", "check",
-	    "build-dep", "full-upgrade", "source"))
+   if (CmdMatches("install", "reinstall", "remove", "purge", "upgrade", "dist-upgrade",
+	    "dselect-upgrade", "autoremove", "auto-remove", "autopurge", "clean", "autoclean", "auto-clean", "check",
+	    "build-dep", "satisfy", "full-upgrade", "source"))
    {
       addArg('s', "simulate", "APT::Get::Simulate", 0);
       addArg('s', "just-print", "APT::Get::Simulate", 0);
@@ -268,12 +276,10 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
    addArg(0,"force-yes","APT::Get::force-yes",0);
    addArg(0,"print-uris","APT::Get::Print-URIs",0);
    addArg(0,"trivial-only","APT::Get::Trivial-Only",0);
+   addArg(0,"mark-auto","APT::Get::Mark-Auto",0);
    addArg(0,"remove","APT::Get::Remove",0);
    addArg(0,"only-source","APT::Get::Only-Source",0);
-   addArg(0,"arch-only","APT::Get::Arch-Only",0);
    addArg(0,"allow-unauthenticated","APT::Get::AllowUnauthenticated",0);
-   addArg(0,"allow-insecure-repositories","Acquire::AllowInsecureRepositories",0);
-   addArg(0,"allow-weak-repositories","Acquire::AllowWeakRepositories",0);
    addArg(0,"install-recommends","APT::Install-Recommends",CommandLine::Boolean);
    addArg(0,"install-suggests","APT::Install-Suggests",CommandLine::Boolean);
    addArg(0,"fix-policy","APT::Get::Fix-Policy-Broken",0);
@@ -285,12 +291,12 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
 static bool addArgumentsAPTMark(std::vector<CommandLine::Args> &Args, char const * const Cmd)/*{{{*/
 {
    if (CmdMatches("auto", "manual", "hold", "unhold", "showauto",
-	    "showmanual", "showhold", "showholds",
-	    "markauto", "unmarkauto"))
+	    "showmanual", "showhold", "showholds", "showheld",
+	    "markauto", "unmarkauto", "minimize-manual"))
    {
       addArg('f',"file","Dir::State::extended_states",CommandLine::HasArg);
    }
-   else if (CmdMatches("install", "remove", "deinstall", "purge",
+   else if (CmdMatches("install", "reinstall", "remove", "deinstall", "purge",
 	    "showinstall", "showinstalls", "showremove", "showremoves",
 	    "showdeinstall", "showdeinstalls", "showpurge", "showpurges"))
       ;
@@ -302,7 +308,14 @@ static bool addArgumentsAPTMark(std::vector<CommandLine::Args> &Args, char const
       addArg('v',"verbose","APT::MarkAuto::Verbose",0);
    }
 
-   if (strncmp(Cmd, "show", strlen("show")) != 0)
+   if (CmdMatches("minimize-manual"))
+   {
+      addArg('y',"yes","APT::Get::Assume-Yes",0);
+      addArg('y',"assume-yes","APT::Get::Assume-Yes",0);
+      addArg(0,"assume-no","APT::Get::Assume-No",0);
+   }
+
+   if (CmdMatches("minimize-manual") || (Cmd != nullptr && strncmp(Cmd, "show", strlen("show")) != 0))
    {
       addArg('s',"simulate","APT::Mark::Simulate",0);
       addArg('s',"just-print","APT::Mark::Simulate",0);
@@ -332,7 +345,7 @@ static bool addArgumentsAPT(std::vector<CommandLine::Args> &Args, char const * c
       addArg('v', "verbose", "APT::Cmd::List-Include-Summary", 0);
       addArg('a', "all-versions", "APT::Cmd::All-Versions", 0);
    }
-   else if (CmdMatches("show"))
+   else if (CmdMatches("show") || CmdMatches("info"))
    {
       addArg('a', "all-versions", "APT::Cache::AllVersions", 0);
    }
@@ -346,6 +359,14 @@ static bool addArgumentsAPT(std::vector<CommandLine::Args> &Args, char const * c
 
    addArg(0, "with-source", "APT::Sources::With::", CommandLine::HasArg);
 
+   return true;
+}
+									/*}}}*/
+static bool addArgumentsRred(std::vector<CommandLine::Args> &Args, char const * const /*Cmd*/)/*{{{*/
+{
+   addArg('t', nullptr, "Rred::T", 0);
+   addArg('f', nullptr, "Rred::F", 0);
+   addArg('C', "compress", "Rred::Compress",CommandLine::HasArg);
    return true;
 }
 									/*}}}*/
@@ -371,6 +392,7 @@ std::vector<CommandLine::Args> getCommandArgs(APT_CMD const Program, char const 
 	 case APT_CMD::APT_INTERNAL_SOLVER: addArgumentsAPTInternalSolver(Args, Cmd); break;
 	 case APT_CMD::APT_MARK: addArgumentsAPTMark(Args, Cmd); break;
 	 case APT_CMD::APT_SORTPKG: addArgumentsAPTSortPkgs(Args, Cmd); break;
+	 case APT_CMD::RRED: addArgumentsRred(Args, Cmd); break;
       }
 
    // options without a command
@@ -428,11 +450,12 @@ static bool ShowCommonHelp(APT_CMD const Binary, CommandLine &CmdL, std::vector<
       case APT_CMD::APT_INTERNAL_SOLVER: cmd = nullptr; break;
       case APT_CMD::APT_MARK: cmd = "apt-mark(8)"; break;
       case APT_CMD::APT_SORTPKG: cmd = "apt-sortpkgs(1)"; break;
+      case APT_CMD::RRED: cmd = nullptr; break;
    }
    if (cmd != nullptr)
       ioprintf(std::cout, _("See %s for more information about the available commands."), cmd);
    if (Binary != APT_CMD::APT_DUMP_SOLVER && Binary != APT_CMD::APT_INTERNAL_SOLVER &&
-	 Binary != APT_CMD::APT_INTERNAL_PLANNER)
+	 Binary != APT_CMD::APT_INTERNAL_PLANNER && Binary != APT_CMD::RRED)
       std::cout << std::endl <<
 	 _("Configuration options and syntax is detailed in apt.conf(5).\n"
 	       "Information about how to configure sources can be found in sources.list(5).\n"
@@ -461,9 +484,14 @@ static void BinarySpecificConfiguration(char const * const Binary)	/*{{{*/
       _config->CndSet("Binary::apt::APT::Cmd::Show-Update-Stats", true);
       _config->CndSet("Binary::apt::DPkg::Progress-Fancy", true);
       _config->CndSet("Binary::apt::APT::Keep-Downloaded-Packages", false);
+      _config->CndSet("Binary::apt::APT::Get::Update::InteractiveReleaseInfoChanges", true);
+      _config->CndSet("Binary::apt::APT::Cmd::Pattern-Only", true);
+
+      if (isatty(STDIN_FILENO))
+         _config->CndSet("Binary::apt::Dpkg::Lock::Timeout", -1);
+      else
+         _config->CndSet("Binary::apt::Dpkg::Lock::Timeout", 120);
    }
-   if (binary == "apt-config")
-      _config->CndSet("Binary::apt-get::Acquire::AllowInsecureRepositories", true);
 
    _config->Set("Binary", binary);
 }
@@ -471,8 +499,16 @@ static void BinarySpecificConfiguration(char const * const Binary)	/*{{{*/
 static void BinaryCommandSpecificConfiguration(char const * const Binary, char const * const Cmd)/*{{{*/
 {
    std::string const binary = flNotDir(Binary);
-   if (binary == "apt-get" && CmdMatches("update"))
-      _config->CndSet("Binary::apt-get::Acquire::AllowInsecureRepositories", true);
+   if ((binary == "apt" || binary == "apt-get") && CmdMatches("upgrade", "dist-upgrade", "full-upgrade"))
+   {
+      //FIXME: the option is documented to apply only for install/remove, so
+      // we force it false for configuration files where users can be confused if
+      // we support it anyhow, but allow it on the commandline to take effect
+      // even through it isn't documented as a user who doesn't want it wouldn't
+      // ask for it
+      _config->Set("Binary::apt-get::APT::Get::AutomaticRemove", false);
+      _config->Set("Binary::apt::APT::Get::AutomaticRemove", false);
+   }
 }
 #undef CmdMatches
 									/*}}}*/
@@ -490,19 +526,16 @@ std::vector<CommandLine::Dispatch> ParseCommandLine(CommandLine &CmdL, APT_CMD c
    if (likely(argc != 0 && argv[0] != NULL))
       BinarySpecificConfiguration(argv[0]);
 
-   std::vector<aptDispatchWithHelp> const CmdsWithHelp = GetCommands();
    std::vector<CommandLine::Dispatch> Cmds;
+   std::vector<aptDispatchWithHelp> const CmdsWithHelp = GetCommands();
    if (CmdsWithHelp.empty() == false)
    {
       CommandLine::Dispatch const help = { "help", [](CommandLine &){return false;} };
       Cmds.push_back(std::move(help));
    }
-   for (auto const& cmd : CmdsWithHelp)
-      Cmds.push_back({cmd.Match, cmd.Handler});
+   std::transform(CmdsWithHelp.begin(), CmdsWithHelp.end(), std::back_inserter(Cmds),
+		  [](auto &&cmd) { return CommandLine::Dispatch{cmd.Match, cmd.Handler}; });
 
-   // Args running out of scope invalidates the pointer stored in CmdL,
-   // but we don't use the pointer after this function, so we ignore
-   // this problem for now and figure something out if we have to.
    char const * CmdCalled = nullptr;
    if (Cmds.empty() == false && Cmds[0].Handler != nullptr)
       CmdCalled = CommandLine::GetCommand(Cmds.data(), argc, argv);
@@ -510,6 +543,10 @@ std::vector<CommandLine::Dispatch> ParseCommandLine(CommandLine &CmdL, APT_CMD c
       BinaryCommandSpecificConfiguration(argv[0], CmdCalled);
    std::string const conf = "Binary::" + _config->Find("Binary");
    _config->MoveSubTree(conf.c_str(), nullptr);
+
+   // Args running out of scope invalidates the pointer stored in CmdL,
+   // but we don't use the pointer after this function, so we ignore
+   // this problem for now and figure something out if we have to.
    auto Args = getCommandArgs(Binary, CmdCalled);
    CmdL = CommandLine(Args.data(), _config);
 
@@ -521,6 +558,11 @@ std::vector<CommandLine::Dispatch> ParseCommandLine(CommandLine &CmdL, APT_CMD c
 
       _error->DumpErrors();
       exit(100);
+   }
+
+   if (_config->FindB("APT::Get::Force-Yes", false) == true)
+   {
+      _error->Warning(_("--force-yes is deprecated, use one of the options starting with --allow instead."));
    }
 
    // See if the help should be shown

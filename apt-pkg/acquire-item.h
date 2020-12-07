@@ -20,20 +20,16 @@
 #define PKGLIB_ACQUIRE_ITEM_H
 
 #include <apt-pkg/acquire.h>
-#include <apt-pkg/indexfile.h>
 #include <apt-pkg/hashes.h>
-#include <apt-pkg/weakptr.h>
+#include <apt-pkg/indexfile.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
+#include <apt-pkg/weakptr.h>
 
-#include <string>
-#include <vector>
 #include <map>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/sourcelist.h>
-#include <apt-pkg/pkgrecords.h>
-#endif
 
 /** \addtogroup acquire
  *  @{
@@ -47,7 +43,7 @@ class pkgAcqMetaClearSig;
 class pkgAcqIndexMergeDiffs;
 class metaIndex;
 
-class pkgAcquire::Item : public WeakPointable				/*{{{*/
+class APT_PUBLIC pkgAcquire::Item : public WeakPointable				/*{{{*/
 /** \brief Represents the process by which a pkgAcquire object should
  *  retrieve a file or a collection of files.
  *
@@ -102,11 +98,6 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
    /** \brief How much of the object was already fetched. */
    unsigned long long PartialSize;
 
-   /** \brief If not \b NULL, contains the name of a subprocess that
-    *  is operating on this object (for instance, "gzip" or "gpgv").
-    */
-   APT_DEPRECATED_MSG("Use the std::string member ActiveSubprocess instead") const char *Mode;
-
    /** \brief contains the name of the subprocess that is operating on this object
     * (for instance, "gzip", "rred" or "gpgv"). This is obsoleting #Mode from above
     * as it can manage the lifetime of included string properly. */
@@ -114,7 +105,7 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
 
    /** \brief A client-supplied unique identifier.
     *
-    *  This field is initalized to 0; it is meant to be filled in by
+    *  This field is initialized to 0; it is meant to be filled in by
     *  clients that wish to use it to uniquely identify items.
     *
     *  APT progress reporting will store an ID there as shown in "Get:42 …"
@@ -161,6 +152,9 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
     */
    std::string DestFile;
 
+   /** \brief Number of retries */
+   unsigned int Retries;
+
    /** \brief Invoked by the acquire worker when the object couldn't
     *  be fetched.
     *
@@ -175,6 +169,7 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
     *  \sa pkgAcqMethod
     */
    virtual void Failed(std::string const &Message,pkgAcquire::MethodConfig const * const Cnf);
+   APT_HIDDEN void FailMessage(std::string const &Message);
 
    /** \brief Invoked by the acquire worker to check if the successfully
     * fetched object is also the objected we wanted to have.
@@ -239,6 +234,13 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
     *  no trailing newline.
     */
    virtual std::string Custom600Headers() const;
+   // this is more a hack than a proper external interface, hence hidden
+   APT_HIDDEN std::unordered_map<std::string, std::string> &ModifyCustomFields();
+   // this isn't the super nicest interface either…
+   APT_HIDDEN bool PopAlternativeURI(std::string &NewURI);
+   APT_HIDDEN bool IsGoodAlternativeURI(std::string const &AltUri) const;
+   APT_HIDDEN void PushAlternativeURI(std::string &&NewURI, std::unordered_map<std::string, std::string> &&fields, bool const at_the_back);
+   APT_HIDDEN void RemoveAlternativeSite(std::string &&OldSite);
 
    /** \brief A "descriptive" URI-like string.
     *
@@ -273,15 +275,6 @@ class pkgAcquire::Item : public WeakPointable				/*{{{*/
 
    /** \return \b true if this object is being fetched from a trusted source. */
    virtual bool IsTrusted() const;
-
-   /** \brief Report mirror problem
-    *
-    *  This allows reporting mirror failures back to a centralized
-    *  server. The apt-report-mirror-failure script is called for this
-    *
-    *  \param FailCode A short failure string that is send
-    */
-   APT_DEPRECATED_MSG("Item::Failed does this for you") void ReportMirrorFailure(std::string const &FailCode);
 
    /** \brief Set the name of the current active subprocess
     *
@@ -397,7 +390,7 @@ class APT_HIDDEN pkgAcqTransactionItem: public pkgAcquire::Item		/*{{{*/
    virtual HashStringList GetExpectedHashes() const APT_OVERRIDE;
    virtual std::string GetMetaKey() const;
    virtual bool HashesRequired() const APT_OVERRIDE;
-
+   virtual bool AcquireByHash() const;
 
    pkgAcqTransactionItem(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager, IndexTarget const &Target) APT_NONNULL(2, 3);
    virtual ~pkgAcqTransactionItem();
@@ -441,8 +434,9 @@ class APT_HIDDEN pkgAcqMetaBase : public pkgAcqTransactionItem		/*{{{*/
     *
     *  \param Message The message block received from the fetch
     *  subprocess.
+    *  \param Cnf The method and its configuration which handled the request
     */
-   bool CheckAuthDone(std::string const &Message);
+   bool CheckAuthDone(std::string const &Message, pkgAcquire::MethodConfig const *const Cnf);
 
    /** Check if the current item should fail at this point */
    bool CheckStopAuthentication(pkgAcquire::Item * const I, const std::string &Message);
@@ -561,7 +555,7 @@ class APT_HIDDEN pkgAcqMetaSig : public pkgAcqTransactionItem
    virtual ~pkgAcqMetaSig();
 };
 									/*}}}*/
-/** \brief An item repsonsible for downloading clearsigned metaindexes	{{{*/
+/** \brief An item responsible for downloading clearsigned metaindexes	{{{*/
 class APT_HIDDEN pkgAcqMetaClearSig : public pkgAcqMetaIndex
 {
    void * const d;
@@ -682,8 +676,22 @@ class APT_HIDDEN pkgAcqIndex : public pkgAcqBaseIndex
    protected:
    APT_HIDDEN void Init(std::string const &URI, std::string const &URIDesc,
              std::string const &ShortDesc);
-   APT_HIDDEN bool CommonFailed(std::string const &TargetURI, std::string const TargetDesc,
-             std::string const &Message, pkgAcquire::MethodConfig const * const Cnf);
+   APT_HIDDEN bool CommonFailed(std::string const &TargetURI,
+				std::string const &Message, pkgAcquire::MethodConfig const *const Cnf);
+};
+									/*}}}*/
+struct APT_HIDDEN DiffInfo {						/*{{{*/
+   /** The filename of the diff. */
+   std::string file;
+
+   /** The hashes of the file after the diff is applied */
+   HashStringList result_hashes;
+
+   /** The hashes of the diff */
+   HashStringList patch_hashes;
+
+   /** The hashes of the compressed diff */
+   HashStringList download_hashes;
 };
 									/*}}}*/
 /** \brief An item that is responsible for fetching an index file of	{{{
@@ -699,15 +707,12 @@ class APT_HIDDEN pkgAcqDiffIndex : public pkgAcqIndex
 {
    void * const d;
    std::vector<pkgAcqIndexMergeDiffs*> * diffs;
+   std::vector<DiffInfo> available_patches;
+   bool pdiff_merge;
 
  protected:
    /** \brief If \b true, debugging information will be written to std::clog. */
    bool Debug;
-
-   /** \brief A description of the Packages file (stored in
-    *  pkgAcquire::ItemDesc::Description).
-    */
-   std::string Description;
 
    /** \brief Get the full pathname of the final file for the current URI */
    virtual std::string GetFinalFilename() const APT_OVERRIDE;
@@ -718,6 +723,7 @@ class APT_HIDDEN pkgAcqDiffIndex : public pkgAcqIndex
  public:
    // Specialized action members
    virtual void Failed(std::string const &Message, pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
+   virtual bool VerifyDone(std::string const &Message, pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
    virtual void Done(std::string const &Message, HashStringList const &Hashes,
 		     pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
    virtual std::string DescURI() const APT_OVERRIDE {return Target.URI + "Index";};
@@ -752,20 +758,6 @@ class APT_HIDDEN pkgAcqDiffIndex : public pkgAcqIndex
    APT_HIDDEN void QueueOnIMSHit() const;
 };
 									/*}}}*/
-struct APT_HIDDEN DiffInfo {						/*{{{*/
-   /** The filename of the diff. */
-   std::string file;
-
-   /** The hashes of the file after the diff is applied */
-   HashStringList result_hashes;
-
-   /** The hashes of the diff */
-   HashStringList patch_hashes;
-
-   /** The hashes of the compressed diff */
-   HashStringList download_hashes;
-};
-									/*}}}*/
 /** \brief An item that is responsible for fetching client-merge patches {{{
  *  that need to be applied to a given package index file.
  *
@@ -779,17 +771,12 @@ struct APT_HIDDEN DiffInfo {						/*{{{*/
  */
 class APT_HIDDEN pkgAcqIndexMergeDiffs : public pkgAcqBaseIndex
 {
-   void * const d;
-
    protected:
 
    /** \brief If \b true, debugging output will be written to
     *  std::clog.
     */
    bool Debug;
-
-   /** \brief description of the file being downloaded. */
-   std::string Description;
 
    /** \brief information about the current patch */
    struct DiffInfo const patch;
@@ -826,27 +813,23 @@ class APT_HIDDEN pkgAcqIndexMergeDiffs : public pkgAcqBaseIndex
    virtual std::string DescURI() const APT_OVERRIDE {return Target.URI + "Index";};
    virtual HashStringList GetExpectedHashes() const APT_OVERRIDE;
    virtual bool HashesRequired() const APT_OVERRIDE;
+   virtual bool AcquireByHash() const APT_OVERRIDE;
 
    /** \brief Create an index merge-diff item.
     *
     *  \param Owner The pkgAcquire object that owns this item.
-    *
-    *  \param URI The URI of the package index file being
-    *  reconstructed.
-    *
-    *  \param URIDesc A long description of this item.
-    *
-    *  \param ShortDesc A brief description of this item.
-    *
+    *  \param TransactionManager responsible for this item
+    *  \param Target we intend to built via pdiff patching
+    *  \param baseURI is the URI used for the Index, but stripped down to Target
+    *  \param DiffInfo of the patch in question
     *  \param patch contains infos about the patch this item is supposed
     *  to download which were read from the index
-    *
     *  \param allPatches contains all related items so that each item can
     *  check if it was the last one to complete the download step
     */
-   pkgAcqIndexMergeDiffs(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-                         IndexTarget const &Target, DiffInfo const &patch,
-                         std::vector<pkgAcqIndexMergeDiffs*> const * const allPatches) APT_NONNULL(2, 3, 6);
+   pkgAcqIndexMergeDiffs(pkgAcquire *const Owner, pkgAcqMetaClearSig *const TransactionManager,
+			 IndexTarget const &Target, DiffInfo const &patch,
+			 std::vector<pkgAcqIndexMergeDiffs *> const *const allPatches) APT_NONNULL(2, 3, 6);
    virtual ~pkgAcqIndexMergeDiffs();
 };
 									/*}}}*/
@@ -863,8 +846,6 @@ class APT_HIDDEN pkgAcqIndexMergeDiffs : public pkgAcqBaseIndex
  */
 class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
 {
-   void * const d;
-
    private:
 
    /** \brief Queue up the next diff download.
@@ -897,9 +878,6 @@ class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
     *  std::clog.
     */
    bool Debug;
-
-   /** A description of the file being downloaded. */
-   std::string Description;
 
    /** The patches that remain to be downloaded, including the patch
     *  being downloaded right now.  This list should be ordered so
@@ -936,6 +914,7 @@ class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
    virtual std::string DescURI() const APT_OVERRIDE {return Target.URI + "IndexDiffs";};
    virtual HashStringList GetExpectedHashes() const APT_OVERRIDE;
    virtual bool HashesRequired() const APT_OVERRIDE;
+   virtual bool AcquireByHash() const APT_OVERRIDE;
 
    /** \brief Create an index diff item.
     *
@@ -943,21 +922,16 @@ class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
     *  \a diffs is empty, or QueueNextDiff() otherwise.
     *
     *  \param Owner The pkgAcquire object that owns this item.
-    *
-    *  \param URI The URI of the package index file being
-    *  reconstructed.
-    *
-    *  \param URIDesc A long description of this item.
-    *
-    *  \param ShortDesc A brief description of this item.
-    *
+    *  \param TransactionManager responsible for this item
+    *  \param Target we want to built via pdiff patching
+    *  \param baseURI is the URI used for the Index, but stripped down to Target
     *  \param diffs The remaining diffs from the index of diffs.  They
     *  should be ordered so that each diff appears before any diff
     *  that depends on it.
     */
-   pkgAcqIndexDiffs(pkgAcquire * const Owner, pkgAcqMetaClearSig * const TransactionManager,
-                    IndexTarget const &Target,
-		    std::vector<DiffInfo> const &diffs=std::vector<DiffInfo>()) APT_NONNULL(2, 3);
+   pkgAcqIndexDiffs(pkgAcquire *const Owner, pkgAcqMetaClearSig *const TransactionManager,
+		    IndexTarget const &Target,
+		    std::vector<DiffInfo> const &diffs = std::vector<DiffInfo>()) APT_NONNULL(2, 3);
    virtual ~pkgAcqIndexDiffs();
 };
 									/*}}}*/
@@ -966,7 +940,7 @@ class APT_HIDDEN pkgAcqIndexDiffs : public pkgAcqBaseIndex
  *  If the package file already exists in the cache, nothing will be
  *  done.
  */
-class pkgAcqArchive : public pkgAcquire::Item
+class APT_PUBLIC pkgAcqArchive : public pkgAcquire::Item
 {
    void * const d;
 
@@ -991,16 +965,6 @@ class pkgAcqArchive : public pkgAcquire::Item
     *  should be stored.
     */
    std::string &StoreFilename;
-
-   /** \brief The next file for this version to try to download. */
-   pkgCache::VerFileIterator Vf;
-
-   /** \brief How many (more) times to try to find a new source from
-    *  which to download this package version if it fails.
-    *
-    *  Set from Acquire::Retries.
-    */
-   unsigned int Retries;
 
    /** \brief \b true if this version file is being downloaded from a
     *  trusted source.
@@ -1054,7 +1018,7 @@ class pkgAcqArchive : public pkgAcquire::Item
  *  Downloads the changelog to a temporary file it will also remove again
  *  while it is deconstructed or downloads it to a named location.
  */
-class pkgAcqChangelog : public pkgAcquire::Item
+class APT_PUBLIC pkgAcqChangelog : public pkgAcquire::Item
 {
    class Private;
    Private * const d;
@@ -1170,14 +1134,9 @@ private:
  *  normally is a NOP, such as "file".  If the download fails, the
  *  partial file is renamed to get a ".FAILED" extension.
  */
-class pkgAcqFile : public pkgAcquire::Item
+class APT_PUBLIC pkgAcqFile : public pkgAcquire::Item
 {
    void * const d;
-
-   /** \brief How many times to retry the download, set from
-    *  Acquire::Retries.
-    */
-   unsigned int Retries;
 
    /** \brief Should this file be considered a index file */
    bool IsIndexFile;
@@ -1188,7 +1147,6 @@ class pkgAcqFile : public pkgAcquire::Item
    virtual bool HashesRequired() const APT_OVERRIDE;
 
    // Specialized action members
-   virtual void Failed(std::string const &Message,pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
    virtual void Done(std::string const &Message, HashStringList const &CalcHashes,
 		     pkgAcquire::MethodConfig const * const Cnf) APT_OVERRIDE;
    virtual std::string DescURI() const APT_OVERRIDE {return Desc.URI;};
@@ -1230,6 +1188,25 @@ class pkgAcqFile : public pkgAcquire::Item
 	      std::string const &DestDir="", std::string const &DestFilename="",
 	      bool const IsIndexFile=false);
    virtual ~pkgAcqFile();
+};
+									/*}}}*/
+class APT_HIDDEN pkgAcqAuxFile : public pkgAcqFile /*{{{*/
+{
+   pkgAcquire::Item *const Owner;
+   pkgAcquire::Worker *const Worker;
+   unsigned long long MaximumSize;
+
+   public:
+   virtual void Failed(std::string const &Message, pkgAcquire::MethodConfig const *const Cnf) APT_OVERRIDE;
+   virtual void Done(std::string const &Message, HashStringList const &CalcHashes,
+		     pkgAcquire::MethodConfig const *const Cnf) APT_OVERRIDE;
+   virtual std::string Custom600Headers() const APT_OVERRIDE;
+   virtual void Finished() APT_OVERRIDE;
+
+   pkgAcqAuxFile(pkgAcquire::Item *const Owner, pkgAcquire::Worker *const Worker,
+		 std::string const &ShortDesc, std::string const &Desc, std::string const &URI,
+		 HashStringList const &Hashes, unsigned long long const MaximumSize);
+   virtual ~pkgAcqAuxFile();
 };
 									/*}}}*/
 /** @} */

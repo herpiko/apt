@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.26\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-08-30 22:20+0200\n"
+"POT-Creation-Date: 2020-08-11 14:34+0200\n"
 "PO-Revision-Date: 2004-05-06 15:25+0100\n"
 "Last-Translator: Safir Šećerović <sapphire@linux.org.ba>\n"
 "Language-Team: Bosnian <lokal@lugbih.org>\n"
@@ -16,176 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Invalid archive signature"
-msgstr ""
-
-#: apt-inst/contrib/arfile.cc
-msgid "Error reading archive member header"
-msgstr ""
-
-#: apt-inst/contrib/arfile.cc
-#, c-format
-msgid "Invalid archive member header %s"
-msgstr ""
-
-#: apt-inst/contrib/arfile.cc
-msgid "Invalid archive member header"
-msgstr ""
-
-#: apt-inst/contrib/arfile.cc
-msgid "Archive is too short"
-msgstr "Arhiva je prekratka"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Failed to read the archive headers"
-msgstr ""
-
-#: apt-inst/contrib/extracttar.cc
-#, fuzzy, c-format
-msgid "Cannot find a configured compressor for '%s'"
-msgstr "Ne mogu otvoriti %s"
-
-#: apt-inst/contrib/extracttar.cc
-msgid "Corrupted archive"
-msgstr "Oštećena arhiva"
-
-#: apt-inst/contrib/extracttar.cc
-msgid "Tar checksum failed, archive corrupted"
-msgstr "Provjera Tar kontrolnog zbira nije uspjela, arhiva oštećena"
-
-#: apt-inst/contrib/extracttar.cc
-#, c-format
-msgid "Unknown TAR header type %u, member %s"
-msgstr ""
-
-#: apt-inst/deb/debfile.cc
-#, c-format
-msgid "This is not a valid DEB archive, missing '%s' member"
-msgstr ""
-
-#: apt-inst/deb/debfile.cc
-#, c-format
-msgid "Internal error, could not locate member %s"
-msgstr ""
-
-#: apt-inst/deb/debfile.cc
-msgid "Unparsable control file"
-msgstr ""
-
-#: apt-inst/dirstream.cc
-#, fuzzy, c-format
-msgid "Failed to write file %s"
-msgstr "Ne mogu ukloniti %s"
-
-#: apt-inst/dirstream.cc
-#, c-format
-msgid "Failed to close file %s"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The path %s is too long"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Unpacking %s more than once"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The directory %s is diverted"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The package is trying to write to the diversion target %s/%s"
-msgstr ""
-
-#: apt-inst/extract.cc
-msgid "The diversion path is too long"
-msgstr ""
-
-#: apt-inst/extract.cc apt-pkg/acquire-item.cc ftparchive/cachedb.cc
-#: methods/rred.cc
-#, c-format
-msgid "Failed to stat %s"
-msgstr ""
-
-#: apt-inst/extract.cc ftparchive/multicompress.cc
-#, c-format
-msgid "Failed to rename %s to %s"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The directory %s is being replaced by a non-directory"
-msgstr ""
-
-#: apt-inst/extract.cc
-msgid "Failed to locate node in its hash bucket"
-msgstr ""
-
-#: apt-inst/extract.cc
-msgid "The path is too long"
-msgstr "Putanja je preduga"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Overwrite package match with no version for %s"
-msgstr ""
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "File %s/%s overwrites the one in the package %s"
-msgstr ""
-
-#. Only warn if there are no sources.list.d.
-#. Only warn if there is no sources.list file.
-#: apt-inst/extract.cc apt-pkg/acquire.cc apt-pkg/clean.cc
-#: apt-pkg/contrib/cdromutl.cc apt-pkg/contrib/fileutl.cc apt-pkg/deb/dpkgpm.cc
-#: apt-pkg/init.cc apt-pkg/policy.cc apt-pkg/sourcelist.cc methods/mirror.cc
-#, c-format
-msgid "Unable to read %s"
-msgstr "Ne mogu čitati %s"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Unable to stat %s"
-msgstr ""
-
-#: apt-inst/filelist.cc
-msgid "DropNode called on still linked node"
-msgstr ""
-
-#: apt-inst/filelist.cc
-msgid "Failed to locate the hash element!"
-msgstr ""
-
-#: apt-inst/filelist.cc
-msgid "Failed to allocate diversion"
-msgstr ""
-
-#: apt-inst/filelist.cc
-msgid "Internal error in AddDiversion"
-msgstr ""
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Trying to overwrite a diversion, %s -> %s and %s/%s"
-msgstr ""
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Double add of diversion %s -> %s"
-msgstr ""
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Duplicate conf file %s/%s"
-msgstr ""
 
 #: apt-pkg/acquire-item.cc
 msgid ""
@@ -212,7 +42,7 @@ msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
-msgid "The repository '%s' does no longer have a Release file."
+msgid "The repository '%s' no longer has a Release file."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -239,6 +69,11 @@ msgstr ""
 #: apt-pkg/acquire-item.cc ftparchive/writer.cc
 #, c-format
 msgid "Failed to readlink %s"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc ftparchive/cachedb.cc methods/rred.cc
+#, c-format
+msgid "Failed to stat %s"
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -291,6 +126,13 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
+"Skipping acquire of configured file '%s' as repository '%s' doesn't have the "
+"component '%s' (component misspelt in sources.list?)"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' doesn't support "
 "architecture '%s'"
 msgstr ""
@@ -298,8 +140,8 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
-"Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
-"or malformed file)"
+"Skipping acquire of configured file '%s' as repository '%s' does not seem to "
+"provide it (sources.list entry misspelt?)"
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -319,10 +161,50 @@ msgid ""
 "repository will not be applied."
 msgstr ""
 
+#. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
+#. the time until the file will be valid - formatted in the same way as in
+#. the download progress display (e.g. 7d 3h 42min 1s)
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Release file for %s is not valid yet (invalid for another %s). Updates for "
+"this repository will not be applied."
+msgstr ""
+
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
+msgstr ""
+
+#. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"More information about this can be found online in the Release notes at: %s"
+msgstr ""
+
+#. TRANSLATOR: %s is the name of the manpage in question, e.g. apt-secure(8)
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"This must be accepted explicitly before updates for this repository can be "
+"applied. See %s manpage for details."
+msgstr ""
+
+#: apt-pkg/acquire-item.cc apt-pkg/update.cc apt-private/private-download.cc
+#, fuzzy, c-format
+msgid "Failed to fetch %s  %s"
+msgstr "Ne mogu otvoriti %s"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -336,16 +218,17 @@ msgstr ""
 msgid "Can't find a source to download version '%s' of '%s'"
 msgstr ""
 
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"The package index files are corrupted. No Filename: field for package %s."
-msgstr ""
-
 #. TRANSLATOR: %s=%s is sourcename=sourceversion, e.g. apt=1.1
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Changelog unavailable for %s=%s"
+msgstr ""
+
+#: apt-pkg/acquire-worker.cc
+#, c-format
+msgid ""
+"The method '%s' is unsupported and disabled by default. Consider switching "
+"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
 msgstr ""
 
 #: apt-pkg/acquire-worker.cc
@@ -381,12 +264,12 @@ msgstr ""
 
 #: apt-pkg/acquire.cc apt-pkg/cdrom.cc
 #, c-format
-msgid "List directory %spartial is missing."
+msgid "List directory %s is missing."
 msgstr ""
 
 #: apt-pkg/acquire.cc
 #, c-format
-msgid "Archives directory %spartial is missing."
+msgid "Archives directory %s is missing."
 msgstr ""
 
 #: apt-pkg/acquire.cc
@@ -402,8 +285,8 @@ msgstr ""
 #: apt-pkg/acquire.cc
 #, c-format
 msgid ""
-"Can't drop privileges for downloading as file '%s' couldn't be accessed by "
-"user '%s'."
+"Download is performed unsandboxed as root as file '%s' couldn't be accessed "
+"by user '%s'."
 msgstr ""
 
 #: apt-pkg/acquire.cc apt-pkg/clean.cc
@@ -411,14 +294,15 @@ msgstr ""
 msgid "Clean of %s is not supported"
 msgstr ""
 
+#. Only warn if there are no sources.list.d.
+#. Only warn if there is no sources.list file.
 #: apt-pkg/acquire.cc apt-pkg/clean.cc apt-pkg/contrib/cdromutl.cc
-#: methods/mirror.cc
+#: apt-pkg/contrib/fileutl.cc apt-pkg/deb/dpkgpm.cc apt-pkg/init.cc
+#: apt-pkg/policy.cc apt-pkg/sourcelist.cc
 #, c-format
-msgid "Unable to change to %s"
-msgstr ""
+msgid "Unable to read %s"
+msgstr "Ne mogu čitati %s"
 
-#. only show the ETA if it makes sense
-#. two days
 #: apt-pkg/acquire.cc
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
@@ -453,11 +337,12 @@ msgstr ""
 msgid "You may want to run apt-get update to correct these problems"
 msgstr ""
 
-#: apt-pkg/cachefile.cc
+#: apt-pkg/cachefile.cc methods/mirror.cc
 msgid "The list of sources could not be read."
 msgstr ""
 
-#: apt-pkg/cachefilter.cc apt-private/private-output.cc
+#: apt-pkg/cachefilter-patterns.cc apt-pkg/cachefilter.cc
+#: apt-private/private-output.cc
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr ""
@@ -603,6 +488,26 @@ msgstr ""
 msgid "Unable to stat %s."
 msgstr ""
 
+#: apt-pkg/contrib/arfile.cc
+msgid "Invalid archive signature"
+msgstr ""
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Error reading archive member header"
+msgstr ""
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Invalid archive member header"
+msgstr ""
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Archive is too short"
+msgstr "Arhiva je prekratka"
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Failed to read the archive headers"
+msgstr ""
+
 #: apt-pkg/contrib/cdromutl.cc
 #, c-format
 msgid "Unable to stat the mount point %s"
@@ -668,11 +573,6 @@ msgstr ""
 
 #: apt-pkg/contrib/configuration.cc
 #, c-format
-msgid "Opening configuration file %s"
-msgstr ""
-
-#: apt-pkg/contrib/configuration.cc
-#, c-format
 msgid "Syntax error %s:%u: Block starts with no name."
 msgstr ""
 
@@ -716,6 +616,24 @@ msgstr ""
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr ""
 
+#: apt-pkg/contrib/extracttar.cc
+#, fuzzy, c-format
+msgid "Cannot find a configured compressor for '%s'"
+msgstr "Ne mogu otvoriti %s"
+
+#: apt-pkg/contrib/extracttar.cc
+msgid "Corrupted archive"
+msgstr "Oštećena arhiva"
+
+#: apt-pkg/contrib/extracttar.cc
+msgid "Tar checksum failed, archive corrupted"
+msgstr "Provjera Tar kontrolnog zbira nije uspjela, arhiva oštećena"
+
+#: apt-pkg/contrib/extracttar.cc
+#, c-format
+msgid "Unknown TAR header type %u"
+msgstr ""
+
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Problem unlinking the file %s"
@@ -738,7 +656,23 @@ msgstr ""
 
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
+msgid "Could not get lock %s. It is held by process %d"
+msgstr ""
+
+#: apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "Could not get lock %s. It is held by process %d (%s)"
+msgstr ""
+
+#: apt-pkg/contrib/fileutl.cc
+#, c-format
 msgid "Could not get lock %s"
+msgstr ""
+
+#: apt-pkg/contrib/fileutl.cc
+msgid ""
+"Be aware that removing the lock file is not a solution and may break your "
+"system."
 msgstr ""
 
 #: apt-pkg/contrib/fileutl.cc
@@ -778,6 +712,7 @@ msgstr ""
 msgid "Sub-process %s received signal %u."
 msgstr ""
 
+#. we forward the statuscode, so don't generate a message on the fd in this case
 #: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc
 #, c-format
 msgid "Sub-process %s returned an error code (%u)"
@@ -847,12 +782,12 @@ msgstr ""
 msgid "Problem syncing the file"
 msgstr ""
 
-#: apt-pkg/contrib/fileutl.cc cmdline/apt-extracttemplates.cc
+#: apt-pkg/contrib/fileutl.cc
 #, fuzzy, c-format
 msgid "Unable to mkstemp %s"
 msgstr "Ne mogu kreirati %s"
 
-#: apt-pkg/contrib/fileutl.cc cmdline/apt-extracttemplates.cc
+#: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Unable to write to %s"
 msgstr "Ne mogu zapisati na %s"
@@ -910,6 +845,13 @@ msgid ""
 "Unable to increase size of the MMap as automatic growing is disabled by user."
 msgstr ""
 
+#: apt-pkg/contrib/netrc.cc
+#, c-format
+msgid ""
+"%s: Credentials for %s match, but the protocol is not encrypted. Annotate "
+"with %s:// to use."
+msgstr ""
+
 #: apt-pkg/contrib/progress.cc
 #, c-format
 msgid "%c%s... Error!"
@@ -924,7 +866,16 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#. Print the spinner
+#: apt-pkg/contrib/progress.cc
+#, c-format
+msgid "%c%s... %llu/%llus"
+msgstr ""
+
+#: apt-pkg/contrib/progress.cc
+#, c-format
+msgid "%c%s... %llus"
+msgstr ""
+
 #: apt-pkg/contrib/progress.cc
 #, c-format
 msgid "%c%s... %u%%"
@@ -957,6 +908,25 @@ msgstr ""
 #: apt-pkg/contrib/strutl.cc
 #, c-format
 msgid "Selection %s not found"
+msgstr ""
+
+#: apt-pkg/deb/debfile.cc
+#, c-format
+msgid "This is not a valid DEB archive, missing '%s' member"
+msgstr ""
+
+#: apt-pkg/deb/debfile.cc
+#, c-format
+msgid "Internal error, could not locate member %s"
+msgstr ""
+
+#: apt-pkg/deb/debfile.cc
+msgid "Unparsable control file"
+msgstr ""
+
+#: apt-pkg/deb/debindexfile.cc
+#, c-format
+msgid "Could not read meta data from %s"
 msgstr ""
 
 #. TRANSLATOR: an identifier like Packages; Releasefile key indicating
@@ -1024,15 +994,20 @@ msgid "Unable to parse package file %s (%d)"
 msgstr ""
 
 #: apt-pkg/deb/debsystem.cc
+#, fuzzy, c-format
+#| msgid "Waiting for headers"
+msgid "Waiting for cache lock: %s"
+msgstr "Čekam na zaglavlja"
+
+#: apt-pkg/deb/debsystem.cc
 #, c-format
 msgid ""
-"Unable to lock the administration directory (%s), is another process using "
-"it?"
+"Unable to acquire the dpkg frontend lock (%s), is another process using it?"
 msgstr ""
 
 #: apt-pkg/deb/debsystem.cc
 #, c-format
-msgid "Unable to lock the administration directory (%s), are you root?"
+msgid "Unable to acquire the dpkg frontend lock (%s), are you root?"
 msgstr ""
 
 #. TRANSLATORS: the %s contains the recovery command, usually
@@ -1044,28 +1019,41 @@ msgid ""
 msgstr ""
 
 #: apt-pkg/deb/debsystem.cc
+#, c-format
+msgid ""
+"Unable to lock the administration directory (%s), is another process using "
+"it?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc
+#, c-format
+msgid "Unable to lock the administration directory (%s), are you root?"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr ""
 
+#. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
 #, fuzzy, c-format
-msgid "Installing %s"
-msgstr "  Instalirano:"
-
-#: apt-pkg/deb/dpkgpm.cc
-#, fuzzy, c-format
-msgid "Configuring %s"
-msgstr "Povezujem se sa %s"
-
-#: apt-pkg/deb/dpkgpm.cc
-#, fuzzy, c-format
-msgid "Removing %s"
+msgid "Preparing %s"
 msgstr "Otvaram %s"
 
 #: apt-pkg/deb/dpkgpm.cc
-#, fuzzy, c-format
-msgid "Completely removing %s"
-msgstr "Ne mogu ukloniti %s"
+#, c-format
+msgid "Preparing to configure %s"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc
+#, c-format
+msgid "Preparing for removal of %s"
+msgstr ""
+
+#: apt-pkg/deb/dpkgpm.cc
+#, c-format
+msgid "Preparing to completely remove %s"
+msgstr ""
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1082,6 +1070,11 @@ msgstr ""
 msgid "Installed %s"
 msgstr "  Instalirano:"
 
+#: apt-pkg/deb/dpkgpm.cc
+#, fuzzy, c-format
+msgid "Configuring %s"
+msgstr "Povezujem se sa %s"
+
 #. FIXME: use a better string after freeze
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1095,33 +1088,23 @@ msgstr "Ne mogu otvoriti %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, fuzzy, c-format
-msgid "Preparing %s"
-msgstr "Otvaram %s"
-
-#: apt-pkg/deb/dpkgpm.cc
-#, fuzzy, c-format
 msgid "Unpacking %s"
 msgstr "Otvaram %s"
 
 #: apt-pkg/deb/dpkgpm.cc
-#, c-format
-msgid "Preparing to configure %s"
-msgstr ""
-
-#: apt-pkg/deb/dpkgpm.cc
-#, c-format
-msgid "Preparing for removal of %s"
-msgstr ""
+#, fuzzy, c-format
+msgid "Installing %s"
+msgstr "  Instalirano:"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, fuzzy, c-format
-msgid "Removed %s"
-msgstr "Preporučuje"
+msgid "Removing %s"
+msgstr "Otvaram %s"
 
 #: apt-pkg/deb/dpkgpm.cc
-#, c-format
-msgid "Preparing to completely remove %s"
-msgstr ""
+#, fuzzy, c-format
+msgid "Completely removing %s"
+msgstr "Ne mogu ukloniti %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, fuzzy, c-format
@@ -1206,6 +1189,16 @@ msgstr "Ne mogu otvoriti %s"
 msgid "Failed to write temporary StateFile %s"
 msgstr "Ne mogu ukloniti %s"
 
+#: apt-pkg/dirstream.cc
+#, fuzzy, c-format
+msgid "Failed to write file %s"
+msgstr "Ne mogu ukloniti %s"
+
+#: apt-pkg/dirstream.cc
+#, c-format
+msgid "Failed to close file %s"
+msgstr ""
+
 #: apt-pkg/edsp.cc
 msgid "Send scenario to solver"
 msgstr ""
@@ -1283,7 +1276,7 @@ msgstr ""
 
 #: apt-pkg/install-progress.cc
 #, c-format
-msgid "Progress: [%3i%%]"
+msgid "Progress: [%3li%%]"
 msgstr ""
 
 #. send status information that we are about to fork dpkg
@@ -1453,6 +1446,12 @@ msgstr ""
 
 #: apt-pkg/policy.cc
 #, c-format
+msgid ""
+"%s: The special 'Pin-Priority: %s' can only be used for 'Package: *' records"
+msgstr ""
+
+#: apt-pkg/policy.cc
+#, c-format
 msgid "%s: Value %s is outside the range of valid pin priorities (%d to %d)"
 msgstr ""
 
@@ -1465,11 +1464,6 @@ msgstr ""
 #, c-format
 msgid "Malformed entry %u in %s file %s (%s)"
 msgstr ""
-
-#: apt-pkg/sourcelist.cc
-#, c-format
-msgid "Opening %s"
-msgstr "Otvaram %s"
 
 #: apt-pkg/sourcelist.cc
 #, c-format
@@ -1491,24 +1485,19 @@ msgstr ""
 msgid "Type '%s' is not known on stanza %u in source list %s"
 msgstr ""
 
-#: apt-pkg/sourcelist.cc
+#: apt-pkg/sourcelist.cc apt-private/private-install.cc
 #, c-format
 msgid "Unsupported file %s given on commandline"
 msgstr ""
 
 #: apt-pkg/srcrecords.cc
-msgid "You must put some 'source' URIs in your sources.list"
+msgid "You must put some 'deb-src' URIs in your sources.list"
 msgstr ""
 
 #: apt-pkg/tagfile.cc
 #, c-format
 msgid "Cannot convert %s to integer: out of range"
 msgstr ""
-
-#: apt-pkg/update.cc apt-private/private-download.cc
-#, fuzzy, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Ne mogu otvoriti %s"
 
 #: apt-pkg/update.cc
 msgid ""
@@ -1564,6 +1553,12 @@ msgid ""
 "in the drive '%s' and press [Enter]\n"
 msgstr ""
 
+#: apt-private/acqprogress.cc
+msgid ""
+"Do you want to accept these changes and continue updating from this "
+"repository?"
+msgstr ""
+
 #: apt-private/private-cachefile.cc
 msgid "Correcting dependencies..."
 msgstr "Ispravljam zavisnosti..."
@@ -1584,13 +1579,15 @@ msgstr ""
 msgid " Done"
 msgstr " Urađeno"
 
-#: apt-private/private-cachefile.cc
-msgid "You might want to run 'apt-get -f install' to correct these."
+#: apt-private/private-cachefile.cc apt-private/private-install.cc
+msgid "You might want to run 'apt --fix-broken install' to correct these."
 msgstr ""
 
-#: apt-private/private-cachefile.cc
-msgid "Unmet dependencies. Try using -f."
-msgstr "Nezadovoljene zavisnosti. Pokušajte koristeći -f."
+#: apt-private/private-cachefile.cc apt-private/private-install.cc
+msgid ""
+"Unmet dependencies. Try 'apt --fix-broken install' with no packages (or "
+"specify a solution)."
+msgstr ""
 
 #: apt-private/private-cacheset.cc apt-private/private-search.cc
 msgid "Sorting"
@@ -1693,8 +1690,14 @@ msgstr ""
 msgid "This APT helper has Super Meep Powers."
 msgstr ""
 
-#: apt-private/private-depends.cc apt-private/private-show.cc
-#: cmdline/apt-mark.cc
+#: apt-private/private-cmndline.cc
+msgid ""
+"--force-yes is deprecated, use one of the options starting with --allow "
+"instead."
+msgstr ""
+
+#: apt-private/private-depends.cc apt-private/private-download.cc
+#: apt-private/private-show.cc cmdline/apt-mark.cc
 msgid "No packages found"
 msgstr "Paketi nisu pronađeni"
 
@@ -1713,12 +1716,6 @@ msgstr ""
 
 #: apt-private/private-download.cc
 msgid "Install these packages without verification?"
-msgstr ""
-
-#: apt-private/private-download.cc apt-private/private-install.cc
-msgid ""
-"--force-yes is deprecated, use one of the options starting with --allow "
-"instead."
 msgstr ""
 
 #: apt-private/private-download.cc
@@ -1766,6 +1763,12 @@ msgstr ""
 #: apt-private/private-install.cc
 msgid "Broken packages"
 msgstr "Oštećeni paketi"
+
+#: apt-private/private-install.cc
+msgid ""
+"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
+"missing?"
+msgstr ""
 
 #: apt-private/private-install.cc
 msgid "Internal error, InstallPackages was called with broken packages!"
@@ -1849,7 +1852,7 @@ msgstr ""
 msgid "Abort."
 msgstr "Odustani."
 
-#: apt-private/private-install.cc
+#: apt-private/private-install.cc cmdline/apt-mark.cc
 msgid "Do you want to continue?"
 msgstr "Da li želite nastaviti?"
 
@@ -1859,12 +1862,6 @@ msgstr ""
 
 #: apt-private/private-install.cc apt-private/private-source.cc
 msgid "Download complete and in download only mode"
-msgstr ""
-
-#: apt-private/private-install.cc
-msgid ""
-"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
-"missing?"
 msgstr ""
 
 #: apt-private/private-install.cc
@@ -1931,16 +1928,6 @@ msgid "Use '%s' to remove it."
 msgid_plural "Use '%s' to remove them."
 msgstr[0] ""
 msgstr[1] ""
-
-#: apt-private/private-install.cc
-msgid "You might want to run 'apt-get -f install' to correct these:"
-msgstr ""
-
-#: apt-private/private-install.cc
-msgid ""
-"Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
-"solution)."
-msgstr ""
 
 #: apt-private/private-install.cc
 #, fuzzy
@@ -2179,11 +2166,6 @@ msgstr ""
 msgid "Full Text Search"
 msgstr ""
 
-#: apt-private/private-show.cc cmdline/apt-cache.cc
-#, c-format
-msgid "Package file %s is out of sync."
-msgstr ""
-
 #: apt-private/private-show.cc
 #, c-format
 msgid "There is %i additional record. Please use the '-a' switch to see it"
@@ -2320,7 +2302,6 @@ msgid "Unpack command '%s' failed.\n"
 msgstr ""
 
 #: apt-private/private-source.cc
-#, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr ""
 
@@ -2340,14 +2321,20 @@ msgid "%s has no build depends.\n"
 msgstr ""
 
 #: apt-private/private-source.cc
+#, c-format
+msgid ""
+"No architecture information available for %s. See apt.conf(5) APT::"
+"Architectures for setup"
+msgstr ""
+
+#: apt-private/private-source.cc
 msgid "Must specify at least one package to check builddeps for"
 msgstr ""
 
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"Invalid operator '%c' at offset %d, did you mean '%c%c' or '%c='? - in: %s"
 msgstr ""
 
 #: apt-private/private-source.cc
@@ -2371,7 +2358,7 @@ msgstr "Ne mogu otvoriti %s"
 
 #: apt-private/private-sources.cc
 #, c-format
-msgid "Your '%s' file changed, please run 'apt-get update'."
+msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr ""
 
 #: apt-private/private-unmet.cc
@@ -2381,6 +2368,14 @@ msgstr "Paket %s verzije %s ima nezadovoljenu zavisnost:\n"
 
 #: apt-private/private-update.cc
 msgid "The update command takes no arguments"
+msgstr ""
+
+#. TRANSLATOR: the first two are manpage references, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
+msgid ""
+"Usage of %s should be preferred over embedding login information directly in "
+"the %s entry for '%s'"
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -2395,8 +2390,9 @@ msgstr[1] ""
 msgid "All packages are up to date."
 msgstr ""
 
-#: cmdline/apt-cache.cc
-msgid "apt-cache stats does not take any arguments"
+#: cmdline/apt-cache.cc cmdline/apt-mark.cc
+#, c-format
+msgid "%s does not take any arguments"
 msgstr ""
 
 #: cmdline/apt-cache.cc
@@ -2641,6 +2637,10 @@ msgid "Install new packages (pkg is libc6 not libc6.deb)"
 msgstr ""
 
 #: cmdline/apt-get.cc
+msgid "Reinstall packages (pkg is libc6 not libc6.deb)"
+msgstr ""
+
+#: cmdline/apt-get.cc
 #, fuzzy
 msgid "Remove packages"
 msgstr "Oštećeni paketi"
@@ -2665,6 +2665,12 @@ msgstr ""
 #: cmdline/apt-get.cc
 msgid "Configure build-dependencies for source packages"
 msgstr ""
+
+#: cmdline/apt-get.cc
+#, fuzzy
+#| msgid "Building dependency tree"
+msgid "Satisfy dependency strings"
+msgstr "Gradim stablo zavisnosti"
 
 #: cmdline/apt-get.cc
 msgid "Erase downloaded archive files"
@@ -2733,6 +2739,18 @@ msgstr ""
 msgid "detect proxy using apt.conf"
 msgstr ""
 
+#: cmdline/apt-helper.cc
+msgid "wait for system to be online"
+msgstr ""
+
+#: cmdline/apt-helper.cc
+msgid "drop privileges before running given command"
+msgstr ""
+
+#: cmdline/apt-helper.cc
+msgid "analyse a pattern"
+msgstr ""
+
 #: cmdline/apt-internal-planner.cc
 msgid ""
 "Usage: apt-internal-planner\n"
@@ -2765,6 +2783,16 @@ msgstr "ali se %s treba instalirati"
 #, fuzzy, c-format
 msgid "%s was already set to automatically installed.\n"
 msgstr "ali se %s treba instalirati"
+
+#: cmdline/apt-mark.cc
+msgid "No changes necessary"
+msgstr ""
+
+#: cmdline/apt-mark.cc
+#, fuzzy
+#| msgid "The following NEW packages will be installed:"
+msgid "The following packages will be marked as automatically installed:"
+msgstr "Slijedeći NOVI paketi će biti instalirani:"
 
 #: cmdline/apt-mark.cc
 #, c-format
@@ -2826,6 +2854,11 @@ msgid "Mark the given packages as manually installed"
 msgstr "Slijedeći NOVI paketi će biti instalirani:"
 
 #: cmdline/apt-mark.cc
+#, fuzzy
+msgid "Mark all dependencies of meta packages as automatically installed."
+msgstr "ali se %s treba instalirati"
+
+#: cmdline/apt-mark.cc
 msgid "Mark a package as held back"
 msgstr ""
 
@@ -2844,7 +2877,7 @@ msgid "Print the list of manually installed packages"
 msgstr "ali se %s treba instalirati"
 
 #: cmdline/apt-mark.cc
-msgid "Print the list of package on hold"
+msgid "Print the list of packages on hold"
 msgstr ""
 
 #: cmdline/apt-sortpkgs.cc
@@ -2893,6 +2926,11 @@ msgstr "  Pojedinačni virutuelni paketi:"
 
 #: cmdline/apt.cc
 #, fuzzy
+msgid "reinstall packages"
+msgstr "  Pojedinačni virutuelni paketi:"
+
+#: cmdline/apt.cc
+#, fuzzy
 msgid "remove packages"
 msgstr "Oštećeni paketi"
 
@@ -2915,6 +2953,12 @@ msgstr ""
 #, fuzzy
 msgid "edit the source information file"
 msgstr "Sastavljam dostupne informacije"
+
+#: cmdline/apt.cc
+#, fuzzy
+#| msgid "Building dependency tree"
+msgid "satisfy dependency strings"
+msgstr "Gradim stablo zavisnosti"
 
 #: dselect/install
 msgid "Bad default setting!"
@@ -3096,6 +3140,11 @@ msgstr ""
 msgid "Failed to read while computing MD5"
 msgstr ""
 
+#: ftparchive/multicompress.cc
+#, c-format
+msgid "Failed to rename %s to %s"
+msgstr ""
+
 #: ftparchive/override.cc
 #, c-format
 msgid "Unable to open %s"
@@ -3203,6 +3252,58 @@ msgstr ""
 msgid "  %s has no binary override entry either\n"
 msgstr ""
 
+#: methods/basehttp.cc
+msgid "Waiting for headers"
+msgstr "Čekam na zaglavlja"
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid reply header"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "Bad header line"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid Content-Length header"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid Content-Range header"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "This HTTP server has broken range support"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "Unknown date format"
+msgstr "Nepoznat oblik datuma"
+
+#: methods/basehttp.cc
+msgid "Bad header data"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "Connection failed"
+msgstr "Povezivanje neuspješno"
+
+#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#, c-format
+msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
+msgstr ""
+
+#: methods/basehttp.cc
+#, c-format
+msgid ""
+"Automatically disabled %s due to incorrect response from server/proxy. (man "
+"5 apt.conf)"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "Internal error"
+msgstr "Unutrašnja greška"
+
 #: methods/cdrom.cc
 #, c-format
 msgid "Unable to read the cdrom database %s"
@@ -3239,14 +3340,20 @@ msgstr "Datoteka nije pronađena"
 msgid "Direct connection to %s domains is blocked by default."
 msgstr ""
 
-#: methods/connect.cc methods/http.cc
-#, c-format
-msgid "Connecting to %s (%s)"
-msgstr ""
-
 #: methods/connect.cc
 #, c-format
 msgid "[IP: %s %s]"
+msgstr ""
+
+#: methods/connect.cc
+#, fuzzy, c-format
+#| msgid "Connecting to %s"
+msgid "Connected to %s (%s)"
+msgstr "Povezujem se sa %s"
+
+#: methods/connect.cc methods/http.cc
+#, c-format
+msgid "Connecting to %s (%s)"
 msgstr ""
 
 #: methods/connect.cc
@@ -3259,11 +3366,6 @@ msgstr ""
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr ""
 
-#: methods/connect.cc
-#, c-format
-msgid "Could not connect to %s:%s (%s), connection timed out"
-msgstr ""
-
 #: methods/connect.cc methods/ftp.cc methods/rsh.cc
 msgid "Failed"
 msgstr "Neuspješno"
@@ -3271,6 +3373,11 @@ msgstr "Neuspješno"
 #: methods/connect.cc
 #, c-format
 msgid "Could not connect to %s:%s (%s)."
+msgstr ""
+
+#: methods/connect.cc
+#, c-format
+msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr ""
 
 #. We say this mainly because the pause here is for the
@@ -3493,10 +3600,6 @@ msgid ""
 msgstr ""
 
 #: methods/http.cc
-msgid "Error writing to the file"
-msgstr ""
-
-#: methods/http.cc
 msgid "Error reading from server. Remote end closed connection"
 msgstr ""
 
@@ -3516,34 +3619,6 @@ msgstr ""
 msgid "Connection timed out"
 msgstr ""
 
-#: methods/http.cc
-msgid "Error writing to output file"
-msgstr ""
-
-#. FIXME: fallback to a default mirror here instead
-#. and provide a config option to define that default
-#: methods/mirror.cc
-#, c-format
-msgid "No mirror file '%s' found "
-msgstr ""
-
-#. FIXME: fallback to a default mirror here instead
-#. and provide a config option to define that default
-#: methods/mirror.cc
-#, fuzzy, c-format
-msgid "Can not read mirror file '%s'"
-msgstr "Ne mogu otvoriti %s"
-
-#: methods/mirror.cc
-#, fuzzy, c-format
-msgid "No entry found in mirror file '%s'"
-msgstr "Ne mogu otvoriti %s"
-
-#: methods/mirror.cc
-#, c-format
-msgid "[Mirror: %s]"
-msgstr ""
-
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr ""
@@ -3552,56 +3627,30 @@ msgstr ""
 msgid "Connection closed prematurely"
 msgstr ""
 
-#: methods/server.cc
-msgid "Waiting for headers"
-msgstr "Čekam na zaglavlja"
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid reply header"
-msgstr ""
-
-#: methods/server.cc
-msgid "Bad header line"
-msgstr ""
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid Content-Length header"
-msgstr ""
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid Content-Range header"
-msgstr ""
-
-#: methods/server.cc
-msgid "This HTTP server has broken range support"
-msgstr ""
-
-#: methods/server.cc
-msgid "Unknown date format"
-msgstr "Nepoznat oblik datuma"
-
-#: methods/server.cc
-msgid "Bad header data"
-msgstr ""
-
-#: methods/server.cc
-msgid "Connection failed"
-msgstr "Povezivanje neuspješno"
-
-#: methods/server.cc
-#, c-format
-msgid ""
-"Automatically disabled %s due to incorrect response from server/proxy. (man "
-"5 apt.conf)"
-msgstr ""
-
-#: methods/server.cc
-msgid "Internal error"
-msgstr "Unutrašnja greška"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr ""
+
+#~ msgid "The path is too long"
+#~ msgstr "Putanja je preduga"
+
+#, fuzzy
+#~ msgid "Removed %s"
+#~ msgstr "Preporučuje"
+
+#, fuzzy
+#~ msgid "Can not read mirror file '%s'"
+#~ msgstr "Ne mogu otvoriti %s"
+
+#, fuzzy
+#~ msgid "No entry found in mirror file '%s'"
+#~ msgstr "Ne mogu otvoriti %s"
+
+#~ msgid "Opening %s"
+#~ msgstr "Otvaram %s"
+
+#~ msgid "Unmet dependencies. Try using --fix-broken."
+#~ msgstr "Nezadovoljene zavisnosti. Pokušajte koristeći --fix-broken."
 
 #~ msgid ""
 #~ "Options:\n"

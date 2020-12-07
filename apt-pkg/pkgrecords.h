@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: pkgrecords.h,v 1.6 2001/03/13 06:51:46 jgg Exp $
 /* ######################################################################
    
    Package Records - Allows access to complete package description records
@@ -10,21 +9,21 @@
    package files. This is different than the generators parser in that
    it is used to access information not generate information. No 
    information touched by the generator should be parable from here as
-   it can always be retreived directly from the cache.
+   it can always be retrieved directly from the cache.
    
    ##################################################################### */
 									/*}}}*/
 #ifndef PKGLIB_PKGRECORDS_H
 #define PKGLIB_PKGRECORDS_H
 
-#include <apt-pkg/pkgcache.h>
 #include <apt-pkg/hashes.h>
 #include <apt-pkg/macros.h>
+#include <apt-pkg/pkgcache.h>
 
 #include <string>
 #include <vector>
 
-class pkgRecords							/*{{{*/
+class APT_PUBLIC pkgRecords							/*{{{*/
 {
    public:
    class Parser;
@@ -46,7 +45,7 @@ class pkgRecords							/*{{{*/
    virtual ~pkgRecords();
 };
 									/*}}}*/
-class pkgRecords::Parser						/*{{{*/
+class APT_PUBLIC pkgRecords::Parser						/*{{{*/
 {
    protected:
    
@@ -68,10 +67,6 @@ class pkgRecords::Parser						/*{{{*/
     * choose the hash to be used.
     */
    virtual HashStringList Hashes() const { return HashStringList(); };
-   APT_DEPRECATED_MSG("Use .Hashes instead of a hardcoded hash algorithm") std::string MD5Hash() const { return GetHashFromHashes("MD5Sum"); };
-   APT_DEPRECATED_MSG("Use .Hashes instead of a hardcoded hash algorithm") std::string SHA1Hash() const { return GetHashFromHashes("SHA1"); };
-   APT_DEPRECATED_MSG("Use .Hashes instead of a hardcoded hash algorithm") std::string SHA256Hash() const { return GetHashFromHashes("SHA256"); };
-   APT_DEPRECATED_MSG("Use .Hashes instead of a hardcoded hash algorithm") std::string SHA512Hash() const { return GetHashFromHashes("SHA512"); };
 
    // These are some general stats about the package
    virtual std::string Maintainer() {return std::string();};

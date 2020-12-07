@@ -3,9 +3,9 @@
 /* ######################################################################
 
    Acquire Worker - Worker process manager
-   
-   Each worker class is associated with exaclty one subprocess.
-   
+
+   Each worker class is associated with exactly one subprocess.
+
    ##################################################################### */
 									/*}}}*/
 
@@ -21,9 +21,9 @@
 #include <apt-pkg/acquire.h>
 #include <apt-pkg/weakptr.h>
 
-#include <sys/types.h>
 #include <string>
 #include <vector>
+#include <sys/types.h>
 
 /** \brief A fetch subprocess.
  *
@@ -44,7 +44,7 @@
  *
  *  \sa pkgAcqMethod, pkgAcquire::Item, pkgAcquire
  */
-class pkgAcquire::Worker : public WeakPointable
+class APT_PUBLIC pkgAcquire::Worker : public WeakPointable
 {
    /** \brief dpointer placeholder (for later in case we need it) */
    void * const d;
@@ -251,21 +251,6 @@ class pkgAcquire::Worker : public WeakPointable
     */
    std::string Status;
 
-   /** \brief How many bytes of the file have been downloaded.  Zero
-    *  if the current progress of the file cannot be determined.
-    */
-   unsigned long long CurrentSize;
-
-   /** \brief The total number of bytes to be downloaded.  Zero if the
-    *  total size of the final is unknown.
-    */
-   unsigned long long TotalSize;
-
-   /** \brief How much of the file was already downloaded prior to
-    *  starting this worker.
-    */
-   unsigned long long ResumePoint;
-   
    /** \brief Tell the subprocess to download the given item.
     *
     *  \param Item the item to queue up.
@@ -276,6 +261,7 @@ class pkgAcquire::Worker : public WeakPointable
     *  queue.
     */
    bool QueueItem(pkgAcquire::Queue::QItem *Item);
+   APT_HIDDEN bool ReplyAux(pkgAcquire::ItemDesc const &Item);
 
    /** \brief Start up the worker and fill in #Config.
     *
@@ -328,6 +314,9 @@ class pkgAcquire::Worker : public WeakPointable
 
 private:
    APT_HIDDEN void PrepareFiles(char const * const caller, pkgAcquire::Queue::QItem const * const Itm);
+   APT_HIDDEN void HandleFailure(std::vector<pkgAcquire::Item *> const &ItmOwners,
+				 pkgAcquire::MethodConfig *const Config, pkgAcquireStatus *const Log,
+				 std::string const &Message, bool const errTransient, bool const errAuthErr);
 };
 
 /** @} */

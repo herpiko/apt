@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: contents.cc,v 1.4 2003/02/10 07:34:41 doogie Exp $
 /* ######################################################################
    
    contents - Archive contents generator
@@ -140,7 +139,7 @@ GenContents::Node *GenContents::Grab(GenContents::Node *Top,const char *Name,
       // Collision!
       if (Res == 0)
       {
-	 // See if this the the same package (multi-version dup)
+	 // See if this is the same package (multi-version dup)
 	 if (Top->Package == Package ||
 	     strcasecmp(Top->Package,Package) == 0)
 	    return Top;
@@ -205,7 +204,7 @@ void GenContents::Add(const char *Dir,const char *Package)
    Node *Root = &this->Root;
    
    // Drop leading slashes
-   while (*Dir == '/' && *Dir != 0)
+   while (*Dir == '/')
       Dir++;
    
    // Run over the string and grab out each bit up to and including a /

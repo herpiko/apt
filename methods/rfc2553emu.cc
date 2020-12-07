@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: rfc2553emu.cc,v 1.8 2001/02/20 07:03:18 jgg Exp $
 /* ######################################################################
 
    RFC 2553 Emulation - Provides emulation for RFC 2553 getaddrinfo,
@@ -16,12 +15,12 @@
 									/*}}}*/
 #include <config.h>
 
-#include <stdlib.h>
+#include "rfc2553emu.h"
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <string.h>
 #include <stdio.h>
-#include "rfc2553emu.h"
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef HAVE_GETADDRINFO
 // getaddrinfo - Resolve a hostname					/*{{{*/
@@ -203,7 +202,7 @@ int getnameinfo(const struct sockaddr *sa, socklen_t salen,
 	 }
       }
       
-      // Resolve as a plain numberic
+      // Resolve as a plain numeric
       if ((flags & NI_NUMERICHOST) == NI_NUMERICHOST)
       {
 	 strncpy(host,inet_ntoa(sin->sin_addr),hostlen);
@@ -232,7 +231,7 @@ int getnameinfo(const struct sockaddr *sa, socklen_t salen,
 	 }
       }
       
-      // Resolve as a plain numberic
+      // Resolve as a plain numeric
       if ((flags & NI_NUMERICSERV) == NI_NUMERICSERV)
       {
 	 snprintf(serv,servlen,"%u",ntohs(sin->sin_port));

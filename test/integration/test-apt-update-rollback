@@ -39,7 +39,8 @@ start_with_good_inrelease() {
     create_fresh_archive
     testsuccess aptget update
     listcurrentlistsdirectory > lists.before
-    testsuccessequal 'old/unstable 1.0 all' apt list -qq
+    testsuccessequal 'dpkg/now 1.16.2+fake all [installed,local]
+old/unstable 1.0 all' apt list -qq
 }
 
 test_inrelease_to_new_inrelease() {
@@ -48,7 +49,8 @@ test_inrelease_to_new_inrelease() {
 
     add_new_package '+1hour'
     testsuccess aptget update -o Debug::Acquire::Transaction=1
-    testsuccessequal 'new/unstable 1.0 all
+    testsuccessequal 'dpkg/now 1.16.2+fake all [installed,local]
+new/unstable 1.0 all
 old/unstable 1.0 all' apt list -qq
 }
 
@@ -63,11 +65,11 @@ test_inrelease_to_broken_hash_reverts_all() {
     # test the error condition
     testfailureequal "E: Failed to fetch file:${APTARCHIVE}/dists/unstable/main/source/Sources.gz  Hash Sum mismatch
    Hashes of expected file:
-    - Checksum-FileSize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz.orig') [weak]
+    - Filesize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz.orig') [weak]
     - SHA256:$(sha256sum 'aptarchive/dists/unstable/main/source/Sources.gz.orig' | cut -d' ' -f 1)
    Hashes of received file:
     - SHA256:$(sha256sum 'aptarchive/dists/unstable/main/source/Sources.gz' | cut -d' ' -f 1)
-    - Checksum-FileSize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz') [weak]
+    - Filesize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz') [weak]
    Last modification reported: $(lastmodification 'aptarchive/dists/unstable/main/source/Sources.gz')
    Release file created at: $(releasefiledate 'aptarchive/dists/unstable/InRelease')
 E: Some index files failed to download. They have been ignored, or old ones used instead." aptget update -qq
@@ -134,11 +136,11 @@ E: There were unauthenticated packages and -y was used without --allow-unauthent
 
     testfailureequal "E: Failed to fetch file:$APTARCHIVE/dists/unstable/main/source/Sources.gz  Hash Sum mismatch
    Hashes of expected file:
-    - Checksum-FileSize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz.orig') [weak]
+    - Filesize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz.orig') [weak]
     - SHA256:$(sha256sum 'aptarchive/dists/unstable/main/source/Sources.gz.orig' | cut -d' ' -f 1)
    Hashes of received file:
     - SHA256:$(sha256sum 'aptarchive/dists/unstable/main/source/Sources.gz' | cut -d' ' -f 1)
-    - Checksum-FileSize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz') [weak]
+    - Filesize:$(stat -c '%s' 'aptarchive/dists/unstable/main/source/Sources.gz') [weak]
    Last modification reported: $(lastmodification 'aptarchive/dists/unstable/main/source/Sources.gz')
    Release file created at: $(releasefiledate 'aptarchive/dists/unstable/InRelease')
 E: Some index files failed to download. They have been ignored, or old ones used instead." aptget update -qq

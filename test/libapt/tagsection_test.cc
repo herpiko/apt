@@ -3,8 +3,8 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/tagfile.h>
 
-#include <string>
 #include <sstream>
+#include <string>
 
 #include <gtest/gtest.h>
 
@@ -16,23 +16,9 @@ std::string typoValue = "aa\n"
    " cc";
 std::string typoRawValue = "\n " + typoValue;
 std::string overrideValue = "1";
-/*
-   std::cerr << "FILECONTENT: »";
-   char buffer[3000];
-   while (fd.ReadLine(buffer, sizeof(buffer)))
-      std::cerr << buffer;
-   std::cerr << "«" << std::endl;;
-*/
 
-static void setupTestcaseStart(FileFd &fd, pkgTagSection &section, std::string &content)
+static void EXPECT_SECTION_WITH_ALL_CONTENT(pkgTagSection const &section)
 {
-   createTemporaryFile("writesection", fd, NULL, NULL);
-   content = "Package: " + packageValue + "\n"
-      "TypoA:\n " + typoValue + "\n"
-      "Override: " + overrideValue + "\n"
-      "Override-Backup: " + overrideValue + "\n"
-      "\n";
-   EXPECT_TRUE(section.Scan(content.c_str(), content.length(), true));
    EXPECT_TRUE(section.Exists("Package"));
    EXPECT_TRUE(section.Exists("TypoA"));
    EXPECT_TRUE(section.Exists("Override"));
@@ -43,7 +29,19 @@ static void setupTestcaseStart(FileFd &fd, pkgTagSection &section, std::string &
    EXPECT_EQ(typoRawValue, section.FindRawS("TypoA"));
    EXPECT_EQ(1, section.FindI("Override"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_EQ(4u, section.Count());
+}
+
+static void setupTestcaseStart(FileFd &fd, pkgTagSection &section, std::string &content)
+{
+   openTemporaryFile("writesection", fd);
+   content = "Package: " + packageValue + "\n"
+      "TypoA:\n " + typoValue + "\n"
+      "Override: " + overrideValue + "\n"
+      "Override-Backup: " + overrideValue + "\n"
+      "\n";
+   EXPECT_TRUE(section.Scan(content.c_str(), content.length(), true));
+   EXPECT_SECTION_WITH_ALL_CONTENT(section);
 }
 TEST(TagSectionTest,WriteUnmodified)
 {
@@ -55,16 +53,7 @@ TEST(TagSectionTest,WriteUnmodified)
    EXPECT_TRUE(fd.Seek(0));
    pkgTagFile tfile(&fd);
    ASSERT_TRUE(tfile.Step(section));
-   EXPECT_TRUE(section.Exists("Package"));
-   EXPECT_TRUE(section.Exists("TypoA"));
-   EXPECT_TRUE(section.Exists("Override"));
-   EXPECT_TRUE(section.Exists("Override-Backup"));
-   EXPECT_FALSE(section.Exists("TypoB"));
-   EXPECT_EQ(packageValue, section.FindS("Package"));
-   EXPECT_EQ(typoValue, section.FindS("TypoA"));
-   EXPECT_EQ(1, section.FindI("Override"));
-   EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_SECTION_WITH_ALL_CONTENT(section);
 }
 TEST(TagSectionTest,WriteUnmodifiedOrder)
 {
@@ -77,16 +66,7 @@ TEST(TagSectionTest,WriteUnmodifiedOrder)
    EXPECT_TRUE(fd.Seek(0));
    pkgTagFile tfile(&fd);
    ASSERT_TRUE(tfile.Step(section));
-   EXPECT_TRUE(section.Exists("Package"));
-   EXPECT_TRUE(section.Exists("TypoA"));
-   EXPECT_TRUE(section.Exists("Override"));
-   EXPECT_TRUE(section.Exists("Override-Backup"));
-   EXPECT_FALSE(section.Exists("TypoB"));
-   EXPECT_EQ(packageValue, section.FindS("Package"));
-   EXPECT_EQ(typoValue, section.FindS("TypoA"));
-   EXPECT_EQ(1, section.FindI("Override"));
-   EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_SECTION_WITH_ALL_CONTENT(section);
 }
 TEST(TagSectionTest,WriteUnmodifiedOrderReversed)
 {
@@ -99,16 +79,7 @@ TEST(TagSectionTest,WriteUnmodifiedOrderReversed)
    EXPECT_TRUE(fd.Seek(0));
    pkgTagFile tfile(&fd);
    ASSERT_TRUE(tfile.Step(section));
-   EXPECT_TRUE(section.Exists("Package"));
-   EXPECT_TRUE(section.Exists("TypoA"));
-   EXPECT_TRUE(section.Exists("Override"));
-   EXPECT_TRUE(section.Exists("Override-Backup"));
-   EXPECT_FALSE(section.Exists("TypoB"));
-   EXPECT_EQ(packageValue, section.FindS("Package"));
-   EXPECT_EQ(typoValue, section.FindS("TypoA"));
-   EXPECT_EQ(1, section.FindI("Override"));
-   EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_SECTION_WITH_ALL_CONTENT(section);
 }
 TEST(TagSectionTest,WriteUnmodifiedOrderNotAll)
 {
@@ -121,16 +92,7 @@ TEST(TagSectionTest,WriteUnmodifiedOrderNotAll)
    EXPECT_TRUE(fd.Seek(0));
    pkgTagFile tfile(&fd);
    ASSERT_TRUE(tfile.Step(section));
-   EXPECT_TRUE(section.Exists("Package"));
-   EXPECT_TRUE(section.Exists("TypoA"));
-   EXPECT_TRUE(section.Exists("Override"));
-   EXPECT_TRUE(section.Exists("Override-Backup"));
-   EXPECT_FALSE(section.Exists("TypoB"));
-   EXPECT_EQ(packageValue, section.FindS("Package"));
-   EXPECT_EQ(typoValue, section.FindS("TypoA"));
-   EXPECT_EQ(1, section.FindI("Override"));
-   EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_SECTION_WITH_ALL_CONTENT(section);
 }
 TEST(TagSectionTest,WriteNoOrderRename)
 {
@@ -153,7 +115,7 @@ TEST(TagSectionTest,WriteNoOrderRename)
    EXPECT_EQ(typoValue, section.FindS("TypoB"));
    EXPECT_EQ(1, section.FindI("Override"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_EQ(4u, section.Count());
 }
 TEST(TagSectionTest,WriteNoOrderRemove)
 {
@@ -174,7 +136,7 @@ TEST(TagSectionTest,WriteNoOrderRemove)
    EXPECT_FALSE(section.Exists("Override"));
    EXPECT_TRUE(section.Exists("Override-Backup"));
    EXPECT_EQ(packageValue, section.FindS("Package"));
-   EXPECT_EQ(2, section.Count());
+   EXPECT_EQ(2u, section.Count());
 }
 TEST(TagSectionTest,WriteNoOrderRewrite)
 {
@@ -196,7 +158,7 @@ TEST(TagSectionTest,WriteNoOrderRewrite)
    EXPECT_EQ(packageValue, section.FindS("Package"));
    EXPECT_EQ(42, section.FindI("Override"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_EQ(4u, section.Count());
 }
 TEST(TagSectionTest,WriteOrderRename)
 {
@@ -220,7 +182,7 @@ TEST(TagSectionTest,WriteOrderRename)
    EXPECT_EQ(typoValue, section.FindS("TypoB"));
    EXPECT_EQ(1, section.FindI("Override"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_EQ(4u, section.Count());
 }
 TEST(TagSectionTest,WriteOrderRemove)
 {
@@ -243,7 +205,7 @@ TEST(TagSectionTest,WriteOrderRemove)
    EXPECT_TRUE(section.Exists("Override-Backup"));
    EXPECT_EQ(packageValue, section.FindS("Package"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(2, section.Count());
+   EXPECT_EQ(2u, section.Count());
 }
 TEST(TagSectionTest,WriteOrderRewrite)
 {
@@ -266,5 +228,5 @@ TEST(TagSectionTest,WriteOrderRewrite)
    EXPECT_EQ(packageValue, section.FindS("Package"));
    EXPECT_EQ(42, section.FindI("Override"));
    EXPECT_EQ(1, section.FindI("Override-Backup"));
-   EXPECT_EQ(4, section.Count());
+   EXPECT_EQ(4u, section.Count());
 }

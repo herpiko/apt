@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: tagfile.cc,v 1.37.2.2 2003/12/31 16:02:30 mdz Exp $
 /* ######################################################################
 
    Fast scanner for RFC-822 type header information
@@ -11,19 +10,20 @@
    ##################################################################### */
 									/*}}}*/
 // Include Files							/*{{{*/
-#include<config.h>
+#include <config.h>
 
-#include <apt-pkg/tagfile.h>
 #include <apt-pkg/error.h>
-#include <apt-pkg/strutl.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/string_view.h>
+#include <apt-pkg/strutl.h>
+#include <apt-pkg/tagfile-keys.h>
+#include <apt-pkg/tagfile.h>
 
 #include <list>
 
 #include <string>
-#include <stdio.h>
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -69,7 +69,7 @@ public:
    {
       bool const good;
       size_t length;
-      FileChunk(bool const pgood, size_t const plength) : good(pgood), length(plength) {}
+      FileChunk(bool const pgood, size_t const plength) noexcept : good(pgood), length(plength) {}
    };
    std::list<FileChunk> chunks;
 
@@ -98,7 +98,7 @@ public:
 };
 									/*}}}*/
 
-static unsigned long AlphaHash(const char *Text, size_t Length)		/*{{{*/
+static unsigned long BetaHash(const char *Text, size_t Length)		/*{{{*/
 {
    /* This very simple hash function for the last 8 letters gives
       very good performance on the debian package files */
@@ -110,7 +110,7 @@ static unsigned long AlphaHash(const char *Text, size_t Length)		/*{{{*/
    unsigned long Res = 0;
    for (size_t i = 0; i < Length; ++i)
       Res = ((unsigned long)(Text[i]) & 0xDF) ^ (Res << 1);
-   return Res & 0xFF;
+   return Res & 0x7F;
 }
 									/*}}}*/
 
@@ -250,8 +250,12 @@ bool pkgTagFile::Step(pkgTagSection &Tag)
       d->chunks.erase(d->chunks.begin(), first);
    }
 
-   Tag.Trim();
-   return true;
+   if ((d->Flags & pkgTagFile::SUPPORT_COMMENTS) == 0 || Tag.Count() != 0)
+   {
+      Tag.Trim();
+      return true;
+   }
+   return Step(Tag);
 }
 									/*}}}*/
 // TagFile::Fill - Top up the buffer					/*{{{*/
@@ -469,13 +473,12 @@ bool pkgTagFile::Jump(pkgTagSection &Tag,unsigned long long Offset)
 // pkgTagSection::pkgTagSection - Constructor				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-APT_IGNORE_DEPRECATED_PUSH
 pkgTagSection::pkgTagSection()
    : Section(0), d(new pkgTagSectionPrivate()), Stop(0)
 {
    memset(&AlphaIndexes, 0, sizeof(AlphaIndexes));
+   memset(&BetaIndexes, 0, sizeof(BetaIndexes));
 }
-APT_IGNORE_DEPRECATED_POP
 									/*}}}*/
 // TagSection::Scan - Scan for the end of the header information	/*{{{*/
 bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const Restart)
@@ -499,6 +502,7 @@ bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const R
       if (d->Tags.empty() == false)
       {
 	 memset(&AlphaIndexes, 0, sizeof(AlphaIndexes));
+	 memset(&BetaIndexes, 0, sizeof(BetaIndexes));
 	 d->Tags.clear();
       }
       d->Tags.reserve(0x100);
@@ -509,8 +513,8 @@ bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const R
       return false;
 
    pkgTagSectionPrivate::TagData lastTagData(0);
-   lastTagData.EndTag = 0;
-   unsigned long lastTagHash = 0;
+   Key lastTagKey = Key::Unknown;
+   unsigned int lastTagHash = 0;
    while (Stop < End)
    {
       TrimRecord(true,End);
@@ -524,17 +528,19 @@ bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const R
       if (isspace_ascii(Stop[0]) == 0)
       {
 	 // store the last found tag
-	 if (lastTagData.EndTag != 0)
+	 if (lastTagData.StartValue != 0)
 	 {
-	    if (AlphaIndexes[lastTagHash] != 0)
-	       lastTagData.NextInBucket = AlphaIndexes[lastTagHash];
-	    APT_IGNORE_DEPRECATED_PUSH
-	    AlphaIndexes[lastTagHash] = TagCount;
-	    APT_IGNORE_DEPRECATED_POP
+	    if (lastTagKey != Key::Unknown) {
+	       AlphaIndexes[static_cast<size_t>(lastTagKey)] = TagCount;
+	    } else {
+	       if (BetaIndexes[lastTagHash] != 0)
+		  lastTagData.NextInBucket = BetaIndexes[lastTagHash];
+	       BetaIndexes[lastTagHash] = TagCount;
+	    }
 	    d->Tags.push_back(lastTagData);
 	 }
 
-	 APT_IGNORE_DEPRECATED(++TagCount;)
+	 ++TagCount;
 	 lastTagData = pkgTagSectionPrivate::TagData(Stop - Section);
 	 // find the colon separating tag and value
 	 char const * Colon = (char const *) memchr(Stop, ':', End - Stop);
@@ -547,7 +553,9 @@ bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const R
 	    ;
 	 ++EndTag;
 	 lastTagData.EndTag = EndTag - Section;
-	 lastTagHash = AlphaHash(Stop, EndTag - Stop);
+	 lastTagKey = pkgTagHash(Stop, EndTag - Stop);
+	 if (lastTagKey == Key::Unknown)
+	    lastTagHash = BetaHash(Stop, EndTag - Stop);
 	 // find the beginning of the value
 	 Stop = Colon + 1;
 	 for (; Stop < End && isspace_ascii(*Stop) != 0; ++Stop)
@@ -570,11 +578,15 @@ bool pkgTagSection::Scan(const char *Start,unsigned long MaxLength, bool const R
       // Double newline marks the end of the record
       if (Stop+1 < End && Stop[1] == '\n')
       {
-	 if (lastTagData.EndTag != 0)
+	 if (lastTagData.StartValue != 0)
 	 {
-	    if (AlphaIndexes[lastTagHash] != 0)
-	       lastTagData.NextInBucket = AlphaIndexes[lastTagHash];
-	    APT_IGNORE_DEPRECATED(AlphaIndexes[lastTagHash] = TagCount;)
+	    if (lastTagKey != Key::Unknown) {
+	       AlphaIndexes[static_cast<size_t>(lastTagKey)] = TagCount;
+	    } else {
+	       if (BetaIndexes[lastTagHash] != 0)
+		  lastTagData.NextInBucket = BetaIndexes[lastTagHash];
+	       BetaIndexes[lastTagHash] = TagCount;
+	    }
 	    d->Tags.push_back(lastTagData);
 	 }
 
@@ -618,11 +630,21 @@ bool pkgTagSection::Exists(StringView Tag) const
 // TagSection::Find - Locate a tag					/*{{{*/
 // ---------------------------------------------------------------------
 /* This searches the section for a tag that matches the given string. */
+bool pkgTagSection::Find(Key key,unsigned int &Pos) const
+{
+   auto Bucket = AlphaIndexes[static_cast<size_t>(key)];
+   Pos = Bucket - 1;
+   return Bucket != 0;
+}
 bool pkgTagSection::Find(StringView TagView,unsigned int &Pos) const
 {
    const char * const Tag = TagView.data();
    size_t const Length = TagView.length();
-   unsigned int Bucket = AlphaIndexes[AlphaHash(Tag, Length)];
+   auto key = pkgTagHash(Tag, Length);
+   if (key != Key::Unknown)
+      return Find(key, Pos);
+
+   unsigned int Bucket = BetaIndexes[BetaHash(Tag, Length)];
    if (Bucket == 0)
       return false;
 
@@ -643,12 +665,11 @@ bool pkgTagSection::Find(StringView TagView,unsigned int &Pos) const
    return false;
 }
 
-bool pkgTagSection::Find(StringView Tag,const char *&Start,
+bool pkgTagSection::FindInternal(unsigned int Pos, const char *&Start,
 		         const char *&End) const
 {
-   unsigned int Pos;
-   if (Find(Tag, Pos) == false)
-      return false;
+   if (unlikely(Pos + 1 >= d->Tags.size() || Pos >= d->Tags.size()))
+      return _error->Error("Internal parsing error");
 
    Start = Section + d->Tags[Pos].StartValue;
    // Strip off the gunk from the end
@@ -660,6 +681,18 @@ bool pkgTagSection::Find(StringView Tag,const char *&Start,
 
    return true;
 }
+bool pkgTagSection::Find(StringView Tag,const char *&Start,
+		         const char *&End) const
+{
+   unsigned int Pos;
+   return Find(Tag, Pos) && FindInternal(Pos, Start, End);
+}
+bool pkgTagSection::Find(Key key,const char *&Start,
+		         const char *&End) const
+{
+   unsigned int Pos;
+   return Find(key, Pos) && FindInternal(Pos, Start, End);
+}
 									/*}}}*/
 // TagSection::FindS - Find a string					/*{{{*/
 StringView pkgTagSection::Find(StringView Tag) const
@@ -670,17 +703,29 @@ StringView pkgTagSection::Find(StringView Tag) const
       return StringView();
    return StringView(Start, End - Start);
 }
+StringView pkgTagSection::Find(Key key) const
+{
+   const char *Start;
+   const char *End;
+   if (Find(key,Start,End) == false)
+      return StringView();
+   return StringView(Start, End - Start);
+}
 									/*}}}*/
 // TagSection::FindRawS - Find a string					/*{{{*/
-StringView pkgTagSection::FindRaw(StringView Tag) const
+StringView pkgTagSection::FindRawInternal(unsigned int Pos) const
 {
-   unsigned int Pos;
-   if (Find(Tag, Pos) == false)
-      return "";
+   if (unlikely(Pos + 1 >= d->Tags.size() || Pos >= d->Tags.size()))
+      return _error->Error("Internal parsing error"), "";
 
    char const *Start = (char const *) memchr(Section + d->Tags[Pos].EndTag, ':', d->Tags[Pos].StartValue - d->Tags[Pos].EndTag);
-   ++Start;
    char const *End = Section + d->Tags[Pos + 1].StartTag;
+
+   if (Start == nullptr)
+      return "";
+
+   ++Start;
+
    if (unlikely(Start > End))
       return "";
 
@@ -688,15 +733,25 @@ StringView pkgTagSection::FindRaw(StringView Tag) const
 
    return StringView(Start, End - Start);
 }
+StringView pkgTagSection::FindRaw(StringView Tag) const
+{
+   unsigned int Pos;
+   return Find(Tag, Pos) ? FindRawInternal(Pos) : "";
+}
+StringView pkgTagSection::FindRaw(Key key) const
+{
+   unsigned int Pos;
+   return Find(key, Pos) ? FindRawInternal(Pos) : "";
+}
 									/*}}}*/
 // TagSection::FindI - Find an integer					/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-signed int pkgTagSection::FindI(StringView Tag,signed long Default) const
+signed int pkgTagSection::FindIInternal(unsigned int Pos,signed long Default) const
 {
    const char *Start;
    const char *Stop;
-   if (Find(Tag,Start,Stop) == false)
+   if (FindInternal(Pos,Start,Stop) == false)
       return Default;
 
    // Copy it into a temp buffer so we can use strtol
@@ -718,15 +773,27 @@ signed int pkgTagSection::FindI(StringView Tag,signed long Default) const
       return Default;
    return Result;
 }
+signed int pkgTagSection::FindI(Key key,signed long Default) const
+{
+   unsigned int Pos;
+
+   return Find(key, Pos) ? FindIInternal(Pos) : Default;
+}
+signed int pkgTagSection::FindI(StringView Tag,signed long Default) const
+{
+   unsigned int Pos;
+
+   return Find(Tag, Pos) ? FindIInternal(Pos, Default) : Default;
+}
 									/*}}}*/
 // TagSection::FindULL - Find an unsigned long long integer		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-unsigned long long pkgTagSection::FindULL(StringView Tag, unsigned long long const &Default) const
+unsigned long long pkgTagSection::FindULLInternal(unsigned int Pos, unsigned long long const &Default) const
 {
    const char *Start;
    const char *Stop;
-   if (Find(Tag,Start,Stop) == false)
+   if (FindInternal(Pos,Start,Stop) == false)
       return Default;
 
    // Copy it into a temp buffer so we can use strtoull
@@ -742,29 +809,67 @@ unsigned long long pkgTagSection::FindULL(StringView Tag, unsigned long long con
       return Default;
    return Result;
 }
+unsigned long long pkgTagSection::FindULL(Key key, unsigned long long const &Default) const
+{
+   unsigned int Pos;
+
+   return Find(key, Pos) ? FindULLInternal(Pos, Default) : Default;
+}
+unsigned long long pkgTagSection::FindULL(StringView Tag, unsigned long long const &Default) const
+{
+   unsigned int Pos;
+
+   return Find(Tag, Pos) ? FindULLInternal(Pos, Default) : Default;
+}
 									/*}}}*/
 // TagSection::FindB - Find boolean value                		/*{{{*/
 // ---------------------------------------------------------------------
 /* */
-bool pkgTagSection::FindB(StringView Tag, bool Default) const
+bool pkgTagSection::FindBInternal(unsigned int Pos, bool Default) const
 {
    const char *Start, *Stop;
-   if (Find(Tag, Start, Stop) == false)
+   if (FindInternal(Pos, Start, Stop) == false)
       return Default;
    return StringToBool(string(Start, Stop));
+}
+bool pkgTagSection::FindB(Key key, bool Default) const
+{
+   unsigned int Pos;
+   return Find(key, Pos) ? FindBInternal(Pos, Default): Default;
+}
+bool pkgTagSection::FindB(StringView Tag, bool Default) const
+{
+   unsigned int Pos;
+   return Find(Tag, Pos) ? FindBInternal(Pos, Default) : Default;
 }
 									/*}}}*/
 // TagSection::FindFlag - Locate a yes/no type flag			/*{{{*/
 // ---------------------------------------------------------------------
 /* The bits marked in Flag are masked on/off in Flags */
-bool pkgTagSection::FindFlag(StringView Tag, uint8_t &Flags,
+bool pkgTagSection::FindFlagInternal(unsigned int Pos, uint8_t &Flags,
 			     uint8_t const Flag) const
 {
    const char *Start;
    const char *Stop;
-   if (Find(Tag,Start,Stop) == false)
+   if (FindInternal(Pos,Start,Stop) == false)
       return true;
    return FindFlag(Flags, Flag, Start, Stop);
+}
+bool pkgTagSection::FindFlag(Key key, uint8_t &Flags,
+			     uint8_t const Flag) const
+{
+   unsigned int Pos;
+   if (Find(key,Pos) == false)
+      return true;
+   return FindFlagInternal(Pos, Flags, Flag);
+}
+bool pkgTagSection::FindFlag(StringView Tag, uint8_t &Flags,
+			     uint8_t const Flag) const
+{
+   unsigned int Pos;
+   if (Find(Tag,Pos) == false)
+      return true;
+   return FindFlagInternal(Pos, Flags, Flag);
 }
 bool pkgTagSection::FindFlag(uint8_t &Flags, uint8_t const Flag,
 					char const* const Start, char const* const Stop)
@@ -785,14 +890,26 @@ bool pkgTagSection::FindFlag(uint8_t &Flags, uint8_t const Flag,
    }
    return true;
 }
-bool pkgTagSection::FindFlag(StringView Tag,unsigned long &Flags,
+bool pkgTagSection::FindFlagInternal(unsigned int Pos,unsigned long &Flags,
 			     unsigned long Flag) const
 {
    const char *Start;
    const char *Stop;
-   if (Find(Tag,Start,Stop) == false)
+   if (FindInternal(Pos,Start,Stop) == false)
       return true;
    return FindFlag(Flags, Flag, Start, Stop);
+}
+bool pkgTagSection::FindFlag(Key key,unsigned long &Flags,
+			     unsigned long Flag) const
+{
+   unsigned int Pos;
+   return Find(key, Pos) ? FindFlagInternal(Pos, Flags, Flag) : true;
+}
+bool pkgTagSection::FindFlag(StringView Tag,unsigned long &Flags,
+			     unsigned long Flag) const
+{
+   unsigned int Pos;
+   return Find(Tag, Pos) ? FindFlagInternal(Pos, Flags, Flag) : true;
 }
 bool pkgTagSection::FindFlag(unsigned long &Flags, unsigned long Flag,
 					char const* Start, char const* Stop)
@@ -816,6 +933,8 @@ bool pkgTagSection::FindFlag(unsigned long &Flags, unsigned long Flag,
 									/*}}}*/
 void pkgTagSection::Get(const char *&Start,const char *&Stop,unsigned int I) const/*{{{*/
 {
+   if (unlikely(I + 1 >= d->Tags.size() || I >= d->Tags.size()))
+      abort();
    Start = Section + d->Tags[I].StartTag;
    Stop = Section + d->Tags[I+1].StartTag;
 }
@@ -954,146 +1073,6 @@ bool pkgTagSection::Write(FileFd &File, char const * const * const Order, std::v
 }
 									/*}}}*/
 
-void pkgUserTagSection::TrimRecord(bool /*BeforeRecord*/, const char* &End)/*{{{*/
-{
-   for (; Stop < End && (Stop[0] == '\n' || Stop[0] == '\r' || Stop[0] == '#'); Stop++)
-      if (Stop[0] == '#')
-	 Stop = (const char*) memchr(Stop,'\n',End-Stop);
-}
-									/*}}}*/
-
 #include "tagfile-order.c"
-
-// TFRewrite - Rewrite a control record					/*{{{*/
-// ---------------------------------------------------------------------
-/* This writes the control record to stdout rewriting it as necessary. The
-   override map item specificies the rewriting rules to follow. This also
-   takes the time to sort the feild list. */
-APT_IGNORE_DEPRECATED_PUSH
-bool TFRewrite(FILE *Output,pkgTagSection const &Tags,const char *Order[],
-	       TFRewriteData *Rewrite)
-{
-   unsigned char Visited[256];   // Bit 1 is Order, Bit 2 is Rewrite
-   for (unsigned I = 0; I != 256; I++)
-      Visited[I] = 0;
-
-   // Set new tag up as necessary.
-   for (unsigned int J = 0; Rewrite != 0 && Rewrite[J].Tag != 0; J++)
-   {
-      if (Rewrite[J].NewTag == 0)
-	 Rewrite[J].NewTag = Rewrite[J].Tag;
-   }
-   
-   // Write all all of the tags, in order.
-   if (Order != NULL)
-   {
-      for (unsigned int I = 0; Order[I] != 0; I++)
-      {
-         bool Rewritten = false;
-         
-         // See if this is a field that needs to be rewritten
-         for (unsigned int J = 0; Rewrite != 0 && Rewrite[J].Tag != 0; J++)
-         {
-            if (strcasecmp(Rewrite[J].Tag,Order[I]) == 0)
-            {
-               Visited[J] |= 2;
-               if (Rewrite[J].Rewrite != 0 && Rewrite[J].Rewrite[0] != 0)
-               {
-                  if (isspace_ascii(Rewrite[J].Rewrite[0]))
-                     fprintf(Output,"%s:%s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-                  else
-                     fprintf(Output,"%s: %s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-               }
-               Rewritten = true;
-               break;
-            }
-         }
-	    
-         // See if it is in the fragment
-         unsigned Pos;
-         if (Tags.Find(StringView(Order[I]),Pos) == false)
-            continue;
-         Visited[Pos] |= 1;
-
-         if (Rewritten == true)
-            continue;
-      
-         /* Write out this element, taking a moment to rewrite the tag
-            in case of changes of case. */
-         const char *Start;
-         const char *Stop;
-         Tags.Get(Start,Stop,Pos);
-      
-         if (fputs(Order[I],Output) < 0)
-            return _error->Errno("fputs","IO Error to output");
-         Start += strlen(Order[I]);
-         if (fwrite(Start,Stop - Start,1,Output) != 1)
-            return _error->Errno("fwrite","IO Error to output");
-         if (Stop[-1] != '\n')
-            fprintf(Output,"\n");
-      }
-   }
-
-   // Now write all the old tags that were missed.
-   for (unsigned int I = 0; I != Tags.Count(); I++)
-   {
-      if ((Visited[I] & 1) == 1)
-	 continue;
-
-      const char *Start;
-      const char *Stop;
-      Tags.Get(Start,Stop,I);
-      const char *End = Start;
-      for (; End < Stop && *End != ':'; End++);
-
-      // See if this is a field that needs to be rewritten
-      bool Rewritten = false;
-      for (unsigned int J = 0; Rewrite != 0 && Rewrite[J].Tag != 0; J++)
-      {
-	 if (stringcasecmp(Start,End,Rewrite[J].Tag) == 0)
-	 {
-	    Visited[J] |= 2;
-	    if (Rewrite[J].Rewrite != 0 && Rewrite[J].Rewrite[0] != 0)
-	    {
-	       if (isspace_ascii(Rewrite[J].Rewrite[0]))
-		  fprintf(Output,"%s:%s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-	       else
-		  fprintf(Output,"%s: %s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-	    }
-	    
-	    Rewritten = true;
-	    break;
-	 }
-      }      
-      
-      if (Rewritten == true)
-	 continue;
-      
-      // Write out this element
-      if (fwrite(Start,Stop - Start,1,Output) != 1)
-	 return _error->Errno("fwrite","IO Error to output");
-      if (Stop[-1] != '\n')
-	 fprintf(Output,"\n");
-   }
-   
-   // Now write all the rewrites that were missed
-   for (unsigned int J = 0; Rewrite != 0 && Rewrite[J].Tag != 0; J++)
-   {
-      if ((Visited[J] & 2) == 2)
-	 continue;
-      
-      if (Rewrite[J].Rewrite != 0 && Rewrite[J].Rewrite[0] != 0)
-      {
-	 if (isspace_ascii(Rewrite[J].Rewrite[0]))
-	    fprintf(Output,"%s:%s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-	 else
-	    fprintf(Output,"%s: %s\n",Rewrite[J].NewTag,Rewrite[J].Rewrite);
-      }      
-   }
-      
-   return true;
-}
-APT_IGNORE_DEPRECATED_POP
-									/*}}}*/
 
 pkgTagSection::~pkgTagSection() { delete d; }

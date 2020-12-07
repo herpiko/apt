@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: file.cc,v 1.9.2.1 2004/01/16 18:58:50 mdz Exp $
 /* ######################################################################
 
    File URI method for APT
@@ -15,12 +14,12 @@
 // Include Files							/*{{{*/
 #include <config.h>
 
+#include "aptmethod.h"
 #include <apt-pkg/aptconfiguration.h>
 #include <apt-pkg/error.h>
-#include <apt-pkg/hashes.h>
 #include <apt-pkg/fileutl.h>
+#include <apt-pkg/hashes.h>
 #include <apt-pkg/strutl.h>
-#include "aptmethod.h"
 
 #include <string>
 #include <sys/stat.h>
@@ -33,7 +32,10 @@ class FileMethod : public aptMethod
    virtual bool Fetch(FetchItem *Itm) APT_OVERRIDE;
 
    public:
-   FileMethod() : aptMethod("file", "1.0", SingleInstance | SendConfig | LocalOnly) {};
+   FileMethod() : aptMethod("file", "1.0", SingleInstance | SendConfig | LocalOnly)
+   {
+      SeccompFlags = aptMethod::BASE;
+   }
 };
 
 // FileMethod::Fetch - Fetch a file					/*{{{*/
@@ -41,7 +43,7 @@ class FileMethod : public aptMethod
 /* */
 bool FileMethod::Fetch(FetchItem *Itm)
 {
-   URI Get = Itm->Uri;
+   URI Get(Itm->Uri);
    std::string File = Get.Path;
    FetchResult Res;
    if (Get.Host.empty() == false)
@@ -55,7 +57,6 @@ bool FileMethod::Fetch(FetchItem *Itm)
       {
 	 if (Itm->LastModified == Buf.st_mtime && Itm->LastModified != 0)
 	 {
-	    HashStringList const hsl = Itm->ExpectedHashes;
 	    if (Itm->ExpectedHashes.VerifyFile(File))
 	    {
 	       Res.Filename = Itm->DestFile;

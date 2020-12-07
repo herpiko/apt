@@ -12,14 +12,14 @@
 #include <config.h>
 
 #include <apt-pkg/configuration.h>
-#include <apt-pkg/edsplistparser.h>
-#include <apt-pkg/md5.h>
 #include <apt-pkg/deblistparser.h>
-#include <apt-pkg/pkgcache.h>
-#include <apt-pkg/cacheiterators.h>
-#include <apt-pkg/tagfile.h>
+#include <apt-pkg/edsplistparser.h>
 #include <apt-pkg/fileutl.h>
+#include <apt-pkg/pkgcache.h>
 #include <apt-pkg/pkgsystem.h>
+#include <apt-pkg/string_view.h>
+#include <apt-pkg/strutl.h>
+#include <apt-pkg/tagfile.h>
 
 #include <array>
 
@@ -53,26 +53,19 @@ std::vector<std::string> edspLikeListParser::AvailableDescriptionLanguages()
 {
    return {};
 }
-MD5SumValue edspLikeListParser::Description_md5()
+APT::StringView edspLikeListParser::Description_md5()
 {
-   return MD5SumValue("");
+   return APT::StringView();
 }
 									/*}}}*/
 // ListParser::VersionHash - Compute a unique hash for this version	/*{{{*/
-unsigned short edspLikeListParser::VersionHash()
+uint32_t edspLikeListParser::VersionHash()
 {
    if (Section.Exists("APT-Hash") == true)
       return Section.FindI("APT-Hash");
    else if (Section.Exists("APT-ID") == true)
       return Section.FindI("APT-ID");
    return 0;
-}
-									/*}}}*/
-// ListParser::LoadReleaseInfo - Load the release information		/*{{{*/
-APT_CONST bool edspLikeListParser::LoadReleaseInfo(pkgCache::RlsFileIterator & /*FileI*/,
-				    FileFd & /*File*/, std::string const &/*component*/)
-{
-   return true;
 }
 									/*}}}*/
 // ListParser::ParseStatus - Parse the status field			/*{{{*/
@@ -94,7 +87,7 @@ bool edspListParser::ParseStatus(pkgCache::PkgIterator &Pkg,
    if (state != 0)
    {
       Pkg->CurrentState = pkgCache::State::Installed;
-      Pkg->CurrentVer = Ver.Index();
+      Pkg->CurrentVer = Ver.MapPointer();
    }
 
    if (Section.FindB("APT-Automatic", false))
@@ -169,7 +162,7 @@ bool eippListParser::ParseStatus(pkgCache::PkgIterator &Pkg,
 	    case pkgCache::State::TriggersAwaited:
 	    case pkgCache::State::TriggersPending:
 	    case pkgCache::State::Installed:
-	       Pkg->CurrentVer = Ver.Index();
+	       Pkg->CurrentVer = Ver.MapPointer();
 	       break;
 	 }
 	 break;

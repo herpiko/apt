@@ -24,8 +24,16 @@ TEST(CommandLineTest,SaveInConfig)
 	 "apt-get", "install", "-sf");
    APT_EXPECT_CMD("apt-cache -s apt -so Debug::test=Test",
 	 "apt-cache", "-s", "apt", "-so", "Debug::test=Test");
-   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test=\"Das ist ein Test\"",
+   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test='Das ist ein Test'",
 	 "apt-cache", "-s", "apt", "-so", "Debug::test=Das ist ein Test");
+   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test='Das ist ein Test'",
+	 "apt-cache", "-s", "apt", "-so", "Debug::test=\"Das ist ein Test\"");
+   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test='Das ist ein Test' foo",
+	 "apt-cache", "-s", "apt", "-so", "\"Debug::test=Das ist ein Test\"", "foo");
+   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test='Das ist ein Test' foo",
+	 "apt-cache", "-s", "apt", "-so", "\'Debug::test=Das ist ein Test\'", "foo");
+   APT_EXPECT_CMD("apt-cache -s apt -so Debug::test='That 	 is crazy!' foo",
+	 "apt-cache", "-s", "apt", "-so", "\'Debug::test=That 	 \ris\n crazy!\'", "foo");
    APT_EXPECT_CMD("apt-cache -s apt --hallo test=1.0",
 	 "apt-cache", "-s", "apt", "--hallo", "test=1.0");
 #undef APT_EXPECT_CMD
@@ -65,7 +73,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(3 , argv);
    EXPECT_TRUE(c.FindB("Test::Worked", false));
    EXPECT_EQ("yes", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(0, CmdL.FileSize());
+   EXPECT_EQ(0u, CmdL.FileSize());
    }
    c.Clear("Test");
    {
@@ -73,7 +81,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(2 , argv);
    EXPECT_TRUE(c.Exists("Test::Worked"));
    EXPECT_EQ("yes", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(0, CmdL.FileSize());
+   EXPECT_EQ(0u, CmdL.FileSize());
    }
    c.Clear("Test");
    {
@@ -81,7 +89,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(3 , argv);
    EXPECT_TRUE(c.Exists("Test::Worked"));
    EXPECT_EQ("no", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(1, CmdL.FileSize());
+   EXPECT_EQ(1u, CmdL.FileSize());
    }
 
    c.Clear("Test");
@@ -90,7 +98,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(3 , argv);
    EXPECT_TRUE(c.FindB("Test::Worked", false));
    EXPECT_EQ("yes", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(0, CmdL.FileSize());
+   EXPECT_EQ(0u, CmdL.FileSize());
    }
    c.Clear("Test");
    {
@@ -98,7 +106,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(2 , argv);
    EXPECT_TRUE(c.Exists("Test::Worked"));
    EXPECT_EQ("yes", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(0, CmdL.FileSize());
+   EXPECT_EQ(0u, CmdL.FileSize());
    }
    c.Clear("Test");
    {
@@ -106,7 +114,7 @@ TEST(CommandLineTest,Parsing)
    CmdL.Parse(3 , argv);
    EXPECT_TRUE(c.Exists("Test::Worked"));
    EXPECT_EQ("no", c.Find("Test::Worked", "no"));
-   EXPECT_EQ(1, CmdL.FileSize());
+   EXPECT_EQ(1u, CmdL.FileSize());
    }
 
    c.Clear("Test");
@@ -177,7 +185,7 @@ TEST(CommandLineTest,GetCommand)
    ASSERT_TRUE(CmdL.Parse(sizeof(argv)/sizeof(argv[0]), argv));
    EXPECT_EQ(c.Find("APT::Default-Release"), "unstable");
    EXPECT_TRUE(c.FindB("APT::Get::Download-Only"));
-   ASSERT_EQ(2, CmdL.FileSize());
+   ASSERT_EQ(2u, CmdL.FileSize());
    EXPECT_EQ(std::string(CmdL.FileList[0]), "remove");
    EXPECT_EQ(std::string(CmdL.FileList[1]), "foo");
    }
@@ -191,7 +199,7 @@ TEST(CommandLineTest,GetCommand)
    ASSERT_TRUE(CmdL.Parse(sizeof(argv)/sizeof(argv[0]), argv));
    EXPECT_EQ(c.Find("APT::Default-Release"), "unstable");
    EXPECT_FALSE(c.FindB("APT::Get::Download-Only"));
-   ASSERT_EQ(3, CmdL.FileSize());
+   ASSERT_EQ(3u, CmdL.FileSize());
    EXPECT_EQ(std::string(CmdL.FileList[0]), "remove");
    EXPECT_EQ(std::string(CmdL.FileList[1]), "-d");
    EXPECT_EQ(std::string(CmdL.FileList[2]), "foo");
@@ -206,7 +214,7 @@ TEST(CommandLineTest,GetCommand)
    ASSERT_TRUE(CmdL.Parse(sizeof(argv)/sizeof(argv[0]), argv));
    EXPECT_EQ(c.Find("APT::Default-Release"), "unstable");
    EXPECT_FALSE(c.FindB("APT::Get::Download-Only"));
-   ASSERT_EQ(CmdL.FileSize(), 3);
+   ASSERT_EQ(3u, CmdL.FileSize());
    EXPECT_EQ(std::string(CmdL.FileList[0]), "remove");
    EXPECT_EQ(std::string(CmdL.FileList[1]), "-d");
    EXPECT_EQ(std::string(CmdL.FileList[2]), "foo");
@@ -221,7 +229,7 @@ TEST(CommandLineTest,GetCommand)
    ASSERT_TRUE(CmdL.Parse(sizeof(argv)/sizeof(argv[0]), argv));
    EXPECT_EQ(c.Find("APT::Default-Release"), "unstable");
    EXPECT_FALSE(c.FindB("APT::Get::Download-Only"));
-   ASSERT_EQ(CmdL.FileSize(), 4);
+   ASSERT_EQ(4u, CmdL.FileSize());
    EXPECT_EQ(std::string(CmdL.FileList[0]), "install");
    EXPECT_EQ(std::string(CmdL.FileList[1]), "remove");
    EXPECT_EQ(std::string(CmdL.FileList[2]), "-d");

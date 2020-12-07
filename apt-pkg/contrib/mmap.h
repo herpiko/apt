@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
 // Description								/*{{{*/
-// $Id: mmap.h,v 1.12 2001/05/14 05:16:43 jgg Exp $
 /* ######################################################################
    
    MMap Class - Provides 'real' mmap or a faked mmap using read().
@@ -10,7 +9,7 @@
    from file fd's this function will use read and normal allocated 
    memory.
    
-   Writing to a public mmap will always fully comit all changes when the 
+   Writing to a public mmap will always fully commit all changes when the
    class is deleted. Ie it will rewrite the file, unless it is readonly
 
    The DynamicMMap class is used to help the on-disk data structure 
@@ -25,17 +24,15 @@
 #ifndef PKGLIB_MMAP_H
 #define PKGLIB_MMAP_H
 
-
 #include <string>
+#include <limits>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/fileutl.h>
-using std::string;
-#endif
+#include <sys/mman.h>
+
 
 class FileFd;
 
-/* This should be a 32 bit type, larger tyes use too much ram and smaller
+/* This should be a 32 bit type, larger types use too much ram and smaller
    types are too small. Where ever possible 'unsigned long' should be used
    instead of this internal type */
 typedef unsigned int map_ptrloc;
@@ -66,14 +63,14 @@ class MMap
    inline void *Data() {return Base;}; 
    inline unsigned long long Size() {return iSize;};
    inline void AddSize(unsigned long long const size) {iSize += size;};
-   inline bool validData() const { return Base != (void *)-1 && Base != 0; };
+   inline bool validData() const { return Base != MAP_FAILED && Base != 0; };
    
    // File manipulators
    bool Sync();
    bool Sync(unsigned long Start,unsigned long Stop);
    
    MMap(FileFd &F,unsigned long Flags);
-   MMap(unsigned long Flags);
+   explicit MMap(unsigned long Flags);
    virtual ~MMap();
 };
 
@@ -105,7 +102,7 @@ class DynamicMMap : public MMap
    // Allocation
    unsigned long RawAllocate(unsigned long long Size,unsigned long Aln = 0);
    unsigned long Allocate(unsigned long ItemSize);
-   unsigned long WriteString(const char *String,unsigned long Len = (unsigned long)-1);
+   unsigned long WriteString(const char *String,unsigned long Len = std::numeric_limits<unsigned long>::max());
    inline unsigned long WriteString(const std::string &S) {return WriteString(S.c_str(),S.length());};
    void UsePools(Pool &P,unsigned int Count) {Pools = &P; PoolCount = Count;};
    

@@ -2,8 +2,8 @@
 // Description								/*{{{*/
 /* ######################################################################
 
-   Update - ListUpdate releated code
-   
+   Update - ListUpdate related code
+
    ##################################################################### */
 									/*}}}*/
 
@@ -14,8 +14,8 @@ class pkgAcquireStatus;
 class pkgSourceList;
 class pkgAcquire;
 
-bool ListUpdate(pkgAcquireStatus &progress, pkgSourceList &List, int PulseInterval=0);
-bool AcquireUpdate(pkgAcquire &Fetcher, int const PulseInterval = 0,
+APT_PUBLIC bool ListUpdate(pkgAcquireStatus &progress, pkgSourceList &List, int PulseInterval=0);
+APT_PUBLIC bool AcquireUpdate(pkgAcquire &Fetcher, int const PulseInterval = 0,
 		   bool const RunUpdateScripts = true, bool const ListCleanup = true);
 
 

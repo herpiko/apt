@@ -13,6 +13,7 @@ setupaptarchive --no-update
 changetohttpswebserver --authorization="$(printf '%s' 'star@irc:hunter2' | base64 )"
 
 echo 'See, when YOU type hunter2, it shows to us as *******' > aptarchive/bash
+echo 'Debug::Acquire::netrc "true";' > rootdir/etc/apt/apt.conf.d/netrcdebug.conf
 
 testauthfailure() {
 	testfailure apthelper download-file "${1}/bash" ./downloaded/bash
@@ -37,7 +38,11 @@ testauthsuccess() {
 	fi
 
 	rm -rf rootdir/var/lib/apt/lists
-	testsuccess aptget update
+	if expr index "$1" '@' >/dev/null; then
+		testsuccesswithnotice aptget update
+	else
+		testsuccess aptget update
+	fi
 	testsuccessequal 'Reading package lists...
 Building dependency tree...
 The following NEW packages will be installed:
@@ -48,7 +53,8 @@ Conf foo (1 unstable [all])' aptget install foo -s
 }
 
 authfile() {
-	local AUTHCONF='rootdir/etc/apt/auth.conf'
+	local AUTHCONF="${2:-rootdir/etc/apt/auth.conf}"
+	mkdir -p "$(dirname "$AUTHCONF")"
 	rm -f "$AUTHCONF"
 	printf '%s' "$1" > "$AUTHCONF"
 	chmod 600 "$AUTHCONF"
@@ -59,27 +65,63 @@ runtest() {
 	authfile ''
 	testauthfailure "$1"
 
+	protocol="${1%%://*}"
+
 	# good auth
-	authfile 'machine localhost
+	authfile "machine ${protocol}://localhost
 login star@irc
-password hunter2'
+password hunter2"
 	testauthsuccess "$1"
 
 	# bad auth
-	authfile 'machine localhost
+	authfile "machine ${protocol}://localhost
 login anonymous
-password hunter2'
+password hunter2"
 	testauthfailure "$1"
 
 	# 2 stanzas: unmatching + good auth
-	authfile 'machine debian.org
+	authfile "machine ${protocol}://debian.org
 login debian
 password jessie
 
-machine localhost
+machine ${protocol}://localhost
 login star@irc
-password hunter2'
+password hunter2"
 	testauthsuccess "$1"
+
+	# no protocol specifier
+	authfile "machine localhost
+login star@irc
+password hunter2"
+	if [ "$protocol" = "https" ]; then
+		testauthsuccess "$1"
+	else
+		testfailure apthelper download-file "${1}/bash" ./downloaded/bash
+		testsuccessequal "W: ${1}/bash: ${TMPWORKINGDIRECTORY}/rootdir/etc/apt/auth.conf: Credentials for localhost match, but the protocol is not encrypted. Annotate with http:// to use." grep "Credentials.*match" rootdir/tmp/testfailure.output
+		testauthfailure "$1"
+	fi
+
+	# wrong protocol specifier
+	if [ "$protocol" = "https" ]; then
+		authfile "machine http://localhost
+login star@irc
+password hunter2"
+	else
+		authfile "machine https://localhost
+login star@irc
+password hunter2"
+	fi
+	testauthfailure "$1"
+
+	# delete file, make sure it fails; add auth.conf.d snippet, works again.
+	rm rootdir/etc/apt/auth.conf
+	testauthfailure "$1"
+
+	authfile  "machine ${protocol}://localhost
+login star@irc
+password hunter2" rootdir/etc/apt/auth.conf.d/myauth.conf
+	testauthsuccess "$1"
+	rm rootdir/etc/apt/auth.conf.d/myauth.conf
 }
 
 msgmsg 'server basic auth'
@@ -94,7 +136,9 @@ rewritesourceslist "http://localhost:${APTHTTPPORT}"
 
 msgmsg 'proxy to server basic auth'
 webserverconfig 'aptwebserver::request::absolute' 'uri'
-export http_proxy="http://localhost:${APTHTTPPORT}"
+# using ip instead of localhost avoids picking up the auth for the repo
+# for the proxy as well as we serve them both over the same server…
+export http_proxy="http://127.0.0.1:${APTHTTPPORT}"
 runtest "http://localhost:${APTHTTPPORT}"
 unset http_proxy
 

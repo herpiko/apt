@@ -267,6 +267,11 @@ an informational string provided for visual debugging.
 </listitem>
 <listitem>
 <para>
+351 Aux Request - Method requests an auxiliary file
+</para>
+</listitem>
+<listitem>
+<para>
 400 URI Failure - URI has failed to acquire
 </para>
 </listitem>
@@ -309,9 +314,9 @@ Authorization is User/Pass
 </itemizedlist>
 <para>
 Only the 6xx series of status codes is sent TO the method. Furthermore the
-method may not emit status codes in the 6xx range. The Codes 402 and 403
+method may not emit status codes in the 6xx range. The Codes 351, 402 and 403
 require that the method continue reading all other 6xx codes until the proper
-602/603 code is received. This means the method must be capable of handling an
+600/602/603 code is received. This means the method must be capable of handling an
 unlimited number of 600 messages.
 </para>
 <para>
@@ -567,6 +572,20 @@ Size, Last-Modified, Filename, MD5-Hash
 </listitem>
 </varlistentry>
 <varlistentry>
+<term>351 Aux Request</term>
+<listitem>
+<para>
+Indicates a request for an auxiliary file to be downloaded by the acquire system
+(via another method) and made available for the requesting method. The requestor
+will get a <emphasis>600 URI Acquire</emphasis> with the URI it requested and the
+filename will either be an existing file if the request was success or if the
+acquire failed for some reason the file will not exist.
+Fields: URI (of the file causing the need for the auxiliary file), MaximumSize,
+Aux-ShortDesc, Aux-Description, Aux-URI
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
 <term>400 URI Failure</term>
 <listitem>
 <para>
@@ -685,7 +704,7 @@ http - For HTTP servers
 </orderedlist>
 <para>
 The two internal methods, copy and gzip, are used by the acquire code to
-parallize and simplify the automatic decompression of package files as well as
+parallelize and simplify the automatic decompression of package files as well as
 copying package files around the file system. Both methods can be seen to act
 the same except that one decompresses on the fly. APT uses them by generating
 a copy URI that is formed identically to a file URI. The destination file is

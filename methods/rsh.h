@@ -1,6 +1,5 @@
 // -*- mode: cpp; mode: fold -*-
-// Description								/*{{{*/// $Id: rsh.h,v 1.4 2002/11/09 23:33:26 doogie Exp $
-// $Id: rsh.h,v 1.4 2002/11/09 23:33:26 doogie Exp $
+// Description								/*{{{*/
 /* ######################################################################
 
    RSH method - Transfer files via rsh compatible program
@@ -36,8 +35,8 @@ class RSHConn
 
    // Raw connection IO
    bool WriteMsg(std::string &Text,bool Sync,const char *Fmt,...);
-   bool Connect(std::string Host, std::string User);
-   bool Connect(std::string Host, unsigned int Port, std::string User);
+   bool Connect(std::string const &Host, std::string const &User);
+   bool Connect(std::string const &Host, unsigned int Port, std::string const &User);
    bool Comp(URI Other) const {return Other.Host == ServerName.Host && Other.Port == ServerName.Port;};
 
    // Connection control

@@ -7,13 +7,13 @@
 # Klaus Ade Johnstad <klaus@skolelinux.no>, 2004.
 # Bjorn Steensrud <bjornst@powertech.no>, 2004.
 # Hans Fredrik Nordhaug <hans@nordhaug.priv.no>, 2003, 2005-2010.
-# Petter Reinholdtsen <pere@hungry.com>, 2016.
+# Petter Reinholdtsen <pere@hungry.com>, 2016, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2016-08-30 22:20+0200\n"
-"PO-Revision-Date: 2016-06-11 22:38+0200\n"
+"POT-Creation-Date: 2020-08-11 14:34+0200\n"
+"PO-Revision-Date: 2018-10-30 20:53+0100\n"
 "Last-Translator: Petter Reinholdtsen <pere@hungry.com>\n"
 "Language-Team: Norwegian Bokmål <i18n-no@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -21,183 +21,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.5\n"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Invalid archive signature"
-msgstr "Ugyldig arkivsignatur"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Error reading archive member header"
-msgstr "Feil ved lesing av arkivmedlemshode"
-
-#: apt-inst/contrib/arfile.cc
-#, c-format
-msgid "Invalid archive member header %s"
-msgstr "Ugyldig arkivmedlemshode %s"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Invalid archive member header"
-msgstr "Ugyldig arkivmedlemshode"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Archive is too short"
-msgstr "Arkivet er for kort"
-
-#: apt-inst/contrib/arfile.cc
-msgid "Failed to read the archive headers"
-msgstr "Klarte ikke å lese arkivhodene"
-
-#: apt-inst/contrib/extracttar.cc
-#, fuzzy, c-format
-msgid "Cannot find a configured compressor for '%s'"
-msgstr "Klarte ikke finne autentiseringsoppføring for: %s"
-
-#: apt-inst/contrib/extracttar.cc
-msgid "Corrupted archive"
-msgstr "Ødelagt arkiv"
-
-#: apt-inst/contrib/extracttar.cc
-msgid "Tar checksum failed, archive corrupted"
-msgstr "Tar-sjekksummen mislykkes, arkivet er ødelagt"
-
-#: apt-inst/contrib/extracttar.cc
-#, c-format
-msgid "Unknown TAR header type %u, member %s"
-msgstr "Ukjent TAR-hode: type %u, medlem %s"
-
-#: apt-inst/deb/debfile.cc
-#, c-format
-msgid "This is not a valid DEB archive, missing '%s' member"
-msgstr "Dette er ikke et gyldig DEB-arkiv, mangler «%s»-medlemmet"
-
-#: apt-inst/deb/debfile.cc
-#, c-format
-msgid "Internal error, could not locate member %s"
-msgstr "Intern feil, fant ikke medlemmet %s"
-
-#: apt-inst/deb/debfile.cc
-msgid "Unparsable control file"
-msgstr "Kontrollfila kan ikke tolkes"
-
-#: apt-inst/dirstream.cc
-#, c-format
-msgid "Failed to write file %s"
-msgstr "Klarte ikke å skrive fila %s"
-
-#: apt-inst/dirstream.cc
-#, c-format
-msgid "Failed to close file %s"
-msgstr "Klarte ikke å lukke fila %s"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The path %s is too long"
-msgstr "Stien %s er for lang"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Unpacking %s more than once"
-msgstr "Pakker ut %s mer enn en gang"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The directory %s is diverted"
-msgstr "Katalogen %s er avledet"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The package is trying to write to the diversion target %s/%s"
-msgstr "Pakken prøver å skrive til avledningsmålet %s/%s"
-
-#: apt-inst/extract.cc
-msgid "The diversion path is too long"
-msgstr "Avledningsstien er for lang"
-
-#: apt-inst/extract.cc apt-pkg/acquire-item.cc ftparchive/cachedb.cc
-#: methods/rred.cc
-#, c-format
-msgid "Failed to stat %s"
-msgstr "Klarte ikke å få statusen på %s"
-
-#: apt-inst/extract.cc ftparchive/multicompress.cc
-#, c-format
-msgid "Failed to rename %s to %s"
-msgstr "Klarte ikke å endre navnet på %s til %s"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "The directory %s is being replaced by a non-directory"
-msgstr "Mappa %s blir byttet ut med noe som ikke er en mappe"
-
-#: apt-inst/extract.cc
-msgid "Failed to locate node in its hash bucket"
-msgstr "Fant ikke knutepunktet i dens hash-spann"
-
-#: apt-inst/extract.cc
-msgid "The path is too long"
-msgstr "Stien er for lang"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Overwrite package match with no version for %s"
-msgstr "Skriver over pakketreff uten versjon for %s"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "File %s/%s overwrites the one in the package %s"
-msgstr "Fila %s/%s skriver over den tilsvarende fila i pakken %s"
-
-#. Only warn if there are no sources.list.d.
-#. Only warn if there is no sources.list file.
-#: apt-inst/extract.cc apt-pkg/acquire.cc apt-pkg/clean.cc
-#: apt-pkg/contrib/cdromutl.cc apt-pkg/contrib/fileutl.cc apt-pkg/deb/dpkgpm.cc
-#: apt-pkg/init.cc apt-pkg/policy.cc apt-pkg/sourcelist.cc methods/mirror.cc
-#, c-format
-msgid "Unable to read %s"
-msgstr "Klarer ikke å lese %s"
-
-#: apt-inst/extract.cc
-#, c-format
-msgid "Unable to stat %s"
-msgstr "Klarte ikke å få statusen på %s"
-
-#: apt-inst/filelist.cc
-msgid "DropNode called on still linked node"
-msgstr "DropNode ble startet på et knutepunkt som ennå er lenket"
-
-#: apt-inst/filelist.cc
-msgid "Failed to locate the hash element!"
-msgstr "Fant ikke nøkkelelementet."
-
-#: apt-inst/filelist.cc
-msgid "Failed to allocate diversion"
-msgstr "Klarte ikke å tildele avledning"
-
-#: apt-inst/filelist.cc
-msgid "Internal error in AddDiversion"
-msgstr "Intern feil i AddDiversion"
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Trying to overwrite a diversion, %s -> %s and %s/%s"
-msgstr "Prøver å skrive over en avledning, %s -> %s og %s/%s"
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Double add of diversion %s -> %s"
-msgstr "Dobbel tillegging av avledning %s -> %s"
-
-#: apt-inst/filelist.cc
-#, c-format
-msgid "Duplicate conf file %s/%s"
-msgstr "Dobbel oppsettsfil %s/%s"
+"X-Generator: Lokalize 2.0\n"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
 "Updating from such a repository can't be done securely, and is therefore "
 "disabled by default."
 msgstr ""
+"Oppdatering fra et slikt depot kan ikke gjøres på sikkert vis, og er derfor "
+"avskrudd som standard."
 
 #: apt-pkg/acquire-item.cc
 msgid ""
@@ -210,6 +42,8 @@ msgid ""
 "See apt-secure(8) manpage for repository creation and user configuration "
 "details."
 msgstr ""
+"Se manualsiden apt-secure(8) for detaljer om oppretting av depote og "
+"brukeroppsett."
 
 #: apt-pkg/acquire-item.cc
 #, fuzzy, c-format
@@ -218,7 +52,7 @@ msgstr "Katalogen %s er avledet"
 
 #: apt-pkg/acquire-item.cc
 #, fuzzy, c-format
-msgid "The repository '%s' does no longer have a Release file."
+msgid "The repository '%s' no longer has a Release file."
 msgstr "Katalogen %s er avledet"
 
 #: apt-pkg/acquire-item.cc
@@ -247,6 +81,11 @@ msgstr "Katalogen %s er avledet"
 msgid "Failed to readlink %s"
 msgstr "Klarte ikke å lese lenken %s"
 
+#: apt-pkg/acquire-item.cc ftparchive/cachedb.cc methods/rred.cc
+#, c-format
+msgid "Failed to stat %s"
+msgstr "Klarte ikke å få statusen på %s"
+
 #: apt-pkg/acquire-item.cc
 msgid "Hash Sum mismatch"
 msgstr "Hashsummen stemmer ikke"
@@ -254,6 +93,8 @@ msgstr "Hashsummen stemmer ikke"
 #: apt-pkg/acquire-item.cc
 msgid "Insufficient information available to perform this download securely"
 msgstr ""
+"Utilstrekkelig informasjon tilgjengelig for å utføre denne nedlastingen på "
+"sikkert vis."
 
 #: apt-pkg/acquire-item.cc apt-pkg/contrib/fileutl.cc
 #, c-format
@@ -300,6 +141,13 @@ msgstr "GPG-feil: %s: %s"
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
+"Skipping acquire of configured file '%s' as repository '%s' doesn't have the "
+"component '%s' (component misspelt in sources.list?)"
+msgstr ""
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' doesn't support "
 "architecture '%s'"
 msgstr ""
@@ -307,8 +155,8 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
-"Unable to find expected entry '%s' in Release file (Wrong sources.list entry "
-"or malformed file)"
+"Skipping acquire of configured file '%s' as repository '%s' does not seem to "
+"provide it (sources.list entry misspelt?)"
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -328,10 +176,53 @@ msgid ""
 "repository will not be applied."
 msgstr ""
 
+#. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
+#. the time until the file will be valid - formatted in the same way as in
+#. the download progress display (e.g. 7d 3h 42min 1s)
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Release file for %s is not valid yet (invalid for another %s). Updates for "
+"this repository will not be applied."
+msgstr ""
+
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konflikt mellom distribusjoner: %s (forventet %s men fant %s)"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
+msgstr "Depot «%s» endret sin «%s»-verdi fra «%s» til «%s»."
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
+msgstr "Depot «%s» endret sin standardprioritet for %s fra %hi til %hi."
+
+#. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"More information about this can be found online in the Release notes at: %s"
+msgstr ""
+"Mer informasjon om dette kan finnes på nettet i utgivelsesnotatene på: %s"
+
+#. TRANSLATOR: %s is the name of the manpage in question, e.g. apt-secure(8)
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"This must be accepted explicitly before updates for this repository can be "
+"applied. See %s manpage for details."
+msgstr ""
+"Dette må eksplisitt aksepteres før oppdateringer fra dette depoet kan tas i "
+"bruk.  Se manualsiden %s for detaljer."
+
+#: apt-pkg/acquire-item.cc apt-pkg/update.cc apt-private/private-download.cc
+#, c-format
+msgid "Failed to fetch %s  %s"
+msgstr "Klarte ikke å skaffe %s  %s"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -345,13 +236,7 @@ msgstr ""
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Can't find a source to download version '%s' of '%s'"
-msgstr ""
-
-#: apt-pkg/acquire-item.cc
-#, c-format
-msgid ""
-"The package index files are corrupted. No Filename: field for package %s."
-msgstr "Oversiktsfilene er ødelagte. Feltet «Filename:» mangler for pakken %s."
+msgstr "Klarte ikke finne kilde for å laste ned versjon «%s» av «%s»"
 
 #. TRANSLATOR: %s=%s is sourcename=sourceversion, e.g. apt=1.1
 #: apt-pkg/acquire-item.cc
@@ -361,13 +246,20 @@ msgstr "Kobler til %s (%s)"
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
-msgid "The method '%s' is explicitly disabled via configuration."
+msgid ""
+"The method '%s' is unsupported and disabled by default. Consider switching "
+"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
 msgstr ""
+
+#: apt-pkg/acquire-worker.cc
+#, c-format
+msgid "The method '%s' is explicitly disabled via configuration."
+msgstr "Metoden «%s» er eksplisitt avskrudd via oppsettet."
 
 #: apt-pkg/acquire-worker.cc methods/connect.cc
 #, c-format
 msgid "If you meant to use Tor remember to use %s instead of %s."
-msgstr ""
+msgstr "Hvis du mente å bruke Tor, husk å bruke %s i stedet for %s."
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -375,9 +267,9 @@ msgid "The method driver %s could not be found."
 msgstr "Finner ikke metode-driveren %s."
 
 #: apt-pkg/acquire-worker.cc
-#, fuzzy, c-format
+#, c-format
 msgid "Is the package %s installed?"
-msgstr "Sjekk om pakken «dpkg-dev» er installert.\n"
+msgstr "Er pakken «%s» installert?"
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -392,13 +284,13 @@ msgstr "Sett inn disken merket «%s» i lagringsenheten «%s» og trykk Enter."
 
 #: apt-pkg/acquire.cc apt-pkg/cdrom.cc
 #, c-format
-msgid "List directory %spartial is missing."
-msgstr "Listemappa %spartial mangler."
+msgid "List directory %s is missing."
+msgstr "Listemappa %s mangler."
 
 #: apt-pkg/acquire.cc
 #, c-format
-msgid "Archives directory %spartial is missing."
-msgstr "Arkivmappa %spartial mangler."
+msgid "Archives directory %s is missing."
+msgstr "Arkivmappa %s mangler."
 
 #: apt-pkg/acquire.cc
 #, c-format
@@ -408,13 +300,13 @@ msgstr "Klarte ikke låse mappa %s"
 #: apt-pkg/acquire.cc
 #, c-format
 msgid "No sandbox user '%s' on the system, can not drop privileges"
-msgstr ""
+msgstr "Mangler sandkassebruker «%s» på systemet, kan ikke droppe privileger"
 
 #: apt-pkg/acquire.cc
 #, c-format
 msgid ""
-"Can't drop privileges for downloading as file '%s' couldn't be accessed by "
-"user '%s'."
+"Download is performed unsandboxed as root as file '%s' couldn't be accessed "
+"by user '%s'."
 msgstr ""
 
 #: apt-pkg/acquire.cc apt-pkg/clean.cc
@@ -422,14 +314,15 @@ msgstr ""
 msgid "Clean of %s is not supported"
 msgstr "Oversiktsfil av typen «%s» støttes ikke"
 
+#. Only warn if there are no sources.list.d.
+#. Only warn if there is no sources.list file.
 #: apt-pkg/acquire.cc apt-pkg/clean.cc apt-pkg/contrib/cdromutl.cc
-#: methods/mirror.cc
+#: apt-pkg/contrib/fileutl.cc apt-pkg/deb/dpkgpm.cc apt-pkg/init.cc
+#: apt-pkg/policy.cc apt-pkg/sourcelist.cc
 #, c-format
-msgid "Unable to change to %s"
-msgstr "Klarer ikke å endre %s"
+msgid "Unable to read %s"
+msgstr "Klarer ikke å lese %s"
 
-#. only show the ETA if it makes sense
-#. two days
 #: apt-pkg/acquire.cc
 #, c-format
 msgid "Retrieving file %li of %li (%s remaining)"
@@ -468,11 +361,12 @@ msgid "You may want to run apt-get update to correct these problems"
 msgstr ""
 "Det kan hende du vil kjøre «apt-get update» for å rette på disse problemene"
 
-#: apt-pkg/cachefile.cc
+#: apt-pkg/cachefile.cc methods/mirror.cc
 msgid "The list of sources could not be read."
 msgstr "Kan ikke lese kildlista."
 
-#: apt-pkg/cachefilter.cc apt-private/private-output.cc
+#: apt-pkg/cachefilter-patterns.cc apt-pkg/cachefilter.cc
+#: apt-private/private-output.cc
 #, c-format
 msgid "Regex compilation error - %s"
 msgstr "Kompileringsfeil i regulært uttrykk - %s"
@@ -495,12 +389,12 @@ msgstr "Klarte ikke å finne oppgave «%s»"
 #: apt-pkg/cacheset.cc
 #, c-format
 msgid "Couldn't find any package by regex '%s'"
-msgstr "Klarte ikke finne noen pakken med regex «%s»"
+msgstr "Klarte ikke finne noen pakke med regex «%s»"
 
 #: apt-pkg/cacheset.cc
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find any package by glob '%s'"
-msgstr "Klarte ikke finne noen pakken med regex «%s»"
+msgstr "Klarte ikke finne noen pakke med glob «%s»"
 
 #: apt-pkg/cacheset.cc apt-private/private-show.cc
 #, c-format
@@ -628,6 +522,26 @@ msgstr "Kildelisteoppføringer for denne CD-en er:\n"
 msgid "Unable to stat %s."
 msgstr "Klarer ikke finne informasjonom %s."
 
+#: apt-pkg/contrib/arfile.cc
+msgid "Invalid archive signature"
+msgstr "Ugyldig arkivsignatur"
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Error reading archive member header"
+msgstr "Feil ved lesing av arkivmedlemshode"
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Invalid archive member header"
+msgstr "Ugyldig arkivmedlemshode"
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Archive is too short"
+msgstr "Arkivet er for kort"
+
+#: apt-pkg/contrib/arfile.cc
+msgid "Failed to read the archive headers"
+msgstr "Klarte ikke å lese arkivhodene"
+
 #: apt-pkg/contrib/cdromutl.cc
 #, c-format
 msgid "Unable to stat the mount point %s"
@@ -693,11 +607,6 @@ msgstr "Ukjent typeforkortelse: «%c»"
 
 #: apt-pkg/contrib/configuration.cc
 #, c-format
-msgid "Opening configuration file %s"
-msgstr "Åpner oppsettsfila %s"
-
-#: apt-pkg/contrib/configuration.cc
-#, c-format
 msgid "Syntax error %s:%u: Block starts with no name."
 msgstr "Syntaksfeil %s:%u: Blokka starter uten navn."
 
@@ -741,6 +650,25 @@ msgstr "Syntaksfeil %s:%u: clear-direktivet krever et valgtre som argument"
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "Syntaksfeil %s:%u: Ugyldige angivelser på slutten av fila"
 
+#: apt-pkg/contrib/extracttar.cc
+#, c-format
+msgid "Cannot find a configured compressor for '%s'"
+msgstr "Klarte ikke finne oppsatt kompressor for «%s»"
+
+#: apt-pkg/contrib/extracttar.cc
+msgid "Corrupted archive"
+msgstr "Ødelagt arkiv"
+
+#: apt-pkg/contrib/extracttar.cc
+msgid "Tar checksum failed, archive corrupted"
+msgstr "Tar-sjekksummen mislykkes, arkivet er ødelagt"
+
+#: apt-pkg/contrib/extracttar.cc
+#, fuzzy, c-format
+#| msgid "Unknown TAR header type %u, member %s"
+msgid "Unknown TAR header type %u"
+msgstr "Ukjent TAR-hode: type %u, medlem %s"
+
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Problem unlinking the file %s"
@@ -762,9 +690,26 @@ msgid "Not using locking for nfs mounted lock file %s"
 msgstr "Bruker ikke låsing på den nfs-monterte låsefila %s"
 
 #: apt-pkg/contrib/fileutl.cc
+#, fuzzy, c-format
+#| msgid "Could not get lock %s"
+msgid "Could not get lock %s. It is held by process %d"
+msgstr "Får ikke låst %s"
+
+#: apt-pkg/contrib/fileutl.cc
+#, c-format
+msgid "Could not get lock %s. It is held by process %d (%s)"
+msgstr ""
+
+#: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Could not get lock %s"
 msgstr "Får ikke låst %s"
+
+#: apt-pkg/contrib/fileutl.cc
+msgid ""
+"Be aware that removing the lock file is not a solution and may break your "
+"system."
+msgstr ""
 
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
@@ -803,6 +748,7 @@ msgstr "Underprosessen %s mottok et minnefeilsignal."
 msgid "Sub-process %s received signal %u."
 msgstr "Underprosessen %s mottok signalet %u."
 
+#. we forward the statuscode, so don't generate a message on the fd in this case
 #: apt-pkg/contrib/fileutl.cc apt-pkg/contrib/gpgv.cc
 #, c-format
 msgid "Sub-process %s returned an error code (%u)"
@@ -849,14 +795,14 @@ msgid "Could not open file descriptor %d"
 msgstr "Klarte ikke åpne fildeskriptor %d"
 
 #: apt-pkg/contrib/fileutl.cc
-#, fuzzy, c-format
+#, c-format
 msgid "read, still have %llu to read but none left"
-msgstr "lese, har fremdeles %lu igjen å lese, men ingen igjen"
+msgstr "lese, har fremdeles %llu igjen å lese, men ingen igjen"
 
 #: apt-pkg/contrib/fileutl.cc
-#, fuzzy, c-format
+#, c-format
 msgid "write, still have %llu to write but couldn't"
-msgstr "skrive, har fremdeles %lu igjen å skrive, men klarte ikke å"
+msgstr "skrive, har fremdeles %llu igjen å skrive, men klarte ikke å"
 
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
@@ -872,12 +818,12 @@ msgstr "Problem ved endring av navn på fila %s til %s"
 msgid "Problem syncing the file"
 msgstr "Problem ved oppdatering av fila"
 
-#: apt-pkg/contrib/fileutl.cc cmdline/apt-extracttemplates.cc
+#: apt-pkg/contrib/fileutl.cc
 #, fuzzy, c-format
 msgid "Unable to mkstemp %s"
 msgstr "Klarte ikke å få statusen på %s"
 
-#: apt-pkg/contrib/fileutl.cc cmdline/apt-extracttemplates.cc
+#: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Unable to write to %s"
 msgstr "Kan ikke skrive til %s"
@@ -938,6 +884,13 @@ msgstr ""
 "Klarte ikke øke størrelsen på MMap-en siden automatisk voksing er deaktivert "
 "av brukeren."
 
+#: apt-pkg/contrib/netrc.cc
+#, c-format
+msgid ""
+"%s: Credentials for %s match, but the protocol is not encrypted. Annotate "
+"with %s:// to use."
+msgstr ""
+
 #: apt-pkg/contrib/progress.cc
 #, c-format
 msgid "%c%s... Error!"
@@ -952,11 +905,22 @@ msgstr "%c%s ... Ferdig"
 msgid "..."
 msgstr "..."
 
-#. Print the spinner
 #: apt-pkg/contrib/progress.cc
 #, fuzzy, c-format
+#| msgid "%c%s... %u%%"
+msgid "%c%s... %llu/%llus"
+msgstr "%c%s ... %u%%"
+
+#: apt-pkg/contrib/progress.cc
+#, fuzzy, c-format
+#| msgid "%c%s... %u%%"
+msgid "%c%s... %llus"
+msgstr "%c%s ... %u%%"
+
+#: apt-pkg/contrib/progress.cc
+#, c-format
 msgid "%c%s... %u%%"
-msgstr "%c%s ... Ferdig"
+msgstr "%c%s ... %u%%"
 
 #. TRANSLATOR: d means days, h means hours, min means minutes, s means seconds
 #: apt-pkg/contrib/strutl.cc
@@ -986,6 +950,26 @@ msgstr "%lis"
 #, c-format
 msgid "Selection %s not found"
 msgstr "Fant ikke utvalget %s"
+
+#: apt-pkg/deb/debfile.cc
+#, c-format
+msgid "This is not a valid DEB archive, missing '%s' member"
+msgstr "Dette er ikke et gyldig DEB-arkiv, mangler «%s»-medlemmet"
+
+#: apt-pkg/deb/debfile.cc
+#, c-format
+msgid "Internal error, could not locate member %s"
+msgstr "Intern feil, fant ikke medlemmet %s"
+
+#: apt-pkg/deb/debfile.cc
+msgid "Unparsable control file"
+msgstr "Kontrollfila kan ikke tolkes"
+
+#: apt-pkg/deb/debindexfile.cc
+#, fuzzy, c-format
+#| msgid "Could not get lock %s"
+msgid "Could not read meta data from %s"
+msgstr "Får ikke låst %s"
 
 #. TRANSLATOR: an identifier like Packages; Releasefile key indicating
 #. a file like main/binary-amd64/Packages; another identifier like Contents;
@@ -1052,6 +1036,36 @@ msgid "Unable to parse package file %s (%d)"
 msgstr "Klarer ikke å fortolke pakkefila %s (%d)"
 
 #: apt-pkg/deb/debsystem.cc
+#, fuzzy, c-format
+#| msgid "Waiting for headers"
+msgid "Waiting for cache lock: %s"
+msgstr "Venter på hoder"
+
+#: apt-pkg/deb/debsystem.cc
+#, fuzzy, c-format
+#| msgid ""
+#| "Unable to lock the administration directory (%s), is another process "
+#| "using it?"
+msgid ""
+"Unable to acquire the dpkg frontend lock (%s), is another process using it?"
+msgstr ""
+"Klarte ikke låse den administrative mappen (%s). Bruker en annen prosess den?"
+
+#: apt-pkg/deb/debsystem.cc
+#, fuzzy, c-format
+#| msgid "Unable to lock the administration directory (%s), are you root?"
+msgid "Unable to acquire the dpkg frontend lock (%s), are you root?"
+msgstr "Klarte ikke låse den administrative mappen (%s). Er du root?"
+
+#. TRANSLATORS: the %s contains the recovery command, usually
+#. dpkg --configure -a
+#: apt-pkg/deb/debsystem.cc
+#, c-format
+msgid ""
+"dpkg was interrupted, you must manually run '%s' to correct the problem. "
+msgstr "dpkg ble avbrutt. Du må kjøre «%s» manuelt for å rette problemet,"
+
+#: apt-pkg/deb/debsystem.cc
 #, c-format
 msgid ""
 "Unable to lock the administration directory (%s), is another process using "
@@ -1064,37 +1078,30 @@ msgstr ""
 msgid "Unable to lock the administration directory (%s), are you root?"
 msgstr "Klarte ikke låse den administrative mappen (%s). Er du root?"
 
-#. TRANSLATORS: the %s contains the recovery command, usually
-#. dpkg --configure -a
-#: apt-pkg/deb/debsystem.cc
-#, c-format
-msgid ""
-"dpkg was interrupted, you must manually run '%s' to correct the problem. "
-msgstr "dpkg ble avbrutt. Du må kjøre «%s» manuelt for å rette problemet,"
-
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "Ikke låst"
 
+#. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Installing %s"
-msgstr "Installerer %s"
+msgid "Preparing %s"
+msgstr "Forbereder %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Configuring %s"
-msgstr "Setter opp %s"
+msgid "Preparing to configure %s"
+msgstr "Forbereder oppsett av %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Removing %s"
-msgstr "Fjerner %s"
+msgid "Preparing for removal of %s"
+msgstr "Forbereder fjerning av %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Completely removing %s"
-msgstr "Fjerner %s fullstendig"
+msgid "Preparing to completely remove %s"
+msgstr "Forbereder å fullstendig slette %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1111,6 +1118,11 @@ msgstr "Kjører etter-installasjonsutløser %s"
 msgid "Installed %s"
 msgstr "Installerte %s"
 
+#: apt-pkg/deb/dpkgpm.cc
+#, c-format
+msgid "Configuring %s"
+msgstr "Setter opp %s"
+
 #. FIXME: use a better string after freeze
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1124,33 +1136,23 @@ msgstr "Klarte ikke åpne fila «%s»"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Preparing %s"
-msgstr "Forbereder %s"
-
-#: apt-pkg/deb/dpkgpm.cc
-#, c-format
 msgid "Unpacking %s"
 msgstr "Pakker ut %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Preparing to configure %s"
-msgstr "Forbereder oppsett av %s"
+msgid "Installing %s"
+msgstr "Installerer %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Preparing for removal of %s"
-msgstr "Forbereder fjerning av %s"
+msgid "Removing %s"
+msgstr "Fjerner %s"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
-msgid "Removed %s"
-msgstr "Fjernet %s"
-
-#: apt-pkg/deb/dpkgpm.cc
-#, c-format
-msgid "Preparing to completely remove %s"
-msgstr "Forbereder å fullstendig slette %s"
+msgid "Completely removing %s"
+msgstr "Fjerner %s fullstendig"
 
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1243,6 +1245,16 @@ msgstr "Klarte ikke å åpne StateFile %s"
 msgid "Failed to write temporary StateFile %s"
 msgstr "Klarte ikke å skrive midlertidig StateFile %s"
 
+#: apt-pkg/dirstream.cc
+#, c-format
+msgid "Failed to write file %s"
+msgstr "Klarte ikke å skrive fila %s"
+
+#: apt-pkg/dirstream.cc
+#, c-format
+msgid "Failed to close file %s"
+msgstr "Klarte ikke å lukke fila %s"
+
 #: apt-pkg/edsp.cc
 msgid "Send scenario to solver"
 msgstr ""
@@ -1320,8 +1332,8 @@ msgstr "Klarer ikke bestemme en passende pakkesystemtype"
 
 #: apt-pkg/install-progress.cc
 #, c-format
-msgid "Progress: [%3i%%]"
-msgstr ""
+msgid "Progress: [%3li%%]"
+msgstr "Fremgang: [%3li%%]"
 
 #. send status information that we are about to fork dpkg
 #: apt-pkg/install-progress.cc
@@ -1495,6 +1507,12 @@ msgstr "Forsto ikke spikring av typen %s"
 
 #: apt-pkg/policy.cc
 #, c-format
+msgid ""
+"%s: The special 'Pin-Priority: %s' can only be used for 'Package: *' records"
+msgstr ""
+
+#: apt-pkg/policy.cc
+#, c-format
 msgid "%s: Value %s is outside the range of valid pin priorities (%d to %d)"
 msgstr ""
 
@@ -1507,11 +1525,6 @@ msgstr "Ingen prioritet (eller null) spesifisert for pin"
 #, fuzzy, c-format
 msgid "Malformed entry %u in %s file %s (%s)"
 msgstr "Ugyldig overstyring %s linje %lu #1"
-
-#: apt-pkg/sourcelist.cc
-#, c-format
-msgid "Opening %s"
-msgstr "Åpner %s"
 
 #: apt-pkg/sourcelist.cc
 #, c-format
@@ -1533,13 +1546,15 @@ msgstr "Feil på %u i kildelista %s (type)"
 msgid "Type '%s' is not known on stanza %u in source list %s"
 msgstr "Typen «%s» er ukjent i linje %u i kildelista %s"
 
-#: apt-pkg/sourcelist.cc
+#: apt-pkg/sourcelist.cc apt-private/private-install.cc
 #, c-format
 msgid "Unsupported file %s given on commandline"
 msgstr ""
 
 #: apt-pkg/srcrecords.cc
-msgid "You must put some 'source' URIs in your sources.list"
+#, fuzzy
+#| msgid "You must put some 'source' URIs in your sources.list"
+msgid "You must put some 'deb-src' URIs in your sources.list"
 msgstr ""
 "Beklager, du må legge inn noen kilder (nettadresser) i din «sources.list»."
 
@@ -1547,11 +1562,6 @@ msgstr ""
 #, c-format
 msgid "Cannot convert %s to integer: out of range"
 msgstr "Kan ikke gjøre om %s til heltall: utenfor rekkevidde"
-
-#: apt-pkg/update.cc apt-private/private-download.cc
-#, c-format
-msgid "Failed to fetch %s  %s"
-msgstr "Klarte ikke å skaffe %s  %s"
 
 #: apt-pkg/update.cc
 #, fuzzy
@@ -1613,6 +1623,12 @@ msgstr ""
 "  «%s»\n"
 "i «%s» og trykk «Enter»\n"
 
+#: apt-private/acqprogress.cc
+msgid ""
+"Do you want to accept these changes and continue updating from this "
+"repository?"
+msgstr ""
+
 #: apt-private/private-cachefile.cc
 msgid "Correcting dependencies..."
 msgstr "Retter på avhengighetsforhold ..."
@@ -1633,13 +1649,17 @@ msgstr "Klarer ikke å minimere oppgraderingsettet"
 msgid " Done"
 msgstr " Utført"
 
-#: apt-private/private-cachefile.cc
-msgid "You might want to run 'apt-get -f install' to correct these."
-msgstr "Du vil kanskje kjøre «apt-get -f install» for å rette på dette."
+#: apt-private/private-cachefile.cc apt-private/private-install.cc
+msgid "You might want to run 'apt --fix-broken install' to correct these."
+msgstr "Du vil kanskje kjøre «apt --fix-broken install» for å rette på dette."
 
-#: apt-private/private-cachefile.cc
-msgid "Unmet dependencies. Try using -f."
-msgstr "Uinnfridde avhengighetsforhold - Prøv «-f»."
+#: apt-private/private-cachefile.cc apt-private/private-install.cc
+msgid ""
+"Unmet dependencies. Try 'apt --fix-broken install' with no packages (or "
+"specify a solution)."
+msgstr ""
+"Uinnfridde avhengighetsforhold. Prøv «apt --fix-broken install» uten pakker "
+"(eller angi en løsning)."
 
 #: apt-private/private-cacheset.cc apt-private/private-search.cc
 msgid "Sorting"
@@ -1748,8 +1768,15 @@ msgstr "Denne APT har kraften til en Superku."
 msgid "This APT helper has Super Meep Powers."
 msgstr ""
 
-#: apt-private/private-depends.cc apt-private/private-show.cc
-#: cmdline/apt-mark.cc
+#: apt-private/private-cmndline.cc
+msgid ""
+"--force-yes is deprecated, use one of the options starting with --allow "
+"instead."
+msgstr ""
+"--force-yes er utdatert, bruk en av valgene som starter med --allow istedet."
+
+#: apt-private/private-depends.cc apt-private/private-download.cc
+#: apt-private/private-show.cc cmdline/apt-mark.cc
 msgid "No packages found"
 msgstr "Fant ingen pakker"
 
@@ -1768,13 +1795,6 @@ msgstr "Noen pakker ble ikke autentisert"
 #: apt-private/private-download.cc
 msgid "Install these packages without verification?"
 msgstr "Installer disse pakkene uten verifikasjon?"
-
-#: apt-private/private-download.cc apt-private/private-install.cc
-msgid ""
-"--force-yes is deprecated, use one of the options starting with --allow "
-"instead."
-msgstr ""
-"--force-yes er utdatert, bruk en av valgene som starter med --allow istedet."
 
 #: apt-private/private-download.cc
 #, fuzzy
@@ -1826,6 +1846,14 @@ msgstr "Følgende informasjon kan være til hjelp med å løse problemet:"
 #: apt-private/private-install.cc
 msgid "Broken packages"
 msgstr "Ødelagte pakker"
+
+#: apt-private/private-install.cc
+msgid ""
+"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
+"missing?"
+msgstr ""
+"Klarte ikke å hente alle arkivene. Du kan prøve med «apt-get update» eller "
+"«--fix-missing»."
 
 #: apt-private/private-install.cc
 msgid "Internal error, InstallPackages was called with broken packages!"
@@ -1919,7 +1947,7 @@ msgstr ""
 msgid "Abort."
 msgstr "Avbryter."
 
-#: apt-private/private-install.cc
+#: apt-private/private-install.cc cmdline/apt-mark.cc
 msgid "Do you want to continue?"
 msgstr "Vil du fortsette?"
 
@@ -1930,14 +1958,6 @@ msgstr "Klarte ikke laste ned alle filene"
 #: apt-private/private-install.cc apt-private/private-source.cc
 msgid "Download complete and in download only mode"
 msgstr "Nedlasting fullført med innstillinga «bare nedlasting»"
-
-#: apt-private/private-install.cc
-msgid ""
-"Unable to fetch some archives, maybe run apt-get update or try with --fix-"
-"missing?"
-msgstr ""
-"Klarte ikke å hente alle arkivene. Du kan prøve med «apt-get update» eller "
-"«--fix-missing»."
 
 #: apt-private/private-install.cc
 msgid "--fix-missing and media swapping is not currently supported"
@@ -2010,18 +2030,6 @@ msgid "Use '%s' to remove it."
 msgid_plural "Use '%s' to remove them."
 msgstr[0] "Bruk «%s» for å fjerne den."
 msgstr[1] "Bruk «%s» for å fjerne dem."
-
-#: apt-private/private-install.cc
-msgid "You might want to run 'apt-get -f install' to correct these:"
-msgstr "Du vil kanskje utføre «apt-get -f install» for å rette på disse:"
-
-#: apt-private/private-install.cc
-msgid ""
-"Unmet dependencies. Try 'apt-get -f install' with no packages (or specify a "
-"solution)."
-msgstr ""
-"Uinnfridde avhengighetsforhold. Prøv «apt-get -f install» uten pakker (eller "
-"angi en løsning)."
 
 #: apt-private/private-install.cc
 msgid "The following additional packages will be installed:"
@@ -2269,11 +2277,6 @@ msgstr "Du må oppgi minst ett søkemønster"
 msgid "Full Text Search"
 msgstr "Fulltekstsøk"
 
-#: apt-private/private-show.cc cmdline/apt-cache.cc
-#, c-format
-msgid "Package file %s is out of sync."
-msgstr "Pakkefila %s er ikke oppdatert."
-
 #: apt-private/private-show.cc
 #, c-format
 msgid "There is %i additional record. Please use the '-a' switch to see it"
@@ -2419,7 +2422,6 @@ msgid "Unpack command '%s' failed.\n"
 msgstr "Utpakkingskommandoen «%s» mislyktes.\n"
 
 #: apt-private/private-source.cc
-#, c-format
 msgid "Check if the 'dpkg-dev' package is installed.\n"
 msgstr "Sjekk om pakken «dpkg-dev» er installert.\n"
 
@@ -2439,10 +2441,6 @@ msgid "%s has no build depends.\n"
 msgstr "%s har ingen avhengigheter.\n"
 
 #: apt-private/private-source.cc
-msgid "Must specify at least one package to check builddeps for"
-msgstr "Du må angi minst en pakke du vil sjekke «builddeps» for"
-
-#: apt-private/private-source.cc
 #, c-format
 msgid ""
 "No architecture information available for %s. See apt.conf(5) APT::"
@@ -2450,6 +2448,16 @@ msgid ""
 msgstr ""
 "Ingen arkitekturinformasjon tilgjengelig for %s.  Se apt.conf(5) APT::"
 "Architectures for oppsett."
+
+#: apt-private/private-source.cc
+msgid "Must specify at least one package to check builddeps for"
+msgstr "Du må angi minst en pakke du vil sjekke «builddeps» for"
+
+#: apt-private/private-source.cc
+#, c-format
+msgid ""
+"Invalid operator '%c' at offset %d, did you mean '%c%c' or '%c='? - in: %s"
+msgstr ""
 
 #: apt-private/private-source.cc
 #, c-format
@@ -2472,8 +2480,8 @@ msgstr "Klarte ikke å endre navnet på %s til %s"
 
 #: apt-private/private-sources.cc
 #, c-format
-msgid "Your '%s' file changed, please run 'apt-get update'."
-msgstr "'%s'-filen din ble endret, vær så snill å kjør 'apt-get update'."
+msgid "Your '%s' file changed, please run 'apt-get update'.\n"
+msgstr "'%s'-filen din ble endret, vær så snill å kjør 'apt-get update'.\n"
 
 #: apt-private/private-unmet.cc
 #, c-format
@@ -2483,6 +2491,14 @@ msgstr "Pakken %s versjon %s har et uinnfridd avhengighetsforhold:\n"
 #: apt-private/private-update.cc
 msgid "The update command takes no arguments"
 msgstr "Oppdaterings-kommandoen tar ingen argumenter"
+
+#. TRANSLATOR: the first two are manpage references, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
+msgid ""
+"Usage of %s should be preferred over embedding login information directly in "
+"the %s entry for '%s'"
+msgstr ""
 
 #: apt-private/private-update.cc
 #, c-format
@@ -2498,9 +2514,9 @@ msgstr[1] ""
 msgid "All packages are up to date."
 msgstr "Alle pakkene er oppdatert."
 
-#: cmdline/apt-cache.cc
-#, fuzzy
-msgid "apt-cache stats does not take any arguments"
+#: cmdline/apt-cache.cc cmdline/apt-mark.cc
+#, fuzzy, c-format
+msgid "%s does not take any arguments"
 msgstr "Oppdaterings-kommandoen tar ingen argumenter"
 
 #: cmdline/apt-cache.cc
@@ -2765,6 +2781,12 @@ msgid "Install new packages (pkg is libc6 not libc6.deb)"
 msgstr "Installér nye pakker (Pakke er «foo», ikke «foo.deb»)"
 
 #: cmdline/apt-get.cc
+#, fuzzy
+#| msgid "Install new packages (pkg is libc6 not libc6.deb)"
+msgid "Reinstall packages (pkg is libc6 not libc6.deb)"
+msgstr "Installér nye pakker (Pakke er «foo», ikke «foo.deb»)"
+
+#: cmdline/apt-get.cc
 msgid "Remove packages"
 msgstr "Fjern pakker"
 
@@ -2787,6 +2809,12 @@ msgstr "Følg «dselect» sine anbefalinger"
 #: cmdline/apt-get.cc
 msgid "Configure build-dependencies for source packages"
 msgstr "Sett opp bygge-forutsetninger for kildekodepakker"
+
+#: cmdline/apt-get.cc
+#, fuzzy
+#| msgid "Building dependency tree"
+msgid "Satisfy dependency strings"
+msgstr "Skaper oversikt over avhengighetsforhold"
 
 #: cmdline/apt-get.cc
 msgid "Erase downloaded archive files"
@@ -2856,6 +2884,18 @@ msgstr "slå sammen filer, med automatisk utpakking"
 msgid "detect proxy using apt.conf"
 msgstr ""
 
+#: cmdline/apt-helper.cc
+msgid "wait for system to be online"
+msgstr ""
+
+#: cmdline/apt-helper.cc
+msgid "drop privileges before running given command"
+msgstr ""
+
+#: cmdline/apt-helper.cc
+msgid "analyse a pattern"
+msgstr ""
+
 #: cmdline/apt-internal-planner.cc
 #, fuzzy
 msgid ""
@@ -2914,6 +2954,16 @@ msgid "%s was already set to automatically installed.\n"
 msgstr "%s satt til automatisk installasjon.\n"
 
 #: cmdline/apt-mark.cc
+msgid "No changes necessary"
+msgstr ""
+
+#: cmdline/apt-mark.cc
+#, fuzzy
+#| msgid "The following NEW packages will be installed:"
+msgid "The following packages will be marked as automatically installed:"
+msgstr "Følgende NYE pakker vil bli installert:"
+
+#: cmdline/apt-mark.cc
 #, fuzzy, c-format
 msgid "%s was already set on hold.\n"
 msgstr "%s er allerede nyeste versjon.\n"
@@ -2963,14 +3013,19 @@ msgid ""
 msgstr ""
 
 #: cmdline/apt-mark.cc
-#, fuzzy
 msgid "Mark the given packages as automatically installed"
-msgstr "%s satt til automatisk installasjon.\n"
+msgstr "Marker den angitte pakken som automatisk installert"
 
 #: cmdline/apt-mark.cc
 #, fuzzy
 msgid "Mark the given packages as manually installed"
 msgstr "Sjekk om pakken «dpkg-dev» er installert.\n"
+
+#: cmdline/apt-mark.cc
+#, fuzzy
+#| msgid "Mark the given packages as automatically installed"
+msgid "Mark all dependencies of meta packages as automatically installed."
+msgstr "Marker den angitte pakken som automatisk installert"
 
 #: cmdline/apt-mark.cc
 msgid "Mark a package as held back"
@@ -2991,7 +3046,7 @@ msgid "Print the list of manually installed packages"
 msgstr "%s satt til manuell installasjon.\n"
 
 #: cmdline/apt-mark.cc
-msgid "Print the list of package on hold"
+msgid "Print the list of packages on hold"
 msgstr "Skriv listen med pakker som holdes tilbake"
 
 #: cmdline/apt-sortpkgs.cc
@@ -3040,6 +3095,11 @@ msgstr "Låste pakker:"
 
 #: cmdline/apt.cc
 #, fuzzy
+msgid "reinstall packages"
+msgstr "Låste pakker:"
+
+#: cmdline/apt.cc
+#, fuzzy
 msgid "remove packages"
 msgstr "Ødelagte pakker"
 
@@ -3062,6 +3122,12 @@ msgstr "oppgrader systemet ved å fjerne/installere/oppgradere pakker"
 #, fuzzy
 msgid "edit the source information file"
 msgstr "Leser tilstandsinformasjon"
+
+#: cmdline/apt.cc
+#, fuzzy
+#| msgid "Failed to satisfy %s dependency for %s: %s"
+msgid "satisfy dependency strings"
+msgstr "Klarte ikke å tilfredsstille %s avhengighet for %s: %s"
 
 #: dselect/install
 msgid "Bad default setting!"
@@ -3288,6 +3354,11 @@ msgstr "Klarte ikke å kommunisere med underprosess/fil"
 msgid "Failed to read while computing MD5"
 msgstr "Klarte ikke å lese under utregning av MD5"
 
+#: ftparchive/multicompress.cc
+#, c-format
+msgid "Failed to rename %s to %s"
+msgstr "Klarte ikke å endre navnet på %s til %s"
+
 #: ftparchive/override.cc
 #, c-format
 msgid "Unable to open %s"
@@ -3395,6 +3466,58 @@ msgstr "  %s har ingen kildeoverstyringsoppføring\n"
 msgid "  %s has no binary override entry either\n"
 msgstr "  %s har ingen binæroverstyringsoppføring heller\n"
 
+#: methods/basehttp.cc
+msgid "Waiting for headers"
+msgstr "Venter på hoder"
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid reply header"
+msgstr "HTTP-tjeneren sendte et ugyldig svarhode"
+
+#: methods/basehttp.cc
+msgid "Bad header line"
+msgstr "Ødelagt hodelinje"
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid Content-Length header"
+msgstr "HTTP-tjeneren sendte et ugyldig «Content-Length»-hode"
+
+#: methods/basehttp.cc
+msgid "The HTTP server sent an invalid Content-Range header"
+msgstr "HTTP-tjeneren sendte et ugyldig «Content-Range»-hode"
+
+#: methods/basehttp.cc
+msgid "This HTTP server has broken range support"
+msgstr "Denne HTTP-tjeneren har ødelagt støtte for område"
+
+#: methods/basehttp.cc
+msgid "Unknown date format"
+msgstr "Ukjent datoformat"
+
+#: methods/basehttp.cc
+msgid "Bad header data"
+msgstr "Ødelagte hodedata"
+
+#: methods/basehttp.cc
+msgid "Connection failed"
+msgstr "Forbindelsen mislykkes"
+
+#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#, c-format
+msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
+msgstr ""
+
+#: methods/basehttp.cc
+#, c-format
+msgid ""
+"Automatically disabled %s due to incorrect response from server/proxy. (man "
+"5 apt.conf)"
+msgstr ""
+
+#: methods/basehttp.cc
+msgid "Internal error"
+msgstr "Intern feil"
+
 #: methods/cdrom.cc
 #, c-format
 msgid "Unable to read the cdrom database %s"
@@ -3433,15 +3556,21 @@ msgstr "Fant ikke fila"
 msgid "Direct connection to %s domains is blocked by default."
 msgstr ""
 
-#: methods/connect.cc methods/http.cc
-#, c-format
-msgid "Connecting to %s (%s)"
-msgstr "Kobler til %s (%s)"
-
 #: methods/connect.cc
 #, c-format
 msgid "[IP: %s %s]"
 msgstr "[IP: %s %s]"
+
+#: methods/connect.cc
+#, fuzzy, c-format
+#| msgid "Connecting to %s (%s)"
+msgid "Connected to %s (%s)"
+msgstr "Kobler til %s (%s)"
+
+#: methods/connect.cc methods/http.cc
+#, c-format
+msgid "Connecting to %s (%s)"
+msgstr "Kobler til %s (%s)"
 
 #: methods/connect.cc
 #, c-format
@@ -3453,11 +3582,6 @@ msgstr "Klarte ikke å opprette en sokkel for %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Klarte ikke å starte forbindelsen til %s:%s (%s)."
 
-#: methods/connect.cc
-#, c-format
-msgid "Could not connect to %s:%s (%s), connection timed out"
-msgstr "Klarte ikke å koble til %s:%s (%s), tidsavbrudd på forbindelsen"
-
 #: methods/connect.cc methods/ftp.cc methods/rsh.cc
 msgid "Failed"
 msgstr "Mislyktes"
@@ -3466,6 +3590,11 @@ msgstr "Mislyktes"
 #, c-format
 msgid "Could not connect to %s:%s (%s)."
 msgstr "Klarte ikke å koble til %s:%s (%s)."
+
+#: methods/connect.cc
+#, c-format
+msgid "Could not connect to %s:%s (%s), connection timed out"
+msgstr "Klarte ikke å koble til %s:%s (%s), tidsavbrudd på forbindelsen"
 
 #. We say this mainly because the pause here is for the
 #. ssh connection that is still going
@@ -3691,10 +3820,6 @@ msgstr ""
 "ikke er tilgjengelig:\n"
 
 #: methods/http.cc
-msgid "Error writing to the file"
-msgstr "Feil ved skriving til fila"
-
-#: methods/http.cc
 msgid "Error reading from server. Remote end closed connection"
 msgstr "Feil ved lesing fra tjeneren. Forbindelsen ble lukket i andre enden"
 
@@ -3714,34 +3839,6 @@ msgstr "Utvalget mislykkes"
 msgid "Connection timed out"
 msgstr "Tidsavbrudd på forbindelsen"
 
-#: methods/http.cc
-msgid "Error writing to output file"
-msgstr "Feil ved skriving til utfil"
-
-#. FIXME: fallback to a default mirror here instead
-#. and provide a config option to define that default
-#: methods/mirror.cc
-#, c-format
-msgid "No mirror file '%s' found "
-msgstr "Ingen speilfil «%s» funnet"
-
-#. FIXME: fallback to a default mirror here instead
-#. and provide a config option to define that default
-#: methods/mirror.cc
-#, fuzzy, c-format
-msgid "Can not read mirror file '%s'"
-msgstr "Ingen speilfil «%s» funnet"
-
-#: methods/mirror.cc
-#, fuzzy, c-format
-msgid "No entry found in mirror file '%s'"
-msgstr "Ingen speilfil «%s» funnet"
-
-#: methods/mirror.cc
-#, c-format
-msgid "[Mirror: %s]"
-msgstr "[Speil: %s]"
-
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Klarte ikke å sette endringstidspunkt"
@@ -3750,56 +3847,113 @@ msgstr "Klarte ikke å sette endringstidspunkt"
 msgid "Connection closed prematurely"
 msgstr "Forbindelsen ble uventet stengt"
 
-#: methods/server.cc
-msgid "Waiting for headers"
-msgstr "Venter på hoder"
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid reply header"
-msgstr "HTTP-tjeneren sendte et ugyldig svarhode"
-
-#: methods/server.cc
-msgid "Bad header line"
-msgstr "Ødelagt hodelinje"
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid Content-Length header"
-msgstr "HTTP-tjeneren sendte et ugyldig «Content-Length»-hode"
-
-#: methods/server.cc
-msgid "The HTTP server sent an invalid Content-Range header"
-msgstr "HTTP-tjeneren sendte et ugyldig «Content-Range»-hode"
-
-#: methods/server.cc
-msgid "This HTTP server has broken range support"
-msgstr "Denne HTTP-tjeneren har ødelagt støtte for område"
-
-#: methods/server.cc
-msgid "Unknown date format"
-msgstr "Ukjent datoformat"
-
-#: methods/server.cc
-msgid "Bad header data"
-msgstr "Ødelagte hodedata"
-
-#: methods/server.cc
-msgid "Connection failed"
-msgstr "Forbindelsen mislykkes"
-
-#: methods/server.cc
-#, c-format
-msgid ""
-"Automatically disabled %s due to incorrect response from server/proxy. (man "
-"5 apt.conf)"
-msgstr ""
-
-#: methods/server.cc
-msgid "Internal error"
-msgstr "Intern feil"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Tomme filer kan ikke være gyldige arkiver"
+
+#~ msgid "Error writing to output file"
+#~ msgstr "Feil ved skriving til utfil"
+
+#~ msgid "Error writing to the file"
+#~ msgstr "Feil ved skriving til fila"
+
+#~ msgid "Invalid archive member header %s"
+#~ msgstr "Ugyldig arkivmedlemshode %s"
+
+#~ msgid "The path %s is too long"
+#~ msgstr "Stien %s er for lang"
+
+#~ msgid "Unpacking %s more than once"
+#~ msgstr "Pakker ut %s mer enn en gang"
+
+#~ msgid "The directory %s is diverted"
+#~ msgstr "Katalogen %s er avledet"
+
+#~ msgid "The package is trying to write to the diversion target %s/%s"
+#~ msgstr "Pakken prøver å skrive til avledningsmålet %s/%s"
+
+#~ msgid "The diversion path is too long"
+#~ msgstr "Avledningsstien er for lang"
+
+#~ msgid "The directory %s is being replaced by a non-directory"
+#~ msgstr "Mappa %s blir byttet ut med noe som ikke er en mappe"
+
+#~ msgid "Failed to locate node in its hash bucket"
+#~ msgstr "Fant ikke knutepunktet i dens hash-spann"
+
+#~ msgid "The path is too long"
+#~ msgstr "Stien er for lang"
+
+#~ msgid "Overwrite package match with no version for %s"
+#~ msgstr "Skriver over pakketreff uten versjon for %s"
+
+#~ msgid "File %s/%s overwrites the one in the package %s"
+#~ msgstr "Fila %s/%s skriver over den tilsvarende fila i pakken %s"
+
+#~ msgid "Unable to stat %s"
+#~ msgstr "Klarte ikke å få statusen på %s"
+
+#~ msgid "DropNode called on still linked node"
+#~ msgstr "DropNode ble startet på et knutepunkt som ennå er lenket"
+
+#~ msgid "Failed to locate the hash element!"
+#~ msgstr "Fant ikke nøkkelelementet."
+
+#~ msgid "Failed to allocate diversion"
+#~ msgstr "Klarte ikke å tildele avledning"
+
+#~ msgid "Internal error in AddDiversion"
+#~ msgstr "Intern feil i AddDiversion"
+
+#~ msgid "Trying to overwrite a diversion, %s -> %s and %s/%s"
+#~ msgstr "Prøver å skrive over en avledning, %s -> %s og %s/%s"
+
+#~ msgid "Double add of diversion %s -> %s"
+#~ msgstr "Dobbel tillegging av avledning %s -> %s"
+
+#~ msgid "Duplicate conf file %s/%s"
+#~ msgstr "Dobbel oppsettsfil %s/%s"
+
+#~ msgid "Unable to change to %s"
+#~ msgstr "Klarer ikke å endre %s"
+
+#~ msgid "Removed %s"
+#~ msgstr "Fjernet %s"
+
+#~ msgid "Package file %s is out of sync."
+#~ msgstr "Pakkefila %s er ikke oppdatert."
+
+#~ msgid ""
+#~ "The package index files are corrupted. No Filename: field for package %s."
+#~ msgstr ""
+#~ "Oversiktsfilene er ødelagte. Feltet «Filename:» mangler for pakken %s."
+
+#~ msgid "No mirror file '%s' found "
+#~ msgstr "Ingen speilfil «%s» funnet"
+
+#, fuzzy
+#~ msgid "Can not read mirror file '%s'"
+#~ msgstr "Ingen speilfil «%s» funnet"
+
+#, fuzzy
+#~ msgid "No entry found in mirror file '%s'"
+#~ msgstr "Ingen speilfil «%s» funnet"
+
+#~ msgid "[Mirror: %s]"
+#~ msgstr "[Speil: %s]"
+
+#~ msgid "Opening configuration file %s"
+#~ msgstr "Åpner oppsettsfila %s"
+
+#~ msgid "Opening %s"
+#~ msgstr "Åpner %s"
+
+#~ msgid "Unmet dependencies. Try using --fix-broken."
+#~ msgstr "Uinnfridde avhengighetsforhold - Prøv «--fix-broken»."
+
+#~ msgid "You might want to run 'apt --fix-broken install' to correct these:"
+#~ msgstr ""
+#~ "Du vil kanskje utføre «apt --fix-broken install» for å rette på disse:"
 
 #~ msgid "Failed to fetch %s  %s\n"
 #~ msgstr "Klarte ikke å skaffe %s  %s\n"
@@ -3852,9 +4006,6 @@ msgstr "Tomme filer kan ikke være gyldige arkiver"
 #~ "%s dependency for %s cannot be satisfied because package %s has no "
 #~ "candidate version"
 #~ msgstr "Kravet %s for %s kan ikke oppfylles fordi pakken %s ikke finnes"
-
-#~ msgid "Failed to satisfy %s dependency for %s: %s"
-#~ msgstr "Klarte ikke å tilfredsstille %s avhengighet for %s: %s"
 
 #~ msgid "Build-dependencies for %s could not be satisfied."
 #~ msgstr "Klarte ikke å tilfredstille bygg-avhengighetene for %s."
